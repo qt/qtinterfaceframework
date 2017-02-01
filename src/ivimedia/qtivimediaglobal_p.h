@@ -39,48 +39,21 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIABSTRACTFEATURE_P_H
-#define QIVIABSTRACTFEATURE_P_H
+#ifndef QTIVIMEDIAGLOBAL_P_H
+#define QTIVIMEDIAGLOBAL_P_H
 
 //
 //  W A R N I N G
 //  -------------
 //
 // This file is not part of the Qt API.  It exists purely as an
-// implementation detail. This header file may change from version to
+// implementation detail.  This header file may change from version to
 // version without notice, or even be removed.
 //
 // We mean it.
 //
 
-#include <private/qtiviglobal_p.h>
-#include <private/qobject_p.h>
+#include <QtIviMedia/private/qtivimedia-config_p.h>
+#include <QtIviMedia/qtivimediaglobal.h>
 
-#include "qiviabstractfeature.h"
-
-QT_BEGIN_NAMESPACE
-
-class Q_QTIVICORE_EXPORT QIviAbstractFeaturePrivate : public QObjectPrivate
-{
-public:
-    QIviAbstractFeaturePrivate(const QString &interface, QIviAbstractFeature *parent);
-
-    virtual void initialize();
-
-    void setDiscoveryResult(QIviAbstractFeature::DiscoveryResult discoveryResult);
-
-    QIviAbstractFeature * const q_ptr;
-    Q_DECLARE_PUBLIC(QIviAbstractFeature)
-
-    QString m_interface;
-    QIviServiceObject *m_serviceObject;
-    QIviAbstractFeature::DiscoveryMode m_discoveryMode;
-    QIviAbstractFeature::DiscoveryResult m_discoveryResult;
-    QString m_errorMessage;
-    QIviAbstractFeature::Error m_error;
-    bool m_qmlCreation;
-};
-
-QT_END_NAMESPACE
-
-#endif // QIVIABSTRACTFEATURE_P_H
+#endif // QTIVIMEDIAGLOBAL_P_H
