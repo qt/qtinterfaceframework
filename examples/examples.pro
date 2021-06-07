@@ -5,4 +5,3 @@ qtHaveModule(gui): {
     qtHaveModule(ivivehiclefunctions): SUBDIRS += ivivehiclefunctions
     qtHaveModule(ivimedia): SUBDIRS += ivimedia
 }
-qtHaveModule(geniviextras): SUBDIRS += geniviextras

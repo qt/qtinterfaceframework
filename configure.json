@@ -1,9 +1,0 @@
-{
-    "subconfigs": [
-        "src/geniviextras",
-        "src/ivicore",
-        "src/ivivehiclefunctions",
-        "src/ivimedia"
-    ]
-}
-

@@ -2,13 +2,11 @@
     "QtIviCore" => "$basedir/src/ivicore",
     "QtIviVehicleFunctions" => "$basedir/src/ivivehiclefunctions;$out_basedir/src/ivivehiclefunctions",
     "QtIviMedia" => "$basedir/src/ivimedia",
-    "QtGeniviExtras" => "$basedir/src/geniviextras",
     "QtIviRemoteObjectsHelper" => "$basedir/src/helper/remoteobjects",
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
 %classnames = (
-     "qdlt.h" => "QtDlt",
      "qiviqueryterm.h" => "QIviAbstractQueryTerm", "QIviConjunctionTerm", "QIviScopeTerm", "QIviFilterTerm", "QIviOrderTerm",
      "qivistandarditem.h" => "QIviSearchAndBrowseModelItem"
 );

@@ -1,4 +1,3 @@
-qt_commandline_subconfig(src/geniviextras)
 qt_commandline_subconfig(src/ivicore)
 qt_commandline_subconfig(src/ivivehiclefunctions)
 qt_commandline_subconfig(src/ivimedia)
