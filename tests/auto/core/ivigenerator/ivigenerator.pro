@@ -1,7 +1,16 @@
 TEMPLATE = subdirs
 
-SUBDIRS = projects \
+QT_FOR_CONFIG += ivicore
+
+SUBDIRS = org-example-echo \
+          org-example-echo-noprivate \
+          org-example-echo-noanno \
+          include-test \
           custom-template \
+
+qtConfig(remoteobjects) {
+    SUBDIRS += org-example-echo-qtro
+}
 
 OTHER_FILES = org.example.echo.qface \
               org.example.echo.yaml \
