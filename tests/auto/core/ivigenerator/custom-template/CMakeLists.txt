@@ -21,8 +21,8 @@ find_package(Qt6 COMPONENTS Test)
 
 qt_add_executable(tst_custom-template)
 
-# IVI Generator:
-qt6_ivigenerator(tst_custom-template
+# Interface Framework Generator:
+qt6_ifcodegen(tst_custom-template
     QFACE_SOURCES ../org.example.echo.qface
     QFACE_FORMAT custom-test
 )

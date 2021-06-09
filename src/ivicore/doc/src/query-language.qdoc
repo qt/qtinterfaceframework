@@ -28,34 +28,34 @@
 ****************************************************************************/
 /*!
 \page query-language.html
-\title Qt IVI Query Language
-\keyword Qt IVI Query Language
+\title Qt Interface Framework Query Language
+\keyword Qt Interface Framework Query Language
 \previouspage Models
-\nextpage Qt IVI Simulation System
+\nextpage Qt Interface Framework Simulation System
 \contentspage Concepts
 
 Automotive systems are getting bigger and including more features, particularly in entertainment
-and connectivity. Modern systems can handle phone calls, access the mobile phone's address book,
+and connectifty. Modern systems can handle phone calls, access the mobile phone's address book,
 and have a media player that manages a media database. Since address books and media databases
 can be quite large these days, it's important for users to be able to filter, sort, and search
 through them in a convenient way.
 
-The Qt IVI Query Language provides you with a minimal language to express what you want to be
+The Qt Interface Framework Query Language provides you with a minimal language to express what you want to be
 displayed and how it should be sorted. This language is independent from both, the underlying
-architecture and potentially underlying database languages like SQL or PSQL. The Qt IVI Query
+architecture and potentially underlying database languages like SQL or PSQL. The Qt Interface Framework Query
 Language does not specify the data itself, but is only used to filter and sort.
 
 
 \section1 Work with the Query Language
 
-Currently the \l QIviSearchAndBrowseModel is the only class that supports the use of the query
+Currently the \l QIfFilterAndBrowseModel is the only class that supports the use of the query
 language. In this case, the model's backend informs the query parser about the identifiers
 available to filter and sort.
 
 An identifier is the name of a column or property which can be used in the query language.
 
-Suppose you use the QIviSearchAndBrowseModel to access a list of QIviAudioTrackItems, then
-every property of the QIviAudioTrackItem are your identifiers.
+Suppose you use the QIfFilterAndBrowseModel to access a list of QIfAudioTrackItems, then
+every property of the QIfAudioTrackItem are your identifiers.
 
 The following query results in a search for tracks on the album "Nevermind":
 
@@ -65,7 +65,7 @@ album='Nevermind'
 
 \section2 Filter and Sort
 
-The Qt IVI Query Language has two parts:
+The Qt Interface Framework Query Language has two parts:
 
 \list 1
     \li The filter specification
@@ -161,7 +161,7 @@ The query above sorts the tracks by \c trackNumber in descending order, and the 
 \section2 Conjunctions
 
 Often, to achieve the expected result, it is not sufficient to only add a specific condition and
-define the order. It may be necessary to use basic Boolean algebra, which the Qt IVI Query
+define the order. It may be necessary to use basic Boolean algebra, which the Qt Interface Framework Query
 Language supports. You can combine multiple filters by using AND / OR conjunctions.
 
 The following query only lists the first 5 tracks in the album 'Metallica':
@@ -182,9 +182,9 @@ For the backend, the query is translated from a string to a binary representatio
 Abstract Syntax Tree (AST). Like the query itself, the representation is split into two parts:
 
 \list 1
-    \li A pointer to a QIviAbstractQueryTerm, which can be cast to one of the following types:
-        \annotatedlist qtivi_queryterms
-    \li A QList<QIviOrderTerm> that provides the order in which the user wants the result to be in.
+    \li A pointer to a QIfAbstractQueryTerm, which can be cast to one of the following types:
+        \annotatedlist qtif_queryterms
+    \li A QList<QIfOrderTerm> that provides the order in which the user wants the result to be in.
 \endlist
 
 Usually, this C++ representation is translated into any form the backend supports.
@@ -211,11 +211,11 @@ QString SearchAndBrowseBackend::mapIdentifiers(const QString &type)
 Next, we need functions to translate the QueryTerms and the OrderTerms into SQL clauses:
 
 \code
-QString SearchAndBrowseBackend::createSortOrder(const QString &type, const QList<QIviOrderTerm> &orderTerms)
+QString SearchAndBrowseBackend::createSortOrder(const QString &type, const QList<QIfOrderTerm> &orderTerms)
 {
     QStringList order;
     int i = 0;
-    for (const QIviOrderTerm & term : orderTerms) {
+    for (const QIfOrderTerm & term : orderTerms) {
         if (i)
             order.append(",");
 
@@ -231,24 +231,24 @@ QString SearchAndBrowseBackend::createSortOrder(const QString &type, const QList
     return order.join(' ');
 }
 
-QString SearchAndBrowseBackend::createWhereClause(QIviAbstractQueryTerm *term)
+QString SearchAndBrowseBackend::createWhereClause(QIfAbstractQueryTerm *term)
 {
     if (!term)
         return QString();
 
     switch (term->type()) {
-    case QIviAbstractQueryTerm::ScopeTerm: {
-        QIviScopeTerm *scope = static_cast<QIviScopeTerm*>(term);
+    case QIfAbstractQueryTerm::ScopeTerm: {
+        QIfScopeTerm *scope = static_cast<QIfScopeTerm*>(term);
         return QString(QLatin1String("%1 (%2)")).arg(scope->isNegated() ? "NOT" : "",createWhereClause(scope->term()));
     }
-    case QIviAbstractQueryTerm::ConjunctionTerm: {
-        QIviConjunctionTerm *conjunctionTerm = static_cast<QIviConjunctionTerm*>(term);
+    case QIfAbstractQueryTerm::ConjunctionTerm: {
+        QIfConjunctionTerm *conjunctionTerm = static_cast<QIfConjunctionTerm*>(term);
         QString conjunction = QLatin1String("AND");
-        if (conjunctionTerm->conjunction() == QIviConjunctionTerm::Or)
+        if (conjunctionTerm->conjunction() == QIfConjunctionTerm::Or)
             conjunction = QLatin1String("OR");
 
         QString string;
-        QListIterator<QIviAbstractQueryTerm*> it(conjunctionTerm->terms());
+        QListIterator<QIfAbstractQueryTerm*> it(conjunctionTerm->terms());
         while (it.hasNext()) {
             string += createWhereClause(it.next());
             if (it.hasNext())
@@ -256,8 +256,8 @@ QString SearchAndBrowseBackend::createWhereClause(QIviAbstractQueryTerm *term)
         }
         return string;
     }
-    case QIviAbstractQueryTerm::FilterTerm: {
-        QIviFilterTerm *filter = static_cast<QIviFilterTerm*>(term);
+    case QIfAbstractQueryTerm::FilterTerm: {
+        QIfFilterTerm *filter = static_cast<QIfFilterTerm*>(term);
         QString operatorString;
         bool negated = filter->isNegated();
         QString value;
@@ -267,13 +267,13 @@ QString SearchAndBrowseBackend::createWhereClause(QIviAbstractQueryTerm *term)
             value = filter->value().toString();
 
         switch (filter->operatorType()){
-            case QIviFilterTerm::Equals: operatorString = QLatin1String("="); break;
-            case QIviFilterTerm::EqualsCaseInsensitive: operatorString = QLatin1String("LIKE"); break;
-            case QIviFilterTerm::Unequals: operatorString = QLatin1String("="); negated = !negated; break;
-            case QIviFilterTerm::GreaterThan: operatorString = QLatin1String(">"); break;
-            case QIviFilterTerm::GreaterEquals: operatorString = QLatin1String(">="); break;
-            case QIviFilterTerm::LowerThan: operatorString = QLatin1String("<"); break;
-            case QIviFilterTerm::LowerEquals: operatorString = QLatin1String("<="); break;
+            case QIfFilterTerm::Equals: operatorString = QLatin1String("="); break;
+            case QIfFilterTerm::EqualsCaseInsensitive: operatorString = QLatin1String("LIKE"); break;
+            case QIfFilterTerm::Unequals: operatorString = QLatin1String("="); negated = !negated; break;
+            case QIfFilterTerm::GreaterThan: operatorString = QLatin1String(">"); break;
+            case QIfFilterTerm::GreaterEquals: operatorString = QLatin1String(">="); break;
+            case QIfFilterTerm::LowerThan: operatorString = QLatin1String("<"); break;
+            case QIfFilterTerm::LowerEquals: operatorString = QLatin1String("<="); break;
         }
 
         QStringList clause;

@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,49 +38,49 @@
 **
 ****************************************************************************/
 
-#include "qivimediadiscoveryqtroadapter.h"
-#include "qivisearchandbrowsemodelqtroadapter.h"
+#include "qifmediadiscoveryqtroadapter.h"
+#include "qiffilterandbrowsemodelqtroadapter.h"
 #include "core.h"
 
-#include <QIviMediaDevice>
+#include <QIfMediaDevice>
 #include <QRemoteObjectRegistryHost>
 
-QIviMediaDiscoveryModelQtRoAdapter::QIviMediaDiscoveryModelQtRoAdapter(MediaDiscoveryBackend *parent)
-    : QIviMediaDiscoveryModelQtRoAdapter(QStringLiteral("QtIviMedia.QIviMediaDiscoveryModel"), parent)
+QIfMediaDiscoveryModelQtRoAdapter::QIfMediaDiscoveryModelQtRoAdapter(MediaDiscoveryBackend *parent)
+    : QIfMediaDiscoveryModelQtRoAdapter(QStringLiteral("QtIfMedia.QIfMediaDiscoveryModel"), parent)
 {
 }
 
-QIviMediaDiscoveryModelQtRoAdapter::QIviMediaDiscoveryModelQtRoAdapter(const QString &remoteObjectsLookupName, MediaDiscoveryBackend *parent)
-    : QIviMediaDiscoveryModelSource(parent)
+QIfMediaDiscoveryModelQtRoAdapter::QIfMediaDiscoveryModelQtRoAdapter(const QString &remoteObjectsLookupName, MediaDiscoveryBackend *parent)
+    : QIfMediaDiscoveryModelSource(parent)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
     , m_backend(parent)
 {
-    QMap<QString, QIviServiceObject*> deviceMap = m_backend->deviceMap();
+    QMap<QString, QIfServiceObject*> deviceMap = m_backend->deviceMap();
 
     for (auto it = deviceMap.cbegin(); it != deviceMap.cend(); it++) {
-        QIviMediaDevice *mediaDevice = qobject_cast<QIviMediaDevice *>(it.value());
+        QIfMediaDevice *mediaDevice = qobject_cast<QIfMediaDevice *>(it.value());
         if (mediaDevice)
             createDeviceAdapter(mediaDevice);
     }
 
-    connect(m_backend, &MediaDiscoveryBackend::deviceAdded, this, &QIviMediaDiscoveryModelQtRoAdapter::onDeviceAdded);
-    connect(m_backend, &MediaDiscoveryBackend::deviceRemoved, this, &QIviMediaDiscoveryModelQtRoAdapter::onDeviceRemoved);
+    connect(m_backend, &MediaDiscoveryBackend::deviceAdded, this, &QIfMediaDiscoveryModelQtRoAdapter::onDeviceAdded);
+    connect(m_backend, &MediaDiscoveryBackend::deviceRemoved, this, &QIfMediaDiscoveryModelQtRoAdapter::onDeviceRemoved);
 }
 
 
-QString QIviMediaDiscoveryModelQtRoAdapter::remoteObjectsLookupName() const
+QString QIfMediaDiscoveryModelQtRoAdapter::remoteObjectsLookupName() const
 {
     return m_remoteObjectsLookupName;
 }
 
-QStringList QIviMediaDiscoveryModelQtRoAdapter::devices() const
+QStringList QIfMediaDiscoveryModelQtRoAdapter::devices() const
 {
     return QStringList(m_hostMap.keys());
 }
 
-void QIviMediaDiscoveryModelQtRoAdapter::onDeviceAdded(QIviServiceObject *device)
+void QIfMediaDiscoveryModelQtRoAdapter::onDeviceAdded(QIfServiceObject *device)
 {
-    QIviMediaDevice *mediaDevice = qobject_cast<QIviMediaDevice *>(device);
+    QIfMediaDevice *mediaDevice = qobject_cast<QIfMediaDevice *>(device);
     if (!mediaDevice)
         return;
 
@@ -88,9 +88,9 @@ void QIviMediaDiscoveryModelQtRoAdapter::onDeviceAdded(QIviServiceObject *device
     emit deviceAdded(mediaDevice->name());
 }
 
-void QIviMediaDiscoveryModelQtRoAdapter::onDeviceRemoved(QIviServiceObject *device)
+void QIfMediaDiscoveryModelQtRoAdapter::onDeviceRemoved(QIfServiceObject *device)
 {
-    QIviMediaDevice *mediaDevice = qobject_cast<QIviMediaDevice *>(device);
+    QIfMediaDevice *mediaDevice = qobject_cast<QIfMediaDevice *>(device);
     if (!mediaDevice)
         return;
 
@@ -102,15 +102,15 @@ void QIviMediaDiscoveryModelQtRoAdapter::onDeviceRemoved(QIviServiceObject *devi
     delete instance;
 }
 
-void QIviMediaDiscoveryModelQtRoAdapter::createDeviceAdapter(QIviMediaDevice *device)
+void QIfMediaDiscoveryModelQtRoAdapter::createDeviceAdapter(QIfMediaDevice *device)
 {
     qDebug() << "Adding USB Instance" << device->name();
 
-    QIviSearchAndBrowseModelInterface *searchAndBrowseBackend = qivi_interface_cast<QIviSearchAndBrowseModelInterface *>(device->interfaceInstance(QStringLiteral(QIviSearchAndBrowseModel_iid)));
+    QIfFilterAndBrowseModelInterface *searchAndBrowseBackend = qif_interface_cast<QIfFilterAndBrowseModelInterface *>(device->interfaceInstance(QStringLiteral(QIfFilterAndBrowseModel_iid)));
 
     searchAndBrowseBackend->initialize();
-    auto instance = new QIviSearchAndBrowseModelQtRoAdapter(QStringLiteral("QIviSearchAndBrowseModel_") + device->name(), searchAndBrowseBackend);
-    Core::instance()->host()->enableRemoting<QIviSearchAndBrowseModelAddressWrapper>(instance);
+    auto instance = new QIfFilterAndBrowseModelQtRoAdapter(QStringLiteral("QIfFilterAndBrowseModel_") + device->name(), searchAndBrowseBackend);
+    Core::instance()->host()->enableRemoting<QIfFilterAndBrowseModelAddressWrapper>(instance);
 
     m_hostMap.insert(device->name(), instance);
 }

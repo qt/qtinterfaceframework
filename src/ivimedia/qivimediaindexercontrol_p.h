@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAINDEXERCONTROL_P_H
-#define QIVIMEDIAINDEXERCONTROL_P_H
+#ifndef QIFMEDIAINDEXERCONTROL_P_H
+#define QIFMEDIAINDEXERCONTROL_P_H
 
 //
 //  W A R N I N G
@@ -53,32 +53,32 @@
 // We mean it.
 //
 
-#include "private/qtivimediaglobal_p.h"
-#include "private/qiviabstractfeature_p.h"
+#include "private/qtifmediaglobal_p.h"
+#include "private/qifabstractfeature_p.h"
 
-#include "qivimediaindexercontrol.h"
-#include "qivimediaindexercontrolbackendinterface.h"
+#include "qifmediaindexercontrol.h"
+#include "qifmediaindexercontrolbackendinterface.h"
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaIndexerControlPrivate : public QIviAbstractFeaturePrivate
+class QIfMediaIndexerControlPrivate : public QIfAbstractFeaturePrivate
 {
 public:
-    QIviMediaIndexerControlPrivate(const QString &interface, QIviMediaIndexerControl *parent);
+    QIfMediaIndexerControlPrivate(const QString &interface, QIfMediaIndexerControl *parent);
 
     void clearToDefaults();
     void onProgressChanged(qreal progress);
-    void onStateChanged(QIviMediaIndexerControl::State state);
+    void onStateChanged(QIfMediaIndexerControl::State state);
 
-    QIviMediaIndexerControlBackendInterface *indexerBackend() const;
+    QIfMediaIndexerControlBackendInterface *indexerBackend() const;
 
-    QIviMediaIndexerControl * const q_ptr;
+    QIfMediaIndexerControl * const q_ptr;
 
     qreal m_progress;
-    QIviMediaIndexerControl::State m_state;
-    Q_DECLARE_PUBLIC(QIviMediaIndexerControl)
+    QIfMediaIndexerControl::State m_state;
+    Q_DECLARE_PUBLIC(QIfMediaIndexerControl)
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIAINDEXERCONTROL_P_H
+#endif // QIFMEDIAINDEXERCONTROL_P_H

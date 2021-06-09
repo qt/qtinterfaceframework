@@ -8,7 +8,7 @@ SOURCES = main.cpp
 RESOURCES += app.qrc \
              ../../images/images.qrc \
 
-LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIviInstrumentCluster)
+LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfInstrumentCluster)
 INCLUDEPATH += $$OUT_PWD/../frontend
 QMAKE_RPATHDIR += $ORIGIN
 
@@ -16,5 +16,5 @@ QMAKE_RPATHDIR += $ORIGIN
 QML_IMPORT_PATH = $$OUT_PWD/../frontend/qml
 
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-tutorial/chapter5-ipc
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-tutorial/chapter5-ipc
 INSTALLS += target

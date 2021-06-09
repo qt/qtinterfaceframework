@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,60 +39,60 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIABSTRACTFEATURELISTMODEL_H
-#define QIVIABSTRACTFEATURELISTMODEL_H
+#ifndef QIFABSTRACTFEATURELISTMODEL_H
+#define QIFABSTRACTFEATURELISTMODEL_H
 
 #include <QAbstractListModel>
-#include <QtIviCore/QIviServiceObject>
-#include <QtIviCore/QIviAbstractFeature>
+#include <QtInterfaceFramework/QIfServiceObject>
+#include <QtInterfaceFramework/QIfAbstractFeature>
 
 QT_BEGIN_NAMESPACE
 
-class QIviAbstractFeatureListModelPrivate;
+class QIfAbstractFeatureListModelPrivate;
 
-class Q_QTIVICORE_EXPORT QIviAbstractFeatureListModel : public QAbstractListModel, public QQmlParserStatus
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeatureListModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
 
-    Q_PROPERTY(QIviAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
-    Q_PROPERTY(QIviAbstractFeature::DiscoveryResult discoveryResult READ discoveryResult NOTIFY discoveryResultChanged)
-    Q_PROPERTY(QIviServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged)
+    Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
+    Q_PROPERTY(QIfAbstractFeature::DiscoveryResult discoveryResult READ discoveryResult NOTIFY discoveryResultChanged)
+    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged)
     Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
     Q_PROPERTY(bool isInitialized READ isInitialized NOTIFY isInitializedChanged)
     Q_PROPERTY(QString error READ errorMessage NOTIFY errorChanged)
 
 public:
 
-    explicit QIviAbstractFeatureListModel(const QString &interfaceName, QObject *parent = nullptr);
+    explicit QIfAbstractFeatureListModel(const QString &interfaceName, QObject *parent = nullptr);
 
-    QIviServiceObject *serviceObject() const;
-    QIviAbstractFeature::DiscoveryMode discoveryMode() const;
-    QIviAbstractFeature::DiscoveryResult discoveryResult() const;
+    QIfServiceObject *serviceObject() const;
+    QIfAbstractFeature::DiscoveryMode discoveryMode() const;
+    QIfAbstractFeature::DiscoveryResult discoveryResult() const;
     bool isValid() const;
     bool isInitialized() const;
-    QIviAbstractFeature::Error error() const;
+    QIfAbstractFeature::Error error() const;
     QString errorMessage() const;
 
 public Q_SLOTS:
-    bool setServiceObject(QIviServiceObject *so);
-    void setDiscoveryMode(QIviAbstractFeature::DiscoveryMode discoveryMode);
-    QIviAbstractFeature::DiscoveryResult startAutoDiscovery();
+    bool setServiceObject(QIfServiceObject *so);
+    void setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode);
+    QIfAbstractFeature::DiscoveryResult startAutoDiscovery();
 
 Q_SIGNALS:
     void serviceObjectChanged();
-    void discoveryModeChanged(QIviAbstractFeature::DiscoveryMode discoveryMode);
-    void discoveryResultChanged(QIviAbstractFeature::DiscoveryResult discoveryResult);
+    void discoveryModeChanged(QIfAbstractFeature::DiscoveryMode discoveryMode);
+    void discoveryResultChanged(QIfAbstractFeature::DiscoveryResult discoveryResult);
     void isValidChanged(bool arg);
     void isInitializedChanged(bool isInitialized);
-    void errorChanged(QIviAbstractFeature::Error error, const QString &message);
+    void errorChanged(QIfAbstractFeature::Error error, const QString &message);
 
 protected:
-    QIviAbstractFeatureListModel(QIviAbstractFeatureListModelPrivate &dd, QObject *parent = nullptr);
+    QIfAbstractFeatureListModel(QIfAbstractFeatureListModelPrivate &dd, QObject *parent = nullptr);
 
-    virtual bool acceptServiceObject(QIviServiceObject*);
-    virtual void connectToServiceObject(QIviServiceObject*);
-    virtual void disconnectFromServiceObject(QIviServiceObject*);
+    virtual bool acceptServiceObject(QIfServiceObject*);
+    virtual void connectToServiceObject(QIfServiceObject*);
+    virtual void disconnectFromServiceObject(QIfServiceObject*);
     virtual void clearServiceObject() = 0;
 
      void classBegin() override;
@@ -100,17 +100,17 @@ protected:
 
     QString interfaceName() const;
     QString errorText() const;
-    void setError(QIviAbstractFeature::Error error, const QString &message = QString());
+    void setError(QIfAbstractFeature::Error error, const QString &message = QString());
 
 protected Q_SLOTS:
-    virtual void onErrorChanged(QIviAbstractFeature::Error error, const QString &message = QString());
+    virtual void onErrorChanged(QIfAbstractFeature::Error error, const QString &message = QString());
 
 private:
-    Q_DECLARE_PRIVATE(QIviAbstractFeatureListModel)
-    friend class QIviHelperFeature;
-    friend class QIviFeatureTester;
+    Q_DECLARE_PRIVATE(QIfAbstractFeatureListModel)
+    friend class QIfHelperFeature;
+    friend class QIfFeatureTester;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIABSTRACTFEATURELISTMODEL_H
+#endif // QIFABSTRACTFEATURELISTMODEL_H

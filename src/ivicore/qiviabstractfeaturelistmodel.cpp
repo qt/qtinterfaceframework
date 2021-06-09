@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,136 +39,136 @@
 **
 ****************************************************************************/
 
-#include "qiviabstractfeaturelistmodel.h"
-#include "qiviabstractfeaturelistmodel_p.h"
+#include "qifabstractfeaturelistmodel.h"
+#include "qifabstractfeaturelistmodel_p.h"
 
 QT_BEGIN_NAMESPACE
 
-QIviHelperFeature::QIviHelperFeature(const QString &interfaceName, QIviAbstractFeatureListModel *model)
-    : QIviAbstractFeature(interfaceName)
+QIfHelperFeature::QIfHelperFeature(const QString &interfaceName, QIfAbstractFeatureListModel *model)
+    : QIfAbstractFeature(interfaceName)
     , m_model(model)
 {
 }
 
-bool QIviHelperFeature::acceptServiceObject(QIviServiceObject *so)
+bool QIfHelperFeature::acceptServiceObject(QIfServiceObject *so)
 {
     return m_model->acceptServiceObject(so);
 }
 
-bool QIviHelperFeature::acceptServiceObjectDefaultImpl(QIviServiceObject *so)
+bool QIfHelperFeature::acceptServiceObjectDefaultImpl(QIfServiceObject *so)
 {
-    return QIviAbstractFeature::acceptServiceObject(so);
+    return QIfAbstractFeature::acceptServiceObject(so);
 }
 
-void QIviHelperFeature::connectToServiceObject(QIviServiceObject *so)
+void QIfHelperFeature::connectToServiceObject(QIfServiceObject *so)
 {
     m_model->connectToServiceObject(so);
 }
 
-void QIviHelperFeature::connectToServiceObjectDefaultImpl(QIviServiceObject *so)
+void QIfHelperFeature::connectToServiceObjectDefaultImpl(QIfServiceObject *so)
 {
-    QIviAbstractFeature::connectToServiceObject(so);
+    QIfAbstractFeature::connectToServiceObject(so);
 }
 
-void QIviHelperFeature::disconnectFromServiceObject(QIviServiceObject *so)
+void QIfHelperFeature::disconnectFromServiceObject(QIfServiceObject *so)
 {
     m_model->disconnectFromServiceObject(so);
 }
 
-void QIviHelperFeature::disconnectFromServiceObjectDefaultImpl(QIviServiceObject *so)
+void QIfHelperFeature::disconnectFromServiceObjectDefaultImpl(QIfServiceObject *so)
 {
-    QIviAbstractFeature::disconnectFromServiceObject(so);
+    QIfAbstractFeature::disconnectFromServiceObject(so);
 }
 
-void QIviHelperFeature::clearServiceObject()
+void QIfHelperFeature::clearServiceObject()
 {
     m_model->clearServiceObject();
 }
 
-QIviAbstractFeaturePrivate *QIviHelperFeature::iviPrivate()
+QIfAbstractFeaturePrivate *QIfHelperFeature::ifPrivate()
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     return d;
 }
 
-const QIviAbstractFeaturePrivate *QIviHelperFeature::iviPrivate() const
+const QIfAbstractFeaturePrivate *QIfHelperFeature::ifPrivate() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d;
 }
 
-QIviAbstractFeatureListModelPrivate::QIviAbstractFeatureListModelPrivate(const QString &interfaceName, QIviAbstractFeatureListModel *model)
+QIfAbstractFeatureListModelPrivate::QIfAbstractFeatureListModelPrivate(const QString &interfaceName, QIfAbstractFeatureListModel *model)
     : QAbstractItemModelPrivate()
-    , m_feature(new QIviHelperFeature(interfaceName, model))
+    , m_feature(new QIfHelperFeature(interfaceName, model))
     , m_qmlCreation(false)
 {
 
 }
 
-QIviAbstractFeatureListModelPrivate::~QIviAbstractFeatureListModelPrivate()
+QIfAbstractFeatureListModelPrivate::~QIfAbstractFeatureListModelPrivate()
 {
     delete m_feature;
 }
 
-void QIviAbstractFeatureListModelPrivate::initialize()
+void QIfAbstractFeatureListModelPrivate::initialize()
 {
 }
 
-QIviFeatureInterface *QIviAbstractFeatureListModelPrivate::backend() const
+QIfFeatureInterface *QIfAbstractFeatureListModelPrivate::backend() const
 {
-    return m_feature->iviPrivate()->backend();
+    return m_feature->ifPrivate()->backend();
 }
 
 /*!
-    \class QIviAbstractFeatureListModel
-    \inmodule QtIviCore
-    \brief The QIviAbstractFeatureListModel is the base class for QtIvi Features which should act as a model.
+    \class QIfAbstractFeatureListModel
+    \inmodule QtInterfaceFramework
+    \brief The QIfAbstractFeatureListModel is the base class for QtInterfaceFramework Features which should act as a model.
 
     This base class is necessary to avoid virtual inheritance from QAbstractListModel and
-    QIviAbstractFeature.
+    QIfAbstractFeature.
 
-    For more details on how a Feature works, see QIviAbstractFeature.
-    For more information about models in QtIvi, see \l{Models}.
+    For more details on how a Feature works, see QIfAbstractFeature.
+    For more information about models in QtInterfaceFramework, see \l{Models}.
 
     \section1 Subclassing
 
-    Your QIviAbstractFeatureListModel subclass must provide implementations for all virtual
-    functions from QIviAbstractFeature as well as the virtual functions from QAbstractListModel.
+    Your QIfAbstractFeatureListModel subclass must provide implementations for all virtual
+    functions from QIfAbstractFeature as well as the virtual functions from QAbstractListModel.
 
     \list
         \li For more details on how to integrate with the \l{Dynamic Backend System}, see
-            \l{Write a Subclass}{QIviAbstractFeature}.
+            \l{Write a Subclass}{QIfAbstractFeature}.
         \li For more details on what you need to do to provide the model's required
             functionality, see \l{QAbstractListModel - Subclassing}.
-        \li For a class that implements all the necessary QIviAbstractFeatureListModel functions
-            to provide pagination functionality, see QIviPagingModel.
+        \li For a class that implements all the necessary QIfAbstractFeatureListModel functions
+            to provide pagination functionality, see QIfPagingModel.
     \endlist
 
 */
 
 /*!
     \qmltype AbstractFeatureListModel
-    \instantiates QIviAbstractFeatureListModel
-    \inqmlmodule QtIvi
+    \instantiates QIfAbstractFeatureListModel
+    \inqmlmodule QtInterfaceFramework
 
-    \brief The QIviAbstractFeatureListModel is the base class for QtIvi Features which should act as a model.
+    \brief The QIfAbstractFeatureListModel is the base class for QtInterfaceFramework Features which should act as a model.
 
     This base class is necessary to avoid virtual inheritance from QAbstractListModel and
-    QIviAbstractFeature.
+    QIfAbstractFeature.
 
     This element is not directly accessible from QML. It provides the base QML properties for the
     feature, like autoDiscovery and isValid.
 
-    For more details on how a Feature works, see QIviAbstractFeature.
-    For more information about models in QtIvi, see \l{Models}.
+    For more details on how a Feature works, see QIfAbstractFeature.
+    For more information about models in QtInterfaceFramework, see \l{Models}.
 
     \sa AbstractFeature
 */
 
 /*!
-    \fn void QIviAbstractFeatureListModel::clearServiceObject()
+    \fn void QIfAbstractFeatureListModel::clearServiceObject()
 
-    This method is expected to be implemented by any class subclassing QIviAbstractFeatureListModel.
+    This method is expected to be implemented by any class subclassing QIfAbstractFeatureListModel.
 
     Called when no service object is available. The implementation is expected to set all
     properties to safe defaults and forget all links to the previous service object.
@@ -184,23 +184,23 @@ QIviFeatureInterface *QIviAbstractFeatureListModelPrivate::backend() const
 */
 
 /*!
-    Constructs a QIviAbstractFeatureListModel.
+    Constructs a QIfAbstractFeatureListModel.
 
     The \a parent argument is passed on to the \l QAbstractListModel base class.
 
     The \a interfaceName argument is used to locate suitable service objects.
 */
-QIviAbstractFeatureListModel::QIviAbstractFeatureListModel(const QString &interfaceName, QObject *parent)
-    : QAbstractListModel(*new QIviAbstractFeatureListModelPrivate(interfaceName, this), parent)
+QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(const QString &interfaceName, QObject *parent)
+    : QAbstractListModel(*new QIfAbstractFeatureListModelPrivate(interfaceName, this), parent)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->initialize();
-    connect(d->m_feature, &QIviAbstractFeature::serviceObjectChanged, this, &QIviAbstractFeatureListModel::serviceObjectChanged);
-    connect(d->m_feature, &QIviAbstractFeature::discoveryModeChanged, this, &QIviAbstractFeatureListModel::discoveryModeChanged);
-    connect(d->m_feature, &QIviAbstractFeature::discoveryResultChanged, this, &QIviAbstractFeatureListModel::discoveryResultChanged);
-    connect(d->m_feature, &QIviAbstractFeature::isValidChanged, this, &QIviAbstractFeatureListModel::isValidChanged);
-    connect(d->m_feature, &QIviAbstractFeature::isInitializedChanged, this, &QIviAbstractFeatureListModel::isInitializedChanged);
-    connect(d->m_feature, &QIviAbstractFeature::errorChanged, this, &QIviAbstractFeatureListModel::errorChanged);
+    connect(d->m_feature, &QIfAbstractFeature::serviceObjectChanged, this, &QIfAbstractFeatureListModel::serviceObjectChanged);
+    connect(d->m_feature, &QIfAbstractFeature::discoveryModeChanged, this, &QIfAbstractFeatureListModel::discoveryModeChanged);
+    connect(d->m_feature, &QIfAbstractFeature::discoveryResultChanged, this, &QIfAbstractFeatureListModel::discoveryResultChanged);
+    connect(d->m_feature, &QIfAbstractFeature::isValidChanged, this, &QIfAbstractFeatureListModel::isValidChanged);
+    connect(d->m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfAbstractFeatureListModel::isInitializedChanged);
+    connect(d->m_feature, &QIfAbstractFeature::errorChanged, this, &QIfAbstractFeatureListModel::errorChanged);
 }
 
 /*!
@@ -217,7 +217,7 @@ QIviAbstractFeatureListModel::QIviAbstractFeatureListModel(const QString &interf
 */
 
 /*!
-    \property QIviAbstractFeatureListModel::serviceObject
+    \property QIfAbstractFeatureListModel::serviceObject
     \brief Sets the service object for the feature.
 
     As features only expose the front API facing the developer, a service object implementing the
@@ -228,9 +228,9 @@ QIviAbstractFeatureListModel::QIviAbstractFeatureListModel(const QString &interf
 
     \sa discoveryMode
 */
-QIviServiceObject *QIviAbstractFeatureListModel::serviceObject() const
+QIfServiceObject *QIfAbstractFeatureListModel::serviceObject() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->serviceObject();
 }
 
@@ -255,15 +255,15 @@ QIviServiceObject *QIviAbstractFeatureListModel::serviceObject() const
 */
 
 /*!
-    \property QIviAbstractFeatureListModel::discoveryMode
+    \property QIfAbstractFeatureListModel::discoveryMode
     \brief Holds the mode that is used for the autoDiscovery
 
     \note If you change this property after the Feature is instantiated you need to call startAutoDiscovery() to search for
     a new Service Object
 */
-QIviAbstractFeature::DiscoveryMode QIviAbstractFeatureListModel::discoveryMode() const
+QIfAbstractFeature::DiscoveryMode QIfAbstractFeatureListModel::discoveryMode() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->discoveryMode();
 }
 
@@ -283,14 +283,14 @@ QIviAbstractFeature::DiscoveryMode QIviAbstractFeatureListModel::discoveryMode()
 */
 
 /*!
-    \property QIviAbstractFeatureListModel::discoveryResult
+    \property QIfAbstractFeatureListModel::discoveryResult
     \brief The result of the last autoDiscovery attempt
 
     \sa startAutoDiscovery()
 */
-QIviAbstractFeature::DiscoveryResult QIviAbstractFeatureListModel::discoveryResult() const
+QIfAbstractFeature::DiscoveryResult QIfAbstractFeatureListModel::discoveryResult() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->discoveryResult();
 }
 
@@ -305,10 +305,10 @@ QIviAbstractFeature::DiscoveryResult QIviAbstractFeatureListModel::discoveryResu
     The backend still might not have sent all properties yet and is not fully initialized.
     Use isInitialized instead to know when the feature holds all correct values.
 
-    \sa QIviServiceObject, discoveryMode, isInitialized
+    \sa QIfServiceObject, discoveryMode, isInitialized
 */
 /*!
-    \property QIviAbstractFeatureListModel::isValid
+    \property QIfAbstractFeatureListModel::isValid
     \brief Indicates whether the feature is ready to use.
 
     The property is \c true if the feature is ready to be used, otherwise \c false. Not being
@@ -318,11 +318,11 @@ QIviAbstractFeature::DiscoveryResult QIviAbstractFeatureListModel::discoveryResu
     The backend still might not have sent all properties yet and is not fully initialized.
     Use isInitialized instead to know when the feature holds all correct values.
 
-    \sa QIviServiceObject, discoveryMode, isInitialized
+    \sa QIfServiceObject, discoveryMode, isInitialized
 */
-bool QIviAbstractFeatureListModel::isValid() const
+bool QIfAbstractFeatureListModel::isValid() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->isValid();
 }
 
@@ -330,34 +330,34 @@ bool QIviAbstractFeatureListModel::isValid() const
     \qmlproperty bool AbstractFeatureListModel::isInitialized
     \brief Indicates whether the feature has been initialized with all the values from the backend.
 
-    The property is \c true once the backend sends the QIviFeatureInterface::initializationDone signal
+    The property is \c true once the backend sends the QIfFeatureInterface::initializationDone signal
     to indicate that all values have now been initialized with values from the backend.
 
-    \sa isValid, QIviFeatureInterface::initializationDone
+    \sa isValid, QIfFeatureInterface::initializationDone
 */
 /*!
-    \property QIviAbstractFeatureListModel::isInitialized
+    \property QIfAbstractFeatureListModel::isInitialized
     \brief Indicates whether the feature has been initialized with all the values from the backend.
 
-    The property is \c true once the backend sends the QIviFeatureInterface::initializationDone signal
+    The property is \c true once the backend sends the QIfFeatureInterface::initializationDone signal
     to indicate that all values have now been initialized with values from the backend.
 
-    \sa isValid, QIviFeatureInterface::initializationDone
+    \sa isValid, QIfFeatureInterface::initializationDone
 */
-bool QIviAbstractFeatureListModel::isInitialized() const
+bool QIfAbstractFeatureListModel::isInitialized() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->isInitialized();
 }
 
 /*!
     Returns the last error code.
 
-    \sa QIviAbstractFeature::Error
+    \sa QIfAbstractFeature::Error
 */
-QIviAbstractFeature::Error QIviAbstractFeatureListModel::error() const
+QIfAbstractFeature::Error QIfAbstractFeatureListModel::error() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->error();
 }
 
@@ -367,25 +367,25 @@ QIviAbstractFeature::Error QIviAbstractFeatureListModel::error() const
     Last error message of the feature. Empty if no error.
 */
 /*!
-    \property QIviAbstractFeatureListModel::error
+    \property QIfAbstractFeatureListModel::error
 
     Last error message of the feature. Empty if no error.
 */
-QString QIviAbstractFeatureListModel::errorMessage() const
+QString QIfAbstractFeatureListModel::errorMessage() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->errorMessage();
 }
 
-bool QIviAbstractFeatureListModel::setServiceObject(QIviServiceObject *so)
+bool QIfAbstractFeatureListModel::setServiceObject(QIfServiceObject *so)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     return d->m_feature->setServiceObject(so);
 }
 
-void QIviAbstractFeatureListModel::setDiscoveryMode(QIviAbstractFeature::DiscoveryMode discoveryMode)
+void QIfAbstractFeatureListModel::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->m_feature->setDiscoveryMode(discoveryMode);
 }
 
@@ -400,30 +400,30 @@ void QIviAbstractFeatureListModel::setDiscoveryMode(QIviAbstractFeature::Discove
 /*!
     \brief Performs an automatic discovery attempt.
 */
-QIviAbstractFeature::DiscoveryResult QIviAbstractFeatureListModel::startAutoDiscovery()
+QIfAbstractFeature::DiscoveryResult QIfAbstractFeatureListModel::startAutoDiscovery()
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     return d->m_feature->startAutoDiscovery();
 }
 
 /*!
     \internal
 */
-QIviAbstractFeatureListModel::QIviAbstractFeatureListModel(QIviAbstractFeatureListModelPrivate &dd, QObject *parent)
+QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(QIfAbstractFeatureListModelPrivate &dd, QObject *parent)
     : QAbstractListModel(dd, parent)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->initialize();
-    connect(d->m_feature, &QIviAbstractFeature::serviceObjectChanged, this, &QIviAbstractFeatureListModel::serviceObjectChanged);
-    connect(d->m_feature, &QIviAbstractFeature::discoveryModeChanged, this, &QIviAbstractFeatureListModel::discoveryModeChanged);
-    connect(d->m_feature, &QIviAbstractFeature::discoveryResultChanged, this, &QIviAbstractFeatureListModel::discoveryResultChanged);
-    connect(d->m_feature, &QIviAbstractFeature::isValidChanged, this, &QIviAbstractFeatureListModel::isValidChanged);
-    connect(d->m_feature, &QIviAbstractFeature::isInitializedChanged, this, &QIviAbstractFeatureListModel::isInitializedChanged);
-    connect(d->m_feature, &QIviAbstractFeature::errorChanged, this, &QIviAbstractFeatureListModel::errorChanged);
+    connect(d->m_feature, &QIfAbstractFeature::serviceObjectChanged, this, &QIfAbstractFeatureListModel::serviceObjectChanged);
+    connect(d->m_feature, &QIfAbstractFeature::discoveryModeChanged, this, &QIfAbstractFeatureListModel::discoveryModeChanged);
+    connect(d->m_feature, &QIfAbstractFeature::discoveryResultChanged, this, &QIfAbstractFeatureListModel::discoveryResultChanged);
+    connect(d->m_feature, &QIfAbstractFeature::isValidChanged, this, &QIfAbstractFeatureListModel::isValidChanged);
+    connect(d->m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfAbstractFeatureListModel::isInitializedChanged);
+    connect(d->m_feature, &QIfAbstractFeature::errorChanged, this, &QIfAbstractFeatureListModel::errorChanged);
 }
 
 /*!
-    This method is expected to be implemented by any class subclassing QIviAbstractFeature.
+    This method is expected to be implemented by any class subclassing QIfAbstractFeature.
 
     The method should return \c true if the given \a serviceObject is accepted and
     can be used, otherwise \c false.
@@ -436,14 +436,14 @@ QIviAbstractFeatureListModel::QIviAbstractFeatureListModel(QIviAbstractFeatureLi
 
     \sa connectToServiceObject(), disconnectFromServiceObject(), clearServiceObject()
 */
-bool QIviAbstractFeatureListModel::acceptServiceObject(QIviServiceObject *serviceObject)
+bool QIfAbstractFeatureListModel::acceptServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     return d->m_feature->acceptServiceObjectDefaultImpl(serviceObject);
 }
 
 /*!
-    This method is expected to be implemented by any class subclassing QIviAbstractFeature.
+    This method is expected to be implemented by any class subclassing QIfAbstractFeature.
 
     The implementation should connect to the \a serviceObject, and set up all
     properties to reflect the state of the service object.
@@ -454,13 +454,13 @@ bool QIviAbstractFeatureListModel::acceptServiceObject(QIviServiceObject *servic
     It is safe to assume that the \a serviceObject, has always been accepted through the
     \l acceptServiceObject method prior to being passed to this method.
 
-    The default implementation connects to the signals offered by QIviFeatureInterface and calls
-    QIviFeatureInterface::initialize() afterwards.
+    The default implementation connects to the signals offered by QIfFeatureInterface and calls
+    QIfFeatureInterface::initialize() afterwards.
 
     When reimplementing please keep in mind to connect all signals before calling this function. e.g.
 
     /code
-    void SimpleFeature::connectToServiceObject(QIviServiceObject *serviceObject)
+    void SimpleFeature::connectToServiceObject(QIfServiceObject *serviceObject)
     {
          SimpleFeatureBackendInterface *backend = backend(serviceObject);
          if (!backend)
@@ -471,7 +471,7 @@ bool QIviAbstractFeatureListModel::acceptServiceObject(QIviServiceObject *servic
                  this, &SimpleFeature::onPropertyChanged);
 
          // connects the base signals and call initialize()
-         QIviAbstractFeature::connectToServiceObject(serviceObject);
+         QIfAbstractFeature::connectToServiceObject(serviceObject);
 
          // Additional initialization functions can be added here
     }
@@ -479,14 +479,14 @@ bool QIviAbstractFeatureListModel::acceptServiceObject(QIviServiceObject *servic
 
     \sa acceptServiceObject(), disconnectFromServiceObject(), clearServiceObject()
 */
-void QIviAbstractFeatureListModel::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfAbstractFeatureListModel::connectToServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->m_feature->connectToServiceObjectDefaultImpl(serviceObject);
 }
 
 /*!
-    This method is expected to be implemented by any class subclassing QIviAbstractFeature.
+    This method is expected to be implemented by any class subclassing QIfAbstractFeature.
 
     The implementation should disconnect all connections to the \a serviceObject.
 
@@ -497,27 +497,27 @@ void QIviAbstractFeatureListModel::connectToServiceObject(QIviServiceObject *ser
 
     \sa acceptServiceObject(), connectToServiceObject(), clearServiceObject()
 */
-void QIviAbstractFeatureListModel::disconnectFromServiceObject(QIviServiceObject *serviceObject)
+void QIfAbstractFeatureListModel::disconnectFromServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->m_feature->disconnectFromServiceObjectDefaultImpl(serviceObject);
 }
 
 /*!
     \internal
 */
-void QIviAbstractFeatureListModel::classBegin()
+void QIfAbstractFeatureListModel::classBegin()
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->m_qmlCreation = true;
 }
 
 /*!
     \internal
 */
-void QIviAbstractFeatureListModel::componentComplete()
+void QIfAbstractFeatureListModel::componentComplete()
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->m_qmlCreation = false;
     startAutoDiscovery();
 }
@@ -525,22 +525,22 @@ void QIviAbstractFeatureListModel::componentComplete()
 /*!
     Returns the interface name this Feature expect to be available from the Service Object and this Feature is implementing.
 
-    See \l {Extending Qt IVI} for more information.
+    See \l {Extending Qt Interface Framework} for more information.
 */
-QString QIviAbstractFeatureListModel::interfaceName() const
+QString QIfAbstractFeatureListModel::interfaceName() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->interfaceName();
 }
 
 /*!
-    Returns the current error code converted from QIviAbstractFeature::Error to QString
+    Returns the current error code converted from QIfAbstractFeature::Error to QString
 
     \sa error
 */
-QString QIviAbstractFeatureListModel::errorText() const
+QString QIfAbstractFeatureListModel::errorText() const
 {
-    Q_D(const QIviAbstractFeatureListModel);
+    Q_D(const QIfAbstractFeatureListModel);
     return d->m_feature->errorText();
 }
 
@@ -549,11 +549,11 @@ QString QIviAbstractFeatureListModel::errorText() const
 
     Emits errorChanged() signal.
 
-    \sa QIviAbstractFeature::Error
+    \sa QIfAbstractFeature::Error
 */
-void QIviAbstractFeatureListModel::setError(QIviAbstractFeature::Error error, const QString &message)
+void QIfAbstractFeatureListModel::setError(QIfAbstractFeature::Error error, const QString &message)
 {
-    Q_D(QIviAbstractFeatureListModel);
+    Q_D(QIfAbstractFeatureListModel);
     d->m_feature->setError(error, message);
 }
 
@@ -562,7 +562,7 @@ void QIviAbstractFeatureListModel::setError(QIviAbstractFeature::Error error, co
 
     This slot can be used when implementing a new Feature to report generic errors.
 */
-void QIviAbstractFeatureListModel::onErrorChanged(QIviAbstractFeature::Error error, const QString &message)
+void QIfAbstractFeatureListModel::onErrorChanged(QIfAbstractFeature::Error error, const QString &message)
 {
     setError(error, message);
 }

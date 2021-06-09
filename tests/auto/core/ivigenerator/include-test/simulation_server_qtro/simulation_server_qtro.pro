@@ -4,12 +4,12 @@ LIBS += -L$$OUT_PWD/.. -l$$qtLibraryTarget(include_test_frontend) -l$$qtLibraryT
 
 DESTDIR = ..
 
-CONFIG += c++11 ivigenerator
+CONFIG += c++11 ifcodegen
 CONFIG -= app_bundle
 
 INCLUDEPATH += $$OUT_PWD/../frontend $$OUT_PWD/../common
 
-QT += qml quick core ivicore
+QT += qml quick core interfaceframework
 
 QFACE_FORMAT = server_qtro_simulator
 QFACE_SOURCES = ../../include-test.qface

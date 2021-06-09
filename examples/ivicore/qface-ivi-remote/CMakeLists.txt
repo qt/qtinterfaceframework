@@ -1,6 +1,6 @@
-# Generated from qface-ivi-remote.pro.
+# Generated from qface-if-remote.pro.
 cmake_minimum_required(VERSION 3.14)
-project(example_ivi_remote LANGUAGES CXX)
+project(example_if_remote LANGUAGES CXX)
 
 add_subdirectory(frontend)
 add_subdirectory(backend_qtro)

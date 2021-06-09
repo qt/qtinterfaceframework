@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -63,7 +63,7 @@ QStringList InstrumentClusterPlugin::interfaces() const
     return QStringList(InstrumentClusterModule_InstrumentCluster_iid);
 }
 
-QIviFeatureInterface *InstrumentClusterPlugin::interfaceInstance(const QString &interface) const
+QIfFeatureInterface *InstrumentClusterPlugin::interfaceInstance(const QString &interface) const
 {
     if (interface == InstrumentClusterModule_InstrumentCluster_iid)
         return m_backend;

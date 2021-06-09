@@ -28,15 +28,15 @@
 ****************************************************************************/
 
 /*!
-\example ivicore/qface-ivi-climate
-\brief This Example shows how to use the Qt IVI Generator.
-\ingroup qtivicore-examples
-\title Qt IVI Generator Climate Example
-\image examples_qface_ivi_climate.png
+\example interfaceframework/qface-if-climate
+\brief This Example shows how to use the Qt Interface Framework Generator.
+\ingroup qtinterfaceframework-examples
+\title Qt Interface Framework Generator Climate Example
+\image examples_qface_if_climate.png
 
 \section1 Introduction
 
-This example shows you how you can use the Qt IVI Generator to build a new component. Based on a
+This example shows you how you can use the Qt Interface Framework Generator to build a new component. Based on a
 single QFace IDL file, the example generates:
 
 \list
@@ -53,7 +53,7 @@ single interface and some enumerated types.
 Let's take a look at a minimal version of the same QFace IDL file:
 
 \code
-module Example.IVI.Climate 1.0;
+module Example.If.Climate 1.0;
 
 interface ClimateControl {
     bool airConditioning;
@@ -81,7 +81,7 @@ First, we need to define which \c module we want to describe. The \c module acts
 because the IDL file can contain multiple interfaces.
 
 \code
-module Example.IVI.Climate 1.0;
+module Example.If.Climate 1.0;
 \endcode
 
 The most important part of the \c module is its \c interface definition.
@@ -120,7 +120,7 @@ of each individual item. The second definition is similar, but using the \c flag
 \section2 Comments and Annotations
 
 Compared to the minimal IDL we saw in the previous section, the full
-\fileLink {examples/ivicore/qface-ivi-climate/example-ivi-climate.qface}{IDL file} contains a lot of comments
+\fileLink {examples/interfaceframework/qface-if-climate/example-if-climate.qface}{IDL file} contains a lot of comments
 and annotations.
 
 Comments starting with \c /** define documentation statements and can be converted into
@@ -149,7 +149,7 @@ Here's an overview of all the annotations used in this example and what they do:
         \li Specifies the component name when used from QML.
     \row
         \li \code
-                @config: {id: "example.qtivi.ClimateControl/1.0"}
+                @config: {id: "example.interfaceframework.ClimateControl/1.0"}
             \endcode
         \li Specifies the ID used to match backend plugins.
     \row
@@ -189,7 +189,7 @@ Some of these extra configurations are highlighted below:
     \row
         \li
             \code
-            Example.IVI.Climate.ClimateControl:
+            Example.If.Climate.ClimateControl:
                 config_simulator:
                     zones: { left : FrontLeft, right : FrontRight, rear: Rear }
             \endcode
@@ -197,7 +197,7 @@ Some of these extra configurations are highlighted below:
     \row
         \li
             \code
-            Example.IVI.Climate.ClimateControl#recirculationMode:
+            Example.If.Climate.ClimateControl#recirculationMode:
                 config_simulator:
                     default: RecirculationMode.RecirculationOff
             \endcode
@@ -207,20 +207,20 @@ Some of these extra configurations are highlighted below:
 
 \section1 Frontend Library
 
-Now we want to use the IVI Generator to generate a shared library that contains a C++
+Now we want to use the Interface Framework Generator to generate a shared library that contains a C++
 implementation of our module and its interface.
 
 In this case, we use the \c frontend template, that generates a class derived from
-\c {QIviAbstractZonedFeature} including all the specified properties. The generated library uses
-the \l {Dynamic Backend System} from QtIviCore, providing an easy way to change the behavior
+\c {QIfAbstractZonedFeature} including all the specified properties. The generated library uses
+the \l {Dynamic Backend System} from QtInterfaceFramework, providing an easy way to change the behavior
 implementations. For more details, see \l {Backend Simulator Plugin}.
 
 To call the autogenerator for our shared library, the qmake project file needs to use the
-\c ivigenerator qmake feature. The snippet below shows how to do this:
+\c ifcodegen qmake feature. The snippet below shows how to do this:
 
-\snippet ../../../../examples/ivicore/qface-ivi-climate/frontend/frontend.pro 1
+\snippet ../../../../examples/interfaceframework/qface-if-climate/frontend/frontend.pro 1
 
-By adding \c ivigenerator to the \c CONFIG variable, the \c ivigenerator feature file is loaded
+By adding \c ifcodegen to the \c CONFIG variable, the \c ifcodegen feature file is loaded
 and interprets the \c QFACE_SOURCES variable just like the \c SOURCES variable in normal qmake
 projects.
 
@@ -228,7 +228,7 @@ However, activating the qmake feature using the \c CONFIG variable has one disad
 doesn't report any errors if this feature is not available. But, you can use the following
 additional code to report errors:
 
-\snippet ../../../../examples/ivicore/qface-ivi-climate/frontend/frontend.pro 0
+\snippet ../../../../examples/interfaceframework/qface-if-climate/frontend/frontend.pro 0
 
 The other part of the project file is a normal library setup which should work on Linux, macOS,
 and Windows.
@@ -239,10 +239,10 @@ Since the \c frontend library uses the \l {Dynamic Backend System}, we need a co
 \c backend plugin, for the library to provide some functionality. To generate a mock version of
 the backend plugin called "Simulator Backend", you can use the \c backend_simulator template from
 the same IDL file as the \c frontend library. The qmake integration works in the same way, but it
-uses the \c QFACE_FORMAT variable to tell the \c ivigenerator to use a different generation
+uses the \c QFACE_FORMAT variable to tell the \c ifcodegen to use a different generation
 template.
 
-\snippet ../../../../examples/ivicore/qface-ivi-climate/backend_simulator/backend_simulator.pro 2
+\snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/backend_simulator.pro 2
 
 As we want to generate a plugin instead of a plain library, we need to instruct qmake to do so by
 adding \c plugin to the \c CONFIG variable. For the plugin to compile correctly it needs to get the
@@ -250,7 +250,7 @@ backend interface header from the previously created library. However, this head
 our source tree but the build tree, because it is also generated. We provide this header by adding
 it to the include path using the following construct:
 
-\snippet ../../../../examples/ivicore/qface-ivi-climate/backend_simulator/backend_simulator.pro 1
+\snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/backend_simulator.pro 1
 
 The \c backend_simulator template makes use of the \b @config_simulator annotations explained
 \l{Annotations}{above}. This means that the generated backend provides the default values defined
@@ -274,16 +274,16 @@ types with the QML engine.
 In our QML application, we still need to import the module using the same module URI used
 in the IDL file. Afterwards, the interface can be instantiated like a regular QML item.
 
-\snippet ../../../../examples/ivicore/qface-ivi-climate/demo/main.qml 0
+\snippet ../../../../examples/interfaceframework/qface-if-climate/demo/main.qml 0
 \dots 0
 
 Our application doesn't know about our backend plugin, so, we need to put this plugin in the folder
 where our application looks for plugins. By default, Qt looks in the \b plugins folder within its
-installation directory or in the application's current working directory. For QtIvi plugins to be
-found, they need to be placed within a \b qtivi sub-folder.
+installation directory or in the application's current working directory. For QtInterfaceFramework plugins to be
+found, they need to be placed within a \b interfaceframework sub-folder.
 
 To make sure this is done automatically, we add the following line to our backend project file:
 
-\snippet ../../../../examples/ivicore/qface-ivi-climate/backend_simulator/backend_simulator.pro 0
+\snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/backend_simulator.pro 0
 
 */

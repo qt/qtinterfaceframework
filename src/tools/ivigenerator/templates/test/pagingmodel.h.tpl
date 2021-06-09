@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -40,14 +40,14 @@
 #include "{{property.type.nested|lower}}.h"
 #include <QtDebug>
 
-#include <QIviPagingModelInterface>
+#include <QIfPagingModelInterface>
 
-class {{class}} : public QIviPagingModelInterface
+class {{class}} : public QIfPagingModelInterface
 {
     Q_OBJECT
 public:
     explicit {{class}}(QObject *parent = nullptr)
-        : QIviPagingModelInterface(parent)
+        : QIfPagingModelInterface(parent)
     {
         for(int i=0; i < 100; i++)
             m_list.append(QVariant::fromValue({{property.type.nested|test_type_value}}));

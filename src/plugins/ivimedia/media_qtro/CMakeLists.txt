@@ -6,28 +6,28 @@
 
 qt_internal_add_plugin(MediaQtROPlugin
     OUTPUT_NAME media_qtro
-    TYPE qtivi
+    TYPE interfaceframework
     DEFAULT_IF FALSE
     SOURCES
         mediadiscoverybackend.cpp mediadiscoverybackend.h
         mediaindexerbackend.cpp mediaindexerbackend.h
         mediaplayerbackend.cpp mediaplayerbackend.h
         mediaplugin.cpp mediaplugin.h
-        searchandbrowsemodel.cpp searchandbrowsemodel.h
+        filterandbrowsemodel.cpp filterandbrowsemodel.h
         usbdevice.cpp usbdevice.h
     PUBLIC_LIBRARIES
-        Qt::IviCore
-        Qt::IviMedia
+        Qt::InterfaceFramework
+        Qt::IfMedia
         Qt::RemoteObjects
-        Qt::IviRemoteObjectsHelper
+        Qt::IfRemoteObjectsHelper
 )
 qt6_add_repc_replicas(MediaQtROPlugin
-    ../../../tools/media-simulation-server/qivimediaindexer.rep
-    ../../../tools/media-simulation-server/qivimediaplayer.rep
-    ../../../tools/media-simulation-server/qivisearchandbrowsemodel.rep
-    ../../../tools/media-simulation-server/qivimediadiscoverymodel.rep
+    ../../../tools/media-simulation-server/qifmediaindexer.rep
+    ../../../tools/media-simulation-server/qifmediaplayer.rep
+    ../../../tools/media-simulation-server/qiffilterandbrowsemodel.rep
+    ../../../tools/media-simulation-server/qifmediadiscoverymodel.rep
 )
 
 #### Keys ignored in scope 1:.:.:media_qtro.pro:<TRUE>:
 # DISTFILES = "media_qtro.json"
-# PLUGIN_EXTENDS = "ivimedia"
+# PLUGIN_EXTENDS = "ifmedia"

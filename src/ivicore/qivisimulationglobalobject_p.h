@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISIMULATIONGLOBALOBJECT_P_H
-#define QIVISIMULATIONGLOBALOBJECT_P_H
+#ifndef QIFSIMULATIONGLOBALOBJECT_P_H
+#define QIFSIMULATIONGLOBALOBJECT_P_H
 
 //
 //  W A R N I N G
@@ -53,8 +53,8 @@
 // We mean it.
 //
 
-#include <qiviqmlconversion_helper.h>
-#include <QIviPagingModelInterface>
+#include <qifqmlconversion_helper.h>
+#include <QIfPagingModelInterface>
 
 #include <QtCore/QObject>
 #include <QtCore/QVariantMap>
@@ -68,13 +68,13 @@
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviSimulationGlobalObject : public QObject
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfSimulationGlobalObject : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant simulationData READ simulationData CONSTANT)
 
 public:
-    explicit QIviSimulationGlobalObject(QObject *parent = nullptr);
+    explicit QIfSimulationGlobalObject(QObject *parent = nullptr);
 
     QVariant simulationData() const;
     void setSimulationData(const QVariant &simulationData);
@@ -93,4 +93,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // QIVISIMULATIONGLOBALOBJECT_P_H
+#endif // QIFSIMULATIONGLOBALOBJECT_P_H

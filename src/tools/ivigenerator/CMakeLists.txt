@@ -3,16 +3,16 @@
 ## Virtual env creation
 #####################################################################
 
-set(ivigenerator_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_BINDIR}/ivigenerator")
-set(templates_install_dir "${ivigenerator_install_dir}/templates")
+set(ifcodegen_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_BINDIR}/ifcodegen")
+set(templates_install_dir "${ifcodegen_install_dir}/templates")
 
 if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
-    qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME ivicore)
+    qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
 
-    set(VIRTUALENV_NAME qtivi_qface_virtualenv)
+    set(VIRTUALENV_NAME qtif_qface_virtualenv)
     set(VIRTUALENV_PATH ${CMAKE_CURRENT_BINARY_DIR}/${VIRTUALENV_NAME})
-    set(QFACE_SOURCE_DIR ${QtIvi_SOURCE_DIR}/src/3rdparty/qface)
-    set(RELOCATE_VIRTUALENV ${QtIvi_SOURCE_DIR}/src/3rdparty/virtualenv/relocate_virtualenv.py)
+    set(QFACE_SOURCE_DIR ${QtInterfaceFramework_SOURCE_DIR}/src/3rdparty/qface)
+    set(RELOCATE_VIRTUALENV ${QtInterfaceFramework_SOURCE_DIR}/src/3rdparty/virtualenv/relocate_virtualenv.py)
 
     if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
         set(VIRTUALENV_ACTIVATE ${VIRTUALENV_PATH}/Scripts/activate.bat)
@@ -67,14 +67,14 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
 
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
                               ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
-                       COMMAND ${DEPLOY_VIRTUALENV} qtivi_qface_virtualenv
+                       COMMAND ${DEPLOY_VIRTUALENV} qtif_qface_virtualenv
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-deploy_virtualenv
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
                        DEPENDS ${QFACE_BIN}
                       )
 
     # main target which just relies on the stamp file to be uptodate
-    add_custom_target(ivigenerator ALL
+    add_custom_target(ifcodegen ALL
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
                       )
@@ -111,14 +111,14 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
             DIRECTORY
             ${VIRTUALENV_PATH}
             USE_SOURCE_PERMISSIONS
-            DESTINATION "${ivigenerator_install_dir}"
+            DESTINATION "${ifcodegen_install_dir}"
             )
     else()
         add_custom_target(copy_virtualenv
-                           COMMAND ${CMAKE_COMMAND} -E copy ${VIRTUALENV_PATH} "${ivigenerator_install_dir}"
+                           COMMAND ${CMAKE_COMMAND} -E copy ${VIRTUALENV_PATH} "${ifcodegen_install_dir}"
                            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
                           )
-        add_dependencies(ivigenerator copy_virtualenv)
+        add_dependencies(ifcodegen copy_virtualenv)
     endif()
 endif()
 
@@ -129,7 +129,7 @@ endif()
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.config "---\n")
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "VERSION: \"${QT_REPO_MODULE_VERSION}\"\n")
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "FEATURES:\n")
-# With qmake we only added the features of ivicore. Now we have to add all of the complete repository
+# With qmake we only added the features of interfaceframework. Now we have to add all of the complete repository
 foreach(feature IN LISTS QT_KNOWN_FEATURES)
     if (QT_FEATURE_${feature})
         file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "  - \"${feature}\"\n")
@@ -158,7 +158,7 @@ add_custom_target(generator SOURCES
 qt_copy_or_install(
     FILES
     templates/common/generated_comment.cpp.tpl
-    templates/common/qtivi_macros.j2
+    templates/common/qtif_macros.j2
     templates/common/simulation.qmltypes.tpl
     templates/common/plugins.qmltypes.tpl
     templates/common/designer.metainfo.tpl
@@ -241,14 +241,14 @@ qt_copy_or_install(
     generator/builtin_config.py
     generator/filters.py
     generator/rule_generator.py
-    DESTINATION "${ivigenerator_install_dir}/generator"
+    DESTINATION "${ifcodegen_install_dir}/generator"
     )
 
 qt_copy_or_install(
     FILES
     generate.py
     ${CMAKE_CURRENT_BINARY_DIR}/.config
-    DESTINATION "${ivigenerator_install_dir}"
+    DESTINATION "${ifcodegen_install_dir}"
     )
 
 

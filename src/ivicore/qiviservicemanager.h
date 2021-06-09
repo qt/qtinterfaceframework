@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,20 +39,20 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISERVICEMANAGER_H
-#define QIVISERVICEMANAGER_H
+#ifndef QIFSERVICEMANAGER_H
+#define QIFSERVICEMANAGER_H
 
 #include <QtCore/QAbstractListModel>
 
-#include <QtIviCore/qtiviglobal.h>
-#include <QtIviCore/QIviServiceObject>
+#include <QtInterfaceFramework/qtifglobal.h>
+#include <QtInterfaceFramework/QIfServiceObject>
 
 QT_BEGIN_NAMESPACE
 
-class QIviServiceObject;
-class QIviServiceManagerPrivate;
+class QIfServiceObject;
+class QIfServiceManagerPrivate;
 
-class Q_QTIVICORE_EXPORT QIviServiceManager : public QAbstractListModel
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceManager : public QAbstractListModel
 {
     Q_OBJECT
 public:
@@ -76,9 +76,9 @@ public:
     };
     Q_ENUM(BackendType)
 
-    static QIviServiceManager *instance();
+    static QIfServiceManager *instance();
 
-    Q_INVOKABLE QList<QIviServiceObject*> findServiceByInterface(const QString &interface, SearchFlags searchFlags = IncludeAll);
+    Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, SearchFlags searchFlags = IncludeAll);
     Q_INVOKABLE bool hasInterface(const QString &interface) const;
 
     bool registerService(QObject *serviceBackendInterface, const QStringList &interfaces, BackendType backendType = ProductionBackend);
@@ -90,11 +90,11 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    explicit QIviServiceManager();
-    QIviServiceManagerPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(QIviServiceManager)
+    explicit QIfServiceManager();
+    QIfServiceManagerPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(QIfServiceManager)
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVISERVICEMANAGER_H
+#endif // QIFSERVICEMANAGER_H

@@ -1,26 +1,26 @@
 # Generated from vehiclefunctions_qtro.pro.
 
 #####################################################################
-## QtIviVehicleFunctionsQtROPlugin Plugin:
+## QtIfVehicleFunctionsQtROPlugin Plugin:
 #####################################################################
 
-qt_internal_add_plugin(QtIviVehicleFunctionsQtROPlugin
+qt_internal_add_plugin(QtIfVehicleFunctionsQtROPlugin
     OUTPUT_NAME vehiclefunction_qtro
-    TYPE qtivi
+    TYPE interfaceframework
     DEFAULT_IF FALSE
     PUBLIC_LIBRARIES
         Qt::Core
-        Qt::IviCore
-        Qt::IviVehicleFunctions
+        Qt::InterfaceFramework
+        Qt::IfVehicleFunctions
 )
 
-# IVI Generator:
-qt_ivigenerator(QtIviVehicleFunctionsQtROPlugin
-    QFACE_SOURCES ../../../ivivehiclefunctions/ivivehiclefunctions.qface
+# Interface Framework Generator:
+qt_ifcodegen(QtIfVehicleFunctionsQtROPlugin
+    QFACE_SOURCES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
     QFACE_FORMAT backend_qtro
-    QFACE_MODULE_NAME QtIviVehicleFunctions
+    QFACE_MODULE_NAME QtIfVehicleFunctions
 )
 
 #### Keys ignored in scope 1:.:.:vehiclefunctions_qtro.pro:<TRUE>:
 # CMAKE_MODULE_TESTS = "'-'"
-# PLUGIN_EXTENDS = "ivivehiclefunctions"
+# PLUGIN_EXTENDS = "ifvehiclefunctions"

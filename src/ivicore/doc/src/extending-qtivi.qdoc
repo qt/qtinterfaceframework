@@ -27,12 +27,12 @@
 **
 ****************************************************************************/
 /*!
-\page extending-qtivi.html
-\title Extending Qt IVI
+\page extending-interfaceframework.html
+\title Extending Qt Interface Framework
 
 \section1 Introduction
 
-Qt IVI provides a pattern for extending Qt with more features in a way that suites the
+Qt Interface Framework provides a pattern for extending Qt with more features in a way that suites the
 automotive use-case.
 
 A key aspect is the separation between the frontend that defines the API, from the
@@ -43,7 +43,7 @@ development and testing purposes.
 
 \section1 The Big Picture
 
-Qt IVI consists of three types of building blocks. The core module provides base classes
+Qt Interface Framework consists of three types of building blocks. The core module provides base classes
 and common code for all the more specific modules and API definitions like a climate API
 or a mediaplayer API. Each of these APIs is the second building block called \e Feature,
 which defines the API used by the application developers. The last block consists of a
@@ -56,7 +56,7 @@ A feature is a set of classes for working with a specific function. It defines t
 towards application developers, but it does not implement the complete functionality. Instead, it
 defines a backend interface to be implemented by a backend providing the actual function.
 
-For easy deployment, Qt IVI extensions should be built as Qt modules. This makes it easy to
+For easy deployment, Qt Interface Framework extensions should be built as Qt modules. This makes it easy to
 install and find headers, shared libraries, and plugin modules from app projects.
 
 By using the module system the developer can easily enable the inclusion of his
@@ -72,12 +72,12 @@ In addition, your module is properly set up to work with cmake, qdoc, and auto t
 make tests
 \endcode
 
-When creating a new Qt IVI module, it is recommended that you pick a name such as
+When creating a new Qt Interface Framework module, it is recommended that you pick a name such as
 \e {OemFeatureName}, where \e {Oem} is the name of the car maker or platform owner, and
 \e {FeatureName} is the name of the feature(s) of the module. In addition to the name, a reverse
 domain name prefix is needed for prefixing backend interface names, for example \e {com.example}
 
-Features are based on the QIviAbstractFeature base class, or QIviAbstractZonedFeature for
+Features are based on the QIfAbstractFeature base class, or QIfAbstractZonedFeature for
 zoned features. These classes provide the basic functions expected by users, e.g. backend
 loading.
 
@@ -106,27 +106,27 @@ A backend class is derived from the (commonly QObject-derived) backend interface
 by a feature. Instances of the backend class are called \e {service objects}.
 
 Backends are implemented as an ordinary Qt C++ plugin project that depends on
-\l {QtIviCore}{Qt IVI Core} and the corresponding feature module.
+\l {QtInterfaceFramework}{Qt Interface Framework Core} and the corresponding feature module.
 
-The backends are loaded by Qt IVI Core when the features request them. Each backend has to provide
-a Qt IVI plugin that exposes a \e factory to the Core. This is what is used to load and create
-backends. The plugin interface is called QIviServiceInterface.
+The backends are loaded by Qt Interface Framework Core when the features request them. Each backend has to provide
+a Qt Interface Framework plugin that exposes a \e factory to the Core. This is what is used to load and create
+backends. The plugin interface is called QIfServiceInterface.
 
 \section2 Service Manager
 
-In most cases, the backend loading is handed over to the Qt IVI Core, however, QIviServiceManager
+In most cases, the backend loading is handed over to the Qt Interface Framework Core, however, QIfServiceManager
 can be used in this case to manually search for plugins with a specific BackendInterface. The
 discovery and loading of the backends takes place in this class.
 
-The QIviServiceManager class can also be used to register backends which are part of the same
+The QIfServiceManager class can also be used to register backends which are part of the same
 application and shouldn’t go into a plugin. This is especially useful for autotest as you need
 to control the backend and the feature at the same time.
 
 \section1 Common Practices
 
-The reference APIs provided as a part of Qt IVI introduce some common concepts. If
+The reference APIs provided as a part of Qt Interface Framework introduce some common concepts. If
 implementing the same functionality, it is recommended to use these already defined patterns and
-it is encouraged to add API additions back to the Qt IVI repository to create more common ground
+it is encouraged to add API additions back to the Qt Interface Framework repository to create more common ground
 for future APIs.
 
 */

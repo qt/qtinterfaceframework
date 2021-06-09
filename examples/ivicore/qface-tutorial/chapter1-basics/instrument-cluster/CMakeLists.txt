@@ -9,7 +9,7 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-tutorial/chapter1-basics")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter1-basics")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
@@ -26,7 +26,7 @@ set_target_properties(chapter1-basics PROPERTIES
 )
 
 target_link_libraries(chapter1-basics PUBLIC
-    QtIviInstrumentCluster_Chapter1
+    QtIfInstrumentCluster_Chapter1
     Qt::Core
     Qt::Gui
     Qt::Qml

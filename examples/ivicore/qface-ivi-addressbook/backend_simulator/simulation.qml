@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -52,16 +52,16 @@
 
 //! [0]
 import QtQuick 2.0
-import Example.IVI.AddressBookModule.simulation 1.0
+import Example.If.AddressBookModule.simulation 1.0
 
 Item {
     AddressBookBackend {
         id: backend
-        property var settings : IviSimulator.findData(IviSimulator.simulationData, "AddressBook")
+        property var settings : IfSimulator.findData(IfSimulator.simulationData, "AddressBook")
 
         function initialize() {
             print("AddressBookSimulation INITIALIZE")
-            IviSimulator.initializeDefault(settings, backend)
+            IfSimulator.initializeDefault(settings, backend)
             Base.initialize()
         }
 

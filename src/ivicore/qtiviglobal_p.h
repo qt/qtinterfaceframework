@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QTIVIGLOBAL_P_H
-#define QTIVIGLOBAL_P_H
+#ifndef QTIFGLOBAL_P_H
+#define QTIFGLOBAL_P_H
 
 
 //
@@ -56,9 +56,9 @@
 
 
 #include <QtCore/qglobal.h>
-#include <QtIviCore/private/qtivicore-config_p.h>
-#include <QtIviCore/qiviqmlconversion_helper.h>
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/private/qtinterfaceframework-config_p.h>
+#include <QtInterfaceFramework/qifqmlconversion_helper.h>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -81,15 +81,15 @@ void qAsConst(const T &&) Q_DECL_EQ_DELETE;
 #endif
 #endif
 
-#define Q_IVI_BACKEND(c, b_f, err) \
+#define Q_IF_BACKEND(c, b_f, err) \
 Q_D(c); \
 auto *backend = b_f; \
 if (!backend) { \
-    qtivi_qmlOrCppWarning(this, QLatin1String(err)); \
+    qtif_qmlOrCppWarning(this, QLatin1String(err)); \
     return; \
 } \
 
 QT_END_NAMESPACE
 
-#endif // QTIVIGLOBAL_P_H
+#endif // QTIFGLOBAL_P_H
 

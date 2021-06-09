@@ -2,9 +2,9 @@ TEMPLATE=lib
 TARGET= $$qtLibraryTarget(include_test_frontend)
 DESTDIR = ../
 
-CONFIG += ivigenerator
+CONFIG += ifcodegen
 
-QT += ivicore ivicore-private qml quick
+QT += interfaceframework interfaceframework-private qml quick
 
 DEFINES += QT_BUILD_INCLUDE_TEST_LIB
 INCLUDEPATH += $$OUT_PWD/../common

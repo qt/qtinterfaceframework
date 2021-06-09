@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -32,14 +32,14 @@
 {% set class = '{0}'.format(module.module_name|upperfirst) %}
 {% set qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 {% include 'common/generated_comment.cpp.tpl' %}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 
 #include "{{class|lower}}.h"
 #include "{{class|lower}}factory.h"
 {% for interface in module.interfaces %}
 #include "{{interface|lower}}.h"
 {% endfor %}
-#include <QtIviCore/QIviPendingReply>
+#include <QtInterfaceFramework/QIfPendingReply>
 #include <QQmlEngine>
 #include <QDebug>
 #include <QDataStream>
@@ -61,11 +61,11 @@ QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {% for enum in module.enums %}
 /*!
     \enum {{class}}::{{enum}}
-    {{ ivi.format_comments(enum.comment) }}
+    {{ if.format_comments(enum.comment) }}
 
 {%  for member in enum.members %}
     \value {{member}}
-    {{ ivi.format_comments(member.comment) }}
+    {{ if.format_comments(member.comment) }}
 {%  endfor %}
 */
 {% endfor %}
@@ -125,7 +125,7 @@ void {{class}}::registerTypes()
 
 {% for enum in module.enums %}
     qRegisterMetaType<{{class}}::{{enum|flag_type}}>();
-    qIviRegisterPendingReplyType<{{class}}::{{enum|flag_type}}>();
+    qIfRegisterPendingReplyType<{{class}}::{{enum|flag_type}}>();
 {%   if enum.is_flag %}
     //Workaround for https://bugreports.qt.io/browse/QTBUG-75676
     if (!QMetaType::hasRegisteredConverterFunction<{{class}}::{{enum|flag_type}}, int>())
@@ -134,7 +134,7 @@ void {{class}}::registerTypes()
 {% endfor %}
 {% for struct in module.structs %}
     qRegisterMetaType<{{struct}}>();
-    qIviRegisterPendingReplyType<{{struct}}>();
+    qIfRegisterPendingReplyType<{{struct}}>();
 {% endfor %}
 }
 

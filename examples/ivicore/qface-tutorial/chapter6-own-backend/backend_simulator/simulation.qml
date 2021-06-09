@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -51,20 +51,20 @@
 ****************************************************************************/
 
 import QtQuick 2.10
-import Example.IVI.InstrumentClusterModule.simulation 1.0
+import Example.If.InstrumentClusterModule.simulation 1.0
 
 QtObject {
-    property var settings : IviSimulator.findData(IviSimulator.simulationData, "InstrumentCluster")
+    property var settings : IfSimulator.findData(IfSimulator.simulationData, "InstrumentCluster")
     property bool defaultInitialized: false
     property LoggingCategory qLcInstrumentCluster: LoggingCategory {
-        name: "example.ivi.instrumentclustermodule.simulation.instrumentclusterbackend"
+        name: "example.if.instrumentclustermodule.simulation.instrumentclusterbackend"
     }
     property var backend : InstrumentClusterBackend {
 
         function initialize() {
             console.log(qLcInstrumentCluster, "INITIALIZE")
             if (!defaultInitialized) {
-                IviSimulator.initializeDefault(settings, backend)
+                IfSimulator.initializeDefault(settings, backend)
                 defaultInitialized = true
             }
             Base.initialize()

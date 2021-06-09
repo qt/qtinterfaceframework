@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -45,8 +45,8 @@
 
 #include <QStringList>
 #include <QtDebug>
-#include <QtIviCore/QIviSearchAndBrowseModel>
-#include <QtIviMedia/QIviMediaPlayer>
+#include <QtInterfaceFramework/QIfFilterAndBrowseModel>
+#include <QtIfMedia/QIfMediaPlayer>
 
 TunerSimulatorPlugin::TunerSimulatorPlugin(QObject *parent)
     : QObject(parent)
@@ -58,16 +58,16 @@ TunerSimulatorPlugin::TunerSimulatorPlugin(QObject *parent)
 QStringList TunerSimulatorPlugin::interfaces() const
 {
     QStringList list;
-    list << QStringLiteral(QIviSearchAndBrowseModel_iid);
-    list << QStringLiteral(QIviAmFmTuner_iid);
+    list << QStringLiteral(QIfFilterAndBrowseModel_iid);
+    list << QStringLiteral(QIfAmFmTuner_iid);
     return list;
 }
 
-QIviFeatureInterface *TunerSimulatorPlugin::interfaceInstance(const QString &interface) const
+QIfFeatureInterface *TunerSimulatorPlugin::interfaceInstance(const QString &interface) const
 {
-    if (interface == QLatin1String(QIviAmFmTuner_iid))
+    if (interface == QLatin1String(QIfAmFmTuner_iid))
         return m_amfmtuner;
-    else if (interface == QLatin1String(QIviSearchAndBrowseModel_iid))
+    else if (interface == QLatin1String(QIfFilterAndBrowseModel_iid))
         return m_searchbackend;
 
     return nullptr;

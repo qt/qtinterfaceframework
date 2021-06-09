@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,13 +41,13 @@
 #ifndef MEDIAINDEXERBACKEND_H
 #define MEDIAINDEXERBACKEND_H
 
-#include <QtIviMedia/QIviMediaIndexerControlBackendInterface>
-#include <QIviRemoteObjectReplicaHelper>
+#include <QtIfMedia/QIfMediaIndexerControlBackendInterface>
+#include <QIfRemoteObjectReplicaHelper>
 #include <QRemoteObjectNode>
 
-#include "rep_qivimediaindexer_replica.h"
+#include "rep_qifmediaindexer_replica.h"
 
-class MediaIndexerBackend : public QIviMediaIndexerControlBackendInterface
+class MediaIndexerBackend : public QIfMediaIndexerControlBackendInterface
 {
 public:
     explicit MediaIndexerBackend(QObject *parent = nullptr);
@@ -62,10 +62,10 @@ protected:
     bool connectToNode();
 
 private:
-    QSharedPointer<QIviMediaIndexerReplica> m_replica;
+    QSharedPointer<QIfMediaIndexerReplica> m_replica;
     QRemoteObjectNode *m_node;
     QUrl m_url;
-    QIviRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectReplicaHelper *m_helper;
 };
 
 #endif // MEDIAINDEXERBACKEND_H

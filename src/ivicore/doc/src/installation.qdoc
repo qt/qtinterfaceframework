@@ -27,10 +27,10 @@
 **
 ****************************************************************************/
 /*!
-\page qtivi-installation.html
+\page interfaceframework-installation.html
 \title Installation
 
-Since the QtIvi module uses the same \l{Qt Configure Options}{Configure System} as the rest of Qt,
+Since the QtInterfaceFramework module uses the same \l{Qt Configure Options}{Configure System} as the rest of Qt,
 you can do build-time configuration and enable only the features that you need.
 
 \section1 Features Available
@@ -45,17 +45,17 @@ summary".
     \li Dependency
     \li Description
 \row
-    \li IVI Generator
-        \keyword feature-ivigenerator
+    \li Interface Framework Generator
+        \keyword feature-ifcodegen
     \li python3
         python3-virtualenv
-    \li The IVI Generator provides tooling to generate source code from IDL files. The IVI
+    \li The Interface Framework Generator provides tooling to generate source code from IDL files. The Interface Framework
         Generator comes with a set of templates for specific code generation use cases.
 \row
     \li QtRemoteObjects Support
         \keyword feature-qtremoteobjects
     \li QtRemoteObjects module
-    \li The QtRemoteObjects Support is needed to generate \c qtivi backends, using QtRemoteObjects
+    \li The QtRemoteObjects Support is needed to generate \c interfaceframework backends, using QtRemoteObjects
         for its Inter-Process Communicationm (IPC). This feature also provides templates to
         generate the server part of this IPC.
 \endtable
@@ -70,35 +70,35 @@ needs:
 \row
     \li --host-tools-only
     \li Only compiles the tools needed on the host to cross-compile for another target.
-        For example, the IVI Generator.
+        For example, the Interface Framework Generator.
 \row
-    \li --ivigenerator <no|qt|system>
+    \li --ifcodegen <no|qt|system>
     \li \value no
-               Disables the IVI Generator feature completely.
+               Disables the Interface Framework Generator feature completely.
         \value qt
-               Enables the IVI Generator feature; builds and packages the necessary files.
+               Enables the Interface Framework Generator feature; builds and packages the necessary files.
         \value system
-               Enables the IVI Generator feature, but uses the IVI Generator-related files that are
-               already available on the system. For example, from the native-qtivi package when you
+               Enables the Interface Framework Generator feature, but uses the Interface Framework Generator-related files that are
+               already available on the system. For example, from the native-interfaceframework package when you
                cross-compile inside Yocto.
 \endtable
 
 These command-line options can be passed to qmake using the \c QMAKE_EXTRA_ARGS environment variable:
 
 \code
-    QMAKE_EXTRA_ARGS="--host-tools-only" qmake <qtivi-src>/qtivi.pro
+    QMAKE_EXTRA_ARGS="--host-tools-only" qmake <interfaceframework-src>/interfaceframework.pro
 \endcode
 
 \section2 Build the Required Features Only
 
-By default, all QtIvi modules are configured to be built, depending on whether all the required
+By default, all QtInterfaceFramework modules are configured to be built, depending on whether all the required
 dependencies are available for the respective module or not. Similar to other Qt Features, you can
 request for every module to be built or skip it explicitly using the \c{--[no-]feature-<modulename>}
 argument, when you invoke \c qmake.
 
-For example, to disable building QtIvi Media:
+For example, to disable building QtInterfaceFramework Media:
 \code
-    QMAKE_EXTRA_ARGS="--no-feature-ivimedia" qmake <qtivi-src>/qtivi.pro
+    QMAKE_EXTRA_ARGS="--no-feature-ifmedia" qmake <interfaceframework-src>/interfaceframework.pro
 \endcode
 
 Selecting the required module explicitly has the advantage that you can see any errors, at
@@ -106,7 +106,7 @@ configuration time, if not all dependencies are met.
 
 \section1 General Build Process
 
-To build QtIvi modules, run the following commands:
+To build QtInterfaceFramework modules, run the following commands:
 
 \code
     qmake

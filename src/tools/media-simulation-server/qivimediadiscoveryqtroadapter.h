@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,40 +38,40 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIADISCOVERYMODELQTROADAPTER_H
-#define QIVIMEDIADISCOVERYMODELQTROADAPTER_H
+#ifndef QIFMEDIADISCOVERYMODELQTROADAPTER_H
+#define QIFMEDIADISCOVERYMODELQTROADAPTER_H
 
 #include "mediadiscoverybackend.h"
-#include "rep_qivimediadiscoverymodel_source.h"
+#include "rep_qifmediadiscoverymodel_source.h"
 
 #include <QRemoteObjectRegistryHost>
 
 template <class ObjectType>
-struct QIviMediaDiscoveryModelAddressWrapper: public QIviMediaDiscoveryModelSourceAPI<ObjectType> {
-    QIviMediaDiscoveryModelAddressWrapper(ObjectType *object)
-        : QIviMediaDiscoveryModelSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
+struct QIfMediaDiscoveryModelAddressWrapper: public QIfMediaDiscoveryModelSourceAPI<ObjectType> {
+    QIfMediaDiscoveryModelAddressWrapper(ObjectType *object)
+        : QIfMediaDiscoveryModelSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
     {}
 };
 
-class QIviMediaDiscoveryModelQtRoAdapter : public QIviMediaDiscoveryModelSource
+class QIfMediaDiscoveryModelQtRoAdapter : public QIfMediaDiscoveryModelSource
 {
 public:
-    QIviMediaDiscoveryModelQtRoAdapter(MediaDiscoveryBackend *parent);
-    QIviMediaDiscoveryModelQtRoAdapter(const QString& remoteObjectsLookupName, MediaDiscoveryBackend *parent);
+    QIfMediaDiscoveryModelQtRoAdapter(MediaDiscoveryBackend *parent);
+    QIfMediaDiscoveryModelQtRoAdapter(const QString& remoteObjectsLookupName, MediaDiscoveryBackend *parent);
 
     QString remoteObjectsLookupName() const;
 
 public Q_SLOTS:
     QStringList devices() const override;
-    void onDeviceAdded(QIviServiceObject *device);
-    void onDeviceRemoved(QIviServiceObject *device);
+    void onDeviceAdded(QIfServiceObject *device);
+    void onDeviceRemoved(QIfServiceObject *device);
 
 private:
-    void createDeviceAdapter(QIviMediaDevice *device);
+    void createDeviceAdapter(QIfMediaDevice *device);
 
     QString m_remoteObjectsLookupName;
     MediaDiscoveryBackend *m_backend;
     QHash<QString, QObject*> m_hostMap;
 };
 
-#endif // QIVIMEDIAINDEXERQTROADAPTER_H
+#endif // QIFMEDIAINDEXERQTROADAPTER_H

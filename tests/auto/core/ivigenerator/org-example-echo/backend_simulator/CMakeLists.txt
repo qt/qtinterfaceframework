@@ -6,13 +6,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 qt_add_plugin(echo_simulator)
-set_target_properties(echo_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../qtivi)
+set_target_properties(echo_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 target_sources(echo_simulator PRIVATE
     backend_simulator.cpp
 )
 
-# IVI Generator:
-qt6_ivigenerator(echo_simulator
+# Interface Framework Generator:
+qt6_ifcodegen(echo_simulator
     QFACE_SOURCES ../../org.example.echo.qface
     QFACE_FORMAT backend_simulator
 )
@@ -21,5 +21,5 @@ target_link_libraries(echo_simulator PUBLIC
     echo_frontend
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
 )

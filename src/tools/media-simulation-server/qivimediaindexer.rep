@@ -1,9 +1,9 @@
 
-#include <QtIviMedia/QIviMediaIndexerControl>
+#include <QtIfMedia/QIfMediaIndexerControl>
 
-class QIviMediaIndexer
+class QIfMediaIndexer
 {
-    PROP(QIviMediaIndexerControl::State state READONLY)
+    PROP(QIfMediaIndexerControl::State state READONLY)
     PROP(qreal progress READONLY)
 
     SLOT(QVariant pause());

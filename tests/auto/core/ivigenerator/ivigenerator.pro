@@ -1,6 +1,6 @@
 TEMPLATE = subdirs
 
-QT_FOR_CONFIG += ivicore
+QT_FOR_CONFIG += interfaceframework
 
 SUBDIRS = org-example-echo \
           org-example-echo-noprivate \

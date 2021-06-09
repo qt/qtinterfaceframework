@@ -13,13 +13,13 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivivehiclefunctions/climate_widget")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ifvehiclefunctions/climate_widget")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Widgets)
-find_package(Qt6 COMPONENTS IviCore)
-find_package(Qt6 COMPONENTS IviVehicleFunctions)
+find_package(Qt6 COMPONENTS InterfaceFramework)
+find_package(Qt6 COMPONENTS IfVehicleFunctions)
 
 qt_add_executable(climate_widget
     main.cpp
@@ -33,8 +33,8 @@ target_link_libraries(climate_widget PUBLIC
     Qt::Core
     Qt::Gui
     Qt::Widgets
-    Qt::IviCore
-    Qt::IviVehicleFunctions
+    Qt::InterfaceFramework
+    Qt::IfVehicleFunctions
 )
 
 install(TARGETS climate_widget

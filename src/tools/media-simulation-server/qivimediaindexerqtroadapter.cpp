@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,44 +38,44 @@
 **
 ****************************************************************************/
 
-#include "qivimediaindexerqtroadapter.h"
+#include "qifmediaindexerqtroadapter.h"
 
-QIviMediaIndexerQtRoAdapter::QIviMediaIndexerQtRoAdapter(MediaIndexerBackend *parent)
-    : QIviMediaIndexerQtRoAdapter(QStringLiteral("QtIviMedia.QIviMediaIndexer"), parent)
+QIfMediaIndexerQtRoAdapter::QIfMediaIndexerQtRoAdapter(MediaIndexerBackend *parent)
+    : QIfMediaIndexerQtRoAdapter(QStringLiteral("QtIfMedia.QIfMediaIndexer"), parent)
 {
 }
 
-QIviMediaIndexerQtRoAdapter::QIviMediaIndexerQtRoAdapter(const QString& remoteObjectsLookupName, MediaIndexerBackend *parent)
-    : QIviMediaIndexerSource(parent)
+QIfMediaIndexerQtRoAdapter::QIfMediaIndexerQtRoAdapter(const QString& remoteObjectsLookupName, MediaIndexerBackend *parent)
+    : QIfMediaIndexerSource(parent)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
     , m_backend(parent)
 {
-    connect(m_backend, &MediaIndexerBackend::progressChanged, this, &QIviMediaIndexerQtRoAdapter::progressChanged);
-    connect(m_backend, &MediaIndexerBackend::stateChanged, this, &QIviMediaIndexerQtRoAdapter::stateChanged);
+    connect(m_backend, &MediaIndexerBackend::progressChanged, this, &QIfMediaIndexerQtRoAdapter::progressChanged);
+    connect(m_backend, &MediaIndexerBackend::stateChanged, this, &QIfMediaIndexerQtRoAdapter::stateChanged);
 }
 
-QString QIviMediaIndexerQtRoAdapter::remoteObjectsLookupName() const
+QString QIfMediaIndexerQtRoAdapter::remoteObjectsLookupName() const
 {
     return m_remoteObjectsLookupName;
 }
 
-QIviMediaIndexerControl::State QIviMediaIndexerQtRoAdapter::state() const
+QIfMediaIndexerControl::State QIfMediaIndexerQtRoAdapter::state() const
 {
     return m_backend->state();
 }
 
-qreal QIviMediaIndexerQtRoAdapter::progress() const
+qreal QIfMediaIndexerQtRoAdapter::progress() const
 {
     return m_backend->progress();
 }
 
-QVariant QIviMediaIndexerQtRoAdapter::pause()
+QVariant QIfMediaIndexerQtRoAdapter::pause()
 {
     m_backend->pause();
     return QVariant();
 }
 
-QVariant QIviMediaIndexerQtRoAdapter::resume()
+QVariant QIfMediaIndexerQtRoAdapter::resume()
 {
     m_backend->resume();
     return QVariant();

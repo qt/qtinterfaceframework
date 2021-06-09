@@ -4,7 +4,7 @@
 ## Copyright (C) 2021 The Qt Company Ltd.
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -28,8 +28,8 @@
 #############################################################################
 #}
 
-if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IviRemoteObjectsHelper)
-    find_package(Qt6 COMPONENTS RemoteObjects IviRemoteObjectsHelper)
+if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelper)
+    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelper)
 endif()
 
 target_sources(${CURRENT_TARGET}
@@ -45,5 +45,5 @@ qt6_add_repc_sources(${CURRENT_TARGET}
 
 target_link_libraries(${CURRENT_TARGET} PRIVATE
     Qt6::RemoteObjects
-    Qt6::IviRemoteObjectsHelper
+    Qt6::IfRemoteObjectsHelper
 )

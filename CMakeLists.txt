@@ -1,11 +1,11 @@
-# Generated from qtivi.pro.
+# Generated from interfaceframework.pro.
 
 cmake_minimum_required(VERSION 3.16)
 
 include(.cmake.conf)
-project(QtIvi
+project(QtInterfaceFramework
     VERSION "${QT_REPO_MODULE_VERSION}"
-    DESCRIPTION "Qt Ivi Libraries"
+    DESCRIPTION "Qt Interface Framework Libraries"
     HOMEPAGE_URL "https://qt.io/"
     LANGUAGES CXX C
 )
@@ -16,7 +16,7 @@ set(QT_NO_INTERNAL_COMPATIBILITY_FUNCTIONS TRUE)
 find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core) # special case
 find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Gui Qml Quick RemoteObjects Multimedia Sql DBus Widgets) # special case
 
-include(src/ivicore/Qt6IviCoreMacros.cmake)
+include(src/interfaceframework/Qt6InterfaceFrameworkMacros.cmake)
 
 if(INTEGRITY)
     message(NOTICE "Skipping the build as the condition \"NOT INTEGRITY\" is not met.")

@@ -11,7 +11,7 @@ backend_simulator.depends = frontend
 test.depends = frontend
 qmlplugin.depends = frontend
 
-QT_FOR_CONFIG += ivicore
+QT_FOR_CONFIG += interfaceframework
 
 qtConfig(remoteobjects) {
     SUBDIRS += backend_qtro \

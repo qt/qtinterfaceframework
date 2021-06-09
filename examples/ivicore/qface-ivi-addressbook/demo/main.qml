@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -54,14 +54,14 @@ import QtQuick 2.11
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
-import Example.IVI.AddressBookModule 1.0
+import Example.If.AddressBookModule 1.0
 
 Window {
     id: root
     visible: true
     width: 640
     height: 480
-    title: qsTr("QtIVI AddressBook")
+    title: qsTr("QtIF AddressBook")
 
     UiAddressBook {
         id: addressBook

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -46,8 +46,8 @@
 
 Q_DECLARE_LOGGING_CATEGORY(media)
 
-QT_FORWARD_DECLARE_CLASS(QIviFeatureInterface);
+QT_FORWARD_DECLARE_CLASS(QIfFeatureInterface);
 
-void sqlError(QIviFeatureInterface *interface, const QString &query, const QString &error);
+void sqlError(QIfFeatureInterface *interface, const QString &query, const QString &error);
 
 #endif // LOGGING_H

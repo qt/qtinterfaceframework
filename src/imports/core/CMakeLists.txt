@@ -1,15 +1,15 @@
 # Generated from core.pro.
 
 #####################################################################
-## qtivicoreplugin Plugin:
+## qtinterfaceframeworkplugin Plugin:
 #####################################################################
 
-qt_internal_add_qml_module(qtivicoreplugin
-    URI "QtIvi"
+qt_internal_add_qml_module(qtinterfaceframeworkplugin
+    URI "QtInterfaceFramework"
     VERSION "${PROJECT_VERSION}"
     PAST_MAJOR_VERSIONS 1
-    CLASS_NAME QtIviCorePlugin
-    PLUGIN_TARGET qtivicoreplugin
+    CLASS_NAME QtInterfaceFrameworkPlugin
+    PLUGIN_TARGET qtinterfaceframeworkplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
     NO_GENERATE_QMLTYPES
@@ -17,14 +17,14 @@ qt_internal_add_qml_module(qtivicoreplugin
     SOURCES
         plugin.cpp
     PUBLIC_LIBRARIES
-        Qt::IviCore
+        Qt::InterfaceFramework
 )
 
 #### Keys ignored in scope 1:.:.:core.pro:<TRUE>:
 # CXX_MODULE = "qml"
 # OTHER_FILES = "$$qml_files"
 # QML_IMPORT_VERSION = "1.0"
-# TARGETPATH = "QtIvi"
+# TARGETPATH = "QtInterfaceFramework"
 # qml_files = "$$_PRO_FILE_PWD_/qmldir"
 
 ## Scopes:

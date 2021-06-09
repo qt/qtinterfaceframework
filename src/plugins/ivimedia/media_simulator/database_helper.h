@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -56,22 +56,22 @@
 QString mediaDatabaseFile()
 {
     QString dbFile;
-    const QByteArray database = qgetenv("QTIVIMEDIA_SIMULATOR_DATABASE");
-    if (qEnvironmentVariableIsSet("QTIVIMEDIA_TEMPORARY_DATABASE")) {
+    const QByteArray database = qgetenv("QTIFMEDIA_SIMULATOR_DATABASE");
+    if (qEnvironmentVariableIsSet("QTIFMEDIA_TEMPORARY_DATABASE")) {
         auto *tempFile = new QTemporaryFile(qApp);
         tempFile->open();
         dbFile = tempFile->fileName();
-        qCInfo(media) << "QTIVIMEDIA_TEMPORARY_DATABASE environment variable is set.\n"
+        qCInfo(media) << "QTIFMEDIA_TEMPORARY_DATABASE environment variable is set.\n"
                     << "Using the temporary database: " << tempFile->fileName();
     } else if (!database.isEmpty()) {
         dbFile = QFile::decodeName(database);
         if (!QFileInfo(dbFile).isAbsolute())
-            qCInfo(media) << "Please set an valid absolute path for QTIVIMEDIA_SIMULATOR_DATABASE. Current path:" << dbFile;
+            qCInfo(media) << "Please set an valid absolute path for QTIFMEDIA_SIMULATOR_DATABASE. Current path:" << dbFile;
     } else {
         const QDir cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
         if (!cacheLocation.exists())
             cacheLocation.mkpath(QStringLiteral("."));
-        dbFile = cacheLocation.absoluteFilePath(QStringLiteral("ivimedia.db"));
+        dbFile = cacheLocation.absoluteFilePath(QStringLiteral("ifmedia.db"));
         qCInfo(media) << "Used media database:" << dbFile;
     }
     return dbFile;

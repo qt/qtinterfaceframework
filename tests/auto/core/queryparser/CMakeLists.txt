@@ -17,8 +17,8 @@ qt_internal_add_test(tst_queryparser
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::IviCore
-        Qt::IviCorePrivate
+        Qt::InterfaceFramework
+        Qt::InterfaceFrameworkPrivate
         Qt::Qml
     TESTDATA ${test_data}
 )

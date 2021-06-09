@@ -8,8 +8,8 @@ set(CMAKE_AUTOUIC ON)
 add_library(include_test_frontend)
 set_target_properties(include_test_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-# IVI Generator:
-qt6_ivigenerator(include_test_frontend
+# Interface Framework Generator:
+qt6_ifcodegen(include_test_frontend
     QFACE_SOURCES ../../include-test.qface
     QFACE_FORMAT frontend
     QFACE_IMPORT_PATH ../../qface\ imports
@@ -22,8 +22,8 @@ target_link_libraries(include_test_frontend PUBLIC
     include_test_common
     Qt::Core
     Qt::Gui
-    Qt::IviCore
-    Qt::IviCorePrivate
+    Qt::InterfaceFramework
+    Qt::InterfaceFrameworkPrivate
     Qt::Qml
     Qt::Quick
 )

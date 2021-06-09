@@ -28,56 +28,56 @@
 ****************************************************************************/
 
 /*!
-    \module QtIviCore
-    \title Qt IVI Core C++ Classes
+    \module QtInterfaceFramework
+    \title Qt Interface Framework Core C++ Classes
     \ingroup modules
-    \ingroup qtivi_modules
-    \qtvariable ivicore
+    \ingroup qtif_modules
+    \qtvariable interfaceframework
 
-    \brief C++ classes for the Qt IVI Core API.
+    \brief C++ classes for the Qt Interface Framework Core API.
 
     To include the definitions of the module's classes, use the following directive:
 
     \code
-    #include <QtIviCore>
+    #include <QtInterfaceFramework>
     \endcode
 
     To link against the module, add this line to your qmake .pro file:
 
     \code
-    QT += ivicore
+    QT += interfaceframework
     \endcode
 
-    For more information, see \l{Use the Qt IVI Reference API}.
+    For more information, see \l{Use the Qt Interface Framework Reference API}.
 */
 
 /*!
-    \qmlmodule QtIvi 1.0
-    \title Qt IVI Core QML Types
+    \qmlmodule QtInterfaceFramework 1.0
+    \title Qt Interface Framework Core QML Types
     \ingroup qmlmodules
-    \ingroup qtivi_qmlmodules
+    \ingroup qtif_qmlmodules
 
-    \brief QML types for the Qt IVI Core API.
+    \brief QML types for the Qt Interface Framework Core API.
 
-    The Qt IVI Core QML API provides core functions for in-vehicle infotainment QML types.
+    The Qt Interface Framework Core QML API provides core functions for in-vehicle infotainment QML types.
 
     To import the QML types into your application, use the following import statement
     in your .qml file:
 
     \code
-    import QtIvi 1.0
+    import QtInterfaceFramework 1.0
     \endcode
 
     \section1 QML Types
 */
 
 /*!
-    \group qtivicore-examples
+    \group qtinterfaceframework-examples
     \ingroup all-examples
-    \ingroup qtivi-examples
-    \title Qt IVI Core Examples
+    \ingroup interfaceframework-examples
+    \title Qt Interface Framework Core Examples
 
-    \brief Examples for using the Qt IVI Core features
+    \brief Examples for using the Qt Interface Framework Core features
 
-    These are the Qt IVI Core features examples.
+    These are the Qt Interface Framework Core features examples.
 */

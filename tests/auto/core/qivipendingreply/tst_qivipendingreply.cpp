@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -33,12 +33,12 @@
 #include <QQmlComponent>
 #include <QQmlContext>
 
-#include <qivipendingreply.h>
+#include <qifpendingreply.h>
 
-#define TEST_FUNCTION_DEF(NAME, TYPE) Q_INVOKABLE QIviPendingReply<TYPE> test_##NAME(TYPE result, bool fail = false); \
+#define TEST_FUNCTION_DEF(NAME, TYPE) Q_INVOKABLE QIfPendingReply<TYPE> test_##NAME(TYPE result, bool fail = false); \
 
-#define TEST_FUNCTION(NAME, TYPE) QIviPendingReply<TYPE> TestObject::test_##NAME(TYPE result, bool fail) { \
-    QIviPendingReply<TYPE> reply; \
+#define TEST_FUNCTION(NAME, TYPE) QIfPendingReply<TYPE> TestObject::test_##NAME(TYPE result, bool fail) { \
+    QIfPendingReply<TYPE> reply; \
     auto timer = new QTimer(); \
     timer->setSingleShot(true); \
     connect(timer, &QTimer::timeout, this, [reply, fail, result]() mutable { \
@@ -95,7 +95,7 @@ public:
       : QObject(parent)
     {}
 
-    Q_INVOKABLE QIviPendingReply<void> test_void(bool fail = false);
+    Q_INVOKABLE QIfPendingReply<void> test_void(bool fail = false);
 
     TEST_FUNCTION_DEF(int, int)
     TEST_FUNCTION_DEF(quint16, quint16)
@@ -113,8 +113,8 @@ public:
 
 Q_DECLARE_METATYPE(TestGadget)
 
-QIviPendingReply<void> TestObject::test_void(bool fail) {
-    QIviPendingReply<void> reply;
+QIfPendingReply<void> TestObject::test_void(bool fail) {
+    QIfPendingReply<void> reply;
     auto timer = new QTimer();
     timer->setSingleShot(true);
     connect(timer, &QTimer::timeout, this, [reply, fail]() mutable {
@@ -136,13 +136,13 @@ TEST_FUNCTION(TestEnum, TestObject::TestEnum)
 TEST_FUNCTION(TestFlags, TestObject::TestFlags)
 TEST_FUNCTION(TestGadget, TestGadget)
 
-class tst_QIviPendingReply : public QObject
+class tst_QIfPendingReply : public QObject
 {
     Q_OBJECT
 
 private Q_SLOTS:
     void initTestCase();
-    // This needs to be the first test, as it tests calling a function which returns QIviPendingReply
+    // This needs to be the first test, as it tests calling a function which returns QIfPendingReply
     // from QML and for this the basic types have to be registered before automatically.
     void testSuccess_qml();
     void testSuccess();
@@ -157,36 +157,36 @@ private Q_SLOTS:
     void testThenLater();
 
 private:
-    template <typename T> void test(const QIviPendingReply<T> &reply, bool failed, T expectedResult = T());
-    template <typename T> void test_helper(const QIviPendingReply<T> &reply, bool failed);
+    template <typename T> void test(const QIfPendingReply<T> &reply, bool failed, T expectedResult = T());
+    template <typename T> void test_helper(const QIfPendingReply<T> &reply, bool failed);
     template <typename T> void testQml(TestObject *testObject, const QByteArray qmlFunction, bool failed, T expectedResult = T());
     template <typename T> void qml_helper(TestObject *testObject, const QByteArray qmlFunction, bool failed,
                                           QVariant &result, QVariant &watcherValue, QVariant &replyValue);
 };
 
-void tst_QIviPendingReply::initTestCase()
+void tst_QIfPendingReply::initTestCase()
 {
-    qIviRegisterPendingReplyType<TestObject::TestEnum>();
-    qIviRegisterPendingReplyType<TestObject::TestFlags>();
-    qIviRegisterPendingReplyType<TestGadget>();
+    qIfRegisterPendingReplyType<TestObject::TestEnum>();
+    qIfRegisterPendingReplyType<TestObject::TestFlags>();
+    qIfRegisterPendingReplyType<TestGadget>();
 }
 
-template <typename T> void tst_QIviPendingReply::test(const QIviPendingReply<T> &reply, bool failed, T expectedResult)
+template <typename T> void tst_QIfPendingReply::test(const QIfPendingReply<T> &reply, bool failed, T expectedResult)
 {
     QCOMPARE(reply.reply(), T());
     test_helper<T>(reply, failed);
     QCOMPARE(reply.reply(), expectedResult);
 }
 
-template <typename T> void tst_QIviPendingReply::test_helper(const QIviPendingReply<T> &reply, bool failed)
+template <typename T> void tst_QIfPendingReply::test_helper(const QIfPendingReply<T> &reply, bool failed)
 {
     QVERIFY(reply.isValid());
     QVERIFY(reply.watcher()->isValid());
     QVERIFY(!reply.isResultAvailable());
     QVERIFY(!reply.isSuccessful());
-    QSignalSpy successSpy(reply.watcher(), &QIviPendingReplyWatcher::replySuccess);
-    QSignalSpy valueChangedSpy(reply.watcher(), &QIviPendingReplyWatcher::valueChanged);
-    QSignalSpy failedSpy(reply.watcher(), &QIviPendingReplyWatcher::replyFailed);
+    QSignalSpy successSpy(reply.watcher(), &QIfPendingReplyWatcher::replySuccess);
+    QSignalSpy valueChangedSpy(reply.watcher(), &QIfPendingReplyWatcher::valueChanged);
+    QSignalSpy failedSpy(reply.watcher(), &QIfPendingReplyWatcher::replyFailed);
     if (failed) {
         failedSpy.wait();
         QCOMPARE(successSpy.count(), 0);
@@ -205,7 +205,7 @@ template <typename T> void tst_QIviPendingReply::test_helper(const QIviPendingRe
         QCOMPARE(reply.value(), valueChangedSpy.at(0).at(0));
 }
 
-template <typename T> void tst_QIviPendingReply::testQml(TestObject *testObject, const QByteArray qmlFunction, bool failed, T expectedResult)
+template <typename T> void tst_QIfPendingReply::testQml(TestObject *testObject, const QByteArray qmlFunction, bool failed, T expectedResult)
 {
     QVariant result;
     QVariant watcherValue;
@@ -224,7 +224,7 @@ template <typename T> void tst_QIviPendingReply::testQml(TestObject *testObject,
     }
 }
 
-template <typename T> void tst_QIviPendingReply::qml_helper(TestObject *testObject, const QByteArray qmlFunction, bool failed,
+template <typename T> void tst_QIfPendingReply::qml_helper(TestObject *testObject, const QByteArray qmlFunction, bool failed,
                                                             QVariant &result, QVariant &watcherValue, QVariant &replyValue)
 {
     qWarning() << "TEST " << qmlFunction;
@@ -302,7 +302,7 @@ template <typename T> void tst_QIviPendingReply::qml_helper(TestObject *testObje
     replyValue = obj->property("replyValue");
 }
 
-void tst_QIviPendingReply::testSuccess_qml()
+void tst_QIfPendingReply::testSuccess_qml()
 {
     TestObject testObject;
 
@@ -320,7 +320,7 @@ void tst_QIviPendingReply::testSuccess_qml()
     testQml<TestGadget>(&testObject, "test_TestGadget(testObject.createGadget('FOO', 5))", false, TestGadget("FOO", 5));
 }
 
-void tst_QIviPendingReply::testSuccess()
+void tst_QIfPendingReply::testSuccess()
 {
     TestObject testObject;
 
@@ -336,20 +336,20 @@ void tst_QIviPendingReply::testSuccess()
     test<TestGadget>(testObject.test_TestGadget(TestGadget("FOO", 5)), false, TestGadget("FOO", 5));
 }
 
-void tst_QIviPendingReply::testSuccessFromQml()
+void tst_QIfPendingReply::testSuccessFromQml()
 {
     // Instead of using the PendingReply in QML and react on the result using then()
     // we test here to set the result using the setSuccess function
 
-    QIviPendingReply<void> voidReply;
-    QIviPendingReply<int> intReply;
+    QIfPendingReply<void> voidReply;
+    QIfPendingReply<int> intReply;
 
     QVERIFY(!voidReply.isResultAvailable());
     QVERIFY(!intReply.isResultAvailable());
 
     QQmlEngine engine;
-    engine.rootContext()->setContextProperty("voidReply", QVariant::fromValue(QIviPendingReplyBase(voidReply)));
-    engine.rootContext()->setContextProperty("intReply", QVariant::fromValue(QIviPendingReplyBase(intReply)));
+    engine.rootContext()->setContextProperty("voidReply", QVariant::fromValue(QIfPendingReplyBase(voidReply)));
+    engine.rootContext()->setContextProperty("intReply", QVariant::fromValue(QIfPendingReplyBase(intReply)));
 
     QByteArray qml ("import QtQuick 2.0; \n\
                      QtObject { \n\
@@ -371,7 +371,7 @@ void tst_QIviPendingReply::testSuccessFromQml()
     QCOMPARE(intReply.value(), 5);
 }
 
-void tst_QIviPendingReply::testConversion_qml()
+void tst_QIfPendingReply::testConversion_qml()
 {
     TestObject testObject;
 
@@ -385,7 +385,7 @@ void tst_QIviPendingReply::testConversion_qml()
                                            TestObject::TestFlags(TestObject::TestFlag_2 | TestObject::TestFlag_1));
 }
 
-void tst_QIviPendingReply::testFailed()
+void tst_QIfPendingReply::testFailed()
 {
     TestObject testObject;
 
@@ -399,7 +399,7 @@ void tst_QIviPendingReply::testFailed()
     test<TestGadget>(testObject.test_TestGadget(TestGadget("FOO", 5), true), true);
 }
 
-void tst_QIviPendingReply::testFailed_qml()
+void tst_QIfPendingReply::testFailed_qml()
 {
     TestObject testObject;
     QVariant result;
@@ -415,10 +415,10 @@ void tst_QIviPendingReply::testFailed_qml()
     testQml<TestGadget>(&testObject, "test_TestGadget(testObject.createGadget('FOO', 5), true)", true);
 }
 
-void tst_QIviPendingReply::testEmittingTwice()
+void tst_QIfPendingReply::testEmittingTwice()
 {
-    QIviPendingReply<QString> reply;
-    QSignalSpy successSpy(reply.watcher(), &QIviPendingReplyWatcher::replySuccess);
+    QIfPendingReply<QString> reply;
+    QSignalSpy successSpy(reply.watcher(), &QIfPendingReplyWatcher::replySuccess);
     reply.setSuccess(QStringLiteral("TEST"));
     QCOMPARE(successSpy.count(), 1);
     successSpy.clear();
@@ -429,15 +429,15 @@ void tst_QIviPendingReply::testEmittingTwice()
     QCOMPARE(successSpy.count(), 0);
 }
 
-void tst_QIviPendingReply::testInvalidReply()
+void tst_QIfPendingReply::testInvalidReply()
 {
-    QIviPendingReplyBase reply;
+    QIfPendingReplyBase reply;
     QVERIFY(!reply.isValid());
 }
 
-void tst_QIviPendingReply::testThen_errors()
+void tst_QIfPendingReply::testThen_errors()
 {
-    QIviPendingReply<QString> reply;
+    QIfPendingReply<QString> reply;
     QJSEngine engine;
     QJSValue value = engine.newObject();
     value.setProperty("foo", "bar");
@@ -454,22 +454,22 @@ void tst_QIviPendingReply::testThen_errors()
 //    reply.then(functor);
 }
 
-void tst_QIviPendingReply::testTypeError()
+void tst_QIfPendingReply::testTypeError()
 {
     //Use convertable types an check that the conversion works
     //wrong data type
-    QIviPendingReply<float> floatReply;
+    QIfPendingReply<float> floatReply;
     QTest::ignoreMessage(QtWarningMsg, "Expected: float but got QString");
-    static_cast<QIviPendingReplyBase*>(&floatReply)->setSuccess(QVariant("TEST_STRING"));
+    static_cast<QIfPendingReplyBase*>(&floatReply)->setSuccess(QVariant("TEST_STRING"));
     QVERIFY(!floatReply.isResultAvailable());
     //Enum out of scope
-    QIviPendingReply<TestObject::TestEnum> enumReply;
+    QIfPendingReply<TestObject::TestEnum> enumReply;
     QTest::ignoreMessage(QtWarningMsg, "Enum value out of range");
-    static_cast<QIviPendingReplyBase*>(&enumReply)->setSuccess(QVariant(10));
+    static_cast<QIfPendingReplyBase*>(&enumReply)->setSuccess(QVariant(10));
     QVERIFY(!enumReply.isResultAvailable());
 }
 
-void tst_QIviPendingReply::testThenLater()
+void tst_QIfPendingReply::testThenLater()
 {
     bool failed = false;
     TestObject testObject;
@@ -550,6 +550,6 @@ void tst_QIviPendingReply::testThenLater()
     }
 }
 
-QTEST_MAIN(tst_QIviPendingReply)
+QTEST_MAIN(tst_QIfPendingReply)
 
-#include "tst_qivipendingreply.moc"
+#include "tst_qifpendingreply.moc"

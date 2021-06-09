@@ -1,4 +1,4 @@
-# Generated from ivivehiclefunctions.pro.
+# Generated from ifvehiclefunctions.pro.
 
 add_subdirectory(climate_qml)
 add_subdirectory(window_qml)

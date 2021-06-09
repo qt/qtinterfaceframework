@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -29,11 +29,11 @@
 ****************************************************************************/
 
 #include <QtTest>
-#include <QIviAbstractFeature>
-#include <QIviServiceManager>
-#include <QIviSearchAndBrowseModel>
-#include <QIviSearchAndBrowseModelInterface>
-#include <QIviStandardItem>
+#include <QIfAbstractFeature>
+#include <QIfServiceManager>
+#include <QIfFilterAndBrowseModel>
+#include <QIfFilterAndBrowseModelInterface>
+#include <QIfStandardItem>
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QQmlComponent>
@@ -75,14 +75,14 @@ bool operator>(const QVariant &left, const QVariant &right)
 
 QT_END_NAMESPACE
 
-class TestBackend : public QIviSearchAndBrowseModelInterface
+class TestBackend : public QIfFilterAndBrowseModelInterface
 {
     Q_OBJECT
 
 public:
 
     //Sets the capabilities this instance should report
-    void setCapabilities(QtIviCoreModule::ModelCapabilities capabilities)
+    void setCapabilities(QtInterfaceFrameworkModule::ModelCapabilities capabilities)
     {
         m_caps = capabilities;
     }
@@ -106,9 +106,9 @@ public:
     {
         QString type("filter");
 
-        QList<QIviStandardItem> list;
+        QList<QIfStandardItem> list;
         for (int i=0; i<100; i++) {
-            QIviStandardItem item;
+            QIfStandardItem item;
             item.setId(QString::number(i));
             QVariantMap map;
             map.insert("type", type);
@@ -119,11 +119,11 @@ public:
         m_lists.insert(type, list);
     }
 
-    QList<QIviStandardItem> createItemList(const QString &name)
+    QList<QIfStandardItem> createItemList(const QString &name)
     {
-        QList<QIviStandardItem> list;
+        QList<QIfStandardItem> list;
         for (int i=0; i<100; i++) {
-            QIviStandardItem item;
+            QIfStandardItem item;
             item.setId(name + QLatin1String(" ") + QString::number(i));
             QVariantMap map;
             map.insert("type", name);
@@ -156,11 +156,11 @@ public:
         m_contentType = contentType;
         if (contentType == "levelTwo" || contentType == "levelThree")
             emit canGoBackChanged(identifier, true);
-        emit queryIdentifiersChanged(identifier, identifiersFromItem<QIviStandardItem>());
+        emit queryIdentifiersChanged(identifier, identifiersFromItem<QIfStandardItem>());
         emit contentTypeChanged(identifier, contentType);
     }
 
-    void setupFilter(const QUuid &identifier, QIviAbstractQueryTerm *term, const QList<QIviOrderTerm> &orderTerms) override
+    void setupFilter(const QUuid &identifier, QIfAbstractQueryTerm *term, const QList<QIfOrderTerm> &orderTerms) override
     {
         Q_UNUSED(identifier)
         m_filterTerm = term;
@@ -174,10 +174,10 @@ public:
         if (!m_lists.contains(m_contentType))
             return;
 
-        QList<QIviStandardItem> list = m_lists.value(m_contentType);
+        QList<QIfStandardItem> list = m_lists.value(m_contentType);
 
-        if (m_caps.testFlag(QtIviCoreModule::SupportsFiltering) && m_filterTerm) {
-            if (m_filterTerm->type() != QIviAbstractQueryTerm::FilterTerm) {
+        if (m_caps.testFlag(QtInterfaceFrameworkModule::SupportsFiltering) && m_filterTerm) {
+            if (m_filterTerm->type() != QIfAbstractQueryTerm::FilterTerm) {
                 qWarning("Only filtering is supported");
                 return;
             }
@@ -187,30 +187,30 @@ public:
                 return;
             }
 
-            QIviFilterTerm *filterTerm = static_cast<QIviFilterTerm*>(m_filterTerm);
+            QIfFilterTerm *filterTerm = static_cast<QIfFilterTerm*>(m_filterTerm);
 
-            if (filterTerm->operatorType() == QIviFilterTerm::EqualsCaseInsensitive) {
+            if (filterTerm->operatorType() == QIfFilterTerm::EqualsCaseInsensitive) {
                 qWarning("case insensitive comparison is not supported");
                 return;
             }
 
-            const QMetaObject mo = QIviStandardItem::staticMetaObject;
+            const QMetaObject mo = QIfStandardItem::staticMetaObject;
             int mpi = mo.indexOfProperty(filterTerm->propertyName().toUtf8());
             Q_ASSERT(mpi != -1);
 
             QMetaProperty mp = mo.property(mpi);
 
-            QList<QIviStandardItem> resultList;
-            for (const QIviStandardItem &item : qAsConst(list)) {
+            QList<QIfStandardItem> resultList;
+            for (const QIfStandardItem &item : qAsConst(list)) {
                 QVariant value = mp.readOnGadget(&item);
                 if (value.canConvert(filterTerm->value().metaType()))
                     value.convert(filterTerm->value().metaType());
 
-                bool filterCondition = (filterTerm->operatorType() == QIviFilterTerm::Equals && value == filterTerm->value()) ||
-                                       (filterTerm->operatorType() == QIviFilterTerm::GreaterThan && value > filterTerm->value()) ||
-                                       (filterTerm->operatorType() == QIviFilterTerm::GreaterEquals && value >= filterTerm->value()) ||
-                                       (filterTerm->operatorType() == QIviFilterTerm::LowerThan && value < filterTerm->value()) ||
-                                       (filterTerm->operatorType() == QIviFilterTerm::LowerEquals && value <= filterTerm->value());
+                bool filterCondition = (filterTerm->operatorType() == QIfFilterTerm::Equals && value == filterTerm->value()) ||
+                                       (filterTerm->operatorType() == QIfFilterTerm::GreaterThan && value > filterTerm->value()) ||
+                                       (filterTerm->operatorType() == QIfFilterTerm::GreaterEquals && value >= filterTerm->value()) ||
+                                       (filterTerm->operatorType() == QIfFilterTerm::LowerThan && value < filterTerm->value()) ||
+                                       (filterTerm->operatorType() == QIfFilterTerm::LowerEquals && value <= filterTerm->value());
 
                 if (filterTerm->isNegated())
                     filterCondition = !filterCondition;
@@ -222,19 +222,19 @@ public:
             list = resultList;
         }
 
-        if (m_caps.testFlag(QtIviCoreModule::SupportsSorting) && m_orderTerms.count()) {
+        if (m_caps.testFlag(QtInterfaceFrameworkModule::SupportsSorting) && m_orderTerms.count()) {
             if (m_orderTerms.count() > 1) {
                 qWarning("Only one order term is supported");
                 return;
             }
 
-            const QMetaObject mo = QIviStandardItem::staticMetaObject;
+            const QMetaObject mo = QIfStandardItem::staticMetaObject;
             int mpi = mo.indexOfProperty(m_orderTerms.first().propertyName().toUtf8());
             Q_ASSERT(mpi != -1);
 
             QMetaProperty mp = mo.property(mpi);
 
-            std::sort(list.begin(), list.end(), [mp, this](const QIviStandardItem &s1, const QIviStandardItem &s2) {
+            std::sort(list.begin(), list.end(), [mp, this](const QIfStandardItem &s1, const QIfStandardItem &s2) {
                 QVariant var1 = mp.readOnGadget(&s1);
                 QVariant var2 = mp.readOnGadget(&s2);
                 if (var1.canConvert(QMetaType::fromType<int>()) && var1.canConvert(QMetaType::fromType<int>())) {
@@ -250,7 +250,7 @@ public:
             });
         }
 
-        if (m_caps.testFlag(QtIviCoreModule::SupportsGetSize))
+        if (m_caps.testFlag(QtInterfaceFrameworkModule::SupportsGetSize))
             emit countChanged(identifier, list.count());
 
         QVariantList requestedItems;
@@ -266,38 +266,38 @@ public:
             emit canGoForwardChanged(identifier, QVector<bool>(requestedItems.count() - 1, true), start + 1);
     }
 
-    virtual QIviPendingReply<QString> goBack(const QUuid &identifier) override
+    virtual QIfPendingReply<QString> goBack(const QUuid &identifier) override
     {
         Q_UNUSED(identifier)
 
         if (m_contentType == "levelThree")
-            return QIviPendingReply<QString>("levelTwo");
+            return QIfPendingReply<QString>("levelTwo");
         else if (m_contentType == "levelTwo")
-            return QIviPendingReply<QString>("levelOne");
+            return QIfPendingReply<QString>("levelOne");
 
-        return QIviPendingReply<QString>::createFailedReply();
+        return QIfPendingReply<QString>::createFailedReply();
     }
 
-    virtual QIviPendingReply<QString> goForward(const QUuid &identifier, int index) override
+    virtual QIfPendingReply<QString> goForward(const QUuid &identifier, int index) override
     {
         Q_UNUSED(identifier)
         Q_UNUSED(index)
 
         if (m_contentType == "levelOne")
-            return QIviPendingReply<QString>("levelTwo");
+            return QIfPendingReply<QString>("levelTwo");
         else if (m_contentType == "levelTwo")
-            return QIviPendingReply<QString>("levelThree");
+            return QIfPendingReply<QString>("levelThree");
 
-        return QIviPendingReply<QString>::createFailedReply();
+        return QIfPendingReply<QString>::createFailedReply();
     }
 
-    virtual QIviPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &var) override
+    virtual QIfPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &var) override
     {
-        const QIviStandardItem *item = qtivi_gadgetFromVariant<QIviStandardItem>(this, var);
+        const QIfStandardItem *item = qtif_gadgetFromVariant<QIfStandardItem>(this, var);
         if (!item)
-            return QIviPendingReply<void>::createFailedReply();
+            return QIfPendingReply<void>::createFailedReply();
 
-        QList<QIviStandardItem> list = m_lists.value(m_contentType);
+        QList<QIfStandardItem> list = m_lists.value(m_contentType);
 
         list.insert(index, *item);
         QVariantList variantList = { QVariant::fromValue(*item) };
@@ -306,28 +306,28 @@ public:
 
         emit dataChanged(identifier, variantList, index, 0);
 
-        QIviPendingReply<void> reply;
+        QIfPendingReply<void> reply;
         reply.setSuccess();
         return reply;
     }
 
-    virtual QIviPendingReply<void> remove(const QUuid &identifier, int index) override
+    virtual QIfPendingReply<void> remove(const QUuid &identifier, int index) override
     {
-        QList<QIviStandardItem> list = m_lists.value(m_contentType);
+        QList<QIfStandardItem> list = m_lists.value(m_contentType);
 
         list.removeAt(index);
         m_lists.insert(m_contentType, list);
 
         emit dataChanged(identifier, QVariantList(), index, 1);
 
-        QIviPendingReply<void> reply;
+        QIfPendingReply<void> reply;
         reply.setSuccess();
         return reply;
     }
 
-    virtual QIviPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) override
+    virtual QIfPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) override
     {
-        QList<QIviStandardItem> list = m_lists.value(m_contentType);
+        QList<QIfStandardItem> list = m_lists.value(m_contentType);
 
         int min = qMin(currentIndex, newIndex);
         int max = qMax(currentIndex, newIndex);
@@ -341,49 +341,49 @@ public:
 
         emit dataChanged(identifier, variantLIst, min, max - min + 1);
 
-        QIviPendingReply<void> reply;
+        QIfPendingReply<void> reply;
         reply.setSuccess();
         return reply;
     }
 
-    virtual QIviPendingReply<int> indexOf(const QUuid &identifier, const QVariant &var) override
+    virtual QIfPendingReply<int> indexOf(const QUuid &identifier, const QVariant &var) override
     {
         Q_UNUSED(identifier)
-        const QIviStandardItem *item = qtivi_gadgetFromVariant<QIviStandardItem>(this, var);
+        const QIfStandardItem *item = qtif_gadgetFromVariant<QIfStandardItem>(this, var);
         if (!item)
-            return QIviPendingReply<int>::createFailedReply();
+            return QIfPendingReply<int>::createFailedReply();
 
-        QList<QIviStandardItem> list = m_lists.value(m_contentType);
+        QList<QIfStandardItem> list = m_lists.value(m_contentType);
 
-        QIviPendingReply<int> reply;
+        QIfPendingReply<int> reply;
         reply.setSuccess(list.indexOf(*item));
         return reply;
     }
 
 private:
-    QHash<QString, QList<QIviStandardItem>> m_lists;
-    QtIviCoreModule::ModelCapabilities m_caps;
+    QHash<QString, QList<QIfStandardItem>> m_lists;
+    QtInterfaceFrameworkModule::ModelCapabilities m_caps;
     QString m_contentType;
-    QIviAbstractQueryTerm *m_filterTerm = nullptr;
-    QList<QIviOrderTerm> m_orderTerms;
+    QIfAbstractQueryTerm *m_filterTerm = nullptr;
+    QList<QIfOrderTerm> m_orderTerms;
 };
 
-class TestServiceObject : public QIviServiceObject
+class TestServiceObject : public QIfServiceObject
 {
     Q_OBJECT
 
 public:
     explicit TestServiceObject(QObject *parent = nullptr) :
-        QIviServiceObject(parent)
+        QIfServiceObject(parent)
     {
         m_backend = new TestBackend;
-        m_interfaces << QIviSearchAndBrowseModel_iid;
+        m_interfaces << QIfFilterAndBrowseModel_iid;
     }
 
     QStringList interfaces() const override { return m_interfaces; }
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override
     {
-        if (interface == QIviSearchAndBrowseModel_iid)
+        if (interface == QIfFilterAndBrowseModel_iid)
             return testBackend();
         else
             return 0;
@@ -407,12 +407,12 @@ void verifyQml(QQmlEngine *engine, const QByteArray &qml)
     QVERIFY2(obj, qPrintable(component.errorString()));
 }
 
-class tst_QIviSearchAndBrowseModel : public QObject
+class tst_QIfFilterAndBrowseModel : public QObject
 {
     Q_OBJECT
 
 public:
-    tst_QIviSearchAndBrowseModel();
+    tst_QIfFilterAndBrowseModel();
 
 private Q_SLOTS:
     void cleanup();
@@ -421,7 +421,7 @@ private Q_SLOTS:
     void testClearServiceObject();
 
     //TODO it would be great if we can have a shared test class as most of these tests are also
-    //     part of the qivipagingmodel autotest
+    //     part of the qifpagingmodel autotest
     void testBasic_qml();
     void testGetAt();
     void testFetchMore_data();
@@ -439,30 +439,30 @@ private Q_SLOTS:
     void testMissingCapabilities();
 
 private:
-    QIviServiceManager *manager;
+    QIfServiceManager *manager;
 };
 
-tst_QIviSearchAndBrowseModel::tst_QIviSearchAndBrowseModel()\
-    : manager(QIviServiceManager::instance())
+tst_QIfFilterAndBrowseModel::tst_QIfFilterAndBrowseModel()\
+    : manager(QIfServiceManager::instance())
 {
 }
 
-void tst_QIviSearchAndBrowseModel::cleanup()
+void tst_QIfFilterAndBrowseModel::cleanup()
 {
     manager->unloadAllBackends();
 }
 
-void tst_QIviSearchAndBrowseModel::testWithoutBackend()
+void tst_QIfFilterAndBrowseModel::testWithoutBackend()
 {
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
 
-    QCOMPARE(model.discoveryMode(), QIviAbstractFeature::NoAutoDiscovery);
+    QCOMPARE(model.discoveryMode(), QIfAbstractFeature::NoAutoDiscovery);
     QTest::ignoreMessage(QtWarningMsg, "No backend connected");
     QVERIFY(!model.canGoBack());
     model.goBack();
 
     QVERIFY(!model.canGoForward(0));
-    QVERIFY(!model.goForward(0, QIviSearchAndBrowseModel::InModelNavigation));
+    QVERIFY(!model.goForward(0, QIfFilterAndBrowseModel::InModelNavigation));
 
     QTest::ignoreMessage(QtWarningMsg, "Can't move items without a connected backend");
     model.move(0, 0);
@@ -471,43 +471,43 @@ void tst_QIviSearchAndBrowseModel::testWithoutBackend()
     model.remove(0);
 
     QTest::ignoreMessage(QtWarningMsg, "Can't insert items without a connected backend");
-    model.insert(0, QVariant::fromValue(QIviStandardItem()));
+    model.insert(0, QVariant::fromValue(QIfStandardItem()));
 
     QTest::ignoreMessage(QtWarningMsg, "Can't get the index without a connected backend");
-    auto reply = model.indexOf(QVariant::fromValue(QIviStandardItem()));
+    auto reply = model.indexOf(QVariant::fromValue(QIfStandardItem()));
     QVERIFY(reply.isResultAvailable());
     QVERIFY(!reply.isSuccessful());
 
     QVERIFY(model.availableContentTypes().isEmpty());
 }
 
-void tst_QIviSearchAndBrowseModel::testClearServiceObject()
+void tst_QIfFilterAndBrowseModel::testClearServiceObject()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
 
-    QIviSearchAndBrowseModel defaultModel;
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel defaultModel;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
 
-    model.setLoadingType(QIviSearchAndBrowseModel::DataChanged);
+    model.setLoadingType(QIfFilterAndBrowseModel::DataChanged);
     model.setChunkSize(20);
     model.setContentType("simple");
     model.setFetchMoreThreshold(20);
 
-    QSignalSpy chunkSizeSpy(&model, &QIviSearchAndBrowseModel::chunkSizeChanged);
+    QSignalSpy chunkSizeSpy(&model, &QIfFilterAndBrowseModel::chunkSizeChanged);
     QVERIFY(model.chunkSize() != defaultModel.chunkSize());
-    QSignalSpy contentTypeSpy(&model, &QIviSearchAndBrowseModel::contentTypeChanged);
+    QSignalSpy contentTypeSpy(&model, &QIfFilterAndBrowseModel::contentTypeChanged);
     QVERIFY(model.contentType() != defaultModel.contentType());
-    QSignalSpy thresholdSpy(&model, &QIviSearchAndBrowseModel::fetchMoreThresholdChanged);
+    QSignalSpy thresholdSpy(&model, &QIfFilterAndBrowseModel::fetchMoreThresholdChanged);
     QVERIFY(model.fetchMoreThreshold() != defaultModel.fetchMoreThreshold());
-    QSignalSpy availableContentTypeSpy(&model, &QIviSearchAndBrowseModel::availableContentTypesChanged);
+    QSignalSpy availableContentTypeSpy(&model, &QIfFilterAndBrowseModel::availableContentTypesChanged);
     QVERIFY(model.availableContentTypes() != defaultModel.availableContentTypes());
-    QSignalSpy capabilitiesSpy(&model, &QIviSearchAndBrowseModel::capabilitiesChanged);
+    QSignalSpy capabilitiesSpy(&model, &QIfFilterAndBrowseModel::capabilitiesChanged);
     QVERIFY(model.capabilities() != defaultModel.capabilities());
-    QSignalSpy loadingTypeSpy(&model, &QIviSearchAndBrowseModel::loadingTypeChanged);
+    QSignalSpy loadingTypeSpy(&model, &QIfFilterAndBrowseModel::loadingTypeChanged);
     QVERIFY(model.loadingType() != defaultModel.loadingType());
     QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
     QVERIFY(model.rowCount() != defaultModel.rowCount());
@@ -531,7 +531,7 @@ void tst_QIviSearchAndBrowseModel::testClearServiceObject()
     QCOMPARE(resetSpy.count(), 1);
 }
 
-void tst_QIviSearchAndBrowseModel::testBasic_qml()
+void tst_QIfFilterAndBrowseModel::testBasic_qml()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
@@ -539,34 +539,34 @@ void tst_QIviSearchAndBrowseModel::testBasic_qml()
 
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("testBackend", service);
-    verifyQml(&engine, "import QtQuick 2.0; import QtIvi 1.0; SearchAndBrowseModel{}");
-    verifyQml(&engine, "import QtQuick 2.0; import QtIvi 1.0; SearchAndBrowseModel{ \
+    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; FilterAndBrowseModel{}");
+    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; FilterAndBrowseModel{ \
                             serviceObject: testBackend \n\
                         }");
-    verifyQml(&engine, "import QtQuick 2.0; import QtIvi 1.0; SearchAndBrowseModel{ \
+    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; FilterAndBrowseModel{ \
                             serviceObject: testBackend \n\
                             contentType: 'simple' \n\
                         }");
 }
 
-void tst_QIviSearchAndBrowseModel::testGetAt()
+void tst_QIfFilterAndBrowseModel::testGetAt()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
     model.setContentType("simple");
 
-    QIviStandardItem item = model.at<QIviStandardItem>(0);
+    QIfStandardItem item = model.at<QIfStandardItem>(0);
     QCOMPARE(item.id(), QLatin1String("simple 0"));
 
     QVariant var = model.get(0);
-    QCOMPARE(var.value<QIviStandardItem>().id(), item.id());
+    QCOMPARE(var.value<QIfStandardItem>().id(), item.id());
 }
 
-void tst_QIviSearchAndBrowseModel::testFetchMore_data()
+void tst_QIfFilterAndBrowseModel::testFetchMore_data()
 {
     QTest::addColumn<int>("chunkSize");
     QTest::addColumn<int>("fetchMoreThreshold");
@@ -575,7 +575,7 @@ void tst_QIviSearchAndBrowseModel::testFetchMore_data()
     QTest::newRow("custom fetchMoreThreshold") << -1 << 2;
 }
 
-void tst_QIviSearchAndBrowseModel::testFetchMore()
+void tst_QIfFilterAndBrowseModel::testFetchMore()
 {
     QFETCH(int, chunkSize);
     QFETCH(int, fetchMoreThreshold);
@@ -584,7 +584,7 @@ void tst_QIviSearchAndBrowseModel::testFetchMore()
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
 
     if (chunkSize != -1) {
@@ -621,19 +621,19 @@ void tst_QIviSearchAndBrowseModel::testFetchMore()
     QVERIFY(!contentTypeSpy.count());
 
     QVERIFY(model.serviceObject());
-    QCOMPARE(model.loadingType(), QIviSearchAndBrowseModel::FetchMore);
+    QCOMPARE(model.loadingType(), QIfFilterAndBrowseModel::FetchMore);
 
     QSignalSpy fetchMoreThresholdSpy(&model, SIGNAL(fetchMoreThresholdReached()));
 
     // Ask for an item before the threshold, shouldn't trigger the threshold reached signal and fetch new data.
     int offset = model.fetchMoreThreshold() + 1;
-    QCOMPARE(model.at<QIviStandardItem>(model.chunkSize() - offset).id(),
+    QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - offset).id(),
              QLatin1String("simple ") + QString::number(model.chunkSize() - offset));
     QVERIFY(!fetchMoreThresholdSpy.count());
 
     QCOMPARE(model.rowCount(), model.chunkSize());
     // By using model.at we already prefetch the next chunk of data
-    QCOMPARE(model.at<QIviStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
+    QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
 
     QVERIFY(fetchMoreThresholdSpy.count());
     fetchMoreThresholdSpy.clear();
@@ -648,14 +648,14 @@ void tst_QIviSearchAndBrowseModel::testFetchMore()
     //qDebug() << model.rowCount();
 }
 
-void tst_QIviSearchAndBrowseModel::testDataChangedMode()
+void tst_QIfFilterAndBrowseModel::testDataChangedMode()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
 
     QVERIFY(model.availableContentTypes().contains("simple"));
@@ -665,16 +665,16 @@ void tst_QIviSearchAndBrowseModel::testDataChangedMode()
     //TODO remove this section once we have fixed the capability race
     QSignalSpy fetchMoreThresholdSpy(&model, SIGNAL(fetchMoreThresholdReached()));
     QCOMPARE(model.rowCount(), model.chunkSize());
-    QCOMPARE(model.at<QIviStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
+    QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
     QVERIFY(fetchMoreThresholdSpy.count());
     fetchMoreThresholdSpy.clear();
 
-    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIviPagingModel::LoadingType)));
+    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIfPagingModel::LoadingType)));
     model.setLoadingType(model.loadingType());
     QVERIFY(!loadingTypeChangedSpy.count());
 
-    model.setLoadingType(QIviPagingModel::DataChanged);
-    QCOMPARE(model.loadingType(), QIviPagingModel::DataChanged);
+    model.setLoadingType(QIfPagingModel::DataChanged);
+    QCOMPARE(model.loadingType(), QIfPagingModel::DataChanged);
     QVERIFY(loadingTypeChangedSpy.count());
 
     QCOMPARE(model.rowCount(), 100);
@@ -683,7 +683,7 @@ void tst_QIviSearchAndBrowseModel::testDataChangedMode()
 
     // Asking for an item near inside the threshold range should trigger a new fetch.
     QSignalSpy fetchDataSpy(service->testBackend(), SIGNAL(dataFetched(const QUuid &, const QList<QVariant> &, int , bool )));
-    QCOMPARE(model.at<QIviStandardItem>(testIndex).id(), QLatin1String("simple ") + QString::number(testIndex));
+    QCOMPARE(model.at<QIfStandardItem>(testIndex).id(), QLatin1String("simple ") + QString::number(testIndex));
     QVERIFY(fetchMoreThresholdSpy.count());
     QVERIFY(fetchDataSpy.count());
 
@@ -691,14 +691,14 @@ void tst_QIviSearchAndBrowseModel::testDataChangedMode()
     QCOMPARE(fetchDataSpy.at(0).at(2).toInt(), testIndex + 1);
 }
 
-void tst_QIviSearchAndBrowseModel::testReload()
+void tst_QIfFilterAndBrowseModel::testReload()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
 
     QVERIFY(model.serviceObject());
@@ -720,26 +720,26 @@ void tst_QIviSearchAndBrowseModel::testReload()
     QCOMPARE(model.rowCount(), model.chunkSize());
 }
 
-void tst_QIviSearchAndBrowseModel::testDataChangedMode_jump()
+void tst_QIfFilterAndBrowseModel::testDataChangedMode_jump()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
 
     QVERIFY(model.availableContentTypes().contains("simple"));
     model.setContentType("simple");
     QVERIFY(model.serviceObject());
 
-    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIviPagingModel::LoadingType)));
+    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIfPagingModel::LoadingType)));
     model.setLoadingType(model.loadingType());
     QVERIFY(!loadingTypeChangedSpy.count());
 
-    model.setLoadingType(QIviPagingModel::DataChanged);
-    QCOMPARE(model.loadingType(), QIviSearchAndBrowseModel::DataChanged);
+    model.setLoadingType(QIfPagingModel::DataChanged);
+    QCOMPARE(model.loadingType(), QIfFilterAndBrowseModel::DataChanged);
     QVERIFY(loadingTypeChangedSpy.count());
 
     QCOMPARE(model.rowCount(), 100);
@@ -749,7 +749,7 @@ void tst_QIviSearchAndBrowseModel::testDataChangedMode_jump()
     QSignalSpy fetchDataSpy(service->testBackend(), SIGNAL(dataFetched(const QUuid &, const QList<QVariant> &, int , bool )));
     model.get(99);
     dataChangedSpy.wait();
-    QCOMPARE(model.at<QIviStandardItem>(99).id(), QLatin1String("simple ") + QString::number(99));
+    QCOMPARE(model.at<QIfStandardItem>(99).id(), QLatin1String("simple ") + QString::number(99));
     QVERIFY(fetchDataSpy.count());
 
     // Test that we really fetched new data
@@ -757,24 +757,24 @@ void tst_QIviSearchAndBrowseModel::testDataChangedMode_jump()
     QCOMPARE(fetchDataSpy.at(0).at(2).toInt(), chunkBegin);
 }
 
-void tst_QIviSearchAndBrowseModel::testNavigation_data()
+void tst_QIfFilterAndBrowseModel::testNavigation_data()
 {
-    QTest::addColumn<QIviSearchAndBrowseModel::NavigationType>("navigationType");
-    QTest::newRow("InModelNavigation") << QIviSearchAndBrowseModel::InModelNavigation;
-    QTest::newRow("OutOfModelNavigation") << QIviSearchAndBrowseModel::OutOfModelNavigation;
+    QTest::addColumn<QIfFilterAndBrowseModel::NavigationType>("navigationType");
+    QTest::newRow("InModelNavigation") << QIfFilterAndBrowseModel::InModelNavigation;
+    QTest::newRow("OutOfModelNavigation") << QIfFilterAndBrowseModel::OutOfModelNavigation;
 }
 
-void tst_QIviSearchAndBrowseModel::testNavigation()
+void tst_QIfFilterAndBrowseModel::testNavigation()
 {
-    QFETCH(QIviSearchAndBrowseModel::NavigationType, navigationType);
+    QFETCH(QIfFilterAndBrowseModel::NavigationType, navigationType);
 
-    QStack<QIviSearchAndBrowseModel*> modelStack;
+    QStack<QIfFilterAndBrowseModel*> modelStack;
     TestServiceObject *service = new TestServiceObject();
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsStatelessNavigation);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsStatelessNavigation);
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeNavigationData();
 
-    QIviSearchAndBrowseModel *model = new QIviSearchAndBrowseModel();
+    QIfFilterAndBrowseModel *model = new QIfFilterAndBrowseModel();
     model->setServiceObject(service);
 
     QVERIFY(model->availableContentTypes().contains("levelOne"));
@@ -782,23 +782,23 @@ void tst_QIviSearchAndBrowseModel::testNavigation()
     QVERIFY(model->serviceObject());
 
     QCOMPARE(model->rowCount(), model->chunkSize());
-    QCOMPARE(model->at<QIviStandardItem>(1).id(), QLatin1String("levelOne ") + QString::number(1));
-    QCOMPARE(model->data(model->index(1), QIviSearchAndBrowseModel::CanGoForwardRole).toBool(), true);
+    QCOMPARE(model->at<QIfStandardItem>(1).id(), QLatin1String("levelOne ") + QString::number(1));
+    QCOMPARE(model->data(model->index(1), QIfFilterAndBrowseModel::CanGoForwardRole).toBool(), true);
 
     // Check that navigating deeper on the first item is not possible
     QVERIFY(!model->canGoForward(0));
 
     // Navigate Deeper
     QVERIFY(model->canGoForward(1));
-    QIviSearchAndBrowseModel *newModel = model->goForward(1, navigationType);
+    QIfFilterAndBrowseModel *newModel = model->goForward(1, navigationType);
     if (newModel) {
         modelStack.push(model);
         model = newModel;
     }
-    if (navigationType == QIviSearchAndBrowseModel::InModelNavigation)
+    if (navigationType == QIfFilterAndBrowseModel::InModelNavigation)
         QVERIFY(model->canGoBack());
-    QCOMPARE(model->at<QIviStandardItem>(1).id(), QLatin1String("levelTwo ") + QString::number(1));
-    QCOMPARE(model->data(model->index(1), QIviSearchAndBrowseModel::CanGoForwardRole).toBool(), true);
+    QCOMPARE(model->at<QIfStandardItem>(1).id(), QLatin1String("levelTwo ") + QString::number(1));
+    QCOMPARE(model->data(model->index(1), QIfFilterAndBrowseModel::CanGoForwardRole).toBool(), true);
 
     // Check that navigating deeper on the first item is not possible
     QVERIFY(!model->canGoForward(0));
@@ -810,10 +810,10 @@ void tst_QIviSearchAndBrowseModel::testNavigation()
         modelStack.push(model);
         model = newModel;
     }
-    if (navigationType == QIviSearchAndBrowseModel::InModelNavigation)
+    if (navigationType == QIfFilterAndBrowseModel::InModelNavigation)
         QVERIFY(model->canGoBack());
-    QCOMPARE(model->at<QIviStandardItem>(1).id(), QLatin1String("levelThree ") + QString::number(1));
-    QCOMPARE(model->data(model->index(1), QIviSearchAndBrowseModel::CanGoForwardRole).toBool(), false);
+    QCOMPARE(model->at<QIfStandardItem>(1).id(), QLatin1String("levelThree ") + QString::number(1));
+    QCOMPARE(model->data(model->index(1), QIfFilterAndBrowseModel::CanGoForwardRole).toBool(), false);
 
     // Check that we can't got forward anymore
     QVERIFY(!model->canGoForward(0));
@@ -821,17 +821,17 @@ void tst_QIviSearchAndBrowseModel::testNavigation()
     QTest::ignoreMessage(QtWarningMsg, "Can't go forward anymore");
     QVERIFY(!model->goForward(1, navigationType));
 
-    if (navigationType == QIviSearchAndBrowseModel::InModelNavigation) {
+    if (navigationType == QIfFilterAndBrowseModel::InModelNavigation) {
         // Navigate back to previous level
         QVERIFY(model->canGoBack());
 
         model->goBack();
-        QCOMPARE(model->at<QIviStandardItem>(1).id(), QLatin1String("levelTwo ") + QString::number(1));
+        QCOMPARE(model->at<QIfStandardItem>(1).id(), QLatin1String("levelTwo ") + QString::number(1));
 
         QVERIFY(model->canGoBack());
 
         model->goBack();
-        QCOMPARE(model->at<QIviStandardItem>(1).id(), QLatin1String("levelOne ") + QString::number(1));
+        QCOMPARE(model->at<QIfStandardItem>(1).id(), QLatin1String("levelOne ") + QString::number(1));
 
         QVERIFY(!model->canGoBack());
         QTest::ignoreMessage(QtWarningMsg, "Can't go backward anymore");
@@ -843,7 +843,7 @@ void tst_QIviSearchAndBrowseModel::testNavigation()
 }
 
 // If more complex queries are added here you also need to make sure the backend can handle it.
-void tst_QIviSearchAndBrowseModel::testFilter_data()
+void tst_QIfFilterAndBrowseModel::testFilter_data()
 {
     QTest::addColumn<QString>("query");
     QTest::addColumn<QString>("expectedContent");
@@ -855,23 +855,23 @@ void tst_QIviSearchAndBrowseModel::testFilter_data()
     QTest::newRow("filter + order") << QString("id<50[\\id]") << QString("49");
 }
 
-void tst_QIviSearchAndBrowseModel::testFilter()
+void tst_QIfFilterAndBrowseModel::testFilter()
 {
     QFETCH(QString, query);
     QFETCH(QString, expectedContent);
 
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::ModelCapabilities( QtIviCoreModule::SupportsFiltering |
-                                                                                QtIviCoreModule::SupportsSorting));
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::ModelCapabilities( QtInterfaceFrameworkModule::SupportsFiltering |
+                                                                                QtInterfaceFrameworkModule::SupportsSorting));
     service->testBackend()->initializeFilterData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
     model.setContentType("filter");
 
     // Check that we have a unfiltered content before setting the filter
-    QCOMPARE(model.at<QIviStandardItem>(0).id(), QString::number(0));
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), QString::number(0));
 
     // Set the query
     QSignalSpy queryChangedSpy(&model, SIGNAL(queryChanged(QString)));
@@ -883,32 +883,32 @@ void tst_QIviSearchAndBrowseModel::testFilter()
     QVERIFY(queryChangedSpy.count());
 
     // Check the filtered content
-    QCOMPARE(model.at<QIviStandardItem>(0).id(), expectedContent);
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), expectedContent);
 
     // Reset to unfiltered
     model.setQuery(QString());
     QCOMPARE(model.query(), QString());
 
     // Check that we have a unfiltered content after removing the filter
-    QCOMPARE(model.at<QIviStandardItem>(0).id(), QString::number(0));
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), QString::number(0));
 }
 
-void tst_QIviSearchAndBrowseModel::testEditing()
+void tst_QIfFilterAndBrowseModel::testEditing()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::ModelCapabilities( QtIviCoreModule::SupportsInsert |
-                                                                                QtIviCoreModule::SupportsRemove |
-                                                                                QtIviCoreModule::SupportsMove));
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::ModelCapabilities( QtInterfaceFrameworkModule::SupportsInsert |
+                                                                                QtInterfaceFrameworkModule::SupportsRemove |
+                                                                                QtInterfaceFrameworkModule::SupportsMove));
     service->testBackend()->initializeSimpleData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
     model.setContentType("simple");
 
-    QCOMPARE(model.at<QIviStandardItem>(0).id(), QLatin1String("simple 0"));
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), QLatin1String("simple 0"));
 
-    QIviStandardItem newItem;
+    QIfStandardItem newItem;
     newItem.setId(QLatin1String("testItem"));
 
     // Add a new Item
@@ -918,7 +918,7 @@ void tst_QIviSearchAndBrowseModel::testEditing()
     QCOMPARE(insertSpy.at(0).at(1).toInt(), 0);
     QCOMPARE(insertSpy.at(0).at(2).toInt(), 0);
 
-    QCOMPARE(model.at<QIviStandardItem>(0).id(), newItem.id());
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), newItem.id());
 
     // Move the item to a new location
     QSignalSpy moveSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
@@ -928,7 +928,7 @@ void tst_QIviSearchAndBrowseModel::testEditing()
     QCOMPARE(moveSpy.at(0).at(0).toModelIndex().row(), 0);
     QCOMPARE(moveSpy.at(0).at(1).toModelIndex().row(), newIndex);
 
-    QCOMPARE(model.at<QIviStandardItem>(newIndex).id(), newItem.id());
+    QCOMPARE(model.at<QIfStandardItem>(newIndex).id(), newItem.id());
 
     // Remove the item again
     QSignalSpy removedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int , int )));
@@ -937,16 +937,16 @@ void tst_QIviSearchAndBrowseModel::testEditing()
     QCOMPARE(removedSpy.at(0).at(1).toInt(), newIndex);
     QCOMPARE(removedSpy.at(0).at(2).toInt(), newIndex);
 
-    QCOMPARE(model.at<QIviStandardItem>(newIndex).id(), QLatin1String("simple 10"));
+    QCOMPARE(model.at<QIfStandardItem>(newIndex).id(), QLatin1String("simple 10"));
 }
 
-void tst_QIviSearchAndBrowseModel::testIndexOf_qml()
+void tst_QIfFilterAndBrowseModel::testIndexOf_qml()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
     model.setContentType("simple");
 
@@ -959,7 +959,7 @@ void tst_QIviSearchAndBrowseModel::testIndexOf_qml()
 
     obj->setProperty("model", QVariant::fromValue(&model));
 
-    QIviStandardItem item = model.at<QIviStandardItem>(25);
+    QIfStandardItem item = model.at<QIfStandardItem>(25);
     QCOMPARE(item.id(), QLatin1String("simple 25"));
 
     QVERIFY(QMetaObject::invokeMethod(obj, "callIndexOf", Q_ARG(QVariant, QVariant::fromValue(item))));
@@ -971,15 +971,15 @@ void tst_QIviSearchAndBrowseModel::testIndexOf_qml()
     QCOMPARE(indexOfSpy.at(0).at(0).toInt(), 25);
 }
 
-void tst_QIviSearchAndBrowseModel::testInputErrors()
+void tst_QIfFilterAndBrowseModel::testInputErrors()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
-    service->testBackend()->setCapabilities(QtIviCoreModule::ModelCapabilities( QtIviCoreModule::SupportsFiltering |
-                                                                                QtIviCoreModule::SupportsSorting));
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::ModelCapabilities( QtInterfaceFrameworkModule::SupportsFiltering |
+                                                                                QtInterfaceFrameworkModule::SupportsSorting));
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
     model.setContentType("simple");
 
@@ -997,22 +997,22 @@ void tst_QIviSearchAndBrowseModel::testInputErrors()
     model.setQuery(QString("id>"));
 }
 
-void tst_QIviSearchAndBrowseModel::testMissingCapabilities()
+void tst_QIfFilterAndBrowseModel::testMissingCapabilities()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeNavigationData();
 
-    QIviSearchAndBrowseModel model;
+    QIfFilterAndBrowseModel model;
     model.setServiceObject(service);
     model.setContentType("levelOne");
 
     QTest::ignoreMessage(QtWarningMsg, "The backend doesn't support the DataChanged loading type. This call will have no effect");
-    model.setLoadingType(QIviSearchAndBrowseModel::DataChanged);
-    QCOMPARE(model.loadingType(), QIviSearchAndBrowseModel::FetchMore);
+    model.setLoadingType(QIfFilterAndBrowseModel::DataChanged);
+    QCOMPARE(model.loadingType(), QIfFilterAndBrowseModel::FetchMore);
 
     QTest::ignoreMessage(QtWarningMsg, "The backend doesn't support the OutOfModelNavigation");
-    QVERIFY(!model.goForward(1, QIviSearchAndBrowseModel::OutOfModelNavigation));
+    QVERIFY(!model.goForward(1, QIfFilterAndBrowseModel::OutOfModelNavigation));
 
     QTest::ignoreMessage(QtWarningMsg, "The backend doesn't support moving of items");
     model.move(0, 0);
@@ -1021,13 +1021,13 @@ void tst_QIviSearchAndBrowseModel::testMissingCapabilities()
     model.remove(0);
 
     QTest::ignoreMessage(QtWarningMsg, "The backend doesn't support inserting items");
-    model.insert(0, QVariant::fromValue(QIviStandardItem()));
+    model.insert(0, QVariant::fromValue(QIfStandardItem()));
 
     QTest::ignoreMessage(QtWarningMsg, "The backend doesn't support filtering or sorting. Changing the query will have no effect");
     model.setQuery(QString("id>10"));
 }
 
-QTEST_MAIN(tst_QIviSearchAndBrowseModel)
+QTEST_MAIN(tst_QIfFilterAndBrowseModel)
 
-#include "tst_qivisearchandbrowsemodel.moc"
+#include "tst_qiffilterandbrowsemodel.moc"
 

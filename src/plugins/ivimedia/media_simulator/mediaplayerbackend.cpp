@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -52,16 +52,16 @@
 #include <QtDebug>
 
 MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *parent)
-    : QIviMediaPlayerBackendInterface(parent)
+    : QIfMediaPlayerBackendInterface(parent)
     , m_count(0)
     , m_currentIndex(-1)
-    , m_playMode(QIviMediaPlayer::Normal)
-    , m_requestedState(QIviMediaPlayer::Stopped)
-    , m_state(QIviMediaPlayer::Stopped)
+    , m_playMode(QIfMediaPlayer::Normal)
+    , m_requestedState(QIfMediaPlayer::Stopped)
+    , m_state(QIfMediaPlayer::Stopped)
     , m_threadPool(new QThreadPool(this))
     , m_player(new QMediaPlayer(this))
 {
-    qRegisterMetaType<QIviAudioTrackItem>();
+    qRegisterMetaType<QIfAudioTrackItem>();
 
     m_threadPool->setMaxThreadCount(1);
     connect(m_player, &QMediaPlayer::durationChanged,
@@ -97,21 +97,21 @@ void MediaPlayerBackend::play()
 {
     qCDebug(media) << Q_FUNC_INFO;
     qCDebug(media) << m_player->source();
-    m_requestedState = QIviMediaPlayer::Playing;
+    m_requestedState = QIfMediaPlayer::Playing;
     m_player->play();
 }
 
 void MediaPlayerBackend::pause()
 {
     qCDebug(media) << Q_FUNC_INFO;
-    m_requestedState = QIviMediaPlayer::Paused;
+    m_requestedState = QIfMediaPlayer::Paused;
     m_player->pause();
 }
 
 void MediaPlayerBackend::stop()
 {
     qCDebug(media) << Q_FUNC_INFO;
-    m_requestedState = QIviMediaPlayer::Stopped;
+    m_requestedState = QIfMediaPlayer::Stopped;
     m_player->stop();
 }
 
@@ -125,11 +125,11 @@ void MediaPlayerBackend::next()
 {
     qCDebug(media) << Q_FUNC_INFO;
     int nextIndex = m_currentIndex + 1;
-    if (m_playMode == QIviMediaPlayer::Shuffle)
+    if (m_playMode == QIfMediaPlayer::Shuffle)
         nextIndex = QRandomGenerator::global()->bounded(m_count);
-    else if (m_playMode == QIviMediaPlayer::RepeatTrack)
+    else if (m_playMode == QIfMediaPlayer::RepeatTrack)
         nextIndex = m_currentIndex;
-    else if (m_playMode == QIviMediaPlayer::RepeatAll && nextIndex >= m_count)
+    else if (m_playMode == QIfMediaPlayer::RepeatAll && nextIndex >= m_count)
         nextIndex = 0;
 
     setCurrentIndex(nextIndex);
@@ -139,17 +139,17 @@ void MediaPlayerBackend::previous()
 {
     qCDebug(media) << Q_FUNC_INFO;
     int nextIndex = m_currentIndex - 1;
-    if (m_playMode == QIviMediaPlayer::Shuffle)
+    if (m_playMode == QIfMediaPlayer::Shuffle)
         nextIndex = QRandomGenerator::global()->bounded(m_count);
-    else if (m_playMode == QIviMediaPlayer::RepeatTrack)
+    else if (m_playMode == QIfMediaPlayer::RepeatTrack)
         nextIndex = m_currentIndex;
-    else if (m_playMode == QIviMediaPlayer::RepeatAll && nextIndex < 0)
+    else if (m_playMode == QIfMediaPlayer::RepeatAll && nextIndex < 0)
         nextIndex = m_count - 1;
 
     setCurrentIndex(nextIndex);
 }
 
-void MediaPlayerBackend::setPlayMode(QIviMediaPlayer::PlayMode playMode)
+void MediaPlayerBackend::setPlayMode(QIfMediaPlayer::PlayMode playMode)
 {
     qCDebug(media) << Q_FUNC_INFO << playMode;
     m_playMode = playMode;
@@ -183,7 +183,7 @@ void MediaPlayerBackend::fetchData(const QUuid &identifier, int start, int count
 
 void MediaPlayerBackend::insert(int index, const QVariant &i)
 {
-    const QIviPlayableItem *item = qtivi_gadgetFromVariant<QIviPlayableItem>(this, i);
+    const QIfPlayableItem *item = qtif_gadgetFromVariant<QIfPlayableItem>(this, i);
     if (!item)
         return;
     QString queryString;
@@ -202,7 +202,7 @@ void MediaPlayerBackend::insert(int index, const QVariant &i)
             whereClause = QStringLiteral("albumName == \"%1\"").arg(item->name());
         } else {
             qCWarning(media) << "Can't insert item: The provided type is not supported: " << item->type();
-            emit errorChanged(QIviAbstractFeature::InvalidOperation, QStringLiteral("Can't insert item: Given type is not supported."));
+            emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("Can't insert item: Given type is not supported."));
             return;
         }
         queryString = QStringLiteral("UPDATE queue SET qindex = qindex + (SELECT count(*) from track WHERE %2) WHERE qindex >= %1;"
@@ -262,12 +262,12 @@ void MediaPlayerBackend::move(int cur_index, int new_index)
     Q_UNUSED(future);
 }
 
-QIviMediaPlayer::PlayMode MediaPlayerBackend::playMode() const
+QIfMediaPlayer::PlayMode MediaPlayerBackend::playMode() const
 {
     return m_playMode;
 }
 
-QIviMediaPlayer::PlayState MediaPlayerBackend::playState() const
+QIfMediaPlayer::PlayState MediaPlayerBackend::playState() const
 {
     return m_state;
 }
@@ -321,7 +321,7 @@ void MediaPlayerBackend::doSqlOperation(MediaPlayerBackend::OperationType type, 
                 QString album = query.value(2).toString();
 
                 //Creating the TrackItem in an factory with would make this more performant
-                QIviAudioTrackItem item;
+                QIfAudioTrackItem item;
                 item.setId(id);
                 item.setTitle(query.value(3).toString());
                 item.setArtist(artist);
@@ -350,11 +350,11 @@ void MediaPlayerBackend::doSqlOperation(MediaPlayerBackend::OperationType type, 
         emit dataFetched(identifier, list, start, list.count() >= count);
     } else if (type == MediaPlayerBackend::SetIndex) {
         if (list.isEmpty()) {
-            emit errorChanged(QIviAbstractFeature::InvalidOperation, QStringLiteral("SIMULATION: Can't set index in an empty queue"));
+            emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("SIMULATION: Can't set index in an empty queue"));
             return;
         }
 
-        auto item = list.at(0).value<QIviAudioTrackItem>();
+        auto item = list.at(0).value<QIfAudioTrackItem>();
         emit playTrack(item.url());
         emit currentIndexChanged(start);
         m_currentTrack = list.at(0);
@@ -466,9 +466,9 @@ void MediaPlayerBackend::onStateChanged(QMediaPlayer::PlaybackState state)
 {
     qCDebug(media) << Q_FUNC_INFO << state;
     if (state == QMediaPlayer::PlayingState)
-        m_state = QIviMediaPlayer::Playing;
+        m_state = QIfMediaPlayer::Playing;
     else if (state == QMediaPlayer::PausedState)
-        m_state = QIviMediaPlayer::Paused;
+        m_state = QIfMediaPlayer::Paused;
 
     emit playStateChanged(m_state);
 }
@@ -478,7 +478,7 @@ void MediaPlayerBackend::onMediaStatusChanged(QMediaPlayer::MediaStatus status)
     qCDebug(media) << Q_FUNC_INFO << status;
     if (status == QMediaPlayer::EndOfMedia)
         next();
-    if (status == QMediaPlayer::LoadedMedia && m_requestedState == QIviMediaPlayer::Playing)
+    if (status == QMediaPlayer::LoadedMedia && m_requestedState == QIfMediaPlayer::Playing)
         m_player->play();
 }
 

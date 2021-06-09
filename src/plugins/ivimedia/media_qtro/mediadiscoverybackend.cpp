@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -45,13 +45,13 @@
 #include <QTimer>
 #include <QSettings>
 
-Q_LOGGING_CATEGORY(qLcROQIviMediaDiscovery, "qtivi.media.qivimediadiscoverybackend.remoteobjects", QtInfoMsg)
+Q_LOGGING_CATEGORY(qLcROQIfMediaDiscovery, "interfaceframework.media.qifmediadiscoverybackend.remoteobjects", QtInfoMsg)
 
 MediaDiscoveryBackend::MediaDiscoveryBackend(QObject *parent)
-    : QIviMediaDeviceDiscoveryModelBackendInterface(parent)
+    : QIfMediaDeviceDiscoveryModelBackendInterface(parent)
     , m_node(nullptr)
     , m_initialized(false)
-    , m_helper(new QIviRemoteObjectReplicaHelper(qLcROQIviMediaDiscovery(), this))
+    , m_helper(new QIfRemoteObjectReplicaHelper(qLcROQIfMediaDiscovery(), this))
 {
 }
 
@@ -67,7 +67,7 @@ void MediaDiscoveryBackend::initialize()
 
     QTimer::singleShot(3000, this, [this](){
         if (!m_replica->isInitialized())
-            qCCritical(qLcROQIviMediaDiscovery) << "QtIviMedia.QIviMediaDiscoveryModel wasn't initialized within the timeout period. Please make sure the server is running.";
+            qCCritical(qLcROQIfMediaDiscovery) << "QtIfMedia.QIfMediaDiscoveryModel wasn't initialized within the timeout period. Please make sure the server is running.";
     });
 }
 
@@ -77,7 +77,7 @@ void MediaDiscoveryBackend::onDevicesChanged(const QStringList &devices)
         return;
 
     for (const QString &device : devices) {
-        qCInfo(qLcROQIviMediaDiscovery) << "Adding USB Device: " << device;
+        qCInfo(qLcROQIfMediaDiscovery) << "Adding USB Device: " << device;
         m_deviceMap.insert(device, new USBDevice(device));
     }
     emit availableDevices(m_deviceMap.values());
@@ -93,7 +93,7 @@ void MediaDiscoveryBackend::onDeviceAdded(const QString &device)
 
 void MediaDiscoveryBackend::onDeviceRemoved(const QString &device)
 {
-    QIviServiceObject *dev = m_deviceMap.take(device);
+    QIfServiceObject *dev = m_deviceMap.take(device);
     emit deviceRemoved(dev);
 }
 
@@ -105,25 +105,25 @@ bool MediaDiscoveryBackend::connectToNode()
             configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
         } else {
             configPath = QStringLiteral("./server.conf");
-            qCInfo(qLcROQIviMediaDiscovery) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
+            qCInfo(qLcROQIfMediaDiscovery) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
         }
     }
 
     QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("qtivimedia"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtivimedia")).toString());
+    settings.beginGroup(QStringLiteral("qtifmedia"));
+    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtifmedia")).toString());
     if (m_url != registryUrl) {
         m_url = registryUrl;
         // QtRO doesn't allow to change the URL without destroying the Node
         delete m_node;
         m_node = new QRemoteObjectNode(this);
         if (!m_node->connectToNode(m_url)) {
-            qCCritical(qLcROQIviMediaDiscovery) << "Connection to" << m_url << "failed!";
+            qCCritical(qLcROQIfMediaDiscovery) << "Connection to" << m_url << "failed!";
             m_replica.reset();
             return false;
         }
-        qCInfo(qLcROQIviMediaDiscovery) << "Connecting to" << m_url;
-             m_replica.reset(m_node->acquire<QIviMediaDiscoveryModelReplica>(QStringLiteral("QtIviMedia.QIviMediaDiscoveryModel")));
+        qCInfo(qLcROQIfMediaDiscovery) << "Connecting to" << m_url;
+             m_replica.reset(m_node->acquire<QIfMediaDiscoveryModelReplica>(QStringLiteral("QtIfMedia.QIfMediaDiscoveryModel")));
         setupConnections();
     }
     return true;
@@ -131,11 +131,11 @@ bool MediaDiscoveryBackend::connectToNode()
 
 void MediaDiscoveryBackend::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIviRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIviRemoteObjectReplicaHelper::errorChanged, this, &QIviFeatureInterface::errorChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIviRemoteObjectReplicaHelper::onReplicaStateChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIviFeatureInterface::initializationDone);
-    connect(m_replica.data(), &QIviMediaDiscoveryModelReplica::devicesChanged, this, &MediaDiscoveryBackend::onDevicesChanged);
-    connect(m_replica.data(), &QIviMediaDiscoveryModelReplica::deviceAdded, this, &MediaDiscoveryBackend::onDeviceAdded);
-    connect(m_replica.data(), &QIviMediaDiscoveryModelReplica::deviceRemoved, this, &MediaDiscoveryBackend::onDeviceRemoved);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
+    connect(m_replica.data(), &QIfMediaDiscoveryModelReplica::devicesChanged, this, &MediaDiscoveryBackend::onDevicesChanged);
+    connect(m_replica.data(), &QIfMediaDiscoveryModelReplica::deviceAdded, this, &MediaDiscoveryBackend::onDeviceAdded);
+    connect(m_replica.data(), &QIfMediaDiscoveryModelReplica::deviceRemoved, this, &MediaDiscoveryBackend::onDeviceRemoved);
 }

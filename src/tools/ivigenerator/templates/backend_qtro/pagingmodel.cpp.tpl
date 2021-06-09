@@ -5,7 +5,7 @@
 ## Copyright (C) 2019 Luxoft Sweden AB
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -38,12 +38,12 @@
 Q_LOGGING_CATEGORY(qLcRO{{interface}}{{property|upper_first}}, "{{module|qml_type|lower}}.{{interface|lower}}backend.{{property|lower}}.remoteobjects", QtInfoMsg)
 
 {{class}}::{{class}}(const QString &remoteObjectsLookupName, QObject* parent)
-    : QIviPagingModelInterface(parent)
-    , m_helper(new QIviRemoteObjectReplicaHelper(qLcRO{{interface}}{{property|upper_first}}(), this))
+    : QIfPagingModelInterface(parent)
+    , m_helper(new QIfRemoteObjectReplicaHelper(qLcRO{{interface}}{{property|upper_first}}(), this))
     , m_node(nullptr)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
 {
-    qRegisterMetaType<QIviPagingModelInterface*>();
+    qRegisterMetaType<QIfPagingModelInterface*>();
 }
 
 /*! \internal */
@@ -108,7 +108,7 @@ bool {{class}}::connectToNode()
             return false;
         }
         qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Connecting to" << m_url;
-        m_replica.reset(m_node->acquire<QIviPagingModelReplica>(m_remoteObjectsLookupName));
+        m_replica.reset(m_node->acquire<QIfPagingModelReplica>(m_remoteObjectsLookupName));
         setupConnections();
     }
     return true;
@@ -116,13 +116,13 @@ bool {{class}}::connectToNode()
 
 void {{class}}::setupConnections()
 {
-    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIviFeatureInterface::initializationDone);
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIviRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIviRemoteObjectReplicaHelper::errorChanged, this, &QIviFeatureInterface::errorChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIviRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
 
-    connect(m_replica.data(), &QIviPagingModelReplica::supportedCapabilitiesChanged, this, &{{class}}::supportedCapabilitiesChanged);
-    connect(m_replica.data(), &QIviPagingModelReplica::countChanged, this, &{{class}}::countChanged);
-    connect(m_replica.data(), &QIviPagingModelReplica::dataFetched, this, &{{class}}::dataFetched);
-    connect(m_replica.data(), &QIviPagingModelReplica::dataChanged, this, &{{class}}::dataChanged);
+    connect(m_replica.data(), &QIfPagingModelReplica::supportedCapabilitiesChanged, this, &{{class}}::supportedCapabilitiesChanged);
+    connect(m_replica.data(), &QIfPagingModelReplica::countChanged, this, &{{class}}::countChanged);
+    connect(m_replica.data(), &QIfPagingModelReplica::dataFetched, this, &{{class}}::dataFetched);
+    connect(m_replica.data(), &QIfPagingModelReplica::dataChanged, this, &{{class}}::dataChanged);
 }

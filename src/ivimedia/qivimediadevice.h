@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,15 +39,15 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIADEVICE_H
-#define QIVIMEDIADEVICE_H
+#ifndef QIFMEDIADEVICE_H
+#define QIFMEDIADEVICE_H
 
-#include <QtIviCore/QIviServiceObject>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtInterfaceFramework/QIfServiceObject>
+#include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVIMEDIA_EXPORT QIviMediaDevice : public QIviServiceObject
+class Q_QTIFMEDIA_EXPORT QIfMediaDevice : public QIfServiceObject
 {
     Q_OBJECT
 
@@ -55,7 +55,7 @@ class Q_QTIVIMEDIA_EXPORT QIviMediaDevice : public QIviServiceObject
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
 
 public:
-    explicit QIviMediaDevice(QObject *parent = nullptr);
+    explicit QIfMediaDevice(QObject *parent = nullptr);
     virtual QString type() const = 0;
     virtual QString name() const = 0;
 
@@ -63,12 +63,12 @@ Q_SIGNALS:
     void nameChanged(QString name);
 };
 
-class Q_QTIVIMEDIA_EXPORT QIviMediaUsbDevice : public QIviMediaDevice
+class Q_QTIFMEDIA_EXPORT QIfMediaUsbDevice : public QIfMediaDevice
 {
     Q_OBJECT
 
 public:
-    explicit QIviMediaUsbDevice(QObject *parent = nullptr);
+    explicit QIfMediaUsbDevice(QObject *parent = nullptr);
 
     virtual QString type() const override;
 
@@ -79,4 +79,4 @@ public Q_SLOTS:
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIADEVICE_H
+#endif // QIFMEDIADEVICE_H

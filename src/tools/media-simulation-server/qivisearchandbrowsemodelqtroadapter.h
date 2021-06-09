@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,33 +38,33 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISEARCHANDBROWSEMODELQTROADAPTER_H
-#define QIVISEARCHANDBROWSEMODELQTROADAPTER_H
+#ifndef QIFSEARCHANDBROWSEMODELQTROADAPTER_H
+#define QIFSEARCHANDBROWSEMODELQTROADAPTER_H
 
-#include <QIviRemoteObjectSourceHelper>
+#include <QIfRemoteObjectSourceHelper>
 
 #include "searchandbrowsebackend.h"
-#include "rep_qivisearchandbrowsemodel_source.h"
+#include "rep_qiffilterandbrowsemodel_source.h"
 
 template <class ObjectType>
-struct QIviSearchAndBrowseModelAddressWrapper: public QIviSearchAndBrowseModelSourceAPI<ObjectType> {
-    QIviSearchAndBrowseModelAddressWrapper(ObjectType *object)
-        : QIviSearchAndBrowseModelSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
+struct QIfFilterAndBrowseModelAddressWrapper: public QIfFilterAndBrowseModelSourceAPI<ObjectType> {
+    QIfFilterAndBrowseModelAddressWrapper(ObjectType *object)
+        : QIfFilterAndBrowseModelSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
     {}
 };
 
-class QIviSearchAndBrowseModelQtRoAdapter : public QIviSearchAndBrowseModelSource
+class QIfFilterAndBrowseModelQtRoAdapter : public QIfFilterAndBrowseModelSource
 {
 public:
-    QIviSearchAndBrowseModelQtRoAdapter(QIviSearchAndBrowseModelInterface *parent);
-    QIviSearchAndBrowseModelQtRoAdapter(const QString& remoteObjectsLookupName, QIviSearchAndBrowseModelInterface *parent);
+    QIfFilterAndBrowseModelQtRoAdapter(QIfFilterAndBrowseModelInterface *parent);
+    QIfFilterAndBrowseModelQtRoAdapter(const QString& remoteObjectsLookupName, QIfFilterAndBrowseModelInterface *parent);
 
     QString remoteObjectsLookupName() const;
     QStringList availableContentTypes() const override;
 
 public Q_SLOTS:
     void setContentType(const QUuid &identifier, const QString &contentType) override;
-    void setupFilter(const QUuid &identifier, const QVariant &term, const QList<QIviOrderTerm> &orderTerms) override;
+    void setupFilter(const QUuid &identifier, const QVariant &term, const QList<QIfOrderTerm> &orderTerms) override;
     QVariant goBack(const QUuid &identifier) override;
     QVariant goForward(const QUuid &identifier, int index) override;
     QVariant insert(const QUuid &identifier, int index, const QVariant &item) override;
@@ -78,8 +78,8 @@ public Q_SLOTS:
 
 private:
     QString m_remoteObjectsLookupName;
-    QIviSearchAndBrowseModelInterface *m_backend;
-    QIviRemoteObjectSourceHelper<QIviSearchAndBrowseModelQtRoAdapter> m_helper;
+    QIfFilterAndBrowseModelInterface *m_backend;
+    QIfRemoteObjectSourceHelper<QIfFilterAndBrowseModelQtRoAdapter> m_helper;
 };
 
-#endif // QIVISEARCHANDBROWSEMODELQTROADAPTER_H
+#endif // QIFSEARCHANDBROWSEMODELQTROADAPTER_H

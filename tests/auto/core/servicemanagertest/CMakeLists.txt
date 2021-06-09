@@ -11,11 +11,11 @@ qt_internal_add_test(tst_servicemanagertest
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     PUBLIC_LIBRARIES
-        # Remove: Lqtivi
+        # Remove: Lqtif
         simple_plugin_static # special case
         wrongmetadata_plugin_static # special case
-        Qt::IviCore
-        Qt::IviCorePrivate
+        Qt::InterfaceFramework
+        Qt::InterfaceFrameworkPrivate
 )
 
 #### Keys ignored in scope 2:.:.:tst_servicemanager.pro:<TRUE>:

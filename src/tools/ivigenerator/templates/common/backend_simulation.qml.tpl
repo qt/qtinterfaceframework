@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -37,7 +37,7 @@ import {{module|qml_type}}.simulation {{module.majorVersion}}.{{module.minorVers
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 
 QtObject {
-    property var settings : IviSimulator.findData(IviSimulator.simulationData, "{{interface}}")
+    property var settings : IfSimulator.findData(IfSimulator.simulationData, "{{interface}}")
     property bool defaultInitialized: false
     property LoggingCategory qLc{{interface|upperfirst}}: LoggingCategory {
         name: "{{module|qml_type|lower}}.simulation.{{interface|lower}}backend"
@@ -47,7 +47,7 @@ QtObject {
         function initialize() {
             console.log(qLc{{interface|upperfirst}}, "INITIALIZE")
             if (!defaultInitialized) {
-                IviSimulator.initializeDefault(settings, backend)
+                IfSimulator.initializeDefault(settings, backend)
                 defaultInitialized = true
             }
             Base.initialize()
@@ -62,8 +62,8 @@ QtObject {
 
 {% if interface_zoned %}
         function {{property|setter_name}}({{property}}, zone) {
-            if ("{{property}}" in settings && !IviSimulator.checkSettings(settings["{{property}}"], {{property}}, zone)) {
-                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IviSimulator.constraint(settings["{{property}}"]));
+            if ("{{property}}" in settings && !IfSimulator.checkSettings(settings["{{property}}"], {{property}}, zone)) {
+                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
                 return;
             }
 
@@ -77,8 +77,8 @@ QtObject {
         }
 {% else %}
         function {{property|setter_name}}({{property}}) {
-            if ("{{property}}" in settings && !IviSimulator.checkSettings(settings["{{property}}"], {{property}})) {
-                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IviSimulator.constraint(settings["{{property}}"]));
+            if ("{{property}}" in settings && !IfSimulator.checkSettings(settings["{{property}}"], {{property}})) {
+                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
                 return;
             }
 

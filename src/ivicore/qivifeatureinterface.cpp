@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,16 +39,16 @@
 **
 ****************************************************************************/
 
-#include "qivifeatureinterface.h"
+#include "qiffeatureinterface.h"
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class QIviFeatureInterface
-    \inmodule QtIviCore
+    \class QIfFeatureInterface
+    \inmodule QtInterfaceFramework
     \ingroup backends
 
-    \brief QIviFeatureInterface defines the base class for all backends.
+    \brief QIfFeatureInterface defines the base class for all backends.
 
     To implement a backend for a specific feature you need to derive from this class.
     There's a one-to-one mapping between a spezialized feature API and its corresponding feature interface
@@ -59,22 +59,22 @@ QT_BEGIN_NAMESPACE
 
     This base class contains the generic error handling, which is common between all interfaces.
 
-    See the full example backend implementation from \c {src/plugins/ivivehiclefunctions/climate_simulator}.
-    \sa QIviAbstractFeature, QIviServiceInterface
+    See the full example backend implementation from \c {src/plugins/ifvehiclefunctions/climate_simulator}.
+    \sa QIfAbstractFeature, QIfServiceInterface
 */
 
-QIviFeatureInterface::QIviFeatureInterface(QObject *parent)
+QIfFeatureInterface::QIfFeatureInterface(QObject *parent)
     : QObject(parent)
 {
 }
 
-QIviFeatureInterface::QIviFeatureInterface(QObjectPrivate &dd, QObject *parent)
+QIfFeatureInterface::QIfFeatureInterface(QObjectPrivate &dd, QObject *parent)
     : QObject(dd, parent)
 {
 }
 
 /*!
-    \fn void QIviFeatureInterface::initialize()
+    \fn void QIfFeatureInterface::initialize()
 
     Initializes the backend. This function is called after a feature connected to the backend.
     It is expected that this function will inform about the current state of the backend by
@@ -86,14 +86,14 @@ QIviFeatureInterface::QIviFeatureInterface(QObjectPrivate &dd, QObject *parent)
 */
 
 /*!
-    \fn void QIviFeatureInterface::errorChanged(QIviAbstractFeature::Error error, const QString &message = QString())
+    \fn void QIfFeatureInterface::errorChanged(QIfAbstractFeature::Error error, const QString &message = QString())
 
     The signal is emitted when \a error occurs in the backend.
     Error \a message is optional.
 */
 
 /*!
-    \fn void QIviFeatureInterface::initializationDone()
+    \fn void QIfFeatureInterface::initializationDone()
 
     The signal is emitted  once the current backend state has been sent to the feature after
     a call to initialize()

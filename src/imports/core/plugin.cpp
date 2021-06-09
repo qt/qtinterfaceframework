@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,20 +41,20 @@
 #include <QtQml/qqmlextensionplugin.h>
 #include <qqml.h>
 
-#include <QtIviCore/QtIviCore>
+#include <QtInterfaceFramework/QtInterfaceFramework>
 
 QT_BEGIN_NAMESPACE
 
-class QIviCorePlugin : public QQmlExtensionPlugin
+class QInterfaceFrameworkPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid)
 public:
     void registerTypes(const char *uri) override
     {
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("QtIvi"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("QtInterfaceFramework"));
 
-        QtIviCoreModule::registerQmlTypes(uri, 1, 0);
+        QtInterfaceFrameworkModule::registerQmlTypes(uri, 1, 0);
     }
 };
 

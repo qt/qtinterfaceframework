@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB)
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -162,7 +162,7 @@ def test_type_value(symbol):
         values_string = ', '.join(test_type_value(e) for e in symbol.type.reference.fields)
         return '{0}{1}({2})'.format(prefix, symbol.type.reference.name, values_string)
     elif symbol.type.is_model:
-        return 'new QIviPagingModel()'
+        return 'new QIfPagingModel()'
     jinja_error('test_type_value: Unknown parameter {0} of type {1}'.format(symbol, symbol.type))
 
 
@@ -250,7 +250,7 @@ def parameter_type_default(symbol):
         if nested.is_primitive:
             return '{0}VariantModel *{1}=QVariantModel'.format(prefix, symbol)
         elif nested.is_complex:
-            return 'QIviPagingModel *{0}=nullptr'.format(symbol)
+            return 'QIfPagingModel *{0}=nullptr'.format(symbol)
     else:
         return 'const {0}{1} &{2}={0}{1}()'.format(prefix, symbol.type.reference.name, symbol)
     jinja_error('parameter_type_default: Unknown parameter {0} of type {1}'.format(symbol,
@@ -280,7 +280,7 @@ def parameter_type(symbol):
         if nested.is_primitive:
             return '{0}VariantModel *{1}'.format(prefix, symbol)
         elif nested.is_complex:
-            return 'QIviPagingModel *{0}'.format(symbol)
+            return 'QIfPagingModel *{0}'.format(symbol)
     else:
         return 'const {0}{1} &{2}'.format(prefix, symbol.type.reference.name, symbol)
     jinja_error('parameter_type: Unknown parameter {0} of type {1}'.format(symbol, symbol.type))
@@ -311,7 +311,7 @@ def return_type(symbol):
         if nested.is_primitive:
             return '{0}VariantModel *'.format(prefix)
         elif nested.is_complex:
-            return 'QIviPagingModel *'
+            return 'QIfPagingModel *'
     else:
         return '{0}{1}'.format(prefix, symbol.type.reference.name)
     jinja_error('return_type: Unknown symbol {0} of type {1}'.format(symbol, symbol.type))
@@ -429,7 +429,7 @@ def json_domain(properties):
 
     data = {}
     if len(properties):
-        data["iviVersion"] = builtin_config.config["VERSION"]
+        data["ifVersion"] = builtin_config.config["VERSION"]
     for property in properties:
         if 'config_simulator' in property.tags:
             for p in ['range', 'domain', 'minimum', 'maximum']:
@@ -666,7 +666,7 @@ def qml_info_type(symbol):
     elif symbol.type.is_list:
         return 'QVariantList'
     elif symbol.type.is_model:
-        return 'QIviPagingModel'
+        return 'QIfPagingModel'
     else:
         jinja_error('qml_info_type: Unknown symbol {0} of type {1}'.format(symbol, symbol.type))
 

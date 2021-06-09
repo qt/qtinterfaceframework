@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,16 +39,16 @@
 **
 ****************************************************************************/
 
-#include "qiviplayqueue.h"
-#include "qiviplayqueue_p.h"
-#include "qivimediaplayer.h"
-#include "qiviqmlconversion_helper.h"
+#include "qifplayqueue.h"
+#include "qifplayqueue_p.h"
+#include "qifmediaplayer.h"
+#include "qifqmlconversion_helper.h"
 
 #include <QtDebug>
 
 QT_BEGIN_NAMESPACE
 
-QIviPlayQueuePrivate::QIviPlayQueuePrivate(QIviMediaPlayer *player, QIviPlayQueue *model)
+QIfPlayQueuePrivate::QIfPlayQueuePrivate(QIfMediaPlayer *player, QIfPlayQueue *model)
     : QAbstractItemModelPrivate()
     , q_ptr(model)
     , m_player(player)
@@ -59,30 +59,30 @@ QIviPlayQueuePrivate::QIviPlayQueuePrivate(QIviMediaPlayer *player, QIviPlayQueu
     , m_fetchMoreThreshold(10)
     , m_fetchedDataCount(0)
     , m_canReportCount(false)
-    , m_loadingType(QIviPlayQueue::FetchMore)
+    , m_loadingType(QIfPlayQueue::FetchMore)
 {
-    qRegisterMetaType<QIviPlayableItem>();
+    qRegisterMetaType<QIfPlayableItem>();
 }
 
-QIviPlayQueuePrivate::~QIviPlayQueuePrivate()
+QIfPlayQueuePrivate::~QIfPlayQueuePrivate()
 {
 }
 
-void QIviPlayQueuePrivate::initialize()
+void QIfPlayQueuePrivate::initialize()
 {
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
 
     QObject::connect(q, &QAbstractListModel::rowsInserted,
-                     q, &QIviPlayQueue::countChanged);
+                     q, &QIfPlayQueue::countChanged);
     QObject::connect(q, &QAbstractListModel::rowsRemoved,
-                     q, &QIviPlayQueue::countChanged);
+                     q, &QIfPlayQueue::countChanged);
     QObject::connect(q, &QAbstractListModel::modelReset,
-                     q, &QIviPlayQueue::countChanged);
-    QObjectPrivate::connect(q, &QIviPlayQueue::fetchMoreThresholdReached,
-                            this, &QIviPlayQueuePrivate::onFetchMoreThresholdReached);
+                     q, &QIfPlayQueue::countChanged);
+    QObjectPrivate::connect(q, &QIfPlayQueue::fetchMoreThresholdReached,
+                            this, &QIfPlayQueuePrivate::onFetchMoreThresholdReached);
 }
 
-void QIviPlayQueuePrivate::onInitializationDone()
+void QIfPlayQueuePrivate::onInitializationDone()
 {
     if (m_player->isInitialized())
         return;
@@ -90,21 +90,21 @@ void QIviPlayQueuePrivate::onInitializationDone()
     resetModel();
 }
 
-void QIviPlayQueuePrivate::onCurrentIndexChanged(int currentIndex)
+void QIfPlayQueuePrivate::onCurrentIndexChanged(int currentIndex)
 {
     if (m_currentIndex == currentIndex)
         return;
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
     m_currentIndex = currentIndex;
     emit q->currentIndexChanged(currentIndex);
 }
 
-void QIviPlayQueuePrivate::onCanReportCountChanged(bool canReportCount)
+void QIfPlayQueuePrivate::onCanReportCountChanged(bool canReportCount)
 {
     m_canReportCount = canReportCount;
 }
 
-void QIviPlayQueuePrivate::onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable)
+void QIfPlayQueuePrivate::onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable)
 {
     if (m_identifier != identifier)
         return;
@@ -112,10 +112,10 @@ void QIviPlayQueuePrivate::onDataFetched(const QUuid &identifier, const QList<QV
     if (!items.count())
         return;
 
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
     m_moreAvailable = moreAvailable;
 
-    if (m_loadingType == QIviPlayQueue::FetchMore) {
+    if (m_loadingType == QIfPlayQueue::FetchMore) {
         q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + items.count() -1);
         m_itemList += items;
         m_fetchedDataCount = m_itemList.count();
@@ -134,33 +134,33 @@ void QIviPlayQueuePrivate::onDataFetched(const QUuid &identifier, const QList<QV
     }
 }
 
-void QIviPlayQueuePrivate::onCountChanged(int new_length)
+void QIfPlayQueuePrivate::onCountChanged(int new_length)
 {
-    if (m_loadingType != QIviPlayQueue::DataChanged || m_itemList.count() == new_length)
+    if (m_loadingType != QIfPlayQueue::DataChanged || m_itemList.count() == new_length)
         return;
 
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
     q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + new_length -1);
     for (int i = 0; i < new_length; i++)
         m_itemList.append(QVariant());
     q->endInsertRows();
 }
 
-void QIviPlayQueuePrivate::onDataChanged(const QList<QVariant> &data, int start, int count)
+void QIfPlayQueuePrivate::onDataChanged(const QList<QVariant> &data, int start, int count)
 {
     if (start < 0 || start > m_itemList.count()) {
-        if (m_loadingType == QIviPlayQueue::DataChanged)
+        if (m_loadingType == QIfPlayQueue::DataChanged)
             qWarning("The provided start argument is out of range. Please make sure to emit the countChanged() before emitting dataChanged()");
         return;
     }
 
     if (count < 0 || count > m_itemList.count() - start) {
-        if (m_loadingType == QIviPlayQueue::DataChanged)
+        if (m_loadingType == QIfPlayQueue::DataChanged)
             qWarning("The provided start argument is out of range. Please make sure to emit the countChanged() before emitting dataChanged()");
         return;
     }
 
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
 
     //delta > 0 insert rows
     //delta < 0 remove rows
@@ -191,15 +191,15 @@ void QIviPlayQueuePrivate::onDataChanged(const QList<QVariant> &data, int start,
     }
 }
 
-void QIviPlayQueuePrivate::onFetchMoreThresholdReached()
+void QIfPlayQueuePrivate::onFetchMoreThresholdReached()
 {
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
     q->fetchMore(QModelIndex());
 }
 
-void QIviPlayQueuePrivate::resetModel()
+void QIfPlayQueuePrivate::resetModel()
 {
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
     q->beginResetModel();
     m_itemList.clear();
     q->endResetModel();
@@ -209,9 +209,9 @@ void QIviPlayQueuePrivate::resetModel()
     q->fetchMore(QModelIndex());
 }
 
-void QIviPlayQueuePrivate::clearToDefaults()
+void QIfPlayQueuePrivate::clearToDefaults()
 {
-    Q_Q(QIviPlayQueue);
+    Q_Q(QIfPlayQueue);
     m_identifier = QUuid::createUuid();
     m_currentIndex = -1;
     emit q->currentIndexChanged(-1);
@@ -220,38 +220,38 @@ void QIviPlayQueuePrivate::clearToDefaults()
     m_moreAvailable = false;
     m_fetchMoreThreshold = 10;
     emit q->fetchMoreThresholdChanged(m_fetchMoreThreshold);
-    m_loadingType = QIviPlayQueue::FetchMore;
+    m_loadingType = QIfPlayQueue::FetchMore;
     emit q->loadingTypeChanged(m_loadingType);
 
     resetModel();
 }
 
-const QIviPlayableItem *QIviPlayQueuePrivate::itemAt(int i) const
+const QIfPlayableItem *QIfPlayQueuePrivate::itemAt(int i) const
 {
     QVariant var = m_itemList.at(i);
     if (!var.isValid())
         return nullptr;
 
-    return qtivi_gadgetFromVariant<QIviPlayableItem>(q_ptr, var);
+    return qtif_gadgetFromVariant<QIfPlayableItem>(q_ptr, var);
 }
 
-QIviMediaPlayerBackendInterface *QIviPlayQueuePrivate::playerBackend() const
+QIfMediaPlayerBackendInterface *QIfPlayQueuePrivate::playerBackend() const
 {
     return m_player->d_func()->playerBackend();
 }
 
 /*!
-    \class QIviPlayQueue
-    \inmodule QtIviMedia
-    \brief Provides a play queue for the QIviMediaPlayer.
+    \class QIfPlayQueue
+    \inmodule QtIfMedia
+    \brief Provides a play queue for the QIfMediaPlayer.
 
-    The QIviPlayQueue is a model which is used by the QIviMediaPlayer to control the
-    play order of QIviPlayableItems.
+    The QIfPlayQueue is a model which is used by the QIfMediaPlayer to control the
+    play order of QIfPlayableItems.
 
     It provides mechanisms for adding new items and managing the existing ones by removing
     or moving them around.
 
-    The QIviPlayQueue can't be instantiated by its own and can only be retrieved through the QIviMediaPlayer.
+    The QIfPlayQueue can't be instantiated by its own and can only be retrieved through the QIfMediaPlayer.
 
     The following roles are available in this model:
 
@@ -270,14 +270,14 @@ QIviMediaPlayerBackendInterface *QIviPlayQueuePrivate::playerBackend() const
         \li The type of the playable item. E.g. \e "track" or \e "web-stream"
     \row
         \li \c item
-        \li QIviPlayableItem
+        \li QIfPlayableItem
         \li The playable item instance. This can be used to access type specific properties like the artist.
     \endtable
 
 */
 
 /*!
-    \enum QIviPlayQueue::Roles
+    \enum QIfPlayQueue::Roles
     \value NameRole
           The name of the playable item. E.g. The track name or the name of the web-stream.
     \value TypeRole
@@ -287,7 +287,7 @@ QIviMediaPlayerBackendInterface *QIviPlayQueuePrivate::playerBackend() const
 */
 
 /*!
-    \enum QIviPlayQueue::LoadingType
+    \enum QIfPlayQueue::LoadingType
     \value FetchMore
            This is the default and can be used if you don't know the final size of the list (e.g. a infinite list).
            The list will detect that it is near the end (fetchMoreThreshold) and then fetch the next chunk of data using canFetchMore and fetchMore.
@@ -302,8 +302,8 @@ QIviMediaPlayerBackendInterface *QIviPlayQueuePrivate::playerBackend() const
 
 /*!
     \qmltype PlayQueue
-    \instantiates QIviPlayQueue
-    \inqmlmodule QtIvi.Media
+    \instantiates QIfPlayQueue
+    \inqmlmodule QtInterfaceFramework.Media
     \inherits QAbstractListModel
     \brief Provides a play queue for the MediaPlayer.
 
@@ -317,7 +317,7 @@ QIviMediaPlayerBackendInterface *QIviPlayQueuePrivate::playerBackend() const
 */
 
 
-QIviPlayQueue::~QIviPlayQueue()
+QIfPlayQueue::~QIfPlayQueue()
 {
 }
 
@@ -329,20 +329,20 @@ QIviPlayQueue::~QIviPlayQueue()
 */
 
 /*!
-    \property QIviPlayQueue::currentIndex
+    \property QIfPlayQueue::currentIndex
     \brief Holds the index of the currently active track.
 
     Use the get() method to retrieve more information about the active track.
 */
-int QIviPlayQueue::currentIndex() const
+int QIfPlayQueue::currentIndex() const
 {
-    Q_D(const QIviPlayQueue);
+    Q_D(const QIfPlayQueue);
     return d->m_currentIndex;
 }
 
-void QIviPlayQueue::setCurrentIndex(int currentIndex)
+void QIfPlayQueue::setCurrentIndex(int currentIndex)
 {
-    Q_IVI_BACKEND(QIviPlayQueue, d->playerBackend(), "Can't set the current index without a connected backend");
+    Q_IF_BACKEND(QIfPlayQueue, d->playerBackend(), "Can't set the current index without a connected backend");
 
     backend->setCurrentIndex(currentIndex);
 }
@@ -358,7 +358,7 @@ void QIviPlayQueue::setCurrentIndex(int currentIndex)
 */
 
 /*!
-    \property QIviPlayQueue::chunkSize
+    \property QIfPlayQueue::chunkSize
     \brief Holds the number of rows which are requested from the backend interface.
 
     This property can be used to fine tune the loading performance.
@@ -366,15 +366,15 @@ void QIviPlayQueue::setCurrentIndex(int currentIndex)
     Bigger chunks means less calls to the backend and to a potential IPC underneath, but more data
     to be transferred and probably longer waiting time until the request was finished.
 */
-int QIviPlayQueue::chunkSize() const
+int QIfPlayQueue::chunkSize() const
 {
-    Q_D(const QIviPlayQueue);
+    Q_D(const QIfPlayQueue);
     return d->m_chunkSize;
 }
 
-void QIviPlayQueue::setChunkSize(int chunkSize)
+void QIfPlayQueue::setChunkSize(int chunkSize)
 {
-    Q_D(QIviPlayQueue);
+    Q_D(QIfPlayQueue);
     if (d->m_chunkSize == chunkSize)
         return;
 
@@ -396,7 +396,7 @@ void QIviPlayQueue::setChunkSize(int chunkSize)
 */
 
 /*!
-    \property QIviPlayQueue::fetchMoreThreshold
+    \property QIfPlayQueue::fetchMoreThreshold
     \brief Holds the row delta to the end before the next chunk is loaded
 
     This property can be used to fine tune the loading performance. When the
@@ -407,15 +407,15 @@ void QIviPlayQueue::setChunkSize(int chunkSize)
 
     \note This property is only used when loadingType is set to FetchMore.
 */
-int QIviPlayQueue::fetchMoreThreshold() const
+int QIfPlayQueue::fetchMoreThreshold() const
 {
-    Q_D(const QIviPlayQueue);
+    Q_D(const QIfPlayQueue);
     return d->m_fetchMoreThreshold;
 }
 
-void QIviPlayQueue::setFetchMoreThreshold(int fetchMoreThreshold)
+void QIfPlayQueue::setFetchMoreThreshold(int fetchMoreThreshold)
 {
-    Q_D(QIviPlayQueue);
+    Q_D(QIfPlayQueue);
     if (d->m_fetchMoreThreshold == fetchMoreThreshold)
         return;
 
@@ -431,25 +431,25 @@ void QIviPlayQueue::setFetchMoreThreshold(int fetchMoreThreshold)
 */
 
 /*!
-    \property QIviPlayQueue::loadingType
+    \property QIfPlayQueue::loadingType
     \brief Holds the currently used loading type used for loading the data.
 
     \note When changing this property the content will be reset.
 */
-QIviPlayQueue::LoadingType QIviPlayQueue::loadingType() const
+QIfPlayQueue::LoadingType QIfPlayQueue::loadingType() const
 {
-    Q_D(const QIviPlayQueue);
+    Q_D(const QIfPlayQueue);
     return d->m_loadingType;
 }
 
-void QIviPlayQueue::setLoadingType(QIviPlayQueue::LoadingType loadingType)
+void QIfPlayQueue::setLoadingType(QIfPlayQueue::LoadingType loadingType)
 {
-    Q_D(QIviPlayQueue);
+    Q_D(QIfPlayQueue);
     if (d->m_loadingType == loadingType)
         return;
 
-    if (loadingType == QIviPlayQueue::DataChanged && !d->m_canReportCount) {
-        qtivi_qmlOrCppWarning(this, "The backend doesn't support the DataChanged loading type. This call will have no effect");
+    if (loadingType == QIfPlayQueue::DataChanged && !d->m_canReportCount) {
+        qtif_qmlOrCppWarning(this, "The backend doesn't support the DataChanged loading type. This call will have no effect");
         return;
     }
 
@@ -464,12 +464,12 @@ void QIviPlayQueue::setLoadingType(QIviPlayQueue::LoadingType loadingType)
     \brief Holds the current number of rows in this model.
 */
 /*!
-    \property QIviPlayQueue::count
+    \property QIfPlayQueue::count
     \brief Holds the current number of rows in this model.
 */
-int QIviPlayQueue::rowCount(const QModelIndex &parent) const
+int QIfPlayQueue::rowCount(const QModelIndex &parent) const
 {
-    Q_D(const QIviPlayQueue);
+    Q_D(const QIfPlayQueue);
     if (parent.isValid())
         return 0;
 
@@ -479,9 +479,9 @@ int QIviPlayQueue::rowCount(const QModelIndex &parent) const
 /*!
     \reimp
 */
-QVariant QIviPlayQueue::data(const QModelIndex &index, int role) const
+QVariant QIfPlayQueue::data(const QModelIndex &index, int role) const
 {
-    Q_D(const QIviPlayQueue);
+    Q_D(const QIfPlayQueue);
     if (!index.isValid())
         return QVariant();
 
@@ -493,7 +493,7 @@ QVariant QIviPlayQueue::data(const QModelIndex &index, int role) const
     if (row >= d->m_fetchedDataCount - d->m_fetchMoreThreshold && canFetchMore(QModelIndex()))
         emit fetchMoreThresholdReached();
 
-    const QIviStandardItem *item = d->itemAt(row);
+    const QIfStandardItem *item = d->itemAt(row);
     if (!item)
         return QVariant();
 
@@ -507,7 +507,7 @@ QVariant QIviPlayQueue::data(const QModelIndex &index, int role) const
 }
 
 /*!
-    \fn T QIviPlayQueue::at(int i) const
+    \fn T QIfPlayQueue::at(int i) const
 
     Returns the item at index \a i converted to the template type T.
 */
@@ -522,7 +522,7 @@ QVariant QIviPlayQueue::data(const QModelIndex &index, int role) const
     This function is intended to be used from QML. For C++
     please use the at() instead.
 */
-QVariant QIviPlayQueue::get(int i) const
+QVariant QIfPlayQueue::get(int i) const
 {
     return data(index(i,0), ItemRole);
 }
@@ -536,19 +536,19 @@ QVariant QIviPlayQueue::get(int i) const
 */
 
 /*!
-    \fn void QIviPlayQueue::insert(int index, const QVariant &variant)
+    \fn void QIfPlayQueue::insert(int index, const QVariant &variant)
 
     Insert the \a variant at the position \a index.
 
     If the backend doesn't accept the provided item, this operation will end in a no op.
 */
-void QIviPlayQueue::insert(int index, const QVariant &variant)
+void QIfPlayQueue::insert(int index, const QVariant &variant)
 {
-    const QIviPlayableItem *item = qtivi_gadgetFromVariant<QIviPlayableItem>(this, variant);
+    const QIfPlayableItem *item = qtif_gadgetFromVariant<QIfPlayableItem>(this, variant);
     if (!item)
         return;
 
-    Q_IVI_BACKEND(QIviPlayQueue, d->playerBackend(), "Can't insert items without a connected backend");
+    Q_IF_BACKEND(QIfPlayQueue, d->playerBackend(), "Can't insert items without a connected backend");
 
     backend->insert(index, variant);
 }
@@ -560,13 +560,13 @@ void QIviPlayQueue::insert(int index, const QVariant &variant)
 */
 
 /*!
-    \fn void QIviPlayQueue::remove(int index)
+    \fn void QIfPlayQueue::remove(int index)
 
     Removes the item at position \a index from the play queue.
 */
-void QIviPlayQueue::remove(int index)
+void QIfPlayQueue::remove(int index)
 {
-    Q_IVI_BACKEND(QIviPlayQueue, d->playerBackend(), "Can't remove items without a connected backend");
+    Q_IF_BACKEND(QIfPlayQueue, d->playerBackend(), "Can't remove items without a connected backend");
 
     backend->remove(index);
 }
@@ -578,13 +578,13 @@ void QIviPlayQueue::remove(int index)
 */
 
 /*!
-    \fn void QIviPlayQueue::move(int cur_index, int new_index)
+    \fn void QIfPlayQueue::move(int cur_index, int new_index)
 
     Moves the item at position \a cur_index to the new position \a new_index the play queue.
 */
-void QIviPlayQueue::move(int cur_index, int new_index)
+void QIfPlayQueue::move(int cur_index, int new_index)
 {
-    Q_IVI_BACKEND(QIviPlayQueue, d->playerBackend(), "Can't move items without a connected backend");
+    Q_IF_BACKEND(QIfPlayQueue, d->playerBackend(), "Can't move items without a connected backend");
 
     backend->move(cur_index, new_index);
 }
@@ -592,9 +592,9 @@ void QIviPlayQueue::move(int cur_index, int new_index)
 /*!
     \reimp
 */
-bool QIviPlayQueue::canFetchMore(const QModelIndex &parent) const
+bool QIfPlayQueue::canFetchMore(const QModelIndex &parent) const
 {
-    Q_D(const QIviPlayQueue);
+    Q_D(const QIfPlayQueue);
     if (parent.isValid())
         return false;
 
@@ -604,9 +604,9 @@ bool QIviPlayQueue::canFetchMore(const QModelIndex &parent) const
 /*!
     \reimp
 */
-void QIviPlayQueue::fetchMore(const QModelIndex &parent)
+void QIfPlayQueue::fetchMore(const QModelIndex &parent)
 {
-    Q_D(QIviPlayQueue);
+    Q_D(QIfPlayQueue);
     if (parent.isValid())
         return;
 
@@ -620,7 +620,7 @@ void QIviPlayQueue::fetchMore(const QModelIndex &parent)
 /*!
     \reimp
 */
-QHash<int, QByteArray> QIviPlayQueue::roleNames() const
+QHash<int, QByteArray> QIfPlayQueue::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
@@ -632,17 +632,17 @@ QHash<int, QByteArray> QIviPlayQueue::roleNames() const
 }
 
 /*!
-    Creates a play queue for the QIviMediaPlayer instance \a parent.
+    Creates a play queue for the QIfMediaPlayer instance \a parent.
 */
-QIviPlayQueue::QIviPlayQueue(QIviMediaPlayer *parent)
-    : QAbstractListModel(*new QIviPlayQueuePrivate(parent, this), parent)
+QIfPlayQueue::QIfPlayQueue(QIfMediaPlayer *parent)
+    : QAbstractListModel(*new QIfPlayQueuePrivate(parent, this), parent)
 {
-    Q_D(QIviPlayQueue);
+    Q_D(QIfPlayQueue);
     d->initialize();
 }
 
 /*!
-    \fn void QIviPlayQueue::fetchMoreThresholdReached() const
+    \fn void QIfPlayQueue::fetchMoreThresholdReached() const
 
     This signal is emitted whenever the fetchMoreThreshold is reached and new data is requested from the backend.
 */
@@ -655,4 +655,4 @@ QIviPlayQueue::QIviPlayQueue(QIviMediaPlayer *parent)
 
 QT_END_NAMESPACE
 
-#include "moc_qiviplayqueue.cpp"
+#include "moc_qifplayqueue.cpp"

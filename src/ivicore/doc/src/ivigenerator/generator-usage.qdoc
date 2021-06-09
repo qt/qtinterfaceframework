@@ -32,7 +32,7 @@
     \previouspage Jinja Template Syntax
     \nextpage Filter Reference
 
-    This topic describes how to use the QtIVI generator.
+    This topic describes how to use the QtIF generator.
 
     \section1 Introduction
 
@@ -45,7 +45,7 @@
     To run the generation, use the following command:
 
     \code
-    $$[QT_HOST_BINS]/ivigenerator/generate.py --format=backend_simulator interface.qface out_dir
+    $$[QT_HOST_BINS]/ifcodegen/generate.py --format=backend_simulator interface.qface out_dir
     \endcode
 
     The options and parameters are:
@@ -106,7 +106,7 @@
         \row
             \li \l frontend
             \target frontend-template
-            \li Generates an API using base classes from qtivicore and the \l{Dynamic Backend System}
+            \li Generates an API using base classes from qtinterfaceframework and the \l{Dynamic Backend System}
         \row
             \li \l {QML Plugin} {qmlplugin}
             \li Generates a C++ QML Plugin which registers all types from the frontend in QML.
@@ -169,7 +169,7 @@
     parts; the first part is the name of the file that needs to be created, as specified in the \l
     {Jinja template syntax}{Jinja template language} format. The value of the object property used
     in the template's name is processed and substituted into the template, thus forming the final
-    name of the file to create. The second part is the name of the template to use. For the IVI
+    name of the file to create. The second part is the name of the template to use. For the Interface Framework
     generator, you must specify rules for three kinds of entities: modules, interfaces and
     structures. See the \l{QFace - Rule Base Generation}{QFace Rule Base Generation Documentation}
     for more information.
@@ -186,7 +186,7 @@
     interface that is zoned, and specify its ID.
 
     \code
-    @config: {zoned: true, id: "org.qt-project.qtivi.ClimateControl/1.2"}
+    @config: {zoned: true, id: "org.qt-project.interfaceframework.ClimateControl/1.2"}
     \endcode
 
     It does not make sense to place all of the annotations in the main IDL file. For instance, you
@@ -199,7 +199,7 @@
     annotations that you need for some specific projects, such as when generating a backend plugin.
     For this use case, you can pass multiple additional annotation YAML files to the generator.
 
-    In QtIvi, the following annotations are used to define IDLs:
+    In QtInterfaceFramework, the following annotations are used to define IDLs:
 
     \table 100%
         \header
@@ -215,7 +215,7 @@
             \li Module
             \li Declares a function that is called in the plugin to generate the instances for
                 every interface. The function takes a pointer to the plugin instance and returns a
-                \c {QVector<QIviFeatureInterface *>}. Interfaces should be generated in the same
+                \c {QVector<QIfFeatureInterface *>}. Interfaces should be generated in the same
                 order as defined by \c {Plugin::interfaces()}. Use this tag to instantiate classes
                 derived from the generated plugin interfaces' classes.
         \row
@@ -225,15 +225,15 @@
             \li Main IDL file
             \li Interface
             \li Tells the generator whether the interface is zoned or not. Use this tag to define
-                whether the backend feature interface is derived from QIviZonedFeatureInterface or
-                QIviFeatureInterface.
+                whether the backend feature interface is derived from QIfZonedFeatureInterface or
+                QIfFeatureInterface.
         \row
             \li \code
-                @config: {id: "org.qt.project.qtivi.ClimateControl/1.0"}
+                @config: {id: "org.qt.project.interfaceframework.ClimateControl/1.0"}
                 \endcode
             \li Main IDL file
             \li Interface
-            \li Defines the interface ID, which is a string used by the QtIvi service manager to
+            \li Defines the interface ID, which is a string used by the QtInterfaceFramework service manager to
                 glue a frontend interface with its backend implementation. For more information,
                 see \l {Dynamic Backend System}.
         \row
@@ -266,7 +266,7 @@
                 that exports all enums to QML.
         \row
             \li \code
-                @designer: {categoryName: "QtIvi - Vehicle Functions"}
+                @designer: {categoryName: "QtInterfaceFramework - Vehicle Functions"}
                 \endcode
             \li Main IDL file
             \li Module, Interface
@@ -467,7 +467,7 @@
 
     \section2 Backend Simulator
 
-    Provides a simulator backend using the QIviSimulationEngine to implement the simulation
+    Provides a simulator backend using the QIfSimulationEngine to implement the simulation
     behavior in QML files.
 
     \table 100%
@@ -476,8 +476,8 @@
             \li Purpose
         \row
             \li {{module.module_name|lower}}plugin.h/cpp
-            \li Files defining implementation of QtIvi backend plugin implementing
-                QIviServiceInterface.
+            \li Files defining implementation of QtInterfaceFramework backend plugin implementing
+                QIfServiceInterface.
         \row
             \li {{module.module_name|lower}}.json
             \li File containing identifiers of the exposed feature interfaces needed by the Qt
@@ -521,8 +521,8 @@
             \li Purpose
         \row
             \li {{module.module_name|lower}}plugin.h/cpp
-            \li Files that define the implementation of the QtIvi backend plugin, which implements
-            QIviServiceInterface.
+            \li Files that define the implementation of the QtInterfaceFramework backend plugin, which implements
+            QIfServiceInterface.
         \row
             \li {{module.module_name|lower}}.json
             \li File containing identifiers of the exposed feature interfaces needed by the Qt plugin
@@ -583,7 +583,7 @@
 
     The server_qtro_simulator template is only available if qmake finds the QtRemoteObjects module.
     The code produced contains a fully-implemented server that uses the same implementation as the
-    backend_simulator template, which uses the QIviSimulationEngine to implement the simulation
+    backend_simulator template, which uses the QIfSimulationEngine to implement the simulation
     behavior in QML.
 
     \table 100%

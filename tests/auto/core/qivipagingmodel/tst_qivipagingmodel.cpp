@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -29,12 +29,12 @@
 ****************************************************************************/
 
 #include <QtTest>
-#include <QIviAbstractFeature>
-#include <QIviServiceManager>
-#include <QIviPagingModel>
-#include <private/qivipagingmodel_p.h>
-#include <QIviPagingModelInterface>
-#include <QIviStandardItem>
+#include <QIfAbstractFeature>
+#include <QIfServiceManager>
+#include <QIfPagingModel>
+#include <private/qifpagingmodel_p.h>
+#include <QIfPagingModelInterface>
+#include <QIfStandardItem>
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QQmlComponent>
@@ -44,14 +44,14 @@
 //TODO Add test with multiple model instances, requesting different data at the same time
 //TODO Test the signal without a valid identifier
 
-class TestBackend : public QIviPagingModelInterface
+class TestBackend : public QIfPagingModelInterface
 {
     Q_OBJECT
 
 public:
 
     //Sets the capabilities this instance should report
-    void setCapabilities(QtIviCoreModule::ModelCapabilities capabilities)
+    void setCapabilities(QtInterfaceFrameworkModule::ModelCapabilities capabilities)
     {
         m_caps = capabilities;
     }
@@ -62,11 +62,11 @@ public:
         m_list = createItemList("simple");
     }
 
-    QList<QIviStandardItem> createItemList(const QString &name)
+    QList<QIfStandardItem> createItemList(const QString &name)
     {
-        QList<QIviStandardItem> list;
+        QList<QIfStandardItem> list;
         for (int i=0; i<100; i++) {
-            QIviStandardItem item;
+            QIfStandardItem item;
             item.setId(name + QLatin1String(" ") + QString::number(i));
             QVariantMap map;
             map.insert("type", name);
@@ -96,7 +96,7 @@ public:
     {
         emit supportedCapabilitiesChanged(identifier, m_caps);
 
-        if (m_caps.testFlag(QtIviCoreModule::SupportsGetSize))
+        if (m_caps.testFlag(QtInterfaceFrameworkModule::SupportsGetSize))
             emit countChanged(identifier, m_list.count());
 
         QVariantList requestedItems;
@@ -108,7 +108,7 @@ public:
         emit dataFetched(identifier, requestedItems, start, start + count < m_list.count());
     }
 
-    void insert(int index, const QIviStandardItem item)
+    void insert(int index, const QIfStandardItem item)
     {
         m_list.insert(index, item);
         QVariantList variantList = { QVariant::fromValue(item) };
@@ -141,26 +141,26 @@ Q_SIGNALS:
     void unregisterInstanceCalled(const QUuid &identifier);
 
 private:
-    QList<QIviStandardItem> m_list;
-    QtIviCoreModule::ModelCapabilities m_caps;
+    QList<QIfStandardItem> m_list;
+    QtInterfaceFrameworkModule::ModelCapabilities m_caps;
 };
 
-class TestServiceObject : public QIviServiceObject
+class TestServiceObject : public QIfServiceObject
 {
     Q_OBJECT
 
 public:
     explicit TestServiceObject(QObject *parent = nullptr) :
-        QIviServiceObject(parent)
+        QIfServiceObject(parent)
     {
         m_backend = new TestBackend;
-        m_interfaces << QIviPagingModel_iid;
+        m_interfaces << QIfPagingModel_iid;
     }
 
     QStringList interfaces() const override { return m_interfaces; }
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override
     {
-        if (interface == QIviPagingModel_iid)
+        if (interface == QIfPagingModel_iid)
             return testBackend();
         else
             return 0;
@@ -184,12 +184,12 @@ void verifyQml(QQmlEngine *engine, const QByteArray &qml)
     QVERIFY2(obj, qPrintable(component.errorString()));
 }
 
-class tst_QIviPagingModel : public QObject
+class tst_QIfPagingModel : public QObject
 {
     Q_OBJECT
 
 public:
-    tst_QIviPagingModel();
+    tst_QIfPagingModel();
 
 private Q_SLOTS:
     void cleanup();
@@ -208,41 +208,41 @@ private Q_SLOTS:
     void testMissingCapabilities();
 
 private:
-    QIviServiceManager *manager;
+    QIfServiceManager *manager;
 };
 
-tst_QIviPagingModel::tst_QIviPagingModel()
-    : manager(QIviServiceManager::instance())
+tst_QIfPagingModel::tst_QIfPagingModel()
+    : manager(QIfServiceManager::instance())
 {
 }
 
-void tst_QIviPagingModel::cleanup()
+void tst_QIfPagingModel::cleanup()
 {
     manager->unloadAllBackends();
 }
 
-void tst_QIviPagingModel::testClearServiceObject()
+void tst_QIfPagingModel::testClearServiceObject()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
 
-    QIviPagingModel defaultModel;
-    QIviPagingModel model;
+    QIfPagingModel defaultModel;
+    QIfPagingModel model;
     model.setServiceObject(service);
 
-    model.setLoadingType(QIviPagingModel::DataChanged);
+    model.setLoadingType(QIfPagingModel::DataChanged);
     model.setChunkSize(20);
     model.setFetchMoreThreshold(20);
 
-    QSignalSpy chunkSizeSpy(&model, &QIviPagingModel::chunkSizeChanged);
+    QSignalSpy chunkSizeSpy(&model, &QIfPagingModel::chunkSizeChanged);
     QVERIFY(model.chunkSize() != defaultModel.chunkSize());
-    QSignalSpy thresholdSpy(&model, &QIviPagingModel::fetchMoreThresholdChanged);
+    QSignalSpy thresholdSpy(&model, &QIfPagingModel::fetchMoreThresholdChanged);
     QVERIFY(model.fetchMoreThreshold() != defaultModel.fetchMoreThreshold());
-    QSignalSpy capabilitiesSpy(&model, &QIviPagingModel::capabilitiesChanged);
+    QSignalSpy capabilitiesSpy(&model, &QIfPagingModel::capabilitiesChanged);
     QVERIFY(model.capabilities() != defaultModel.capabilities());
-    QSignalSpy loadingTypeSpy(&model, &QIviPagingModel::loadingTypeChanged);
+    QSignalSpy loadingTypeSpy(&model, &QIfPagingModel::loadingTypeChanged);
     QVERIFY(model.loadingType() != defaultModel.loadingType());
     QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
     QVERIFY(model.rowCount() != defaultModel.rowCount());
@@ -261,24 +261,24 @@ void tst_QIviPagingModel::testClearServiceObject()
     QCOMPARE(resetSpy.count(), 1);
 }
 
-void tst_QIviPagingModel::testRegisterInstance()
+void tst_QIfPagingModel::testRegisterInstance()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
     QSignalSpy registerSpy(service->testBackend(), SIGNAL(registerInstanceCalled(QUuid)));
-    QIviPagingModel firstModel;
+    QIfPagingModel firstModel;
     firstModel.setServiceObject(service);
     QCOMPARE(registerSpy.count(), 1);
-    auto *firstModelPrivate = reinterpret_cast<QIviPagingModelPrivate*> (QObjectPrivate::get(&firstModel));
+    auto *firstModelPrivate = reinterpret_cast<QIfPagingModelPrivate*> (QObjectPrivate::get(&firstModel));
     QUuid firstModelIdentifier = firstModelPrivate->m_identifier;
     QCOMPARE(registerSpy.at(0).at(0).toUuid(), firstModelIdentifier);
 
-    QIviPagingModel secondModel;
+    QIfPagingModel secondModel;
     secondModel.setServiceObject(service);
     QCOMPARE(registerSpy.count(), 2);
-    auto *secondModelPrivate = reinterpret_cast<QIviPagingModelPrivate*> (QObjectPrivate::get(&secondModel));
+    auto *secondModelPrivate = reinterpret_cast<QIfPagingModelPrivate*> (QObjectPrivate::get(&secondModel));
     QUuid secondModelIdentifier = secondModelPrivate->m_identifier;
     QCOMPARE(registerSpy.at(1).at(0).toUuid(), secondModelIdentifier);
 
@@ -292,7 +292,7 @@ void tst_QIviPagingModel::testRegisterInstance()
     QCOMPARE(unregisterSpy.at(1).at(0).toUuid(), firstModelIdentifier);
 }
 
-void tst_QIviPagingModel::testBasic_qml()
+void tst_QIfPagingModel::testBasic_qml()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
@@ -300,29 +300,29 @@ void tst_QIviPagingModel::testBasic_qml()
 
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("testBackend", service);
-    verifyQml(&engine, "import QtQuick 2.0; import QtIvi 1.0; PagingModel{}");
-    verifyQml(&engine, "import QtQuick 2.0; import QtIvi 1.0; PagingModel{ \
+    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; PagingModel{}");
+    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; PagingModel{ \
                             serviceObject: testBackend \n\
                         }");
 }
 
-void tst_QIviPagingModel::testGetAt()
+void tst_QIfPagingModel::testGetAt()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
-    QIviPagingModel model;
+    QIfPagingModel model;
     model.setServiceObject(service);
 
-    QIviStandardItem item = model.at<QIviStandardItem>(0);
+    QIfStandardItem item = model.at<QIfStandardItem>(0);
     QCOMPARE(item.id(), QLatin1String("simple 0"));
 
     QVariant var = model.get(0);
-    QCOMPARE(var.value<QIviStandardItem>().id(), item.id());
+    QCOMPARE(var.value<QIfStandardItem>().id(), item.id());
 }
 
-void tst_QIviPagingModel::testFetchMore_data()
+void tst_QIfPagingModel::testFetchMore_data()
 {
     QTest::addColumn<int>("chunkSize");
     QTest::addColumn<int>("fetchMoreThreshold");
@@ -331,7 +331,7 @@ void tst_QIviPagingModel::testFetchMore_data()
     QTest::newRow("custom fetchMoreThreshold") << -1 << 2;
 }
 
-void tst_QIviPagingModel::testFetchMore()
+void tst_QIfPagingModel::testFetchMore()
 {
     QFETCH(int, chunkSize);
     QFETCH(int, fetchMoreThreshold);
@@ -340,7 +340,7 @@ void tst_QIviPagingModel::testFetchMore()
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
-    QIviPagingModel model;
+    QIfPagingModel model;
     model.setServiceObject(service);
 
     if (chunkSize != -1) {
@@ -366,19 +366,19 @@ void tst_QIviPagingModel::testFetchMore()
     }
 
     QVERIFY(model.serviceObject());
-    QCOMPARE(model.loadingType(), QIviPagingModel::FetchMore);
+    QCOMPARE(model.loadingType(), QIfPagingModel::FetchMore);
 
     QSignalSpy fetchMoreThresholdSpy(&model, SIGNAL(fetchMoreThresholdReached()));
 
     // Ask for an item before the threshold, shouldn't trigger the threshold reached signal and fetch new data.
     int offset = model.fetchMoreThreshold() + 1;
-    QCOMPARE(model.at<QIviStandardItem>(model.chunkSize() - offset).id(),
+    QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - offset).id(),
              QLatin1String("simple ") + QString::number(model.chunkSize() - offset));
     QVERIFY(!fetchMoreThresholdSpy.count());
 
     QCOMPARE(model.rowCount(), model.chunkSize());
     // By using model.at we already prefetch the next chunk of data
-    QCOMPARE(model.at<QIviStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
+    QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
 
     QVERIFY(fetchMoreThresholdSpy.count());
     fetchMoreThresholdSpy.clear();
@@ -393,30 +393,30 @@ void tst_QIviPagingModel::testFetchMore()
     //qDebug() << model.rowCount();
 }
 
-void tst_QIviPagingModel::testDataChangedMode()
+void tst_QIfPagingModel::testDataChangedMode()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
 
-    QIviPagingModel model;
+    QIfPagingModel model;
     model.setServiceObject(service);
     QVERIFY(model.serviceObject());
 
     //TODO remove this section once we have fixed the capability race
     QSignalSpy fetchMoreThresholdSpy(&model, SIGNAL(fetchMoreThresholdReached()));
     QCOMPARE(model.rowCount(), model.chunkSize());
-    QCOMPARE(model.at<QIviStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
+    QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
     QVERIFY(fetchMoreThresholdSpy.count());
     fetchMoreThresholdSpy.clear();
 
-    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIviPagingModel::LoadingType)));
+    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIfPagingModel::LoadingType)));
     model.setLoadingType(model.loadingType());
     QVERIFY(!loadingTypeChangedSpy.count());
 
-    model.setLoadingType(QIviPagingModel::DataChanged);
-    QCOMPARE(model.loadingType(), QIviPagingModel::DataChanged);
+    model.setLoadingType(QIfPagingModel::DataChanged);
+    QCOMPARE(model.loadingType(), QIfPagingModel::DataChanged);
     QVERIFY(loadingTypeChangedSpy.count());
 
     QCOMPARE(model.rowCount(), 100);
@@ -425,7 +425,7 @@ void tst_QIviPagingModel::testDataChangedMode()
 
     // Asking for an item near inside the threshold range should trigger a new fetch.
     QSignalSpy fetchDataSpy(service->testBackend(), SIGNAL(dataFetched(const QUuid &, const QList<QVariant> &, int , bool )));
-    QCOMPARE(model.at<QIviStandardItem>(testIndex).id(), QLatin1String("simple ") + QString::number(testIndex));
+    QCOMPARE(model.at<QIfStandardItem>(testIndex).id(), QLatin1String("simple ") + QString::number(testIndex));
     QVERIFY(fetchMoreThresholdSpy.count());
     QVERIFY(fetchDataSpy.count());
 
@@ -433,14 +433,14 @@ void tst_QIviPagingModel::testDataChangedMode()
     QCOMPARE(fetchDataSpy.at(0).at(2).toInt(), testIndex + 1);
 }
 
-void tst_QIviPagingModel::testReload()
+void tst_QIfPagingModel::testReload()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
 
-    QIviPagingModel model;
+    QIfPagingModel model;
     QSignalSpy countChangedSpy(&model, SIGNAL(countChanged()));
 
     model.setServiceObject(service);
@@ -459,23 +459,23 @@ void tst_QIviPagingModel::testReload()
     QCOMPARE(model.rowCount(), model.chunkSize());
 }
 
-void tst_QIviPagingModel::testDataChangedMode_jump()
+void tst_QIfPagingModel::testDataChangedMode_jump()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
-    service->testBackend()->setCapabilities(QtIviCoreModule::SupportsGetSize);
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
 
-    QIviPagingModel model;
+    QIfPagingModel model;
     model.setServiceObject(service);
     QVERIFY(model.serviceObject());
 
-    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIviPagingModel::LoadingType)));
+    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIfPagingModel::LoadingType)));
     model.setLoadingType(model.loadingType());
     QVERIFY(!loadingTypeChangedSpy.count());
 
-    model.setLoadingType(QIviPagingModel::DataChanged);
-    QCOMPARE(model.loadingType(), QIviPagingModel::DataChanged);
+    model.setLoadingType(QIfPagingModel::DataChanged);
+    QCOMPARE(model.loadingType(), QIfPagingModel::DataChanged);
     QVERIFY(loadingTypeChangedSpy.count());
 
     QCOMPARE(model.rowCount(), 100);
@@ -485,7 +485,7 @@ void tst_QIviPagingModel::testDataChangedMode_jump()
     QSignalSpy fetchDataSpy(service->testBackend(), SIGNAL(dataFetched(const QUuid &, const QList<QVariant> &, int , bool )));
     model.get(99);
     dataChangedSpy.wait();
-    QCOMPARE(model.at<QIviStandardItem>(99).id(), QLatin1String("simple ") + QString::number(99));
+    QCOMPARE(model.at<QIfStandardItem>(99).id(), QLatin1String("simple ") + QString::number(99));
     QVERIFY(fetchDataSpy.count());
 
     // Test that we really fetched new data
@@ -493,18 +493,18 @@ void tst_QIviPagingModel::testDataChangedMode_jump()
     QCOMPARE(fetchDataSpy.at(0).at(2).toInt(), chunkBegin);
 }
 
-void tst_QIviPagingModel::testEditing()
+void tst_QIfPagingModel::testEditing()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
-    QIviPagingModel model;
+    QIfPagingModel model;
     model.setServiceObject(service);
 
-    QCOMPARE(model.at<QIviStandardItem>(0).id(), QLatin1String("simple 0"));
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), QLatin1String("simple 0"));
 
-    QIviStandardItem newItem;
+    QIfStandardItem newItem;
     newItem.setId(QLatin1String("testItem"));
 
     // Add a new Item
@@ -514,7 +514,7 @@ void tst_QIviPagingModel::testEditing()
     QCOMPARE(insertSpy.at(0).at(1).toInt(), 0);
     QCOMPARE(insertSpy.at(0).at(2).toInt(), 0);
 
-    QCOMPARE(model.at<QIviStandardItem>(0).id(), newItem.id());
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), newItem.id());
 
     // Move the item to a new location
     QSignalSpy moveSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
@@ -524,7 +524,7 @@ void tst_QIviPagingModel::testEditing()
     QCOMPARE(moveSpy.at(0).at(0).toModelIndex().row(), 0);
     QCOMPARE(moveSpy.at(0).at(1).toModelIndex().row(), newIndex);
 
-    QCOMPARE(model.at<QIviStandardItem>(newIndex).id(), newItem.id());
+    QCOMPARE(model.at<QIfStandardItem>(newIndex).id(), newItem.id());
 
     // Remove the item again
     QSignalSpy removedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int , int )));
@@ -533,24 +533,24 @@ void tst_QIviPagingModel::testEditing()
     QCOMPARE(removedSpy.at(0).at(1).toInt(), newIndex);
     QCOMPARE(removedSpy.at(0).at(2).toInt(), newIndex);
 
-    QCOMPARE(model.at<QIviStandardItem>(newIndex).id(), QLatin1String("simple 10"));
+    QCOMPARE(model.at<QIfStandardItem>(newIndex).id(), QLatin1String("simple 10"));
 }
 
-void tst_QIviPagingModel::testMissingCapabilities()
+void tst_QIfPagingModel::testMissingCapabilities()
 {
     TestServiceObject *service = new TestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
-    QIviPagingModel model;
+    QIfPagingModel model;
     model.setServiceObject(service);
 
     QTest::ignoreMessage(QtWarningMsg, "The backend doesn't support the DataChanged loading type. This call will have no effect");
-    model.setLoadingType(QIviPagingModel::DataChanged);
-    QCOMPARE(model.loadingType(), QIviPagingModel::FetchMore);
+    model.setLoadingType(QIfPagingModel::DataChanged);
+    QCOMPARE(model.loadingType(), QIfPagingModel::FetchMore);
 }
 
-QTEST_MAIN(tst_QIviPagingModel)
+QTEST_MAIN(tst_QIfPagingModel)
 
-#include "tst_qivipagingmodel.moc"
+#include "tst_qifpagingmodel.moc"
 

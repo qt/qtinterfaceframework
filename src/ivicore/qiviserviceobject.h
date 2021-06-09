@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,24 +39,24 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISERVICEOBJECT_H
-#define QIVISERVICEOBJECT_H
+#ifndef QIFSERVICEOBJECT_H
+#define QIFSERVICEOBJECT_H
 
 #include <QtCore/QObject>
-#include <QtIviCore/QIviServiceInterface>
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/QIfServiceInterface>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviServiceObject : public QObject, public QIviServiceInterface
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObject : public QObject, public QIfServiceInterface
 {
     Q_OBJECT
-    Q_INTERFACES(QIviServiceInterface)
+    Q_INTERFACES(QIfServiceInterface)
 
     Q_PROPERTY(QString id READ id CONSTANT)
 
 public:
-    explicit QIviServiceObject(QObject *parent = nullptr);
+    explicit QIfServiceObject(QObject *parent = nullptr);
 
     virtual QString id() const;
 
@@ -66,4 +66,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // QIVISERVICEOBJECT_H
+#endif // QIFSERVICEOBJECT_H

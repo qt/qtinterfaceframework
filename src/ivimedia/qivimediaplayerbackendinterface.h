@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,25 +39,25 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAPLAYERBACKENDINTERFACE_H
-#define QIVIMEDIAPLAYERBACKENDINTERFACE_H
+#ifndef QIFMEDIAPLAYERBACKENDINTERFACE_H
+#define QIFMEDIAPLAYERBACKENDINTERFACE_H
 
-#include <QtIviCore/QIviFeatureInterface>
-#include <QtIviCore/qiviqmlconversion_helper.h>
-#include <QtIviMedia/qtivimediaglobal.h>
-#include <QtIviMedia/QIviMediaPlayer>
+#include <QtInterfaceFramework/QIfFeatureInterface>
+#include <QtInterfaceFramework/qifqmlconversion_helper.h>
+#include <QtIfMedia/qtifmediaglobal.h>
+#include <QtIfMedia/QIfMediaPlayer>
 #include <QtCore/QUuid>
 
 QT_BEGIN_NAMESPACE
 
-class QIviPlayableItem;
+class QIfPlayableItem;
 
-class Q_QTIVIMEDIA_EXPORT QIviMediaPlayerBackendInterface : public QIviFeatureInterface
+class Q_QTIFMEDIA_EXPORT QIfMediaPlayerBackendInterface : public QIfFeatureInterface
 {
     Q_OBJECT
 
 public:
-    explicit QIviMediaPlayerBackendInterface(QObject *parent = nullptr);
+    explicit QIfMediaPlayerBackendInterface(QObject *parent = nullptr);
 
     virtual void play() = 0;
     virtual void pause() = 0;
@@ -65,7 +65,7 @@ public:
     virtual void seek(qint64 offset) = 0;
     virtual void next() = 0;
     virtual void previous() = 0;
-    virtual void setPlayMode(QIviMediaPlayer::PlayMode playMode) = 0;
+    virtual void setPlayMode(QIfMediaPlayer::PlayMode playMode) = 0;
     virtual void setPosition(qint64 position) = 0;
     virtual void setCurrentIndex(int currentIndex) = 0;
     virtual void setVolume(int volume) = 0;
@@ -78,8 +78,8 @@ public:
     virtual void move(int currentIndex, int newIndex) = 0;
 
 Q_SIGNALS:
-    void playModeChanged(QIviMediaPlayer::PlayMode playMode = QIviMediaPlayer::Normal);
-    void playStateChanged(QIviMediaPlayer::PlayState playState  = QIviMediaPlayer::Stopped);
+    void playModeChanged(QIfMediaPlayer::PlayMode playMode = QIfMediaPlayer::Normal);
+    void playStateChanged(QIfMediaPlayer::PlayState playState  = QIfMediaPlayer::Stopped);
     void currentTrackChanged(const QVariant &currentTrack = QVariant()); //TODO Do we need this or is the currentIndex + the playlistdata enough ?
     void positionChanged(qint64 position = -1);
     //TODO do we need durationChanged, we can get that from the currentTrack metadata.
@@ -93,8 +93,8 @@ Q_SIGNALS:
     void dataChanged(const QList<QVariant> &data, int start, int count);
 };
 
-#define QIviMediaPlayer_iid "org.qt-project.qtivi.MediaPlayer/1.0"
+#define QIfMediaPlayer_iid "org.qt-project.interfaceframework.MediaPlayer/1.0"
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIAPLAYERBACKENDINTERFACE_H
+#endif // QIFMEDIAPLAYERBACKENDINTERFACE_H

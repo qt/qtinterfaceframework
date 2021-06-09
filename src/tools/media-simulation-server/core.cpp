@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -65,8 +65,8 @@ void Core::init()
     else
         qDebug() << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
     QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("qtivimedia"));
-    QUrl url = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtivimedia")).toString());
+    settings.beginGroup(QStringLiteral("qtifmedia"));
+    QUrl url = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtifmedia")).toString());
     m_host = new QRemoteObjectRegistryHost(url);
     qDebug() << "registry at: " << m_host->registryUrl().toString();
     connect(m_host, &QRemoteObjectNode::error, this, &Core::reportError);

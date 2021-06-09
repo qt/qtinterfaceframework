@@ -28,27 +28,27 @@
 ****************************************************************************/
 
 /*!
-\page qtivivehiclefunctions-backends.html
-\title QtIviVehicleFunctions Backends
-\ingroup qtivi_backend_groups
+\page qtifvehiclefunctions-backends.html
+\title QtIfVehicleFunctions Backends
+\ingroup qtif_backend_groups
 
-All backends supporting interfaces from QtIviVehicleFunctions
+All backends supporting interfaces from QtIfVehicleFunctions
 
-\annotatedlist qtivivehiclefunctions_backend
+\annotatedlist qtifvehiclefunctions_backend
 */
 
 /*!
-\page qtivivehiclefunctions-simulation-backend.html
-\title QtIviVehicleFunctions Simulation Backend
-\ingroup qtivivehiclefunctions_backend
-\ingroup qtivi_backend
+\page qtifvehiclefunctions-simulation-backend.html
+\title QtIfVehicleFunctions Simulation Backend
+\ingroup qtifvehiclefunctions_backend
+\ingroup qtif_backend
 
 \brief Provides a static vehicle functions simulation.
 
 \section1 Supported interfaces
 \list
-    \li \l{org.qt-project.qtivi.ClimateControl/1.0}
-    \li \l{org.qt-project.qtivi.WindowControl/1.0}
+    \li \l{org.qt-project.interfaceframework.ClimateControl/1.0}
+    \li \l{org.qt-project.interfaceframework.WindowControl/1.0}
 \endlist
 
 \section1 Supported Zones

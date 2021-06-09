@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,41 +38,41 @@
 **
 ****************************************************************************/
 
-#include "qiviremoteobjectpendingresult.h"
+#include "qifremoteobjectpendingresult.h"
 
 QT_BEGIN_NAMESPACE
 
-namespace qtivi_private {
-    Q_LOGGING_CATEGORY(qLcQtIviRoHelper, "qt.ivi.remoteobjects.helper", QtInfoMsg)
+namespace qtif_private {
+    Q_LOGGING_CATEGORY(qLcQtIfRoHelper, "qt.if.remoteobjects.helper", QtInfoMsg)
 }
 
-QIviRemoteObjectPendingResult::QIviRemoteObjectPendingResult()
+QIfRemoteObjectPendingResult::QIfRemoteObjectPendingResult()
     : m_id()
     , m_failed()
 {}
 
-QIviRemoteObjectPendingResult::QIviRemoteObjectPendingResult(quint64 id, bool failed)
+QIfRemoteObjectPendingResult::QIfRemoteObjectPendingResult(quint64 id, bool failed)
     : m_id(id)
     , m_failed(failed)
 {}
 
-quint64 QIviRemoteObjectPendingResult::id() const
+quint64 QIfRemoteObjectPendingResult::id() const
 {
     return m_id;
 }
 
-void QIviRemoteObjectPendingResult::setId(quint64 id)
+void QIfRemoteObjectPendingResult::setId(quint64 id)
 {
     if (id != m_id)
         m_id = id;
 }
 
-bool QIviRemoteObjectPendingResult::failed() const
+bool QIfRemoteObjectPendingResult::failed() const
 {
     return m_failed;
 }
 
-void QIviRemoteObjectPendingResult::setFailed(bool failed)
+void QIfRemoteObjectPendingResult::setFailed(bool failed)
 {
     if (failed != m_failed)
         m_failed = failed;

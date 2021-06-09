@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -42,39 +42,39 @@
 #include <QtQml/qqmlextensionplugin.h>
 #include <qqml.h>
 
-#include <QtIviMedia/QIviAmFmTuner>
-#include <QtIviMedia/QIviMediaDevice>
-#include <QtIviMedia/QIviMediaDeviceDiscoveryModel>
-#include <QtIviMedia/QIviMediaIndexerControl>
-#include <QtIviMedia/QIviMediaPlayer>
-#include <QtIviMedia/QIviPlayQueue>
-#include <QtIviMedia/QIviTunerStation>
+#include <QtIfMedia/QIfAmFmTuner>
+#include <QtIfMedia/QIfMediaDevice>
+#include <QtIfMedia/QIfMediaDeviceDiscoveryModel>
+#include <QtIfMedia/QIfMediaIndexerControl>
+#include <QtIfMedia/QIfMediaPlayer>
+#include <QtIfMedia/QIfPlayQueue>
+#include <QtIfMedia/QIfTunerStation>
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaPlugin : public QQmlExtensionPlugin
+class QIfMediaPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid)
 public:
     void registerTypes(const char *uri) override
     {
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("QtIvi.Media"));
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("QtInterfaceFramework.Media"));
         Q_UNUSED(uri);
 
-        qRegisterMetaType<QIviTunerStation>();
-        qRegisterMetaType<QIviAmFmTunerStation>();
+        qRegisterMetaType<QIfTunerStation>();
+        qRegisterMetaType<QIfAmFmTunerStation>();
 
-        qmlRegisterType<QIviMediaPlayer>(uri, 1, 0, "MediaPlayer");
+        qmlRegisterType<QIfMediaPlayer>(uri, 1, 0, "MediaPlayer");
         //This should be an singleton, otherwise we might delete a pointer twice ?
-        qmlRegisterType<QIviMediaDeviceDiscoveryModel>(uri, 1, 0, "MediaDeviceDiscoveryModel");
-        qmlRegisterType<QIviMediaIndexerControl>(uri, 1, 0, "MediaIndexerControl");
-        qmlRegisterType<QIviAmFmTuner>(uri, 1, 0, "AmFmTuner");
+        qmlRegisterType<QIfMediaDeviceDiscoveryModel>(uri, 1, 0, "MediaDeviceDiscoveryModel");
+        qmlRegisterType<QIfMediaIndexerControl>(uri, 1, 0, "MediaIndexerControl");
+        qmlRegisterType<QIfAmFmTuner>(uri, 1, 0, "AmFmTuner");
 
-        qmlRegisterUncreatableType<QIviPlayQueue>(uri, 1, 0, "PlayQueue", QStringLiteral("PlayQueue needs to be retrieved from the MediaPlayer"));
+        qmlRegisterUncreatableType<QIfPlayQueue>(uri, 1, 0, "PlayQueue", QStringLiteral("PlayQueue needs to be retrieved from the MediaPlayer"));
 
-        qmlRegisterUncreatableType<QIviMediaDevice>(uri, 1, 0, "MediaDevice", QStringLiteral("MediaDevice can't be instantiated from QML"));
-        qmlRegisterUncreatableType<QIviMediaUsbDevice>(uri, 1, 0, "MediaUsbDevice", QStringLiteral("MediaUsbDevice can't be instantiated from QML"));
+        qmlRegisterUncreatableType<QIfMediaDevice>(uri, 1, 0, "MediaDevice", QStringLiteral("MediaDevice can't be instantiated from QML"));
+        qmlRegisterUncreatableType<QIfMediaUsbDevice>(uri, 1, 0, "MediaUsbDevice", QStringLiteral("MediaUsbDevice can't be instantiated from QML"));
     }
 };
 

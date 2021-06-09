@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -30,7 +30,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}Backend'.format(interface) %}
 {% set zone_class = '{0}Zone'.format(interface) %}
@@ -38,7 +38,7 @@
 #include "{{class|lower}}.h"
 
 #include <QDebug>
-#include <QtIviCore/QIviSimulationEngine>
+#include <QtInterfaceFramework/QIfSimulationEngine>
 
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
@@ -68,14 +68,14 @@ QT_BEGIN_NAMESPACE
 }
 
 {% for property in interface.properties %}
-{{ivi.prop_getter(property, zone_class, model_interface = true)}}
+{{if.prop_getter(property, zone_class, model_interface = true)}}
 {
     return m_{{property}};
 }
 {% endfor %}
 
 {% for property in interface.properties %}
-{{ivi.prop_setter(property, zone_class, model_interface = true)}}
+{{if.prop_setter(property, zone_class, model_interface = true)}}
 {
     if (m_{{property}} == {{property}})
         return;
@@ -91,7 +91,7 @@ QT_BEGIN_NAMESPACE
 {
 }
 
-{{class}}::{{class}}(QIviSimulationEngine *engine, QObject *parent)
+{{class}}::{{class}}(QIfSimulationEngine *engine, QObject *parent)
     : {{class}}Interface(parent)
 {% for property in interface.properties %}
 {%       if not property.type.is_model %}
@@ -131,7 +131,7 @@ QT_BEGIN_NAMESPACE
 QStringList {{class}}::availableZones() const
 {
     QStringList zones;
-    QIVI_SIMULATION_TRY_CALL_FUNC({{class}}, "availableZones", zones = return_value.toStringList());
+    QIF_SIMULATION_TRY_CALL_FUNC({{class}}, "availableZones", zones = return_value.toStringList());
 
     for (const QString &zone : zones)
         const_cast<{{class}}*>(this)->addZone(zone);
@@ -147,7 +147,7 @@ void {{class}}::initialize()
     // initialize to have them created before.
     availableZones();
 {% endif %}
-    QIVI_SIMULATION_TRY_CALL({{class}}, "initialize", void);
+    QIF_SIMULATION_TRY_CALL({{class}}, "initialize", void);
 {% for property in interface.properties %}
 {%   if not interface_zoned  %}
     Q_EMIT {{property}}Changed(m_{{property}});
@@ -184,7 +184,7 @@ void {{class}}::addZone(const QString &zone)
 {% for property in interface.properties %}
 {%   if interface_zoned %}
 {%     if property.type.is_model %}
-{%       set type = 'QIviPagingModelInterface *' %}
+{%       set type = 'QIfPagingModelInterface *' %}
 {%     else %}
 {%       set type = property|return_type %}
 {%     endif %}
@@ -200,7 +200,7 @@ void {{class}}::addZone(const QString &zone)
     return {{property|default_type_value}};
 }
 {%   else %}
-{{ivi.prop_getter(property, class, model_interface = true)}}
+{{if.prop_getter(property, class, model_interface = true)}}
 {
     return m_{{property}};
 }
@@ -208,13 +208,13 @@ void {{class}}::addZone(const QString &zone)
 {% endfor %}
 
 {% for property in interface.properties %}
-{{ivi.prop_setter(property, class, interface_zoned, model_interface = true)}}
+{{if.prop_setter(property, class, interface_zoned, model_interface = true)}}
 {
 {%   set parameters = property.name %}
 {%   if interface_zoned %}
 {%     set parameters = parameters + ', zone' %}
 {%   endif%}
-    QIVI_SIMULATION_TRY_CALL({{class}}, "{{property|setter_name}}", void, {{parameters}});
+    QIF_SIMULATION_TRY_CALL({{class}}, "{{property|setter_name}}", void, {{parameters}});
 
 {% if interface_zoned %}
     if (zone.isEmpty()) {
@@ -240,7 +240,7 @@ void {{class}}::addZone(const QString &zone)
 {% endfor %}
 
 {% for operation in interface.operations %}
-{{ivi.operation(operation, class, interface_zoned)}}
+{{if.operation(operation, class, interface_zoned)}}
 {
 {%   set function_parameters = operation.parameters|join(', ') %}
 {%   if interface_zoned %}
@@ -249,8 +249,8 @@ void {{class}}::addZone(const QString &zone)
 {%     endif %}
 {%     set function_parameters = function_parameters + 'zone' %}
 {%   endif%}
-    QIviPendingReply<{{operation|return_type}}> pendingReply;
-    QIVI_SIMULATION_TRY_CALL_FUNC({{class}}, "{{operation}}", return pendingReply, QIviPendingReplyBase(pendingReply){% if function_parameters is not equalto "" %}, {{function_parameters}} {% endif %});
+    QIfPendingReply<{{operation|return_type}}> pendingReply;
+    QIF_SIMULATION_TRY_CALL_FUNC({{class}}, "{{operation}}", return pendingReply, QIfPendingReplyBase(pendingReply){% if function_parameters is not equalto "" %}, {{function_parameters}} {% endif %});
 
 {% if interface_zoned %}
     Q_UNUSED(zone);
@@ -259,7 +259,7 @@ void {{class}}::addZone(const QString &zone)
     qWarning() << "{{operation}}: Not implemented!";
 
     //Fake that the reply always succeeded
-    QIviPendingReply<{{operation|return_type}}> successReply;
+    QIfPendingReply<{{operation|return_type}}> successReply;
     successReply.setSuccess({{operation|default_type_value}});
     return successReply;
 }

@@ -2,9 +2,9 @@ TEMPLATE=lib
 TARGET= $$qtLibraryTarget(echo_noannotation_frontend)
 DESTDIR = ../
 
-CONFIG += ivigenerator
+CONFIG += ifcodegen
 
-QT += ivicore ivicore-private qml quick
+QT += interfaceframework interfaceframework-private qml quick
 
 DEFINES += QT_BUILD_ORG_EXAMPLE_ECHO_LIB
 

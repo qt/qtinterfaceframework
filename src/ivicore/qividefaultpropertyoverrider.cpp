@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,11 +39,11 @@
 **
 ****************************************************************************/
 
-#include "qiviabstractfeature.h"
-#include "qiviabstractfeature_p.h"
-#include "qiviabstractzonedfeature.h"
-#include "qividefaultpropertyoverrider_p.h"
-#include "qiviserviceobject.h"
+#include "qifabstractfeature.h"
+#include "qifabstractfeature_p.h"
+#include "qifabstractzonedfeature.h"
+#include "qifdefaultpropertyoverrider_p.h"
+#include "qifserviceobject.h"
 
 #include <QDebug>
 #include <QJsonArray>
@@ -51,18 +51,18 @@
 
 QT_BEGIN_NAMESPACE
 
-QIviDefaultPropertyOverrider::PropertyOverride::PropertyOverride()
+QIfDefaultPropertyOverrider::PropertyOverride::PropertyOverride()
     : m_overridable(false)
     , m_overriding(false)
 {
 }
 
-QIviDefaultPropertyOverrider::PropertyOverride::PropertyOverride(QIviDefaultPropertyOverrider::PropertyOverride &&other)
+QIfDefaultPropertyOverrider::PropertyOverride::PropertyOverride(QIfDefaultPropertyOverrider::PropertyOverride &&other)
 {
     *this = std::move(other);
 }
 
-QIviDefaultPropertyOverrider::PropertyOverride::PropertyOverride(const QMetaProperty &metaProperty, const QVariant &value, bool overridable)
+QIfDefaultPropertyOverrider::PropertyOverride::PropertyOverride(const QMetaProperty &metaProperty, const QVariant &value, bool overridable)
     : m_metaProperty(metaProperty)
     , m_overridable(overridable)
     , m_overriding(false)
@@ -70,7 +70,7 @@ QIviDefaultPropertyOverrider::PropertyOverride::PropertyOverride(const QMetaProp
 {
 }
 
-QIviDefaultPropertyOverrider::PropertyOverride &QIviDefaultPropertyOverrider::PropertyOverride::operator=(QIviDefaultPropertyOverrider::PropertyOverride &&other)
+QIfDefaultPropertyOverrider::PropertyOverride &QIfDefaultPropertyOverrider::PropertyOverride::operator=(QIfDefaultPropertyOverrider::PropertyOverride &&other)
 {
     m_metaProperty = other.m_metaProperty;
     m_originalValue = other.m_originalValue;
@@ -80,73 +80,73 @@ QIviDefaultPropertyOverrider::PropertyOverride &QIviDefaultPropertyOverrider::Pr
     return *this;
 }
 
-int QIviDefaultPropertyOverrider::PropertyOverride::propertyIndex() const
+int QIfDefaultPropertyOverrider::PropertyOverride::propertyIndex() const
 {
     return m_metaProperty.isValid() ? m_metaProperty.propertyIndex() : -1;
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::isValid() const
+bool QIfDefaultPropertyOverrider::PropertyOverride::isValid() const
 {
     return m_metaProperty.isValid();
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::isAvailable() const
+bool QIfDefaultPropertyOverrider::PropertyOverride::isAvailable() const
 {
     return m_metaProperty.isValid();
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::hasNotifySignal() const
+bool QIfDefaultPropertyOverrider::PropertyOverride::hasNotifySignal() const
 {
     return m_metaProperty.hasNotifySignal();
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::isWritable() const
+bool QIfDefaultPropertyOverrider::PropertyOverride::isWritable() const
 {
     return (m_metaProperty.isWritable() && !QMetaType(m_metaProperty.userType()).flags().testFlag(QMetaType::PointerToQObject));
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::isOverridable() const
+bool QIfDefaultPropertyOverrider::PropertyOverride::isOverridable() const
 {
     if (!m_overridable)
         return false;
-    int propertyOffset = QIviAbstractFeature::staticMetaObject.propertyCount();
+    int propertyOffset = QIfAbstractFeature::staticMetaObject.propertyCount();
     return m_metaProperty.propertyIndex() >= propertyOffset;
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::isOverridden() const
+bool QIfDefaultPropertyOverrider::PropertyOverride::isOverridden() const
 {
     return m_overriding;
 }
 
-QString QIviDefaultPropertyOverrider::PropertyOverride::name() const
+QString QIfDefaultPropertyOverrider::PropertyOverride::name() const
 {
     return QString::fromUtf8(m_metaProperty.name());
 }
 
-QString QIviDefaultPropertyOverrider::PropertyOverride::typeName() const
+QString QIfDefaultPropertyOverrider::PropertyOverride::typeName() const
 {
     const int userType(m_metaProperty.userType());
     return QString::fromLatin1(QMetaType(userType).name());
 }
 
-QString QIviDefaultPropertyOverrider::PropertyOverride::displayText() const
+QString QIfDefaultPropertyOverrider::PropertyOverride::displayText() const
 {
     const QVariant &value = m_overriding ? m_overridenValue : m_originalValue;
     return value.toString();
 }
 
-QVariant QIviDefaultPropertyOverrider::PropertyOverride::editValue() const
+QVariant QIfDefaultPropertyOverrider::PropertyOverride::editValue() const
 {
     const QVariant &value = m_overriding ? m_overridenValue : m_originalValue;
     return value;
 }
 
-QVariant QIviDefaultPropertyOverrider::PropertyOverride::cppValue() const
+QVariant QIfDefaultPropertyOverrider::PropertyOverride::cppValue() const
 {
     return m_overriding ? m_overridenValue : m_originalValue;
 }
 
-void QIviDefaultPropertyOverrider::PropertyOverride::setOverriden(bool override)
+void QIfDefaultPropertyOverrider::PropertyOverride::setOverriden(bool override)
 {
     if (override != m_overriding) {
         m_overriding = override;
@@ -155,7 +155,7 @@ void QIviDefaultPropertyOverrider::PropertyOverride::setOverriden(bool override)
     }
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::setOverridenValue(const QVariant &value, QIviAbstractFeature *carrier)
+bool QIfDefaultPropertyOverrider::PropertyOverride::setOverridenValue(const QVariant &value, QIfAbstractFeature *carrier)
 {
     Q_ASSERT(isAvailable());
 
@@ -173,9 +173,9 @@ bool QIviDefaultPropertyOverrider::PropertyOverride::setOverridenValue(const QVa
         return notifyOverridenValue(value, carrier);
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::notifyOverridenValue(const QVariant &value, QIviAbstractFeature *carrier)
+bool QIfDefaultPropertyOverrider::PropertyOverride::notifyOverridenValue(const QVariant &value, QIfAbstractFeature *carrier)
 {
-    QIviAbstractFeaturePrivate *d = QIviAbstractFeaturePrivate::get(carrier);
+    QIfAbstractFeaturePrivate *d = QIfAbstractFeaturePrivate::get(carrier);
     if (d && d->notify(m_metaProperty.name(), value))
         return false;
 
@@ -193,18 +193,18 @@ bool QIviDefaultPropertyOverrider::PropertyOverride::notifyOverridenValue(const 
     }
 }
 
-void QIviDefaultPropertyOverrider::PropertyOverride::setOriginalValue(const QVariant &editValue)
+void QIfDefaultPropertyOverrider::PropertyOverride::setOriginalValue(const QVariant &editValue)
 {
     m_originalValue = editValue;
 }
 
-bool QIviDefaultPropertyOverrider::PropertyOverride::operator==(const QByteArray &property) const
+bool QIfDefaultPropertyOverrider::PropertyOverride::operator==(const QByteArray &property) const
 {
     return this->m_metaProperty.name() == property;
 }
 
 
-QIviDefaultPropertyOverrider::QIviDefaultPropertyOverrider(QIviAbstractFeature *carrier, QObject *parent)
+QIfDefaultPropertyOverrider::QIfDefaultPropertyOverrider(QIfAbstractFeature *carrier, QObject *parent)
     : QObject(parent)
     , m_serviceObject(nullptr)
 {
@@ -215,26 +215,26 @@ QIviDefaultPropertyOverrider::QIviDefaultPropertyOverrider(QIviAbstractFeature *
     }
 }
 
-QIviDefaultPropertyOverrider::~QIviDefaultPropertyOverrider()
+QIfDefaultPropertyOverrider::~QIfDefaultPropertyOverrider()
 {
     for (auto &c : qAsConst(m_carriers))
         setCarrierOverride(false, c);
 }
 
-void QIviDefaultPropertyOverrider::init(QIviAbstractFeature *carrier)
+void QIfDefaultPropertyOverrider::init(QIfAbstractFeature *carrier)
 {
     if (!carrier || !m_properties.empty())
         return;
 
     const QMetaObject *mo = carrier->metaObject();
-    const int propertyOffset = QIviAbstractFeature::staticMetaObject.propertyCount();
+    const int propertyOffset = QIfAbstractFeature::staticMetaObject.propertyCount();
     const int propertyCount = mo->propertyCount() - propertyOffset;
 
-    QIviAbstractFeaturePrivate *carrierPrivate = QIviAbstractFeaturePrivate::get(carrier);
+    QIfAbstractFeaturePrivate *carrierPrivate = QIfAbstractFeaturePrivate::get(carrier);
     const bool canOveride = carrierPrivate && carrierPrivate->m_supportsPropertyOverriding;
 
     const QByteArray normalizedSignal(QMetaObject::normalizedSignature("propertyChanged()"));
-    const int propertyChangedSignalIndex(QIviDefaultPropertyOverrider::staticMetaObject.indexOfSignal(normalizedSignal));
+    const int propertyChangedSignalIndex(QIfDefaultPropertyOverrider::staticMetaObject.indexOfSignal(normalizedSignal));
 
     for (int i = 0; i < propertyCount; ++i) {
         const QMetaProperty metaProperty(mo->property(i + propertyOffset));
@@ -246,7 +246,7 @@ void QIviDefaultPropertyOverrider::init(QIviAbstractFeature *carrier)
     }
 }
 
-void QIviDefaultPropertyOverrider::addCarrier(QIviAbstractFeature *carrier)
+void QIfDefaultPropertyOverrider::addCarrier(QIfAbstractFeature *carrier)
 {
     if (!carrier)
         return;
@@ -256,19 +256,19 @@ void QIviDefaultPropertyOverrider::addCarrier(QIviAbstractFeature *carrier)
     setCarrierOverride(true, carrier);
 }
 
-void QIviDefaultPropertyOverrider::removeCarrier(QIviAbstractFeature *carrier)
+void QIfDefaultPropertyOverrider::removeCarrier(QIfAbstractFeature *carrier)
 {
     setCarrierOverride(false, carrier);
-    m_carriers.erase(std::remove_if(m_carriers.begin(), m_carriers.end(), [carrier](QIviAbstractFeature *c) {
+    m_carriers.erase(std::remove_if(m_carriers.begin(), m_carriers.end(), [carrier](QIfAbstractFeature *c) {
         return carrier == c;
     }), m_carriers.end());
 }
 
-void QIviDefaultPropertyOverrider::setCarrierOverride(bool override, QIviAbstractFeature *carrier)
+void QIfDefaultPropertyOverrider::setCarrierOverride(bool override, QIfAbstractFeature *carrier)
 {
     if (!carrier)
         return;
-    QIviAbstractFeaturePrivate *const pPriv = QIviAbstractFeaturePrivate::get(carrier);
+    QIfAbstractFeaturePrivate *const pPriv = QIfAbstractFeaturePrivate::get(carrier);
     if (!pPriv)
         return;
     if (override && pPriv->m_propertyOverride == nullptr) {
@@ -278,12 +278,12 @@ void QIviDefaultPropertyOverrider::setCarrierOverride(bool override, QIviAbstrac
     }
 }
 
-int QIviDefaultPropertyOverrider::numCarriers() const
+int QIfDefaultPropertyOverrider::numCarriers() const
 {
     return (int) m_carriers.size();
 }
 
-QVariant QIviDefaultPropertyOverrider::property(int propertyIndex) const
+QVariant QIfDefaultPropertyOverrider::property(int propertyIndex) const
 {
     if (m_carriers.empty())
         return {};
@@ -292,7 +292,7 @@ QVariant QIviDefaultPropertyOverrider::property(int propertyIndex) const
     return property.cppValue();
 }
 
-void QIviDefaultPropertyOverrider::setProperty(int propertyIndex, const QVariant &value)
+void QIfDefaultPropertyOverrider::setProperty(int propertyIndex, const QVariant &value)
 {
     if (m_carriers.empty())
         return;
@@ -301,7 +301,7 @@ void QIviDefaultPropertyOverrider::setProperty(int propertyIndex, const QVariant
     property.setOriginalValue(value);
 }
 
-bool QIviDefaultPropertyOverrider::isOverridden(int propertyIndex) const
+bool QIfDefaultPropertyOverrider::isOverridden(int propertyIndex) const
 {
     if (m_carriers.empty())
         return false;
@@ -310,7 +310,7 @@ bool QIviDefaultPropertyOverrider::isOverridden(int propertyIndex) const
     return property.isOverridden();
 }
 
-bool QIviDefaultPropertyOverrider::isWritableAt(int index) const
+bool QIfDefaultPropertyOverrider::isWritableAt(int index) const
 {
     if (m_carriers.empty())
         return false;
@@ -319,7 +319,7 @@ bool QIviDefaultPropertyOverrider::isWritableAt(int index) const
     return property.isWritable();
 }
 
-bool QIviDefaultPropertyOverrider::isOverridableAt(int index) const
+bool QIfDefaultPropertyOverrider::isOverridableAt(int index) const
 {
     if (m_carriers.empty())
         return false;
@@ -328,7 +328,7 @@ bool QIviDefaultPropertyOverrider::isOverridableAt(int index) const
     return property.isOverridable();
 }
 
-bool QIviDefaultPropertyOverrider::isAvailableAt(int index) const
+bool QIfDefaultPropertyOverrider::isAvailableAt(int index) const
 {
     if (m_carriers.empty())
         return false;
@@ -337,7 +337,7 @@ bool QIviDefaultPropertyOverrider::isAvailableAt(int index) const
     return property.isAvailable();
 }
 
-bool QIviDefaultPropertyOverrider::isOverriddenAt(int index) const
+bool QIfDefaultPropertyOverrider::isOverriddenAt(int index) const
 {
     if (m_carriers.empty())
         return false;
@@ -346,7 +346,7 @@ bool QIviDefaultPropertyOverrider::isOverriddenAt(int index) const
     return property.isOverridden();
 }
 
-bool QIviDefaultPropertyOverrider::hasNotifySignalAt(int index) const
+bool QIfDefaultPropertyOverrider::hasNotifySignalAt(int index) const
 {
     if (m_carriers.empty())
         return false;
@@ -355,7 +355,7 @@ bool QIviDefaultPropertyOverrider::hasNotifySignalAt(int index) const
     return property.hasNotifySignal();
 }
 
-QString QIviDefaultPropertyOverrider::nameAt(int index) const
+QString QIfDefaultPropertyOverrider::nameAt(int index) const
 {
     if (m_carriers.empty())
         return {};
@@ -364,7 +364,7 @@ QString QIviDefaultPropertyOverrider::nameAt(int index) const
     return property.name();
 }
 
-QString QIviDefaultPropertyOverrider::typeNameAt(int index) const
+QString QIfDefaultPropertyOverrider::typeNameAt(int index) const
 {
     if (m_carriers.empty())
         return {};
@@ -373,7 +373,7 @@ QString QIviDefaultPropertyOverrider::typeNameAt(int index) const
     return property.typeName();
 }
 
-QString QIviDefaultPropertyOverrider::displayTextAt(int index) const
+QString QIfDefaultPropertyOverrider::displayTextAt(int index) const
 {
     if (m_carriers.empty())
         return {};
@@ -382,7 +382,7 @@ QString QIviDefaultPropertyOverrider::displayTextAt(int index) const
     return property.displayText();
 }
 
-QVariant QIviDefaultPropertyOverrider::iviConstraintsAt(int index) const
+QVariant QIfDefaultPropertyOverrider::ifConstraintsAt(int index) const
 {
     if (m_carriers.empty())
         return {};
@@ -393,7 +393,7 @@ QVariant QIviDefaultPropertyOverrider::iviConstraintsAt(int index) const
     QByteArray constraintsJSON;
     for (int i=0; i<carrier->metaObject()->classInfoCount(); i++) {
         QMetaClassInfo ci = carrier->metaObject()->classInfo(i);
-        if (QLatin1String(ci.name()) == QLatin1String("IviPropertyDomains")) {
+        if (QLatin1String(ci.name()) == QLatin1String("IfPropertyDomains")) {
             constraintsJSON = QByteArray(ci.value());
             break;
         }
@@ -434,7 +434,7 @@ QVariant QIviDefaultPropertyOverrider::iviConstraintsAt(int index) const
     return {};
 }
 
-QVariant QIviDefaultPropertyOverrider::editValueAt(int index) const
+QVariant QIfDefaultPropertyOverrider::editValueAt(int index) const
 {
     if (m_carriers.empty())
         return {};
@@ -443,20 +443,20 @@ QVariant QIviDefaultPropertyOverrider::editValueAt(int index) const
     return property.editValue();
 }
 
-QString QIviDefaultPropertyOverrider::label() const
+QString QIfDefaultPropertyOverrider::label() const
 {
     if (m_carriers.empty())
         return {};
     QString name = m_serviceObject ? m_serviceObject->objectName() : QString();
     if (name.isEmpty())
         name = typeName();
-    if (const QIviAbstractZonedFeature *zoned = qobject_cast<const QIviAbstractZonedFeature *>(m_carriers.front()))
+    if (const QIfAbstractZonedFeature *zoned = qobject_cast<const QIfAbstractZonedFeature *>(m_carriers.front()))
         // not translated; the zone API is fixed to English, too
         name += QString::fromLatin1(" [Zone: %1]").arg(zoned->zone());
     return name;
 }
 
-QString QIviDefaultPropertyOverrider::description() const
+QString QIfDefaultPropertyOverrider::description() const
 {
     if (!m_serviceObject)
         return {};
@@ -465,14 +465,14 @@ QString QIviDefaultPropertyOverrider::description() const
             .arg(m_carriers.size());
 }
 
-QString QIviDefaultPropertyOverrider::typeName() const
+QString QIfDefaultPropertyOverrider::typeName() const
 {
     if (m_carriers.empty())
         return {};
     return QString::fromLatin1(m_carriers.front()->metaObject()->className());
 }
 
-bool QIviDefaultPropertyOverrider::setOverride(int index, bool isOverride)
+bool QIfDefaultPropertyOverrider::setOverride(int index, bool isOverride)
 {
     PropertyOverride &property = m_properties.at(index);
     if (property.isOverridable() && isOverride != property.isOverridden()) {
@@ -489,7 +489,7 @@ bool QIviDefaultPropertyOverrider::setOverride(int index, bool isOverride)
     return false;
 }
 
-bool QIviDefaultPropertyOverrider::setOverridenValue(int index, const QVariant &value)
+bool QIfDefaultPropertyOverrider::setOverridenValue(int index, const QVariant &value)
 {
     PropertyOverride &property = m_properties.at(index);
     bool res = false;
@@ -500,14 +500,14 @@ bool QIviDefaultPropertyOverrider::setOverridenValue(int index, const QVariant &
     return res;
 }
 
-int QIviDefaultPropertyOverrider::propertyCount() const
+int QIfDefaultPropertyOverrider::propertyCount() const
 {
     return (int) m_properties.size();
 }
 
-const QIviDefaultPropertyOverrider::PropertyOverride &QIviDefaultPropertyOverrider::propertyForIndex(int index) const
+const QIfDefaultPropertyOverrider::PropertyOverride &QIfDefaultPropertyOverrider::propertyForIndex(int index) const
 {
-    static QIviDefaultPropertyOverrider::PropertyOverride dummy;
+    static QIfDefaultPropertyOverrider::PropertyOverride dummy;
     for (const auto &p: m_properties) {
         if (p.propertyIndex() == index)
             return p;
@@ -515,9 +515,9 @@ const QIviDefaultPropertyOverrider::PropertyOverride &QIviDefaultPropertyOverrid
     return dummy;
 }
 
-QIviDefaultPropertyOverrider::PropertyOverride &QIviDefaultPropertyOverrider::propertyForIndex(int index)
+QIfDefaultPropertyOverrider::PropertyOverride &QIfDefaultPropertyOverrider::propertyForIndex(int index)
 {
-    static QIviDefaultPropertyOverrider::PropertyOverride dummy;
+    static QIfDefaultPropertyOverrider::PropertyOverride dummy;
     for (auto &p: m_properties) {
         if (p.propertyIndex() == index)
             return p;
@@ -525,7 +525,7 @@ QIviDefaultPropertyOverrider::PropertyOverride &QIviDefaultPropertyOverrider::pr
     return dummy;
 }
 
-int QIviDefaultPropertyOverrider::indexOfProperty(const QByteArray &property) const
+int QIfDefaultPropertyOverrider::indexOfProperty(const QByteArray &property) const
 {
     for (uint i = 0; i < m_properties.size(); i++) {
         if (m_properties.at(i) == property) {
@@ -535,18 +535,18 @@ int QIviDefaultPropertyOverrider::indexOfProperty(const QByteArray &property) co
     return -1;
 }
 
-bool QIviDefaultPropertyOverrider::handles(const QObject *carrier) const
+bool QIfDefaultPropertyOverrider::handles(const QObject *carrier) const
 {
-    return std::find_if(m_carriers.begin(), m_carriers.end(), [carrier](const QIviAbstractFeature *p) {
+    return std::find_if(m_carriers.begin(), m_carriers.end(), [carrier](const QIfAbstractFeature *p) {
         return p == carrier;
     }) != m_carriers.end();
 }
 
-QString QIviDefaultPropertyOverrider::serviceId() const
+QString QIfDefaultPropertyOverrider::serviceId() const
 {
     return m_serviceObject ? m_serviceObject->id() : QString();
 }
 
 QT_END_NAMESPACE
 
-#include "moc_qividefaultpropertyoverrider_p.cpp"
+#include "moc_qifdefaultpropertyoverrider_p.cpp"

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -42,10 +42,10 @@
 #include "mediaplugin.h"
 #include "mediaplayerbackend.h"
 #include "mediaindexerbackend.h"
-#include "searchandbrowsemodel.h"
+#include "filterandbrowsemodel.h"
 #include "mediadiscoverybackend.h"
 
-#include <QtIviMedia/QIviMediaPlayer>
+#include <QtIfMedia/QIfMediaPlayer>
 
 #include <QCoreApplication>
 #include <QStringList>
@@ -57,7 +57,7 @@ MediaQtROPlugin::MediaQtROPlugin(QObject *parent)
     : QObject(parent)
     , m_player(new MediaPlayerBackend(this))
     , m_indexer(new MediaIndexerBackend(this))
-    , m_searchModel(new SearchAndBrowseModel(this))
+    , m_searchModel(new FilterAndBrowseModel(this))
     , m_discovery(new MediaDiscoveryBackend(this))
 {
 }
@@ -66,22 +66,22 @@ QStringList MediaQtROPlugin::interfaces() const
 {
     QStringList list;
 
-    list << QStringLiteral(QIviMediaPlayer_iid);
-    list << QStringLiteral(QIviMediaIndexer_iid);
-    list << QStringLiteral(QIviSearchAndBrowseModel_iid);
-    list << QStringLiteral(QIviMediaDeviceDiscovery_iid);
+    list << QStringLiteral(QIfMediaPlayer_iid);
+    list << QStringLiteral(QIfMediaIndexer_iid);
+    list << QStringLiteral(QIfFilterAndBrowseModel_iid);
+    list << QStringLiteral(QIfMediaDeviceDiscovery_iid);
     return list;
 }
 
-QIviFeatureInterface *MediaQtROPlugin::interfaceInstance(const QString &interface) const
+QIfFeatureInterface *MediaQtROPlugin::interfaceInstance(const QString &interface) const
 {
-    if (interface == QStringLiteral(QIviMediaPlayer_iid))
+    if (interface == QStringLiteral(QIfMediaPlayer_iid))
         return m_player;
-    else if (interface == QStringLiteral(QIviMediaIndexer_iid))
+    else if (interface == QStringLiteral(QIfMediaIndexer_iid))
         return m_indexer;
-    else if (interface == QStringLiteral(QIviSearchAndBrowseModel_iid))
+    else if (interface == QStringLiteral(QIfFilterAndBrowseModel_iid))
         return m_searchModel;
-    else if (interface == QStringLiteral(QIviMediaDeviceDiscovery_iid))
+    else if (interface == QStringLiteral(QIfMediaDeviceDiscovery_iid))
         return m_discovery;
 
     return nullptr;

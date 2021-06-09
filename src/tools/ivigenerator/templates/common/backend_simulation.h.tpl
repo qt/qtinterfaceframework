@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -30,7 +30,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}Backend'.format(interface) %}
 {% set zone_class = '{0}Zone'.format(interface) %}
@@ -55,7 +55,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class QIviSimulationEngine;
+class QIfSimulationEngine;
 
 {% if interface_zoned %}
 class {{zone_class}} : public QObject
@@ -63,7 +63,7 @@ class {{zone_class}} : public QObject
     Q_OBJECT
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-{%     set type = 'QIviPagingModelInterface *' %}
+{%     set type = 'QIfPagingModelInterface *' %}
 {%   else %}
 {%     set type = property|return_type %}
 {%   endif %}
@@ -73,17 +73,17 @@ public:
     explicit {{zone_class}}(const QString &zone, {{class}}Interface *parent = nullptr);
 
 {% for property in interface.properties %}
-    {{ivi.prop_getter(property, model_interface = true)}};
+    {{if.prop_getter(property, model_interface = true)}};
 {% endfor %}
 
 public Q_SLOTS:
 {% for property in interface.properties %}
-    {{ivi.prop_setter(property, model_interface = true)}};
+    {{if.prop_setter(property, model_interface = true)}};
 {% endfor %}
 
 Q_SIGNALS:
 {% for property in interface.properties %}
-    {{ivi.prop_notify(property, model_interface = true)}};
+    {{if.prop_notify(property, model_interface = true)}};
 {% endfor %}
 
 private:
@@ -91,7 +91,7 @@ private:
     QString m_zone;
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-    QIviPagingModelInterface *m_{{ property }};
+    QIfPagingModelInterface *m_{{ property }};
 {%   else %}
     {{ property|return_type }} m_{{ property }};
 {%   endif %}
@@ -105,7 +105,7 @@ class {{class}} : public {{class}}Interface
 
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-{%     set type = 'QIviPagingModelInterface *' %}
+{%     set type = 'QIfPagingModelInterface *' %}
 {%   else %}
 {%     set type = property|return_type %}
 {%   endif %}
@@ -116,7 +116,7 @@ class {{class}} : public {{class}}Interface
 {% endif %}
 public:
     explicit {{class}}(QObject *parent = nullptr);
-    explicit {{class}}(QIviSimulationEngine *engine, QObject *parent = nullptr);
+    explicit {{class}}(QIfSimulationEngine *engine, QObject *parent = nullptr);
     ~{{class}}();
 
 {%   if interface_zoned %}
@@ -132,13 +132,13 @@ public:
 {% for property in interface.properties %}
 {%   if interface_zoned %}
 {%     if property.type.is_model %}
-{%       set type = 'QIviPagingModelInterface *' %}
+{%       set type = 'QIfPagingModelInterface *' %}
 {%     else %}
 {%       set type = property|return_type %}
 {%     endif %}
     Q_INVOKABLE {{type}} {{property|getter_name}}(const QString &zone = QString());
 {%   else %}
-    {{ivi.prop_getter(property, model_interface = true)}};
+    {{if.prop_getter(property, model_interface = true)}};
 {%   endif %}
 {% endfor %}
 {% if interface_zoned %}
@@ -148,21 +148,21 @@ public:
 public Q_SLOTS:
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
-    {{ivi.prop_setter(property, zoned = interface_zoned, default_zone = true)}} override;
+    {{if.prop_setter(property, zoned = interface_zoned, default_zone = true)}} override;
 {%   else %}
-    {{ivi.prop_setter(property, zoned = interface_zoned, model_interface = true, default_zone = true)}};
+    {{if.prop_setter(property, zoned = interface_zoned, model_interface = true, default_zone = true)}};
 {%   endif %}
 {% endfor %}
 
 {% for operation in interface.operations %}
-    {{ivi.operation(operation, zoned = interface_zoned)}} override;
+    {{if.operation(operation, zoned = interface_zoned)}} override;
 {% endfor %}
 
 protected:
 {% for property in interface.properties %}
 {#{%   if not property.tags.config_simulator or not property.tags.config_simulator.zoned %}#}
 {%     if property.type.is_model %}
-    QIviPagingModelInterface *m_{{ property }};
+    QIfPagingModelInterface *m_{{ property }};
 {%     else %}
     {{ property|return_type }} m_{{ property }};
 {%     endif %}

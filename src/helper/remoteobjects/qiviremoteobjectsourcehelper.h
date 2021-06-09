@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,25 +38,25 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIREMOTEOBJECTSOURCEHELPER_H
-#define QIVIREMOTEOBJECTSOURCEHELPER_H
+#ifndef QIFREMOTEOBJECTSOURCEHELPER_H
+#define QIFREMOTEOBJECTSOURCEHELPER_H
 
 #include <QtCore/QObject>
-#include <QtIviCore/QIviPendingReply>
+#include <QtInterfaceFramework/QIfPendingReply>
 
-#include <QtIviRemoteObjectsHelper/qiviremoteobjectpendingresult.h>
+#include <QtIfRemoteObjectsHelper/qifremoteobjectpendingresult.h>
 
 QT_BEGIN_NAMESPACE
 
-template <class T> class QIviRemoteObjectSourceHelper
+template <class T> class QIfRemoteObjectSourceHelper
 {
 public:
-    QIviRemoteObjectSourceHelper(T *adapter, const QLoggingCategory &category = qtivi_private::qLcQtIviRoHelper())
+    QIfRemoteObjectSourceHelper(T *adapter, const QLoggingCategory &category = qtif_private::qLcQtIfRoHelper())
         : m_adapter(adapter)
         , m_replyCounter(0)
         , m_category(category)
     {
-        qRegisterMetaType<QIviRemoteObjectPendingResult>();
+        qRegisterMetaType<QIfRemoteObjectPendingResult>();
     }
 
     QVariant toRemoteObjectVariant(const QVariant &variant) const
@@ -68,7 +68,7 @@ public:
         return QVariant(QMetaType(QMetaType::QVariant), &variant);
     }
 
-    QVariant fromPendingReply(const QIviPendingReplyBase &pendingReply)
+    QVariant fromPendingReply(const QIfPendingReplyBase &pendingReply)
     {
         if (pendingReply.isSuccessful()) {
             qCDebug(m_category) << "Returning result right away";
@@ -77,11 +77,11 @@ public:
             const quint64 id = ++m_replyCounter;
             if (pendingReply.isResultAvailable()) { // the call failed
                 qCDebug(m_category) << "Returning failed reply";
-                return QVariant::fromValue(QIviRemoteObjectPendingResult(id, true /* failed */));
+                return QVariant::fromValue(QIfRemoteObjectPendingResult(id, true /* failed */));
             }
-            QIviRemoteObjectPendingResult result = QIviRemoteObjectPendingResult(id, false /* failed */);
+            QIfRemoteObjectPendingResult result = QIfRemoteObjectPendingResult(id, false /* failed */);
             qCDebug(m_category) << "Returning a pending result: id:" << id;
-            QObject::connect(pendingReply.watcher(), &QIviPendingReplyWatcher::valueChanged, [this, pendingReply, id] (const QVariant &value) {
+            QObject::connect(pendingReply.watcher(), &QIfPendingReplyWatcher::valueChanged, [this, pendingReply, id] (const QVariant &value) {
                 qCDebug(m_category) << "Value for pending result available: id:" << id << "value:" << value;
                 Q_EMIT m_adapter->pendingResultAvailable(id, pendingReply.isSuccessful(), value);
             });
@@ -97,4 +97,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif //QIVIREMOTEOBJECTSOURCEHELPER_H
+#endif //QIFREMOTEOBJECTSOURCEHELPER_H

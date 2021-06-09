@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIABSTRACTFEATURELISTMODEL_P_H
-#define QIVIABSTRACTFEATURELISTMODEL_P_H
+#ifndef QIFABSTRACTFEATURELISTMODEL_P_H
+#define QIFABSTRACTFEATURELISTMODEL_P_H
 
 //
 //  W A R N I N G
@@ -54,57 +54,57 @@
 //
 
 #include <private/qabstractitemmodel_p.h>
-#include <private/qiviabstractfeature_p.h>
-#include <private/qtiviglobal_p.h>
+#include <private/qifabstractfeature_p.h>
+#include <private/qtifglobal_p.h>
 
-#include "qiviabstractfeaturelistmodel.h"
+#include "qifabstractfeaturelistmodel.h"
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviHelperFeature : public QIviAbstractFeature
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfHelperFeature : public QIfAbstractFeature
 {
     Q_OBJECT
 
 public:
-    QIviHelperFeature(const QString &interfaceName, QIviAbstractFeatureListModel *model);
+    QIfHelperFeature(const QString &interfaceName, QIfAbstractFeatureListModel *model);
 
-    bool acceptServiceObject(QIviServiceObject *so) override;
-    bool acceptServiceObjectDefaultImpl(QIviServiceObject *so);
-    void connectToServiceObject(QIviServiceObject *so) override;
-    void connectToServiceObjectDefaultImpl(QIviServiceObject *so);
-    void disconnectFromServiceObject(QIviServiceObject *so) override;
-    void disconnectFromServiceObjectDefaultImpl(QIviServiceObject *so);
+    bool acceptServiceObject(QIfServiceObject *so) override;
+    bool acceptServiceObjectDefaultImpl(QIfServiceObject *so);
+    void connectToServiceObject(QIfServiceObject *so) override;
+    void connectToServiceObjectDefaultImpl(QIfServiceObject *so);
+    void disconnectFromServiceObject(QIfServiceObject *so) override;
+    void disconnectFromServiceObjectDefaultImpl(QIfServiceObject *so);
     void clearServiceObject() override;
 
-    QIviAbstractFeaturePrivate *iviPrivate();
-    const QIviAbstractFeaturePrivate *iviPrivate() const;
+    QIfAbstractFeaturePrivate *ifPrivate();
+    const QIfAbstractFeaturePrivate *ifPrivate() const;
 
-    using QIviAbstractFeature::interfaceName;
-    using QIviAbstractFeature::errorText;
-    using QIviAbstractFeature::setError;
+    using QIfAbstractFeature::interfaceName;
+    using QIfAbstractFeature::errorText;
+    using QIfAbstractFeature::setError;
 
-    QIviAbstractFeatureListModel *m_model;
+    QIfAbstractFeatureListModel *m_model;
 };
 
-class Q_QTIVICORE_EXPORT QIviAbstractFeatureListModelPrivate : public QAbstractItemModelPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeatureListModelPrivate : public QAbstractItemModelPrivate
 {
 public:
-    QIviAbstractFeatureListModelPrivate(const QString &interfaceName, QIviAbstractFeatureListModel *model);
-    ~QIviAbstractFeatureListModelPrivate() override;
+    QIfAbstractFeatureListModelPrivate(const QString &interfaceName, QIfAbstractFeatureListModel *model);
+    ~QIfAbstractFeatureListModelPrivate() override;
 
     virtual void initialize();
-    QIviFeatureInterface *backend() const;
+    QIfFeatureInterface *backend() const;
     template <class T> T backend() const
     {
-        return m_feature->iviPrivate()->backend<T>();
+        return m_feature->ifPrivate()->backend<T>();
     }
 
-    Q_DISABLE_COPY(QIviAbstractFeatureListModelPrivate)
+    Q_DISABLE_COPY(QIfAbstractFeatureListModelPrivate)
 
-    QIviHelperFeature *m_feature;
+    QIfHelperFeature *m_feature;
     bool m_qmlCreation;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIABSTRACTFEATURELISTMODEL_P_H
+#endif // QIFABSTRACTFEATURELISTMODEL_P_H

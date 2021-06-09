@@ -9,26 +9,26 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-ivi-climate/qtivi/")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-if-climate/interfaceframework/")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_plugin(climate_backend_simulator)
-set_target_properties(climate_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../qtivi)
+set_target_properties(climate_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
-# IVI Generator:
-qt6_ivigenerator(climate_backend_simulator
-    QFACE_SOURCES ../example-ivi-climate.qface
+# Interface Framework Generator:
+qt6_ifcodegen(climate_backend_simulator
+    QFACE_SOURCES ../example-if-climate.qface
     QFACE_FORMAT backend_simulator
 )
 
 target_link_libraries(climate_backend_simulator PUBLIC
-    QtIviClimateExample
+    QtIfClimateExample
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 install(TARGETS climate_backend_simulator

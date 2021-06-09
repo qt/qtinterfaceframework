@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -40,34 +40,34 @@
 ****************************************************************************/
 
 #include <QtCore/qmetaobject.h>
-#include <QtIviCore/qiviserviceobject.h>
+#include <QtInterfaceFramework/qifserviceobject.h>
 
-#include "qiviabstractzonedfeature.h"
-#include "qiviabstractzonedfeature_p.h"
-#include "qivizonedfeatureinterface.h"
+#include "qifabstractzonedfeature.h"
+#include "qifabstractzonedfeature_p.h"
+#include "qifzonedfeatureinterface.h"
 
 QT_BEGIN_NAMESPACE
 
-QIviAbstractZonedFeaturePrivate::QIviAbstractZonedFeaturePrivate(const QString &interface, const QString &zone, QIviAbstractFeature *parent)
-    : QIviAbstractFeaturePrivate(interface, parent)
+QIfAbstractZonedFeaturePrivate::QIfAbstractZonedFeaturePrivate(const QString &interface, const QString &zone, QIfAbstractFeature *parent)
+    : QIfAbstractFeaturePrivate(interface, parent)
     , m_zone(zone)
 {}
 
 /*!
-    \class QIviAbstractZonedFeature
-    \inmodule QtIviCore
+    \class QIfAbstractZonedFeature
+    \inmodule QtInterfaceFramework
 
     \since 5.6
 
-    \brief The QIviAbstractZonedFeature is the base class for all QtIvi vehicle features.
+    \brief The QIfAbstractZonedFeature is the base class for all QtInterfaceFramework vehicle features.
 
-    QIviAbstractZonedFeature contains all feature attributes and zone handling.
+    QIfAbstractZonedFeature contains all feature attributes and zone handling.
 */
 
 /*!
     \qmltype AbstractZonedFeature
-    \instantiates QIviAbstractZonedFeature
-    \inqmlmodule QtIvi 1.0
+    \instantiates QIfAbstractZonedFeature
+    \inqmlmodule QtInterfaceFramework 1.0
     \inherits AbstractFeature
     \brief The AbstractZonedFeature is not directly accessible. The QML type provides
     base QML properties for each QML Vehicle feature like zone and error access.
@@ -76,23 +76,23 @@ QIviAbstractZonedFeaturePrivate::QIviAbstractZonedFeaturePrivate(const QString &
 /*!
     Constructs a vehicle feature with a specific \a interface and \a zone.
 
-    If \a parent is of type QIviAbstractZonedFeature, then the created instance
+    If \a parent is of type QIfAbstractZonedFeature, then the created instance
     uses parent for the backend connection. Parent is connected to the
     backend and will forward updates between child features and the backend.
 
-    \sa QIviAbstractFeature
+    \sa QIfAbstractFeature
 */
-QIviAbstractZonedFeature::QIviAbstractZonedFeature(const QString &interface, const QString &zone, QObject *parent)
-    : QIviAbstractFeature(*new QIviAbstractZonedFeaturePrivate(interface, zone, this), parent)
+QIfAbstractZonedFeature::QIfAbstractZonedFeature(const QString &interface, const QString &zone, QObject *parent)
+    : QIfAbstractFeature(*new QIfAbstractZonedFeaturePrivate(interface, zone, this), parent)
 {
 }
 
 /*!
     \reimp
 */
-bool QIviAbstractZonedFeature::acceptServiceObject(QIviServiceObject *serviceObject)
+bool QIfAbstractZonedFeature::acceptServiceObject(QIfServiceObject *serviceObject)
 {
-    if (auto *parentFeature = qobject_cast<QIviAbstractZonedFeature*>(parent()))
+    if (auto *parentFeature = qobject_cast<QIfAbstractZonedFeature*>(parent()))
         return parentFeature->acceptServiceObject(serviceObject);
     else if (serviceObject)
         return serviceObject->interfaces().contains(interfaceName());
@@ -102,30 +102,30 @@ bool QIviAbstractZonedFeature::acceptServiceObject(QIviServiceObject *serviceObj
 /*!
     \reimp
 */
-void QIviAbstractZonedFeature::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfAbstractZonedFeature::connectToServiceObject(QIfServiceObject *serviceObject)
 {
-    QIviZonedFeatureInterface *backend = nullptr;
-    if (auto *parentFeature = qobject_cast<QIviAbstractZonedFeature*>(parent()))
+    QIfZonedFeatureInterface *backend = nullptr;
+    if (auto *parentFeature = qobject_cast<QIfAbstractZonedFeature*>(parent()))
         backend = parentFeature->backend();
     else if (serviceObject)
-        backend = qobject_cast<QIviZonedFeatureInterface*>(serviceObject->interfaceInstance(interfaceName()));
+        backend = qobject_cast<QIfZonedFeatureInterface*>(serviceObject->interfaceInstance(interfaceName()));
 
-    connect(backend, &QIviZonedFeatureInterface::availableZonesChanged, this, &QIviAbstractZonedFeature::initializeZones);
+    connect(backend, &QIfZonedFeatureInterface::availableZonesChanged, this, &QIfAbstractZonedFeature::initializeZones);
 
     if (backend) {
         QStringList zones = backend->availableZones();
         initializeZones(zones);
     }
 
-    QIviAbstractFeature::connectToServiceObject(serviceObject);
+    QIfAbstractFeature::connectToServiceObject(serviceObject);
 }
 
 /*!
     \reimp
 */
-void QIviAbstractZonedFeature::clearServiceObject()
+void QIfAbstractZonedFeature::clearServiceObject()
 {
-    Q_D(QIviAbstractZonedFeature);
+    Q_D(QIfAbstractZonedFeature);
     qDeleteAll(d->m_zoneFeatures);
     d->m_zoneFeatures.clear();
     d->m_zoneFeatureList.clear();
@@ -137,25 +137,25 @@ void QIviAbstractZonedFeature::clearServiceObject()
 /*!
     Returns a pointer to the backend \a interface.
 
-    Returns the parent backend, if the parent is a QIviAbstractZonedFeature type.
+    Returns the parent backend, if the parent is a QIfAbstractZonedFeature type.
     Returns zero if no backend is connected.
 */
-QIviZonedFeatureInterface *QIviAbstractZonedFeature::backend(const QString &interface) const
+QIfZonedFeatureInterface *QIfAbstractZonedFeature::backend(const QString &interface) const
 {
     QString iface = interface;
     if (iface.isEmpty())
         iface = interfaceName();
 
-    if (auto *parentFeature = qobject_cast<QIviAbstractZonedFeature*>(parent()))
+    if (auto *parentFeature = qobject_cast<QIfAbstractZonedFeature*>(parent()))
         return parentFeature->backend();
-    else if (QIviServiceObject *so = serviceObject())
-        return so->interfaceInstance<QIviZonedFeatureInterface*>(iface);
+    else if (QIfServiceObject *so = serviceObject())
+        return so->interfaceInstance<QIfZonedFeatureInterface*>(iface);
     return nullptr;
 }
 
 
 /*!
-    \fn virtual QIviAbstractZonedFeature *QIviAbstractZonedFeature::createZoneFeature(const QString &zone) = 0
+    \fn virtual QIfAbstractZonedFeature *QIfAbstractZonedFeature::createZoneFeature(const QString &zone) = 0
 
     Create a new child feature for the given \a zone.
 
@@ -184,7 +184,7 @@ QIviZonedFeatureInterface *QIviAbstractZonedFeature::backend(const QString &inte
     \endqml
 */
 /*!
-    \property QIviAbstractZonedFeature::zone
+    \property QIfAbstractZonedFeature::zone
 
     \brief Name of the zone of this zoned feature.
 
@@ -197,7 +197,7 @@ QIviZonedFeatureInterface *QIviAbstractZonedFeature::backend(const QString &inte
     It's recommended to initialize the zone in the feature constructor:
 
     \code
-    QIviClimateControl *climateControl = new QIviClimateControl("FrontLeft", this);
+    QIfClimateControl *climateControl = new QIfClimateControl("FrontLeft", this);
     climateControl->startAutoDiscovery();
     QString zone = climateControl->zone();
     \endcode
@@ -205,29 +205,29 @@ QIviZonedFeatureInterface *QIviAbstractZonedFeature::backend(const QString &inte
     After initialization, it's not recommended to change the zone.
 
 */
-QString QIviAbstractZonedFeature::zone() const
+QString QIfAbstractZonedFeature::zone() const
 {
-    Q_D(const QIviAbstractZonedFeature);
+    Q_D(const QIfAbstractZonedFeature);
     return d->m_zone;
 }
 
-void QIviAbstractZonedFeature::setZone(const QString &zone)
+void QIfAbstractZonedFeature::setZone(const QString &zone)
 {
-    Q_D(QIviAbstractZonedFeature);
+    Q_D(QIfAbstractZonedFeature);
     if (backend() || d->m_zone == zone)
         return;
     d->m_zone = zone;
     emit zoneChanged();
 }
 
-void QIviAbstractZonedFeature::initializeZones(const QStringList &zones)
+void QIfAbstractZonedFeature::initializeZones(const QStringList &zones)
 {
     if (!backend() || !zone().isEmpty())
         return;
 
-    Q_D(QIviAbstractZonedFeature);
+    Q_D(QIfAbstractZonedFeature);
     for (const QString &zone : zones) {
-        QIviAbstractZonedFeature *f = zoneAt(zone);
+        QIfAbstractZonedFeature *f = zoneAt(zone);
         if (!f) {
             if (this->zone() == zone)
                 f = this;
@@ -251,13 +251,13 @@ void QIviAbstractZonedFeature::initializeZones(const QStringList &zones)
     Holds a list of the available zones.
 */
 /*!
-    \property QIviAbstractZonedFeature::availableZones
+    \property QIfAbstractZonedFeature::availableZones
 
     Holds a list of the available zones.
 */
-QStringList QIviAbstractZonedFeature::availableZones() const
+QStringList QIfAbstractZonedFeature::availableZones() const
 {
-    Q_D(const QIviAbstractZonedFeature);
+    Q_D(const QIfAbstractZonedFeature);
     return d->m_zoneFeatureMap.keys();
 }
 
@@ -265,10 +265,10 @@ QStringList QIviAbstractZonedFeature::availableZones() const
 /*!
     Returns the given \a zone instance for the feature.
 */
-QIviAbstractZonedFeature *QIviAbstractZonedFeature::zoneAt(const QString &zone) const
+QIfAbstractZonedFeature *QIfAbstractZonedFeature::zoneAt(const QString &zone) const
 {
-    Q_D(const QIviAbstractZonedFeature);
-    for (QIviAbstractZonedFeature *f : d->m_zoneFeatures)
+    Q_D(const QIfAbstractZonedFeature);
+    for (QIfAbstractZonedFeature *f : d->m_zoneFeatures)
         if (f->zone() == zone)
             return f;
     return nullptr;
@@ -277,14 +277,14 @@ QIviAbstractZonedFeature *QIviAbstractZonedFeature::zoneAt(const QString &zone) 
 /*!
     Returns all zone instances for the feature.
 */
-QList<QIviAbstractZonedFeature*> QIviAbstractZonedFeature::zones() const
+QList<QIfAbstractZonedFeature*> QIfAbstractZonedFeature::zones() const
 {
-    Q_D(const QIviAbstractZonedFeature);
+    Q_D(const QIfAbstractZonedFeature);
     return d->m_zoneFeatures;
 }
 
-QIviAbstractZonedFeature::QIviAbstractZonedFeature(QIviAbstractZonedFeaturePrivate &dd, QObject *parent)
-    : QIviAbstractFeature(dd, parent)
+QIfAbstractZonedFeature::QIfAbstractZonedFeature(QIfAbstractZonedFeaturePrivate &dd, QObject *parent)
+    : QIfAbstractFeature(dd, parent)
 {
 }
 
@@ -298,13 +298,13 @@ QIviAbstractZonedFeature::QIviAbstractZonedFeature(QIviAbstractZonedFeaturePriva
     \endcode
 */
 /*!
-    \property QIviAbstractZonedFeature::zoneAt
+    \property QIfAbstractZonedFeature::zoneAt
 
     Provides direct feature access to the given zone.
 */
-QVariantMap QIviAbstractZonedFeature::zoneFeatureMap() const
+QVariantMap QIfAbstractZonedFeature::zoneFeatureMap() const
 {
-    Q_D(const QIviAbstractZonedFeature);
+    Q_D(const QIfAbstractZonedFeature);
     return d->m_zoneFeatureMap;
 }
 
@@ -318,13 +318,13 @@ QVariantMap QIviAbstractZonedFeature::zoneFeatureMap() const
     \endcode
 */
 /*!
-    \property QIviAbstractZonedFeature::zones
+    \property QIfAbstractZonedFeature::zones
 
     Provides access to the feature zones model.
 */
-QVariantList QIviAbstractZonedFeature::zoneFeatureList() const
+QVariantList QIfAbstractZonedFeature::zoneFeatureList() const
 {
-    Q_D(const QIviAbstractZonedFeature);
+    Q_D(const QIfAbstractZonedFeature);
     return d->m_zoneFeatureList;
 }
 

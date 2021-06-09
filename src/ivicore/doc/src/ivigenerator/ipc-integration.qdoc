@@ -28,7 +28,7 @@
 ****************************************************************************/
 /*!
 \page ipc-integration.html
-\title Qt IVI Inter-Process Communication Integration
+\title Qt Interface Framework Inter-Process Communication Integration
 
 An Inter-Process Communication (IPC) enables APIs to be split into multiple processes. Each process
 runs independently, sometimes on a separate host machine, and the communication is done using an
@@ -44,14 +44,14 @@ complex system and make it possible to separate computation-intensive code from 
 Additionally, backends that use an IPC can be accessible via multiple frontend points, be it the
 central UI, separate applications, or even mobile devices or third party applications.
 
-Combined with QtIvi's \l{Use the Generator}{automatic code generation} and uniform feature loading,
+Combined with QtInterfaceFramework's \l{Use the Generator}{automatic code generation} and uniform feature loading,
 developing distributed features requires less development overhead, with more interchangeability
 and transparency for the UI code.
 
 \section1 Qt Remote Objects
 
-The Qt IVI Generator makes it possible to generate Middleware Backends that utilize the
-QtRemoteObjects module. The client-side code is generated as a QtIvi backend plugin and and as a
+The Qt Interface Framework Generator makes it possible to generate Middleware Backends that utilize the
+QtRemoteObjects module. The client-side code is generated as a QtInterfaceFramework backend plugin and and as a
 a Middleware Service, either a server stub or a full simulation server. The client is generated
 using the \l{backend-qtro-template} {backend_qtro} template; the server using the
 \l{server-qtro-template} {server_qtro} template. Both the plugin and the server contain generated
@@ -59,9 +59,9 @@ C++ code and an intermediate \c{.rep} file that is further processed by Qt’s
 \l [QtRemoteObjects] {Qt Remote Objects Compiler} {replica compiler} to produce the actual source
 and replica classes.
 
-The generated plugin is loaded and used in the same way as other QtIvi plugins and is
+The generated plugin is loaded and used in the same way as other QtInterfaceFramework plugins and is
 interchangeable with any other backend implementation with the same API. Since all method calls
-over QtIvi feature interfaces are asynchronous, the use of a QtRemoteObjects based backend is
+over QtInterfaceFramework feature interfaces are asynchronous, the use of a QtRemoteObjects based backend is
 similar to any other type of backend.
 
 The generated plugin is buildable and usable as-is; you don't have to make any changes. Your task
@@ -71,6 +71,6 @@ parameters to the plugin and to the server are passed over a config file, either
 location or at a user-specified path.
 
 For a steb-by-step introduction to remote backends, see
-\l {ivicore/qface-ivi-remote}{Generate QtRemoteObjects based backends with the Qt IVI Generator}.
+\l {interfaceframework/qface-if-remote}{Generate QtRemoteObjects based backends with the Qt Interface Framework Generator}.
 
 */

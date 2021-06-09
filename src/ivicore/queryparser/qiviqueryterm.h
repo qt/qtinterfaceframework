@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -46,11 +46,11 @@
 #include <QSharedData>
 #include <QVariant>
 
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviAbstractQueryTerm
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractQueryTerm
 {
 public:
     enum Type {
@@ -59,14 +59,14 @@ public:
         ScopeTerm
     };
 
-    virtual ~QIviAbstractQueryTerm();
+    virtual ~QIfAbstractQueryTerm();
 
     virtual QString toString() const = 0;
-    virtual QIviAbstractQueryTerm::Type type() const = 0;
+    virtual QIfAbstractQueryTerm::Type type() const = 0;
 };
 
-class QIviConjunctionTermPrivate;
-class Q_QTIVICORE_EXPORT QIviConjunctionTerm : public QIviAbstractQueryTerm
+class QIfConjunctionTermPrivate;
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConjunctionTerm : public QIfAbstractQueryTerm
 {
     Q_GADGET
 public:
@@ -76,46 +76,46 @@ public:
     };
     Q_ENUM(Conjunction)
 
-    explicit QIviConjunctionTerm();
-    ~QIviConjunctionTerm() override;
+    explicit QIfConjunctionTerm();
+    ~QIfConjunctionTerm() override;
 
-    QIviAbstractQueryTerm::Type type() const override;
+    QIfAbstractQueryTerm::Type type() const override;
     QString toString() const override;
     Conjunction conjunction() const;
-    QList<QIviAbstractQueryTerm*> terms() const;
+    QList<QIfAbstractQueryTerm*> terms() const;
 
 private:
-    Q_DISABLE_COPY(QIviConjunctionTerm)
-    QIviConjunctionTermPrivate * d_ptr;
-    Q_DECLARE_PRIVATE(QIviConjunctionTerm)
-    friend class QIviQueryParser;
-    friend Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviAbstractQueryTerm** var);
+    Q_DISABLE_COPY(QIfConjunctionTerm)
+    QIfConjunctionTermPrivate * d_ptr;
+    Q_DECLARE_PRIVATE(QIfConjunctionTerm)
+    friend class QIfQueryParser;
+    friend Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfAbstractQueryTerm** var);
 };
 
-class QIviScopeTermPrivate;
-class Q_QTIVICORE_EXPORT QIviScopeTerm : public QIviAbstractQueryTerm
+class QIfScopeTermPrivate;
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfScopeTerm : public QIfAbstractQueryTerm
 {
     Q_GADGET
 public:
 
-    explicit QIviScopeTerm();
-    ~QIviScopeTerm() override;
+    explicit QIfScopeTerm();
+    ~QIfScopeTerm() override;
 
-    QIviAbstractQueryTerm::Type type() const override;
+    QIfAbstractQueryTerm::Type type() const override;
     QString toString() const override;
     bool isNegated() const;
-    QIviAbstractQueryTerm* term() const;
+    QIfAbstractQueryTerm* term() const;
 
 private:
-    Q_DISABLE_COPY(QIviScopeTerm)
-    QIviScopeTermPrivate * d_ptr;
-    Q_DECLARE_PRIVATE(QIviScopeTerm)
-    friend class QIviQueryParser;
-    friend Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviAbstractQueryTerm** var);
+    Q_DISABLE_COPY(QIfScopeTerm)
+    QIfScopeTermPrivate * d_ptr;
+    Q_DECLARE_PRIVATE(QIfScopeTerm)
+    friend class QIfQueryParser;
+    friend Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfAbstractQueryTerm** var);
 };
 
-class QIviFilterTermPrivate;
-class Q_QTIVICORE_EXPORT QIviFilterTerm : public QIviAbstractQueryTerm
+class QIfFilterTermPrivate;
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFilterTerm : public QIfAbstractQueryTerm
 {
     Q_GADGET
 public:
@@ -130,10 +130,10 @@ public:
     };
     Q_ENUM(Operator)
 
-    explicit QIviFilterTerm();
-    ~QIviFilterTerm() override;
+    explicit QIfFilterTerm();
+    ~QIfFilterTerm() override;
 
-    QIviAbstractQueryTerm::Type type() const override;
+    QIfAbstractQueryTerm::Type type() const override;
     QString toString() const override;
     Operator operatorType() const;
     QVariant value() const;
@@ -141,44 +141,44 @@ public:
     bool isNegated() const;
 
 private:
-    Q_DISABLE_COPY(QIviFilterTerm)
-    QIviFilterTermPrivate * d_ptr;
-    Q_DECLARE_PRIVATE(QIviFilterTerm)
-    friend class QIviQueryParser;
-    friend Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviAbstractQueryTerm** var);
+    Q_DISABLE_COPY(QIfFilterTerm)
+    QIfFilterTermPrivate * d_ptr;
+    Q_DECLARE_PRIVATE(QIfFilterTerm)
+    friend class QIfQueryParser;
+    friend Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfAbstractQueryTerm** var);
 };
 
-class QIviOrderTermPrivate;
-class Q_QTIVICORE_EXPORT QIviOrderTerm
+class QIfOrderTermPrivate;
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfOrderTerm
 {
 public:
-    QIviOrderTerm();
-    QIviOrderTerm(const QIviOrderTerm &other);
-    virtual ~QIviOrderTerm();
-    QIviOrderTerm& operator =(const QIviOrderTerm &other);
+    QIfOrderTerm();
+    QIfOrderTerm(const QIfOrderTerm &other);
+    virtual ~QIfOrderTerm();
+    QIfOrderTerm& operator =(const QIfOrderTerm &other);
 
     bool isAscending() const;
     QString propertyName() const;
 
 private:
-    QSharedDataPointer<QIviOrderTermPrivate> d;
-    friend class QIviQueryParser;
-    friend Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviOrderTerm &var);
+    QSharedDataPointer<QIfOrderTermPrivate> d;
+    friend class QIfQueryParser;
+    friend Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfOrderTerm &var);
 };
 
-Q_DECLARE_TYPEINFO(QIviOrderTerm, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QIfOrderTerm, Q_MOVABLE_TYPE);
 
-Q_QTIVICORE_EXPORT QDataStream &operator<<(QDataStream &out, QIviConjunctionTerm::Conjunction var);
-Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviConjunctionTerm::Conjunction &var);
-Q_QTIVICORE_EXPORT QDataStream &operator<<(QDataStream &out, QIviFilterTerm::Operator var);
-Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviFilterTerm::Operator &var);
-Q_QTIVICORE_EXPORT QDataStream &operator<<(QDataStream &out, QIviAbstractQueryTerm *var);
-Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviAbstractQueryTerm **var);
-Q_QTIVICORE_EXPORT QDataStream &operator<<(QDataStream &out, const QIviOrderTerm &var);
-Q_QTIVICORE_EXPORT QDataStream &operator>>(QDataStream &in, QIviOrderTerm &var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator<<(QDataStream &out, QIfConjunctionTerm::Conjunction var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfConjunctionTerm::Conjunction &var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator<<(QDataStream &out, QIfFilterTerm::Operator var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfFilterTerm::Operator &var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator<<(QDataStream &out, QIfAbstractQueryTerm *var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfAbstractQueryTerm **var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator<<(QDataStream &out, const QIfOrderTerm &var);
+Q_QTINTERFACEFRAMEWORK_EXPORT QDataStream &operator>>(QDataStream &in, QIfOrderTerm &var);
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QIviOrderTerm)
+Q_DECLARE_METATYPE(QIfOrderTerm)
 
 #endif // QUERYTERM_H

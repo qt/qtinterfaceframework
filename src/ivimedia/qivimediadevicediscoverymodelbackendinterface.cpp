@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,22 +39,22 @@
 **
 ****************************************************************************/
 
-#include "qivimediadevicediscoverymodelbackendinterface.h"
+#include "qifmediadevicediscoverymodelbackendinterface.h"
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class QIviMediaDeviceDiscoveryModelBackendInterface
-    \inmodule QtIviMedia
+    \class QIfMediaDeviceDiscoveryModelBackendInterface
+    \inmodule QtIfMedia
     \ingroup backends
     \inherits QObject
-    \keyword org.qt-project.qtivi.MediaDiscovery/1.0
-    \brief The QIviMediaDeviceDiscoveryModelBackendInterface defines the interface for backends to the
-    QIviMediaDeviceDiscoveryModel feature class.
+    \keyword org.qt-project.interfaceframework.MediaDiscovery/1.0
+    \brief The QIfMediaDeviceDiscoveryModelBackendInterface defines the interface for backends to the
+    QIfMediaDeviceDiscoveryModel feature class.
 
-    The QIviMediaDeviceDiscoveryModelBackendInterface is the interface used by \l QIviMediaDeviceDiscoveryModel
+    The QIfMediaDeviceDiscoveryModelBackendInterface is the interface used by \l QIfMediaDeviceDiscoveryModel
 
-    The interface is discovered by a \l QIviMediaDeviceDiscoveryModel object, which connects to it and sets it up.
+    The interface is discovered by a \l QIfMediaDeviceDiscoveryModel object, which connects to it and sets it up.
 
     <example of a fully featured backend>
 */
@@ -64,14 +64,14 @@ QT_BEGIN_NAMESPACE
 
     The \a parent is sent to the QObject constructor.
 */
-QIviMediaDeviceDiscoveryModelBackendInterface::QIviMediaDeviceDiscoveryModelBackendInterface(QObject *parent)
-    : QIviFeatureInterface(parent)
+QIfMediaDeviceDiscoveryModelBackendInterface::QIfMediaDeviceDiscoveryModelBackendInterface(QObject *parent)
+    : QIfFeatureInterface(parent)
 {
 
 }
 
 /*!
-    \fn QIviMediaDeviceDiscoveryModelBackendInterface::initialize()
+    \fn QIfMediaDeviceDiscoveryModelBackendInterface::initialize()
 
     Initializes the backend. This function is called after a feature connected to the backend.
     It is expected that this function will use the availableDevices signal to inform the feature about the
@@ -86,7 +86,7 @@ QIviMediaDeviceDiscoveryModelBackendInterface::QIviMediaDeviceDiscoveryModelBack
 //TODO add a unit test for testing multiple features instances connecting to the same instance.
 
 /*!
-    \fn void QIviMediaDeviceDiscoveryModelBackendInterface::availableDevices(const QList<QIviServiceObject*> devices)
+    \fn void QIfMediaDeviceDiscoveryModelBackendInterface::availableDevices(const QList<QIfServiceObject*> devices)
 
     This signal is emitted after a call to initialize() and indicates all the already connected \a devices, which are ready
     to be used.
@@ -95,13 +95,13 @@ QIviMediaDeviceDiscoveryModelBackendInterface::QIviMediaDeviceDiscoveryModelBack
 */
 
 /*!
-    \fn void QIviMediaDeviceDiscoveryModelBackendInterface::deviceAdded(QIviServiceObject *device)
+    \fn void QIfMediaDeviceDiscoveryModelBackendInterface::deviceAdded(QIfServiceObject *device)
 
     This signal is emitted when a new \a device is added to the system and is ready to be used.
 */
 
 /*!
-    \fn void QIviMediaDeviceDiscoveryModelBackendInterface::deviceRemoved(QIviServiceObject *device)
+    \fn void QIfMediaDeviceDiscoveryModelBackendInterface::deviceRemoved(QIfServiceObject *device)
 
     This signal is emitted when a \a device has been removed from the system and cannot be used anymore.
 */

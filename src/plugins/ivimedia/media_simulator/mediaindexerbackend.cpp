@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -52,7 +52,7 @@
 #include <QThreadPool>
 #include <QtDebug>
 
-#ifndef QTIVI_NO_TAGLIB
+#ifndef QTIF_NO_TAGLIB
 #include <attachedpictureframe.h>
 #include <fileref.h>
 #include <id3v2frame.h>
@@ -65,9 +65,9 @@
 #endif
 
 MediaIndexerBackend::MediaIndexerBackend(const QSqlDatabase &database, QObject *parent)
-    : QIviMediaIndexerControlBackendInterface(parent)
+    : QIfMediaIndexerControlBackendInterface(parent)
     , m_db(database)
-    , m_state(QIviMediaIndexerControl::Idle)
+    , m_state(QIfMediaIndexerControl::Idle)
     , m_threadPool(new QThreadPool(this))
 {
     m_threadPool->setMaxThreadCount(1);
@@ -75,16 +75,16 @@ MediaIndexerBackend::MediaIndexerBackend(const QSqlDatabase &database, QObject *
     connect(&m_watcher, &QFutureWatcherBase::finished, this, &MediaIndexerBackend::onScanFinished);
 
     QStringList mediaFolderList;
-    const QByteArray customMediaFolder = qgetenv("QTIVIMEDIA_SIMULATOR_LOCALMEDIAFOLDER");
+    const QByteArray customMediaFolder = qgetenv("QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER");
     if (!customMediaFolder.isEmpty()) {
-        qCInfo(media) << "QTIVIMEDIA_SIMULATOR_LOCALMEDIAFOLDER environment variable is set to:" << customMediaFolder;
+        qCInfo(media) << "QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER environment variable is set to:" << customMediaFolder;
         mediaFolderList.append(customMediaFolder);
     } else {
         mediaFolderList = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);
         qCInfo(media) << "Searching for music files in the following locations: " << mediaFolderList;
     }
 
-#ifdef QTIVI_NO_TAGLIB
+#ifdef QTIF_NO_TAGLIB
     qCCritical(media) << "The indexer simulation doesn't work without an installed taglib";
 #endif
 
@@ -108,14 +108,14 @@ void MediaIndexerBackend::pause()
 {
     static const QLatin1String error("SIMULATION: Pausing the indexing is not supported");
     qCWarning(media) << error;
-    emit errorChanged(QIviAbstractFeature::InvalidOperation, error);
+    emit errorChanged(QIfAbstractFeature::InvalidOperation, error);
 }
 
 void MediaIndexerBackend::resume()
 {
     static const QLatin1String error("SIMULATION: Resuming the indexing is not supported");
     qCWarning(media) << error;
-    emit errorChanged(QIviAbstractFeature::InvalidOperation, error);
+    emit errorChanged(QIfAbstractFeature::InvalidOperation, error);
 }
 
 qreal MediaIndexerBackend::progress() const
@@ -123,7 +123,7 @@ qreal MediaIndexerBackend::progress() const
     return m_progress;
 }
 
-QIviMediaIndexerControl::State MediaIndexerBackend::state() const
+QIfMediaIndexerControl::State MediaIndexerBackend::state() const
 {
     return m_state;
 }
@@ -150,17 +150,17 @@ void MediaIndexerBackend::removeMediaFolder(const QString &path)
 
 bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
 {
-    setState(QIviMediaIndexerControl::Active);
+    setState(QIfMediaIndexerControl::Active);
 
     auto removeDataFunc = [this](QSqlQuery &query, const QStringList &ids) {
         const QString idsToRemove = ids.join(QStringLiteral(", "));
         if (!query.exec(QStringLiteral("DELETE from queue WHERE track_index IN (%1)").arg(idsToRemove))) {
-            setState(QIviMediaIndexerControl::Error);
+            setState(QIfMediaIndexerControl::Error);
             sqlError(this, query.lastQuery(), query.lastError().text());
             return false;
         }
         if (!query.exec(QStringLiteral("DELETE from track WHERE id IN (%1)").arg(idsToRemove))) {
-            setState(QIviMediaIndexerControl::Error);
+            setState(QIfMediaIndexerControl::Error);
             sqlError(this, query.lastQuery(), query.lastError().text());
             return false;
         }
@@ -189,7 +189,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
             m_db.commit();
             return true;
         } else {
-            setState(QIviMediaIndexerControl::Error);
+            setState(QIfMediaIndexerControl::Error);
             sqlError(this, query.lastQuery(), query.lastError().text());
             return false;
         }
@@ -206,7 +206,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
                     emit removeFromQueue(query.value(1).toInt());
             }
         } else {
-            setState(QIviMediaIndexerControl::Error);
+            setState(QIfMediaIndexerControl::Error);
             sqlError(this, query.lastQuery(), query.lastError().text());
             return false;
         }
@@ -239,7 +239,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
 
         QString defaultCoverArtUrl = fileName + QStringLiteral(".png");
         QString coverArtUrl;
-#ifndef QTIVI_NO_TAGLIB
+#ifndef QTIF_NO_TAGLIB
         TagLib::FileRef f(TagLib::FileName(QFile::encodeName(fileName)));
         if (f.isNull())
             continue;
@@ -286,7 +286,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         bool ret = query.exec();
 
         if (!ret) {
-            setState(QIviMediaIndexerControl::Error);
+            setState(QIfMediaIndexerControl::Error);
             sqlError(this, query.lastQuery(), query.lastError().text());
             return false;
         } else {
@@ -294,7 +294,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         }
 #else
         setProgress(qreal(++currentFileIndex)/qreal(totalFileCount));
-#endif // QTIVI_NO_TAGLIB
+#endif // QTIF_NO_TAGLIB
     }
 
     return true;
@@ -308,7 +308,7 @@ void MediaIndexerBackend::onScanFinished()
     }
 
     qCInfo(media) << "Scanning done";
-#ifdef QTIVI_NO_TAGLIB
+#ifdef QTIF_NO_TAGLIB
     qCCritical(media) << "No data was added, this is just a simulation";
 #endif
     setProgress(1);
@@ -317,7 +317,7 @@ void MediaIndexerBackend::onScanFinished()
 
     //If the last run didn't succeed we will stay in the Error state
     if (m_watcher.future().result())
-        setState(QIviMediaIndexerControl::Idle);
+        setState(QIfMediaIndexerControl::Idle);
 }
 
 void MediaIndexerBackend::scanNext()
@@ -335,7 +335,7 @@ void MediaIndexerBackend::setProgress(qreal progress)
     emit progressChanged(progress);
 }
 
-void MediaIndexerBackend::setState(QIviMediaIndexerControl::State state)
+void MediaIndexerBackend::setState(QIfMediaIndexerControl::State state)
 {
     m_state = state;
     emit stateChanged(state);

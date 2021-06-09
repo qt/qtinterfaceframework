@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,22 +39,22 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAINDEXERCONTROL_H
-#define QIVIMEDIAINDEXERCONTROL_H
+#ifndef QIFMEDIAINDEXERCONTROL_H
+#define QIFMEDIAINDEXERCONTROL_H
 
-#include <QtIviCore/QIviAbstractFeature>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtInterfaceFramework/QIfAbstractFeature>
+#include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaIndexerControlPrivate;
+class QIfMediaIndexerControlPrivate;
 
-class Q_QTIVIMEDIA_EXPORT QIviMediaIndexerControl : public QIviAbstractFeature
+class Q_QTIFMEDIA_EXPORT QIfMediaIndexerControl : public QIfAbstractFeature
 {
     Q_OBJECT
 
     Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
-    Q_PROPERTY(QIviMediaIndexerControl::State state READ state NOTIFY stateChanged)
+    Q_PROPERTY(QIfMediaIndexerControl::State state READ state NOTIFY stateChanged)
 public:
 
     enum State {
@@ -65,10 +65,10 @@ public:
     };
     Q_ENUM(State)
 
-    explicit QIviMediaIndexerControl(QObject *parent = nullptr);
+    explicit QIfMediaIndexerControl(QObject *parent = nullptr);
 
     qreal progress() const;
-    QIviMediaIndexerControl::State state() const;
+    QIfMediaIndexerControl::State state() const;
 
 public Q_SLOTS:
     void pause();
@@ -76,23 +76,23 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void progressChanged(qreal progress);
-    void stateChanged(QIviMediaIndexerControl::State state);
+    void stateChanged(QIfMediaIndexerControl::State state);
 
 protected:
-    QIviMediaIndexerControl(QIviMediaIndexerControlPrivate &dd, QObject *parent = nullptr);
+    QIfMediaIndexerControl(QIfMediaIndexerControlPrivate &dd, QObject *parent = nullptr);
 
-    void connectToServiceObject(QIviServiceObject *serviceObject) override;
+    void connectToServiceObject(QIfServiceObject *serviceObject) override;
     void clearServiceObject() override;
 
 private:
-    Q_DECLARE_PRIVATE(QIviMediaIndexerControl)
+    Q_DECLARE_PRIVATE(QIfMediaIndexerControl)
     Q_PRIVATE_SLOT(d_func(), void onProgressChanged(qreal progress))
-    Q_PRIVATE_SLOT(d_func(), void onStateChanged(QIviMediaIndexerControl::State state))
+    Q_PRIVATE_SLOT(d_func(), void onStateChanged(QIfMediaIndexerControl::State state))
 };
 
-Q_QTIVIMEDIA_EXPORT QDataStream &operator<<(QDataStream &out, QIviMediaIndexerControl::State var);
-Q_QTIVIMEDIA_EXPORT QDataStream &operator>>(QDataStream &in, QIviMediaIndexerControl::State &var);
+Q_QTIFMEDIA_EXPORT QDataStream &operator<<(QDataStream &out, QIfMediaIndexerControl::State var);
+Q_QTIFMEDIA_EXPORT QDataStream &operator>>(QDataStream &in, QIfMediaIndexerControl::State &var);
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIAINDEXERCONTROL_H
+#endif // QIFMEDIAINDEXERCONTROL_H

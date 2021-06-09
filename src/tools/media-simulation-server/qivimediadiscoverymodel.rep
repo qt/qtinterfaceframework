@@ -1,5 +1,5 @@
 
-class QIviMediaDiscoveryModel
+class QIfMediaDiscoveryModel
 {
     PROP(QStringList devices READONLY);
 

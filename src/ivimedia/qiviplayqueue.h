@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,18 +39,18 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPLAYQUEUE_H
-#define QIVIPLAYQUEUE_H
+#ifndef QIFPLAYQUEUE_H
+#define QIFPLAYQUEUE_H
 
 #include <QAbstractListModel>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaPlayer;
-class QIviPlayQueuePrivate;
+class QIfMediaPlayer;
+class QIfPlayQueuePrivate;
 
-class Q_QTIVIMEDIA_EXPORT QIviPlayQueue : public QAbstractListModel
+class Q_QTIFMEDIA_EXPORT QIfPlayQueue : public QAbstractListModel
 {
     Q_OBJECT
 
@@ -60,9 +60,9 @@ class Q_QTIVIMEDIA_EXPORT QIviPlayQueue : public QAbstractListModel
     Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
     //TODO fix naming
-    Q_PROPERTY(QIviPlayQueue::LoadingType loadingType READ loadingType WRITE setLoadingType NOTIFY loadingTypeChanged)
+    Q_PROPERTY(QIfPlayQueue::LoadingType loadingType READ loadingType WRITE setLoadingType NOTIFY loadingTypeChanged)
 public:
-    ~QIviPlayQueue();
+    ~QIfPlayQueue();
 
     enum Roles {
         NameRole = Qt::DisplayRole,
@@ -86,8 +86,8 @@ public:
     int fetchMoreThreshold() const;
     void setFetchMoreThreshold(int fetchMoreThreshold);
 
-    QIviPlayQueue::LoadingType loadingType() const;
-    void setLoadingType(QIviPlayQueue::LoadingType loadingType);
+    QIfPlayQueue::LoadingType loadingType() const;
+    void setLoadingType(QIfPlayQueue::LoadingType loadingType);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
@@ -112,15 +112,15 @@ Q_SIGNALS:
     void countChanged();
     void fetchMoreThresholdChanged(int fetchMoreThreshold);
     void fetchMoreThresholdReached() const;
-    void loadingTypeChanged(QIviPlayQueue::LoadingType loadingType);
+    void loadingTypeChanged(QIfPlayQueue::LoadingType loadingType);
 
     void currentIndexChanged(int currentIndex);
 
 protected:
-    explicit QIviPlayQueue(QIviMediaPlayer *parent = nullptr);
+    explicit QIfPlayQueue(QIfMediaPlayer *parent = nullptr);
 
 private:
-    Q_DECLARE_PRIVATE(QIviPlayQueue)
+    Q_DECLARE_PRIVATE(QIfPlayQueue)
     Q_PRIVATE_SLOT(d_func(), void onCurrentIndexChanged(int currentIndex))
     Q_PRIVATE_SLOT(d_func(), void onCanReportCountChanged(bool canReportCount))
     Q_PRIVATE_SLOT(d_func(), void onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable))
@@ -128,10 +128,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void onDataChanged(const QList<QVariant> &data, int start, int count))
     Q_PRIVATE_SLOT(d_func(), void onFetchMoreThresholdReached())
 
-    friend class QIviMediaPlayer;
-    friend class QIviMediaPlayerPrivate;
+    friend class QIfMediaPlayer;
+    friend class QIfMediaPlayerPrivate;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIPLAYQUEUE_H
+#endif // QIFPLAYQUEUE_H

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include "qivisimulationengine.h"
-#include <qivisimulationglobalobject_p.h>
+#include "qifsimulationengine.h"
+#include <qifsimulationglobalobject_p.h>
 
 #include <QDir>
 #include <QFile>
@@ -52,7 +52,7 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace qtivi_helper {
+namespace qtif_helper {
     static const QString qrcUrlLiteral = QStringLiteral("qrc:");
     static const QString qrcLiteral = QStringLiteral("qrc");
     static const QString resourceLiteral = QStringLiteral(":/");
@@ -65,10 +65,10 @@ namespace qtivi_helper {
         return path;
     }
 
-    class QIviSimulationOverrideParser {
+    class QIfSimulationOverrideParser {
     public:
-        static QIviSimulationOverrideParser* instance() {
-            static QIviSimulationOverrideParser* s_parser = new QIviSimulationOverrideParser();
+        static QIfSimulationOverrideParser* instance() {
+            static QIfSimulationOverrideParser* s_parser = new QIfSimulationOverrideParser();
             return s_parser;
         }
 
@@ -76,9 +76,9 @@ namespace qtivi_helper {
         QHash<QString, QString> simulationDataOverrides;
 
     private:
-        QIviSimulationOverrideParser() {
-            parseEnv(qgetenv("QTIVI_SIMULATION_OVERRIDE"), simulationOverrides);
-            parseEnv(qgetenv("QTIVI_SIMULATION_DATA_OVERRIDE"), simulationDataOverrides);
+        QIfSimulationOverrideParser() {
+            parseEnv(qgetenv("QTIF_SIMULATION_OVERRIDE"), simulationOverrides);
+            parseEnv(qgetenv("QTIF_SIMULATION_DATA_OVERRIDE"), simulationDataOverrides);
         }
 
         void parseEnv(const QByteArray &rulesSrc, QHash<QString, QString> &hash) {
@@ -101,9 +101,9 @@ namespace qtivi_helper {
                         if (QFile::exists(fixedStr))
                             hash.insert(key, valueStr);
                         else
-                            qCWarning(qLcIviSimulationEngine, "Ignoring malformed override: File does not exist: '%s'", fixedStr.toUtf8().constData());
+                            qCWarning(qLcIfSimulationEngine, "Ignoring malformed override: File does not exist: '%s'", fixedStr.toUtf8().constData());
                     } else {
-                        qCWarning(qLcIviSimulationEngine, "Ignoring malformed override: '%s'", line.toUtf8().constData());
+                        qCWarning(qLcIfSimulationEngine, "Ignoring malformed override: '%s'", line.toUtf8().constData());
                     }
                 }
             }
@@ -111,25 +111,25 @@ namespace qtivi_helper {
     };
 }
 
-using namespace qtivi_helper;
+using namespace qtif_helper;
 
 /*!
-    \class QIviSimulationEngine
-    \inmodule QtIviCore
+    \class QIfSimulationEngine
+    \inmodule QtInterfaceFramework
     \brief Provides a way to script a simulation backend from QML.
 
     This class is an extended QQmlApplicationEngine which can be used to load QML files. It is made
     especially for \l {Dynamic Backend System}{simulation backends} to script its behavior from
-    QML. For an overview of its functionality, see \l{Qt IVI Simulation System}.
+    QML. For an overview of its functionality, see \l{Qt Interface Framework Simulation System}.
 
-    Compared to a normal QQmlEngine, the QIviSimulationEngine provides an extra template function
+    Compared to a normal QQmlEngine, the QIfSimulationEngine provides an extra template function
     called registerSimulationInstance(). Use this function to register a class instance as a QML
     type. Within a QML file, this QML type can be used to define the behavior for function calls,
     update properties, or emit signals.
 
     \section1 Register an Instance
 
-    You can register any instance of a class derived from QObject to the QIviSimulationEngine by
+    You can register any instance of a class derived from QObject to the QIfSimulationEngine by
     calling registerSimulationInstance(). Similar to qmlRegisterTypes, the URI, version, and name
     provided are used to import the type from within QML.
 
@@ -146,7 +146,7 @@ using namespace qtivi_helper;
     An instance of this simple class can be registered like this:
 
     \code
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
     MyClass myClass;
     engine.registerSimulationInstance<MyClass>(&myClass, "Test", 1, 0, "MyClass");
     engine.loadSimulation("simulation.qml")
@@ -199,7 +199,7 @@ using namespace qtivi_helper;
     The slot is called once the \c myClass variable is updated:
 
     \code
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
     MyClass myClass;
     engine.registerSimulationInstance<MyClass>(&myClass, "Test", 1, 0, "MyClass");
     engine.loadSimulation("simulation.qml")
@@ -216,7 +216,7 @@ using namespace qtivi_helper;
     \code
     void MyClass::setCurrentTemperature(int currentTemperature)
     {
-        QIVI_SIMULATION_TRY_CALL(MyClass, "setCurrentTemperature", void, currentTemperature);
+        QIF_SIMULATION_TRY_CALL(MyClass, "setCurrentTemperature", void, currentTemperature);
 
         if (m_currentTemperature == currentTemperature)
             return;
@@ -282,32 +282,32 @@ using namespace qtivi_helper;
 
     \section1 Runtime Override
 
-    Each QIviSimulationEngine can take an extra identifier which can be used to override the
+    Each QIfSimulationEngine can take an extra identifier which can be used to override the
     simulation QML file or the simulation data file at runtime. The environment variables need to
     be in the following format:
 
     \badcode
-    QTIVI_SIMULATION_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
-    QTIVI_SIMULATION_DATA_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
+    QTIF_SIMULATION_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
+    QTIF_SIMULATION_DATA_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
     \endcode
 */
 
-QIviSimulationEngine::QIviSimulationEngine(QObject *parent)
-    : QIviSimulationEngine(QString(), parent)
+QIfSimulationEngine::QIfSimulationEngine(QObject *parent)
+    : QIfSimulationEngine(QString(), parent)
 {
 }
 
-QIviSimulationEngine::QIviSimulationEngine(const QString &identifier, QObject *parent)
+QIfSimulationEngine::QIfSimulationEngine(const QString &identifier, QObject *parent)
     : QQmlApplicationEngine (parent)
-    , m_globalObject(new QIviSimulationGlobalObject)
+    , m_globalObject(new QIfSimulationGlobalObject)
     , m_identifier(identifier)
 {
-    rootContext()->setContextProperty(QStringLiteral("IviSimulator"), m_globalObject);
+    rootContext()->setContextProperty(QStringLiteral("IfSimulator"), m_globalObject);
     setOutputWarningsToStandardError(false);
 
     connect(this, &QQmlApplicationEngine::warnings, this, [](const QList<QQmlError> &warnings) {
         for (const QQmlError &error : warnings)
-            qCWarning(qLcIviSimulationEngine, "%s", qPrintable(error.toString()));
+            qCWarning(qLcIfSimulationEngine, "%s", qPrintable(error.toString()));
     });
 }
 
@@ -315,30 +315,30 @@ QIviSimulationEngine::QIviSimulationEngine(const QString &identifier, QObject *p
     Loads the simulation data file provided as \a dataFile.
 
     The given file must be in JSON format and is parsed here for errors before it's passed to the
-    IviSimulator global object where it can be accessed from QML. This file can be overridden
+    IfSimulator global object where it can be accessed from QML. This file can be overridden
     at runtime using the following environment variable:
 
     \badcode
-    QTIVI_SIMULATION_DATA_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
+    QTIF_SIMULATION_DATA_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
     \endcode
 
     The simulation engine's identifier can be set in its constructor.
 
-    \sa IviSimulator
+    \sa IfSimulator
 */
-void QIviSimulationEngine::loadSimulationData(const QString &dataFile)
+void QIfSimulationEngine::loadSimulationData(const QString &dataFile)
 {
     QString filePath = dataFile;
-    if (!m_identifier.isEmpty() && QIviSimulationOverrideParser::instance()->simulationDataOverrides.contains(m_identifier)) {
-        filePath = QIviSimulationOverrideParser::instance()->simulationDataOverrides.value(m_identifier);
-        qCWarning(qLcIviSimulationEngine, "Detected matching simulation data override: %s=%s", qPrintable(m_identifier), qPrintable(filePath));
+    if (!m_identifier.isEmpty() && QIfSimulationOverrideParser::instance()->simulationDataOverrides.contains(m_identifier)) {
+        filePath = QIfSimulationOverrideParser::instance()->simulationDataOverrides.value(m_identifier);
+        qCWarning(qLcIfSimulationEngine, "Detected matching simulation data override: %s=%s", qPrintable(m_identifier), qPrintable(filePath));
     }
 
-    qCDebug(qLcIviSimulationEngine, "loading SimulationData for engine %s: %s", qPrintable(m_identifier), qPrintable(filePath));
+    qCDebug(qLcIfSimulationEngine, "loading SimulationData for engine %s: %s", qPrintable(m_identifier), qPrintable(filePath));
 
     QFile file(filePath);
     if (!file.open(QFile::ReadOnly)) {
-        qCCritical(qLcIviSimulationEngine, "Cannot open the simulation data file %s: %s", qPrintable(filePath), qPrintable(file.errorString()));
+        qCCritical(qLcIfSimulationEngine, "Cannot open the simulation data file %s: %s", qPrintable(filePath), qPrintable(file.errorString()));
         return;
     }
 
@@ -346,8 +346,8 @@ void QIviSimulationEngine::loadSimulationData(const QString &dataFile)
     QByteArray data = file.readAll();
     QJsonDocument document = QJsonDocument::fromJson(data, &pe);
     if (pe.error != QJsonParseError::NoError) {
-        qCCritical(qLcIviSimulationEngine, "Error parsing the simulation data in %s: %s", qPrintable(filePath), qPrintable(pe.errorString()));
-        qCCritical(qLcIviSimulationEngine, "Error context:\n %s", data.mid(qMax(pe.offset - 20, 0), 40).data());
+        qCCritical(qLcIfSimulationEngine, "Error parsing the simulation data in %s: %s", qPrintable(filePath), qPrintable(pe.errorString()));
+        qCCritical(qLcIfSimulationEngine, "Error context:\n %s", data.mid(qMax(pe.offset - 20, 0), 40).data());
     }
     m_globalObject->setSimulationData(document.toVariant());
 }
@@ -359,39 +359,39 @@ void QIviSimulationEngine::loadSimulationData(const QString &dataFile)
     the simulation file used via an environment variable in the following format:
 
     \badcode
-    QTIVI_SIMULATION_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
+    QTIF_SIMULATION_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
     \endcode
 
     The simulation engine's identifier can be set in its constructor.
 */
-void QIviSimulationEngine::loadSimulation(const QUrl &file)
+void QIfSimulationEngine::loadSimulation(const QUrl &file)
 {
     QUrl filePath = file;
-    if (!m_identifier.isEmpty() && QIviSimulationOverrideParser::instance()->simulationOverrides.contains(m_identifier)) {
-        filePath = toQmlUrl(QIviSimulationOverrideParser::instance()->simulationOverrides.value(m_identifier));
-        qCWarning(qLcIviSimulationEngine, "Detected matching simulation override: %s=%s", qPrintable(m_identifier), qPrintable(filePath.toString()));
+    if (!m_identifier.isEmpty() && QIfSimulationOverrideParser::instance()->simulationOverrides.contains(m_identifier)) {
+        filePath = toQmlUrl(QIfSimulationOverrideParser::instance()->simulationOverrides.value(m_identifier));
+        qCWarning(qLcIfSimulationEngine, "Detected matching simulation override: %s=%s", qPrintable(m_identifier), qPrintable(filePath.toString()));
     }
 
-    qCDebug(qLcIviSimulationEngine, "loading simulation for engine %s: %s", qPrintable(m_identifier), qPrintable(filePath.toString()));
+    qCDebug(qLcIfSimulationEngine, "loading simulation for engine %s: %s", qPrintable(m_identifier), qPrintable(filePath.toString()));
 
     load(filePath);
 }
 
 /*!
-    \fn template <typename T> void QIviSimulationEngine::registerSimulationInstance(T* instance, const char *uri, int versionMajor, int versionMinor, const char *qmlName)
+    \fn template <typename T> void QIfSimulationEngine::registerSimulationInstance(T* instance, const char *uri, int versionMajor, int versionMinor, const char *qmlName)
 
     Registers the specified \a instance in the QML system with the name \a qmlName, in the library
     imported from \a uri, with a version number composed from \a versionMajor and \a versionMinor.
 
-    \note The registered instance is only available to this QIviSimulationEngine instance.
-    Using it from another QIviSimulationEngine or a QQmlEngine won't work and produces an error.
+    \note The registered instance is only available to this QIfSimulationEngine instance.
+    Using it from another QIfSimulationEngine or a QQmlEngine won't work and produces an error.
 
     \sa qmlRegisterType
 */
 
 /*!
-    \macro QIVI_SIMULATION_TRY_CALL_FUNC(instance_type, function, ret_func, ...)
-    \relates QIviSimulationEngine
+    \macro QIF_SIMULATION_TRY_CALL_FUNC(instance_type, function, ret_func, ...)
+    \relates QIfSimulationEngine
 
     Tries to call \a function in the QML instances registered for the \a instance_type. The variadic
     arguments are passed as arguments to the function in QML.
@@ -401,15 +401,15 @@ void QIviSimulationEngine::loadSimulation(const QUrl &file)
     available as \c return_value.
 
     \code
-    QIVI_SIMULATION_TRY_CALL_FUNC(MyClass, "contactList", return return_value.toStringList());
+    QIF_SIMULATION_TRY_CALL_FUNC(MyClass, "contactList", return return_value.toStringList());
     \endcode
 
-    \sa QIVI_SIMULATION_TRY_CALL {Forward Calls from the Instance to the Engine}
+    \sa QIF_SIMULATION_TRY_CALL {Forward Calls from the Instance to the Engine}
 */
 
 /*!
-    \macro QIVI_SIMULATION_TRY_CALL(instance_type, function, ret_type, ...)
-    \relates QIviSimulationEngine
+    \macro QIF_SIMULATION_TRY_CALL(instance_type, function, ret_type, ...)
+    \relates QIfSimulationEngine
 
     Tries to call \a function in the QML instances registered for the \a instance_type. The variadic
     arguments are passed as arguments to the function in QML.
@@ -417,9 +417,9 @@ void QIviSimulationEngine::loadSimulation(const QUrl &file)
     If the call is successful, a return value of \a ret_type is returned and all code after this
     macro \b{won't} run.
 
-    \sa QIVI_SIMULATION_TRY_CALL_FUNC {Forward Calls from the Instance to the Engine}
+    \sa QIF_SIMULATION_TRY_CALL_FUNC {Forward Calls from the Instance to the Engine}
 */
 
 QT_END_NAMESPACE
 
-#include "qivisimulationengine.moc"
+#include "qifsimulationengine.moc"

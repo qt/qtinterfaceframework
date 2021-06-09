@@ -1,13 +1,13 @@
-TARGET = qface-ivi-remote-server
+TARGET = qface-if-remote-server
 #! [0]
 TEMPLATE = app
 QT -= gui
-CONFIG += c++11 ivigenerator
+CONFIG += c++11 ifcodegen
 #! [0]
 CONFIG -= app_bundle
 DESTDIR = ../
 
-LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIviRemoteExample)
+LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfRemoteExample)
 INCLUDEPATH += $$OUT_PWD/../frontend
 
 SOURCES += main.cpp \
@@ -16,7 +16,7 @@ SOURCES += main.cpp \
 QMAKE_RPATHDIR += $ORIGIN
 #! [1]
 QFACE_FORMAT = server_qtro
-QFACE_SOURCES = ../example-ivi-remote.qface
+QFACE_SOURCES = ../example-if-remote.qface
 #! [1]
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -36,7 +36,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-ivi-remote-server
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-if-remote-server
 INSTALLS += target
 
 HEADERS += \

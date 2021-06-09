@@ -1,4 +1,4 @@
-TARGET = qface-ivi-climate
+TARGET = qface-if-climate
 QMAKE_PROJECT_NAME = $$TARGET
 TEMPLATE = app
 
@@ -7,7 +7,7 @@ CONFIG += c++11
 CONFIG -= app_bundle
 DESTDIR = ../
 
-LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIviClimateExample)
+LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfClimateExample)
 INCLUDEPATH += $$OUT_PWD/../frontend
 
 SOURCES += main.cpp
@@ -34,5 +34,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-ivi-climate
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-if-climate
 INSTALLS += target

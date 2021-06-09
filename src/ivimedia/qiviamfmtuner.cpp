@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,104 +39,104 @@
 **
 ****************************************************************************/
 
-#include "qiviamfmtuner.h"
-#include "qiviamfmtuner_p.h"
-#include <QtIviCore/QIviServiceObject>
+#include "qifamfmtuner.h"
+#include "qifamfmtuner_p.h"
+#include <QtInterfaceFramework/QIfServiceObject>
 #include <QtDebug>
 
 QT_BEGIN_NAMESPACE
 
-QIviAmFmTunerPrivate::QIviAmFmTunerPrivate(const QString &interface, QIviAmFmTuner *parent)
-    : QIviAbstractFeaturePrivate(interface, parent)
+QIfAmFmTunerPrivate::QIfAmFmTunerPrivate(const QString &interface, QIfAmFmTuner *parent)
+    : QIfAbstractFeaturePrivate(interface, parent)
     , q_ptr(parent)
     , m_frequency(-1)
     , m_minimumFrequency(-1)
     , m_maximumFrequency(-1)
     , m_stepSize(-1)
-    , m_band(QIviAmFmTuner::FMBand)
+    , m_band(QIfAmFmTuner::FMBand)
     , m_scanRunning(false)
 {
-    qRegisterMetaType<QIviTunerStation>();
-    qRegisterMetaType<QIviAmFmTunerStation>();
+    qRegisterMetaType<QIfTunerStation>();
+    qRegisterMetaType<QIfAmFmTunerStation>();
 }
 
-void QIviAmFmTunerPrivate::clearToDefaults()
+void QIfAmFmTunerPrivate::clearToDefaults()
 {
     onFrequencyChanged(-1);
     onMinimumFrequencyChanged(-1);
     onMaximumFrequencyChanged(-1);
     onStepSizeChanged(-1);
-    onBandChanged(QIviAmFmTuner::FMBand);
-    onStationChanged(QIviAmFmTunerStation());
+    onBandChanged(QIfAmFmTuner::FMBand);
+    onStationChanged(QIfAmFmTunerStation());
     onScanStatusChanged(false);
 }
 
-void QIviAmFmTunerPrivate::onFrequencyChanged(int frequency)
+void QIfAmFmTunerPrivate::onFrequencyChanged(int frequency)
 {
     if (m_frequency == frequency)
         return;
 
-    Q_Q(QIviAmFmTuner);
+    Q_Q(QIfAmFmTuner);
     m_frequency = frequency;
     emit q->frequencyChanged(frequency);
 }
 
-void QIviAmFmTunerPrivate::onMinimumFrequencyChanged(int frequency)
+void QIfAmFmTunerPrivate::onMinimumFrequencyChanged(int frequency)
 {
     if (m_minimumFrequency == frequency)
         return;
 
-    Q_Q(QIviAmFmTuner);
+    Q_Q(QIfAmFmTuner);
     m_minimumFrequency = frequency;
     emit q->minimumFrequencyChanged(frequency);
 }
 
-void QIviAmFmTunerPrivate::onMaximumFrequencyChanged(int frequency)
+void QIfAmFmTunerPrivate::onMaximumFrequencyChanged(int frequency)
 {
     if (m_maximumFrequency == frequency)
         return;
 
-    Q_Q(QIviAmFmTuner);
+    Q_Q(QIfAmFmTuner);
     m_maximumFrequency = frequency;
     emit q->maximumFrequencyChanged(frequency);
 }
 
-void QIviAmFmTunerPrivate::onStepSizeChanged(int stepSize)
+void QIfAmFmTunerPrivate::onStepSizeChanged(int stepSize)
 {
     if (m_stepSize == stepSize)
         return;
 
-    Q_Q(QIviAmFmTuner);
+    Q_Q(QIfAmFmTuner);
     m_stepSize = stepSize;
     emit q->stepSizeChanged(stepSize);
 }
 
-void QIviAmFmTunerPrivate::onBandChanged(QIviAmFmTuner::Band band)
+void QIfAmFmTunerPrivate::onBandChanged(QIfAmFmTuner::Band band)
 {
     if (m_band == band)
         return;
 
-    Q_Q(QIviAmFmTuner);
+    Q_Q(QIfAmFmTuner);
     m_band = band;
     emit q->bandChanged(band);
 }
 
-void QIviAmFmTunerPrivate::onStationChanged(const QIviAmFmTunerStation &station)
+void QIfAmFmTunerPrivate::onStationChanged(const QIfAmFmTunerStation &station)
 {
     if (m_station == station)
         return;
 
-    Q_Q(QIviAmFmTuner);
+    Q_Q(QIfAmFmTuner);
     m_station = station;
     emit q->stationChanged(station);
 }
 
-void QIviAmFmTunerPrivate::onScanStatusChanged(bool scanRunning)
+void QIfAmFmTunerPrivate::onScanStatusChanged(bool scanRunning)
 {
     if (m_scanRunning == scanRunning)
         return;
 
-    Q_Q(QIviAmFmTuner);
+    Q_Q(QIfAmFmTuner);
     m_scanRunning = scanRunning;
     emit q->scanRunningChanged(scanRunning);
     if (scanRunning)
@@ -145,23 +145,23 @@ void QIviAmFmTunerPrivate::onScanStatusChanged(bool scanRunning)
         emit q->scanStopped();
 }
 
-QIviAmFmTunerBackendInterface *QIviAmFmTunerPrivate::tunerBackend() const
+QIfAmFmTunerBackendInterface *QIfAmFmTunerPrivate::tunerBackend() const
 {
-    return backend<QIviAmFmTunerBackendInterface*>();
+    return backend<QIfAmFmTunerBackendInterface*>();
 }
 
 /*!
-    \class QIviAmFmTuner
-    \inmodule QtIviMedia
+    \class QIfAmFmTuner
+    \inmodule QtIfMedia
     \brief Provides a interface to control the AM/FM tuner.
 
-    The QIviAmFmTuner provides the methods to control a AM/FM tuner.
+    The QIfAmFmTuner provides the methods to control a AM/FM tuner.
 */
 
 /*!
     \qmltype AmFmTuner
-    \instantiates QIviAmFmTuner
-    \inqmlmodule QtIvi.Media
+    \instantiates QIfAmFmTuner
+    \inqmlmodule QtInterfaceFramework.Media
     \inherits AbstractFeature
     \brief Provides a interface to control the AM/FM tuner.
 
@@ -169,7 +169,7 @@ QIviAmFmTunerBackendInterface *QIviAmFmTunerPrivate::tunerBackend() const
 */
 
 /*!
-    \enum QIviAmFmTuner::Band
+    \enum QIfAmFmTuner::Band
     \value AMBand
           The AM Band is based on the Amplitude Modulation technique and can range from 520 to 1610 kHz (1710 kHz).
           The step size is usually between 9 or 10 kHz.
@@ -179,12 +179,12 @@ QIviAmFmTunerBackendInterface *QIviAmFmTunerPrivate::tunerBackend() const
 */
 
 /*!
-    Constructs a QIviAmFmTuner.
+    Constructs a QIfAmFmTuner.
 
-    The \a parent argument is passed on to the \l QIviAbstractFeature base class.
+    The \a parent argument is passed on to the \l QIfAbstractFeature base class.
 */
-QIviAmFmTuner::QIviAmFmTuner(QObject *parent)
-    : QIviAbstractFeature(*new QIviAmFmTunerPrivate(QLatin1String(QIviAmFmTuner_iid), this), parent)
+QIfAmFmTuner::QIfAmFmTuner(QObject *parent)
+    : QIfAbstractFeature(*new QIfAmFmTunerPrivate(QLatin1String(QIfAmFmTuner_iid), this), parent)
 {
 }
 
@@ -193,12 +193,12 @@ QIviAmFmTuner::QIviAmFmTuner(QObject *parent)
     \brief The current frequency of the tuner.
 */
 /*!
-    \property QIviAmFmTuner::frequency
+    \property QIfAmFmTuner::frequency
     \brief The current frequency of the tuner.
 */
-int QIviAmFmTuner::frequency() const
+int QIfAmFmTuner::frequency() const
 {
-    Q_D(const QIviAmFmTuner);
+    Q_D(const QIfAmFmTuner);
     return d->m_frequency;
 }
 
@@ -207,12 +207,12 @@ int QIviAmFmTuner::frequency() const
     \brief The minimum frequency of the current band.
 */
 /*!
-    \property QIviAmFmTuner::minimumFrequency
+    \property QIfAmFmTuner::minimumFrequency
     \brief The minimum frequency of the current band.
 */
-int QIviAmFmTuner::minimumFrequency() const
+int QIfAmFmTuner::minimumFrequency() const
 {
-    Q_D(const QIviAmFmTuner);
+    Q_D(const QIfAmFmTuner);
     return d->m_minimumFrequency;
 }
 
@@ -221,12 +221,12 @@ int QIviAmFmTuner::minimumFrequency() const
     \brief The maximum frequency of the current band.
 */
 /*!
-    \property QIviAmFmTuner::maximumFrequency
+    \property QIfAmFmTuner::maximumFrequency
     \brief The maximum frequency of the current band.
 */
-int QIviAmFmTuner::maximumFrequency() const
+int QIfAmFmTuner::maximumFrequency() const
 {
-    Q_D(const QIviAmFmTuner);
+    Q_D(const QIfAmFmTuner);
     return d->m_maximumFrequency;
 }
 
@@ -237,14 +237,14 @@ int QIviAmFmTuner::maximumFrequency() const
     \sa stepUp() stepDown()
 */
 /*!
-    \property QIviAmFmTuner::stepSize
+    \property QIfAmFmTuner::stepSize
     \brief The frequency step size of the current band.
 
     \sa stepUp() stepDown()
 */
-int QIviAmFmTuner::stepSize() const
+int QIfAmFmTuner::stepSize() const
 {
-    Q_D(const QIviAmFmTuner);
+    Q_D(const QIfAmFmTuner);
     return d->m_stepSize;
 }
 
@@ -261,12 +261,12 @@ int QIviAmFmTuner::stepSize() const
            The step size is usually 100 kHz.
 */
 /*!
-    \property QIviAmFmTuner::band
+    \property QIfAmFmTuner::band
     \brief The current band of the tuner.
 */
-QIviAmFmTuner::Band QIviAmFmTuner::band() const
+QIfAmFmTuner::Band QIfAmFmTuner::band() const
 {
-    Q_D(const QIviAmFmTuner);
+    Q_D(const QIfAmFmTuner);
     return d->m_band;
 }
 
@@ -275,12 +275,12 @@ QIviAmFmTuner::Band QIviAmFmTuner::band() const
     \brief The currently tuned station.
 */
 /*!
-    \property QIviAmFmTuner::station
+    \property QIfAmFmTuner::station
     \brief The currently tuned station.
 */
-QIviAmFmTunerStation QIviAmFmTuner::station() const
+QIfAmFmTunerStation QIfAmFmTuner::station() const
 {
-    Q_D(const QIviAmFmTuner);
+    Q_D(const QIfAmFmTuner);
     return d->m_station;
 }
 
@@ -291,14 +291,14 @@ QIviAmFmTunerStation QIviAmFmTuner::station() const
     \sa startScan() stopScan() scanStarted() scanStopped()
 */
 /*!
-    \property QIviAmFmTuner::scanRunning
+    \property QIfAmFmTuner::scanRunning
     \c true while a scan is in progress, \c false otherwise.
 
     \sa startScan() stopScan() scanStarted() scanStopped()
 */
-bool QIviAmFmTuner::isScanRunning() const
+bool QIfAmFmTuner::isScanRunning() const
 {
-    Q_D(const QIviAmFmTuner);
+    Q_D(const QIfAmFmTuner);
     return d->m_scanRunning;
 }
 
@@ -309,13 +309,13 @@ bool QIviAmFmTuner::isScanRunning() const
 */
 
 /*!
-    \fn void QIviAmFmTuner::tune(const QIviAmFmTunerStation &station)
+    \fn void QIfAmFmTuner::tune(const QIfAmFmTunerStation &station)
 
     Tunes to the provided \a station.
 */
-void QIviAmFmTuner::tune(const QIviAmFmTunerStation &station)
+void QIfAmFmTuner::tune(const QIfAmFmTunerStation &station)
 {
-    Q_D(QIviAmFmTuner);
+    Q_D(QIfAmFmTuner);
 
     if (station.band() != d->m_band)
         setBand(station.band());
@@ -323,18 +323,18 @@ void QIviAmFmTuner::tune(const QIviAmFmTunerStation &station)
         setFrequency(station.frequency());
 }
 
-void QIviAmFmTuner::setFrequency(int frequency)
+void QIfAmFmTuner::setFrequency(int frequency)
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't set the frequency without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't set the frequency without a connected backend");
 
     //TODO Check the minimum/maximum Frequency here ? Add a convention how things like this are done this is also used in the vehicle functions module.
 
     backend->setFrequency(frequency);
 }
 
-void QIviAmFmTuner::setBand(QIviAmFmTuner::Band band)
+void QIfAmFmTuner::setBand(QIfAmFmTuner::Band band)
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't set the band without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't set the band without a connected backend");
 
     //TODO Check the minimum/maximum Frequency here ? Add a convention how things like this are done this is also used in the vehicle functions module.
 
@@ -348,13 +348,13 @@ void QIviAmFmTuner::setBand(QIviAmFmTuner::Band band)
 */
 
 /*!
-    \fn void QIviAmFmTuner::stepUp()
+    \fn void QIfAmFmTuner::stepUp()
 
     Increases the frequency by the current bands step size.
 */
-void QIviAmFmTuner::stepUp()
+void QIfAmFmTuner::stepUp()
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't step up without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't step up without a connected backend");
 
     //TODO Should we pass this down or use setFrequency instead ?
     backend->stepUp();
@@ -367,13 +367,13 @@ void QIviAmFmTuner::stepUp()
 */
 
 /*!
-    \fn void QIviAmFmTuner::stepDown()
+    \fn void QIfAmFmTuner::stepDown()
 
     Decreases the frequency by the current bands step size.
 */
-void QIviAmFmTuner::stepDown()
+void QIfAmFmTuner::stepDown()
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't step down without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't step down without a connected backend");
 
     //TODO Should we pass this down or use setFrequency instead ?
     backend->stepDown();
@@ -388,15 +388,15 @@ void QIviAmFmTuner::stepDown()
 */
 
 /*!
-    \fn void QIviAmFmTuner::seekUp()
+    \fn void QIfAmFmTuner::seekUp()
 
     Seeks the next available Station in upwards direction and tunes it.
 
     If the end of the band where hit without finding a station, the search will be continued from the beginning of the band.
 */
-void QIviAmFmTuner::seekUp()
+void QIfAmFmTuner::seekUp()
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't seek up without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't seek up without a connected backend");
 
     backend->seekUp();
 }
@@ -410,15 +410,15 @@ void QIviAmFmTuner::seekUp()
 */
 
 /*!
-    \fn void QIviAmFmTuner::seekDown()
+    \fn void QIfAmFmTuner::seekDown()
 
     Seeks the next available Station in downwards direction and tunes it.
 
     If the beginning of the band where hit without finding a station, the search will be continued from the end of the band.
 */
-void QIviAmFmTuner::seekDown()
+void QIfAmFmTuner::seekDown()
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't seek down without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't seek down without a connected backend");
 
     backend->seekDown();
 }
@@ -434,7 +434,7 @@ void QIviAmFmTuner::seekDown()
 */
 
 /*!
-    \fn void QIviAmFmTuner::startScan()
+    \fn void QIfAmFmTuner::startScan()
 
     Starts a scan through all available stations.
 
@@ -442,9 +442,9 @@ void QIviAmFmTuner::seekDown()
 
     \sa stopScan scanRunning scanStarted scanStopped
 */
-void QIviAmFmTuner::startScan()
+void QIfAmFmTuner::startScan()
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't start scanning without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't start scanning without a connected backend");
 
     if (d->m_scanRunning) {
         qWarning("A scan is already in progress");
@@ -463,15 +463,15 @@ void QIviAmFmTuner::startScan()
 */
 
 /*!
-    \fn void QIviAmFmTuner::stopScan()
+    \fn void QIfAmFmTuner::stopScan()
 
     Stops the currently active scan. If no scan is active, this method does nothing.
 
     \sa startScan scanRunning scanStarted scanStopped
 */
-void QIviAmFmTuner::stopScan()
+void QIfAmFmTuner::stopScan()
 {
-    Q_IVI_BACKEND(QIviAmFmTuner, d->tunerBackend(), "Can't stop scanning without a connected backend");
+    Q_IF_BACKEND(QIfAmFmTuner, d->tunerBackend(), "Can't stop scanning without a connected backend");
 
     if (!d->m_scanRunning) {
         qWarning("Currently no scan is active which can be stopped");
@@ -484,48 +484,48 @@ void QIviAmFmTuner::stopScan()
 /*!
     \internal
 */
-QIviAmFmTuner::QIviAmFmTuner(QIviAmFmTunerPrivate &dd, QObject *parent)
-    : QIviAbstractFeature(dd, parent)
+QIfAmFmTuner::QIfAmFmTuner(QIfAmFmTunerPrivate &dd, QObject *parent)
+    : QIfAbstractFeature(dd, parent)
 {
 }
 
 /*!
     \reimp
 */
-void QIviAmFmTuner::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfAmFmTuner::connectToServiceObject(QIfServiceObject *serviceObject)
 {
     Q_UNUSED(serviceObject);
 
-    Q_D(QIviAmFmTuner);
+    Q_D(QIfAmFmTuner);
 
-    QIviAmFmTunerBackendInterface *backend = d->tunerBackend();
+    QIfAmFmTunerBackendInterface *backend = d->tunerBackend();
     if (!backend)
         return;
 
-    QObjectPrivate::connect(backend, &QIviAmFmTunerBackendInterface::frequencyChanged,
-                            d, &QIviAmFmTunerPrivate::onFrequencyChanged);
-    QObjectPrivate::connect(backend, &QIviAmFmTunerBackendInterface::minimumFrequencyChanged,
-                            d, &QIviAmFmTunerPrivate::onMinimumFrequencyChanged);
-    QObjectPrivate::connect(backend, &QIviAmFmTunerBackendInterface::maximumFrequencyChanged,
-                            d, &QIviAmFmTunerPrivate::onMaximumFrequencyChanged);
-    QObjectPrivate::connect(backend, &QIviAmFmTunerBackendInterface::stepSizeChanged,
-                            d, &QIviAmFmTunerPrivate::onStepSizeChanged);
-    QObjectPrivate::connect(backend, &QIviAmFmTunerBackendInterface::bandChanged,
-                            d, &QIviAmFmTunerPrivate::onBandChanged);
-    QObjectPrivate::connect(backend, &QIviAmFmTunerBackendInterface::stationChanged,
-                            d, &QIviAmFmTunerPrivate::onStationChanged);
-    QObjectPrivate::connect(backend, &QIviAmFmTunerBackendInterface::scanStatusChanged,
-                            d, &QIviAmFmTunerPrivate::onScanStatusChanged);
+    QObjectPrivate::connect(backend, &QIfAmFmTunerBackendInterface::frequencyChanged,
+                            d, &QIfAmFmTunerPrivate::onFrequencyChanged);
+    QObjectPrivate::connect(backend, &QIfAmFmTunerBackendInterface::minimumFrequencyChanged,
+                            d, &QIfAmFmTunerPrivate::onMinimumFrequencyChanged);
+    QObjectPrivate::connect(backend, &QIfAmFmTunerBackendInterface::maximumFrequencyChanged,
+                            d, &QIfAmFmTunerPrivate::onMaximumFrequencyChanged);
+    QObjectPrivate::connect(backend, &QIfAmFmTunerBackendInterface::stepSizeChanged,
+                            d, &QIfAmFmTunerPrivate::onStepSizeChanged);
+    QObjectPrivate::connect(backend, &QIfAmFmTunerBackendInterface::bandChanged,
+                            d, &QIfAmFmTunerPrivate::onBandChanged);
+    QObjectPrivate::connect(backend, &QIfAmFmTunerBackendInterface::stationChanged,
+                            d, &QIfAmFmTunerPrivate::onStationChanged);
+    QObjectPrivate::connect(backend, &QIfAmFmTunerBackendInterface::scanStatusChanged,
+                            d, &QIfAmFmTunerPrivate::onScanStatusChanged);
 
-    QIviAbstractFeature::connectToServiceObject(serviceObject);
+    QIfAbstractFeature::connectToServiceObject(serviceObject);
 }
 
 /*!
     \reimp
 */
-void QIviAmFmTuner::clearServiceObject()
+void QIfAmFmTuner::clearServiceObject()
 {
-    Q_D(QIviAmFmTuner);
+    Q_D(QIfAmFmTuner);
     d->clearToDefaults();
 }
 
@@ -538,7 +538,7 @@ void QIviAmFmTuner::clearServiceObject()
 */
 
 /*!
-    \fn void QIviAmFmTuner::scanStarted()
+    \fn void QIfAmFmTuner::scanStarted()
 
     A new scan has started and is now running.
 
@@ -554,7 +554,7 @@ void QIviAmFmTuner::clearServiceObject()
 */
 
 /*!
-    \fn void QIviAmFmTuner::scanStopped()
+    \fn void QIfAmFmTuner::scanStopped()
 
     The currently active scan has stopped.
 
@@ -563,4 +563,4 @@ void QIviAmFmTuner::clearServiceObject()
 
 QT_END_NAMESPACE
 
-#include "moc_qiviamfmtuner.cpp"
+#include "moc_qifamfmtuner.cpp"

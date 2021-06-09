@@ -1,6 +1,6 @@
 # Custom compiler for qface:
 #
-# If building a module, use load(ivigenerator_qt_module) instead
+# If building a module, use load(ifcodegen_qt_module) instead
 #
 # Example input:
 #   QFACE_SOURCES += my.foo.qface [required]
@@ -9,7 +9,7 @@
 #   QFACE_OUTPUT_DIR = my_output_dir (defaults to current build dir)
 #   QFACE_ANNOTATIONS += additional.yaml
 #
-QT_FOR_CONFIG += ivicore ivicore-private
+QT_FOR_CONFIG += interfaceframework interfaceframework-private
 
 isEmpty(QFACE_FORMAT): QFACE_FORMAT = frontend
 isEmpty(QFACE_OUTPUT_DIR): QFACE_OUTPUT_DIR = $$OUT_PWD
@@ -21,7 +21,7 @@ isEmpty(QFACE_SOURCES): error("QFACE_SOURCES must be set!")
 
 # See the win32 section, why this is needed
 win32-msvc*:!contains(CONFIG, debug_and_release) {
-    error("The ivigenerator works only in the debug_and_release configuration on windows")
+    error("The ifcodegen works only in the debug_and_release configuration on windows")
 }
 
 QFACE_PWD = $$dirname(QFACE_SOURCES)
@@ -35,23 +35,23 @@ OTHER_FILES += $$QFACE_ABS_PWD/$$QFACE_FILE
 equals(QMAKE_HOST.os, Windows): ENV = chcp 65001 &&
 else: ENV = LC_ALL="en_US.UTF-8"
 
-# Detect whether we are using the feature inside the qtivi repository
-VIRTUALENV_PATH = $$[QT_HOST_BINS]/ivigenerator/qtivi_qface_virtualenv
-INTERNAL_VIRTUALENV_PATH = $$QTIVI_BUILD_ROOT/src/tools/ivigenerator/qtivi_qface_virtualenv
-IVI_GENERATOR_PATH = $$[QT_HOST_BINS]/ivigenerator
+# Detect whether we are using the feature inside the interfaceframework repository
+VIRTUALENV_PATH = $$[QT_HOST_BINS]/ifcodegen/qtif_qface_virtualenv
+INTERNAL_VIRTUALENV_PATH = $$QTIF_BUILD_ROOT/src/tools/ifcodegen/qtif_qface_virtualenv
+IF_GENERATOR_PATH = $$[QT_HOST_BINS]/ifcodegen
 
-# Try to use the internal virtualenv when building qtivi
+# Try to use the internal virtualenv when building interfaceframework
 # Because of the two stage build of COIN, it might not exist, but the installed version should still be there
-QT_FOR_CONFIG *= ivicore-private
-!isEmpty(QTIVI_BUILD_ROOT):!qtConfig(system-ivigenerator):exists($$INTERNAL_VIRTUALENV_PATH) {
+QT_FOR_CONFIG *= interfaceframework-private
+!isEmpty(QTIF_BUILD_ROOT):!qtConfig(system-ifcodegen):exists($$INTERNAL_VIRTUALENV_PATH) {
     VIRTUALENV_PATH = $$INTERNAL_VIRTUALENV_PATH
-    IVI_GENERATOR_PATH = $$QTIVI_ROOT/src/tools/ivigenerator
-    equals(QMAKE_HOST.os, Windows): ENV += set IVIGENERATOR_CONFIG="$$system_path($$QTIVI_BUILD_ROOT/src/tools/ivigenerator/.config)" &&
-    else: ENV += IVIGENERATOR_CONFIG="$$system_path($$QTIVI_BUILD_ROOT/src/tools/ivigenerator/.config)"
+    IF_GENERATOR_PATH = $$QTIF_ROOT/src/tools/ifcodegen
+    equals(QMAKE_HOST.os, Windows): ENV += set IFGENERATOR_CONFIG="$$system_path($$QTIF_BUILD_ROOT/src/tools/ifcodegen/.config)" &&
+    else: ENV += IFGENERATOR_CONFIG="$$system_path($$QTIF_BUILD_ROOT/src/tools/ifcodegen/.config)"
 }
 
 qtConfig(system-qface) {
-    isEmpty(QMAKE_PYTHON3_LOCATION): error("Couldn't find the QMAKE_PYTHON3_LOCATION variable, Please reconfigure qtivi")
+    isEmpty(QMAKE_PYTHON3_LOCATION): error("Couldn't find the QMAKE_PYTHON3_LOCATION variable, Please reconfigure interfaceframework")
     PYTHON = $$QMAKE_PYTHON3_LOCATION
     !exists($$PYTHON) {
         PYTHON = $$[QT_HOST_BINS]/python3
@@ -71,19 +71,19 @@ qtConfig(system-qface) {
         ENV += VIRTUAL_ENV=$$system_path($$VIRTUALENV_PATH)
     }
 }
-IVI_GENERATOR = $$system_quote($$PYTHON) $$IVI_GENERATOR_PATH/generate.py
+IF_GENERATOR = $$system_quote($$PYTHON) $$IF_GENERATOR_PATH/generate.py
 
 # TODO make this work with multiple input files, or only support one QFACE_SOURCE
 # Although this could be extra_compiler it is a normal EXTRA_TARGET for a reason.
 # In the debug_and_release configuration, we want to have the generator executed
 # during the run of the meta Makefile to only generate the code once.
 PRI = $$QFACE_OUTPUT_DIR/$$lower($${QFACE_BASE_NAME}).pri
-IVI_GENERATOR_OPTIONS = --format=$$QFACE_FORMAT --force
-!isEmpty(QFACE_MODULE_NAME): IVI_GENERATOR_OPTIONS += --module=$${QFACE_MODULE_NAME}
+IF_GENERATOR_OPTIONS = --format=$$QFACE_FORMAT --force
+!isEmpty(QFACE_MODULE_NAME): IF_GENERATOR_OPTIONS += --module=$${QFACE_MODULE_NAME}
 for (ANNOTATION, QFACE_ANNOTATIONS) {
     file = $$absolute_path($$ANNOTATION, $$_PRO_FILE_PWD_)
 
-    IVI_GENERATOR_OPTIONS += -A $$system_quote($$system_path($$file))
+    IF_GENERATOR_OPTIONS += -A $$system_quote($$system_path($$file))
     qface_sources.depends += $$file
     OTHER_FILES += $$file
 }
@@ -91,7 +91,7 @@ for (ANNOTATION, QFACE_ANNOTATIONS) {
 for (IMPORT, QFACE_IMPORT_PATH) {
     dir = $$absolute_path($$IMPORT, $$_PRO_FILE_PWD_)
 
-    IVI_GENERATOR_OPTIONS += -I $$system_quote($$system_path($$dir))
+    IF_GENERATOR_OPTIONS += -I $$system_quote($$system_path($$dir))
 }
 
 # Windows doesn't offer any other way to sleep for a time inside non-interactive scripts
@@ -103,18 +103,18 @@ equals(QMAKE_HOST.os, Windows): {
     TOUCH = touch
 }
 
-qface_sources.target = $$relative_path(.stamp-ivigenerator, $$OUT_PWD)
-qface_sources.commands += $(DEL_FILE) $$system_quote($$system_path($$OUT_PWD/.stamp-ivigenerator)) &&
-qface_sources.commands += $$SLEEP && $$ENV $$system_path($$IVI_GENERATOR) $$IVI_GENERATOR_OPTIONS $$system_quote($$system_path($$QFACE_ABS_PWD/$${QFACE_FILE})) $$system_quote($$system_path($$QFACE_OUTPUT_DIR)) &&
-qface_sources.commands += $$TOUCH $$system_quote($$system_path($$OUT_PWD/.stamp-ivigenerator))
-qface_sources.depends = $$IVI_GENERATOR_PATH/generate.py
+qface_sources.target = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
+qface_sources.commands += $(DEL_FILE) $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen)) &&
+qface_sources.commands += $$SLEEP && $$ENV $$system_path($$IF_GENERATOR) $$IF_GENERATOR_OPTIONS $$system_quote($$system_path($$QFACE_ABS_PWD/$${QFACE_FILE})) $$system_quote($$system_path($$QFACE_OUTPUT_DIR)) &&
+qface_sources.commands += $$TOUCH $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen))
+qface_sources.depends = $$IF_GENERATOR_PATH/generate.py
 qface_sources.depends += $$QFACE_ABS_PWD/$${QFACE_FILE}
-qface_sources.depends += $$files($$IVI_GENERATOR_PATH/templates/common/*)
+qface_sources.depends += $$files($$IF_GENERATOR_PATH/templates/common/*)
 
-QMAKE_CLEAN += $$relative_path(.stamp-ivigenerator, $$OUT_PWD)
+QMAKE_CLEAN += $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 
 # Add all templates of the generator format as dependency
-QFACE_TEMPLATE_PWD = $$IVI_GENERATOR_PATH/templates/$${QFACE_FORMAT}
+QFACE_TEMPLATE_PWD = $$IF_GENERATOR_PATH/templates/$${QFACE_FORMAT}
 exists($$QFACE_TEMPLATE_PWD) {
     qface_sources.depends += $$files($${QFACE_TEMPLATE_PWD}/*)
 } else: exists($${QFACE_FORMAT}) {
@@ -133,14 +133,14 @@ exists($$QFACE_YAML) {
     QFACE_HEADERS_OUTPUT_TARGET = $${QFACE_HEADERS_OUTPUT_DIR}/$$lower($${QFACE_MODULE_NAME})module.h
     qface_headers.target = $$relative_path($$QFACE_HEADERS_OUTPUT_TARGET, $$OUT_PWD)
     qface_headers.commands = $${QMAKE_COPY_FILE} $${QFACE_OUTPUT_DIR}/*.h $${QFACE_HEADERS_OUTPUT_DIR}
-    qface_headers.depends = $$relative_path(.stamp-ivigenerator, $$OUT_PWD) $$IVI_GENERATOR_PATH/generate.py
+    qface_headers.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD) $$IF_GENERATOR_PATH/generate.py
 }
 
 # Reevaluate the Makefile after the generation has finished
 Makefile.target = Makefile
 # The relative_path is needed here as qmake will use a relative_path for the output files
 # when using a QMAKE_EXTRA_COMPILER
-Makefile.depends = $$relative_path(.stamp-ivigenerator, $$OUT_PWD)
+Makefile.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 
 # Make the qmake_all target work for usage inside QtCreator
 # Because of the Makefile target the generator is called before the actual Makefile
@@ -149,8 +149,8 @@ Makefile.depends = $$relative_path(.stamp-ivigenerator, $$OUT_PWD)
 # This file is created during the qmake run and updated once the virtualenv is ready
 # and will then cause a rerun of qmake
 # When using qface from the system, we don't need to wait for the virtualenv to be setup
-!qtConfig(system-qface):!isEmpty(QTIVI_BUILD_ROOT):!exists($$VIRTUALENV_PATH): {
-    Makefile.depends = $$shadowed($$IVI_GENERATOR_PATH)/forceRebuild
+!qtConfig(system-qface):!isEmpty(QTIF_BUILD_ROOT):!exists($$VIRTUALENV_PATH): {
+    Makefile.depends = $$shadowed($$IF_GENERATOR_PATH)/forceRebuild
 } else {
     !isEmpty(QFACE_HEADERS_OUTPUT_TARGET) {
         Makefile.depends += $$relative_path($$QFACE_HEADERS_OUTPUT_TARGET, $$OUT_PWD)
@@ -189,7 +189,7 @@ QMAKE_EXTRA_TARGETS += Makefile qface_sources
 # Afterwards the sub makefiles are read (Makefile.debug/release), which have been
 # regenerated before starting NMAKE on them.
 win32-msvc* {
-    qmake.depends = $$relative_path(.stamp-ivigenerator, $$OUT_PWD)
+    qmake.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 
     debug.depends = qmake
     debug-make_first.depends = qmake

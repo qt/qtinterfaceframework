@@ -8,4 +8,4 @@ SUBDIRS = frontend \
 CONFIG += ordered
 
 OTHER_FILES += \
-    example-ivi-remote.qface
+    example-if-remote.qface

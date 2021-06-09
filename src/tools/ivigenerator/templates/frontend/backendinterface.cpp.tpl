@@ -5,7 +5,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set class = '{0}BackendInterface'.format(interface) %}
 {% include 'common/generated_comment.cpp.tpl' %}
 
@@ -41,9 +41,9 @@ QT_BEGIN_NAMESPACE
     \inmodule {{module}}
     \ingroup backends
 {% if interface.tags.config.zoned %}
-    \inherits QIviZonedFeatureInterface
+    \inherits QIfZonedFeatureInterface
 {% else %}
-    \inherits QIviFeatureInterface
+    \inherits QIfFeatureInterface
 {% endif %}
     \keyword {{interface.tags.config.id | default(interface.qualified_name)}}
 
@@ -58,9 +58,9 @@ QT_BEGIN_NAMESPACE
  */
 {{class}}::{{class}}(QObject *parent)
 {% if interface.tags.config.zoned %}
-    : QIviZonedFeatureInterface(parent)
+    : QIfZonedFeatureInterface(parent)
 {% else %}
-    : QIviFeatureInterface(parent)
+    : QIfFeatureInterface(parent)
 {% endif %}
 {
 }
@@ -72,7 +72,7 @@ QT_BEGIN_NAMESPACE
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const %}
 /*!
-    \fn {{ivi.prop_setter(property, class, interface.tags.config.zoned)}};
+    \fn {{if.prop_setter(property, class, interface.tags.config.zoned)}};
 
     Setter for {{interface}}::{{property}}.
     Sets the property \e {{property}} to the new value passed by \a {{property}}.
@@ -91,9 +91,9 @@ QT_BEGIN_NAMESPACE
 {% endfor %}
 {% for operation in interface.operations %}
 /*!
-    \fn {{ivi.operation(operation, class, interface.tags.config.zoned)}};
+    \fn {{if.operation(operation, class, interface.tags.config.zoned)}};
 
-{{ ivi.format_comments(operation.comment) }}
+{{ if.format_comments(operation.comment) }}
 
 {%   if interface.tags.config.zoned %}
     The value of \a zone indicates the zone this operation should be done in.
@@ -103,9 +103,9 @@ QT_BEGIN_NAMESPACE
 
 {% for signal in interface.signals %}
 /*!
-    \fn {{ivi.signal(signal, class, interface.tags.config.zoned)}};
+    \fn {{if.signal(signal, class, interface.tags.config.zoned)}};
 
-{{ ivi.format_comments(signal.comment) }}
+{{ if.format_comments(signal.comment) }}
 
 {%   if interface.tags.config.zoned %}
     The value of \a zone indicates the zone this operation should be done in.
@@ -114,7 +114,7 @@ QT_BEGIN_NAMESPACE
 {% endfor %}
 {% for property in interface.properties %}
 /*!
-    \fn {{ivi.prop_notify(property, class, interface.tags.config.zoned)}};
+    \fn {{if.prop_notify(property, class, interface.tags.config.zoned)}};
 
     The signal is emitted when the \e {{property}} property changed to \a {{property}}.
 

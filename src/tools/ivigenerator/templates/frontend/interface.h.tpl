@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -29,12 +29,12 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set class = '{0}'.format(interface) %}
 {% if interface.tags.config.zoned %}
-{%   set base_class = 'QIviAbstractZonedFeature' %}
+{%   set base_class = 'QIfAbstractZonedFeature' %}
 {% else %}
-{%   set base_class = 'QIviAbstractFeature' %}
+{%   set base_class = 'QIfAbstractFeature' %}
 {% endif %}
 {% set oncedefine = '{0}_{1}_H_'.format(module.module_name|upper, class|upper) %}
 {% set exportsymbol = 'Q_{0}_EXPORT'.format(module|upper|replace('.', '_')) %}
@@ -53,9 +53,9 @@
 {{inc}}
 {% endfor %}
 
-#include <QtIviCore/{{base_class}}>
-#include <QtIviCore/QIviPendingReply>
-#include <QtIviCore/QIviPagingModel>
+#include <QtInterfaceFramework/{{base_class}}>
+#include <QtInterfaceFramework/QIfPendingReply>
+#include <QtInterfaceFramework/QIfPagingModel>
 
 QT_BEGIN_NAMESPACE
 
@@ -66,7 +66,7 @@ class {{exportsymbol}} {{class}} : public {{base_class}}
 {
     Q_OBJECT
 {% for property in interface.properties %}
-    {{ivi.property(property)}}
+    {{if.property(property)}}
 {% endfor %}
 
 public:
@@ -80,46 +80,46 @@ public:
     static void registerQmlTypes(const QString& uri, int majorVersion={{interface.module.majorVersion}}, int minorVersion={{interface.module.minorVersion}});
 
 {% for property in interface.properties %}
-    {{ivi.prop_getter(property)}};
+    {{if.prop_getter(property)}};
 {% endfor %}
 
 public Q_SLOTS:
 {% for operation in interface.operations %}
-    {{ ivi.operation(operation) }};
+    {{ if.operation(operation) }};
 {% endfor %}
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
-    {{ivi.prop_setter(property)}};
+    {{if.prop_setter(property)}};
 {%   endif %}
 {% endfor %}
 
 Q_SIGNALS:
 {% for signal in interface.signals %}
-    {{ivi.signal(signal)}};
+    {{if.signal(signal)}};
 {% endfor %}
 {% for property in interface.properties %}
-    {{ivi.prop_notify(property)}};
+    {{if.prop_notify(property)}};
 {% endfor %}
 
 protected:
 {% if interface.tags.config.zoned %}
-    QIviAbstractZonedFeature *createZoneFeature(const QString &zone) Q_DECL_OVERRIDE;
+    QIfAbstractZonedFeature *createZoneFeature(const QString &zone) Q_DECL_OVERRIDE;
 {% endif %}
     {{class}}BackendInterface *{{interface|lower}}Backend() const;
 
-    void connectToServiceObject(QIviServiceObject *service) Q_DECL_OVERRIDE;
+    void connectToServiceObject(QIfServiceObject *service) Q_DECL_OVERRIDE;
     void clearServiceObject() Q_DECL_OVERRIDE;
 
 private:
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
     friend class {{class}}Private;
     {{class}}Private *m_helper;
 {% else %}
 {% for property in interface.properties %}
 {%   if interface.tags.config.zoned %}
-    Q_PRIVATE_SLOT(d_func(), {{ivi.on_prop_changed(property, "", true, true)}})
+    Q_PRIVATE_SLOT(d_func(), {{if.on_prop_changed(property, "", true, true)}})
 {%   else %}
-    Q_PRIVATE_SLOT(d_func(), {{ivi.on_prop_changed(property, "", false, true)}})
+    Q_PRIVATE_SLOT(d_func(), {{if.on_prop_changed(property, "", false, true)}})
 {%   endif %}
 {% endfor %}
     Q_DECLARE_PRIVATE({{class}})

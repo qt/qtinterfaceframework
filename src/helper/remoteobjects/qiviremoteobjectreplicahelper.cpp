@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,23 +38,23 @@
 **
 ****************************************************************************/
 
-#include "qiviremoteobjectreplicahelper.h"
+#include "qifremoteobjectreplicahelper.h"
 
 QT_BEGIN_NAMESPACE
 
-QIviRemoteObjectReplicaHelper::QIviRemoteObjectReplicaHelper(const QLoggingCategory &category, QObject *parent)
+QIfRemoteObjectReplicaHelper::QIfRemoteObjectReplicaHelper(const QLoggingCategory &category, QObject *parent)
     : QObject(parent)
     , m_category(category)
 {
-    qRegisterMetaType<QIviRemoteObjectPendingResult>();
+    qRegisterMetaType<QIfRemoteObjectPendingResult>();
 }
 
-QVariant QIviRemoteObjectReplicaHelper::fromRemoteObjectVariant(const QVariant &variant) const
+QVariant QIfRemoteObjectReplicaHelper::fromRemoteObjectVariant(const QVariant &variant) const
 {
     return variant.value<QVariant>();
 }
 
-void QIviRemoteObjectReplicaHelper::onPendingResultAvailable(quint64 id, bool isSuccess, const QVariant &value)
+void QIfRemoteObjectReplicaHelper::onPendingResultAvailable(quint64 id, bool isSuccess, const QVariant &value)
 {
     qCDebug(m_category) << "pending result available for id:" << id;
     if (!m_pendingReplies.contains(id)) {
@@ -62,36 +62,36 @@ void QIviRemoteObjectReplicaHelper::onPendingResultAvailable(quint64 id, bool is
         return;
     }
 
-    QIviPendingReplyBase iviReply = m_pendingReplies.take(id);
+    QIfPendingReplyBase ifReply = m_pendingReplies.take(id);
 
     if (isSuccess)
-        iviReply.setSuccess(value);
+        ifReply.setSuccess(value);
     else
-        iviReply.setFailed();
+        ifReply.setFailed();
 }
 
-void QIviRemoteObjectReplicaHelper::onReplicaStateChanged(QRemoteObjectReplica::State newState, QRemoteObjectReplica::State oldState)
+void QIfRemoteObjectReplicaHelper::onReplicaStateChanged(QRemoteObjectReplica::State newState, QRemoteObjectReplica::State oldState)
 {
     Q_UNUSED(oldState)
 
     if (newState == QRemoteObjectReplica::Suspect) {
         qCWarning(m_category) << "QRemoteObjectReplica error, connection to the source lost";
-        emit errorChanged(QIviAbstractFeature::Unknown,
+        emit errorChanged(QIfAbstractFeature::Unknown,
                           QStringLiteral("QRemoteObjectReplica error, connection to the source lost"));
     } else if (newState == QRemoteObjectReplica::SignatureMismatch) {
         qCWarning(m_category) << "QRemoteObjectReplica error, signature mismatch";
-        emit errorChanged(QIviAbstractFeature::Unknown,
+        emit errorChanged(QIfAbstractFeature::Unknown,
                           QStringLiteral("QRemoteObjectReplica error, signature mismatch"));
     } else if (newState == QRemoteObjectReplica::Valid) {
-        emit errorChanged(QIviAbstractFeature::NoError);
+        emit errorChanged(QIfAbstractFeature::NoError);
     }
 }
 
-void QIviRemoteObjectReplicaHelper::onNodeError(QRemoteObjectNode::ErrorCode code)
+void QIfRemoteObjectReplicaHelper::onNodeError(QRemoteObjectNode::ErrorCode code)
 {
     qCWarning(m_category) << "QRemoteObjectNode error, code: " << code;
     QMetaEnum metaEnum = QMetaEnum::fromType<QRemoteObjectNode::ErrorCode>();
-    emit errorChanged(QIviAbstractFeature::Unknown, QStringLiteral("QRemoteObjectNode error, code: ") + QLatin1String(metaEnum.valueToKey(code)));
+    emit errorChanged(QIfAbstractFeature::Unknown, QStringLiteral("QRemoteObjectNode error, code: ") + QLatin1String(metaEnum.valueToKey(code)));
 }
 
 QT_END_NAMESPACE

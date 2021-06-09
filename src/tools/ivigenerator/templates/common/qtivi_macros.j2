@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -30,7 +30,7 @@
 #############################################################################
 #}
 
-{# these macros can be used to generate content for QtIvi code. The macros
+{# these macros can be used to generate content for QtInterfaceFramework code. The macros
 # provide snippets that are commonly found in multiple templates and are not
 # too template specific.
 # Function macros do not generate the whole body of the function, but just
@@ -71,7 +71,7 @@
 {%   else%}
 {%     set const = '' %}
 {%   endif %}
-QIviPendingReply<{{operation|return_type}}> {{scope}}{{operation}}({{join_params(operation, zoned)}}){{const}}
+QIfPendingReply<{{operation|return_type}}> {{scope}}{{operation}}({{join_params(operation, zoned)}}){{const}}
 {%- endmacro %}
 
 
@@ -111,7 +111,7 @@ Q_PROPERTY({{property|return_type}} {{property}} READ {{property|getter_name}}{{
 {%     set zone = '' %}
 {%   endif %}
 {%   if property.type.is_model and model_interface %}
-{%     set type = 'QIviPagingModelInterface *'+property.name %}
+{%     set type = 'QIfPagingModelInterface *'+property.name %}
 {%   else %}
 {%     set type = property|parameter_type %}
 {%   endif %}
@@ -129,7 +129,7 @@ void {{scope}}{{property|setter_name}}({{type}}{{zone}})
 {%     set scope = '' %}
 {%   endif %}
 {%   if property.type.is_model and model_interface %}
-{%     set type = 'QIviPagingModelInterface *' %}
+{%     set type = 'QIfPagingModelInterface *' %}
 {%   else %}
 {%     set type = property|return_type %}
 {%   endif %}
@@ -161,7 +161,7 @@ void {{scope}}{{property|setter_name}}({{type}}{{zone}})
 {%     set zone = '' %}
 {%   endif %}
 {%   if property.type.is_model and model_interface %}
-{%     set type = 'QIviPagingModelInterface *'+property.name %}
+{%     set type = 'QIfPagingModelInterface *'+property.name %}
 {%     set default_value = type + '=nullptr'%}
 {%   else %}
 {%     set type = property|parameter_type %}

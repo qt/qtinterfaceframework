@@ -13,13 +13,13 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivimedia/tuner")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ifmedia/tuner")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_executable(tuner
     main.cpp
@@ -31,7 +31,7 @@ set_target_properties(tuner PROPERTIES
 target_link_libraries(tuner PUBLIC
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
     Qt::Qml
     Qt::Quick
 )

@@ -7,5 +7,5 @@ SUBDIRS = frontend \
 CONFIG += ordered
 
 OTHER_FILES += \
-    example-ivi-climate.qface \
-    example-ivi-climate.yaml
+    example-if-climate.qface \
+    example-if-climate.yaml

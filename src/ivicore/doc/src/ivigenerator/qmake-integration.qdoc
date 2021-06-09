@@ -31,7 +31,7 @@
 \title qmake Integration
 \previouspage Use the Generator
 
-Qt IVI Generator is fully integrated in qmake to generate all or part of a project.
+Qt Interface Framework Generator is fully integrated in qmake to generate all or part of a project.
 
 In it's simplest form, qmake can generate all the source code and the project only needs to
 configure the type of project to build.
@@ -41,10 +41,10 @@ and use the generated code.
 
 Example:
 \code
-CONFIG += ivigenerator
+CONFIG += ifcodegen
 
-QT_FOR_CONFIG += ivicore
-!qtConfig(ivigenerator): error("No ivigenerator available")
+QT_FOR_CONFIG += interfaceframework
+!qtConfig(ifcodegen): error("No ifcodegen available")
 
 QFACE_FORMAT = frontend
 QFACE_SOURCES = example.qface
@@ -81,16 +81,16 @@ The following qmake variables are available:
 For more details on the generator's command line arguments, see \l {Use the Generator}.
 
 \quotation
-\note Since the \c ivigenerator has specific system dependencies, it may not be available in all
-      QtIviCore installation. In this case, the \c ivigenerator qmake feature is also not
+\note Since the \c ifcodegen has specific system dependencies, it may not be available in all
+      QtInterfaceFramework installation. In this case, the \c ifcodegen qmake feature is also not
       available and this can result in build errors.
 
 In this case, use the following code snippet that makes sure the build stops and provides a
 meaningful error message:
 
 \code
-QT_FOR_CONFIG += ivicore
-!qtConfig(ivigenerator): error("No ivigenerator available")
+QT_FOR_CONFIG += interfaceframework
+!qtConfig(ifcodegen): error("No ifcodegen available")
 \endcode
 \endquotation
 
@@ -99,24 +99,24 @@ QT_FOR_CONFIG += ivicore
 The qmake integration also supports generating code that you can subsequently compile into a Qt
 module. Since this module needs to work more closely with Qt's module building system, it shouldn't
 be loaded using the \c CONFIG variable, but using the \c load() function instead. The
-\c ivigenerator_qt_module feature replaces the \c load(qt_module) call.
+\c ifcodegen_qt_module feature replaces the \c load(qt_module) call.
 
-The following shows how you can integrate the QtIviVehicleFunctions module:
+The following shows how you can integrate the QtIfVehicleFunctions module:
 
 \badcode
-TARGET = QtIviVehicleFunctions
-QT = core core-private ivicore ivicore-private
-CONFIG += c++11 ivigenerator
+TARGET = QtIfVehicleFunctions
+QT = core core-private interfaceframework interfaceframework-private
+CONFIG += c++11 ifcodegen
 
-QT_FOR_CONFIG += ivicore
-!qtConfig(ivigenerator): error("No ivigenerator available")
+QT_FOR_CONFIG += interfaceframework
+!qtConfig(ifcodegen): error("No ifcodegen available")
 
 ...
 
-QFACE_MODULE_NAME = QtIviVehicleFunctions
-QFACE_SOURCES += ivivehiclefunctions.qface
+QFACE_MODULE_NAME = QtIfVehicleFunctions
+QFACE_SOURCES += ifvehiclefunctions.qface
 
-load(ivigenerator_qt_module)
+load(ifcodegen_qt_module)
 \endcode
 
 In addition to the project file for the module library, the \c sync.profile also needs to be
@@ -127,7 +127,7 @@ Usually, the \c sync.profile is setup to search for these headers in the source 
 \badcode
 ...
 %modules = ( # path to module name map
-    "QtIviVehicleFunctions" => "$basedir/src/ivivehiclefunctions;$out_basedir/src/ivivehiclefunctions"
+    "QtIfVehicleFunctions" => "$basedir/src/ifvehiclefunctions;$out_basedir/src/ifvehiclefunctions"
 );
 ...
 \endcode

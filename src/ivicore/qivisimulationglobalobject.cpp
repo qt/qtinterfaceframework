@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,13 +39,13 @@
 **
 ****************************************************************************/
 
-#include "qivisimulationglobalobject_p.h"
+#include "qifsimulationglobalobject_p.h"
 #include <QtDebug>
 #include <QJsonDocument>
 
 QT_BEGIN_NAMESPACE
 
-namespace qtivi_helper {
+namespace qtif_helper {
     static const QString unsupportedLiteral = QStringLiteral("unsupported");
     static const QString minLiteral = QStringLiteral("minimum");
     static const QString maxLiteral = QStringLiteral("maximum");
@@ -53,24 +53,24 @@ namespace qtivi_helper {
     static const QString domainLiteral = QStringLiteral("domain");
 }
 
-using namespace qtivi_helper;
+using namespace qtif_helper;
 
 /*!
-    \qmltype IviSimulator
+    \qmltype IfSimulator
 
-    \brief The global object for parsing simulation data inside a QIviSimulationEngine.
+    \brief The global object for parsing simulation data inside a QIfSimulationEngine.
 
-    The IviSimulator global object provides access to the simulation data of a QIviSimulationEngine
+    The IfSimulator global object provides access to the simulation data of a QIfSimulationEngine
     and provides helper functions for parsing and checking boundaries.
 
-    \note This object is only available inside a QIviSimulationEngine and cannot be accessed
+    \note This object is only available inside a QIfSimulationEngine and cannot be accessed
     outside of it.
 
     \section1 Data Format
-    \target IviSimulatorDataFormat
+    \target IfSimulatorDataFormat
 
-    The IviSimulator expects its data already in a parsed form. Usually this is done by the
-    QIviSimulationEngine::loadSimulationData() function, which expects the file to be in the JSON
+    The IfSimulator expects its data already in a parsed form. Usually this is done by the
+    QIfSimulationEngine::loadSimulationData() function, which expects the file to be in the JSON
     format.
 
     \section2 Interfaces
@@ -81,10 +81,10 @@ using namespace qtivi_helper;
 
     \badcode
     {
-      "QIviClimateControl": {
+      "QIfClimateControl": {
         ...
       },
-      "org.qt-project.QIviWindowControl": {
+      "org.qt-project.QIfWindowControl": {
         ...
       }
     }
@@ -99,7 +99,7 @@ using namespace qtivi_helper;
 
     \badcode
     {
-      "QIviClimateControl": {
+      "QIfClimateControl": {
         "airConditioningEnabled": {
           "default": true
         },
@@ -114,7 +114,7 @@ using namespace qtivi_helper;
     }
     \endcode
 
-    For the interface named \c QIviClimateControl, there are settings defined for the properties
+    For the interface named \c QIfClimateControl, there are settings defined for the properties
     \c airConditioningEnabled, \c steeringWheelHeater and \c fanSpeed.
 
     The settings object can store multiple constraints which are called \e domains. The following
@@ -142,11 +142,11 @@ using namespace qtivi_helper;
 
     \badcode
     {
-      "QIviClimateControl": {
+      "QIfClimateControl": {
         "recirculationMode": {
           "default": {
             "type": "enum",
-            "value": "QtIviVehicleFunctionsModule::RecirculationOff"
+            "value": "QtIfVehicleFunctionsModule::RecirculationOff"
           }
         }
       }
@@ -191,7 +191,7 @@ using namespace qtivi_helper;
     Contact::Contact(const QVariant &variant)
         : Contact()
     {
-        QVariant value = qtivi_convertFromJSON(variant);
+        QVariant value = qtif_convertFromJSON(variant);
         // First try to convert the values to a Map or a List
         // This is needed as it could also store a QStringList or a Hash
         if (value.canConvert(QVariant::Map))
@@ -222,7 +222,7 @@ using namespace qtivi_helper;
 
     \badcode
     {
-      "QIviClimateControl": {
+      "QIfClimateControl": {
         "zones": [
           "FrontLeft",
           "FrontRight",
@@ -236,7 +236,7 @@ using namespace qtivi_helper;
 
     \badcode
     {
-      "QIviClimateControl": {
+      "QIfClimateControl": {
         "targetTemperature": {
           "maximum": 30.0,
           "default": {
@@ -253,28 +253,28 @@ using namespace qtivi_helper;
     value is zone specific and is \e 21.5 for the \e FrontLeft zone, while it is \e 22.5 for the
     FrontRight zone. The unzoned \e targetTemperature temperature is initialized with \e 0.0.
 */
-QIviSimulationGlobalObject::QIviSimulationGlobalObject(QObject *parent)
+QIfSimulationGlobalObject::QIfSimulationGlobalObject(QObject *parent)
     : QObject(parent)
 {
 }
 
 /*!
-    \qmlproperty object IviSimulator::simulationData
+    \qmlproperty object IfSimulator::simulationData
 
-    Provides the simulation data parsed in QIviSimulationEngine::loadSimulationData()
+    Provides the simulation data parsed in QIfSimulationEngine::loadSimulationData()
 */
-QVariant QIviSimulationGlobalObject::simulationData() const
+QVariant QIfSimulationGlobalObject::simulationData() const
 {
     return m_simulationData;
 }
 
-void QIviSimulationGlobalObject::setSimulationData(const QVariant &simulationData)
+void QIfSimulationGlobalObject::setSimulationData(const QVariant &simulationData)
 {
     m_simulationData = simulationData;
 }
 
 /*!
-    \qmlmethod IviSimulator::findData(object data, string interface)
+    \qmlmethod IfSimulator::findData(object data, string interface)
 
     Searches for the key \a interface within \a data and returns the stored values. Returns
     undefined if no data was found for this \a interface.
@@ -291,7 +291,7 @@ void QIviSimulationGlobalObject::setSimulationData(const QVariant &simulationDat
         \li ClimateControl
     \endlist
 */
-QVariantMap QIviSimulationGlobalObject::findData(const QVariantMap &data, const QString &interface)
+QVariantMap QIfSimulationGlobalObject::findData(const QVariantMap &data, const QString &interface)
 {
     QString key = interface;
     forever {
@@ -308,19 +308,19 @@ QVariantMap QIviSimulationGlobalObject::findData(const QVariantMap &data, const 
 }
 
 /*!
-    \qmlmethod IviSimulator::initializeDefault(object data, QObject* object)
+    \qmlmethod IfSimulator::initializeDefault(object data, QObject* object)
 
     Applies the default values read from \a data to \a object.
 
     If \a object supports zoneing, the default value is only applied to the correct zone.
 */
-void QIviSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObject *object)
+void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObject *object)
 {
     for (auto i = data.constBegin(); i != data.constEnd(); ++i) {
         const QVariant defVal = defaultValue(i.value().toMap());
         if (defVal.isValid()) {
             QVariant currentValue = object->property(i.key().toLatin1());
-            if (QIviPagingModelInterface *model = currentValue.value<QIviPagingModelInterface*>()) {
+            if (QIfPagingModelInterface *model = currentValue.value<QIfPagingModelInterface*>()) {
                 QVariantList list = defVal.toList();
                 for (auto i = list.crbegin(); i != list.crend(); ++i)
                     QMetaObject::invokeMethod(model, "insert", Q_ARG(int, 0), createArgument(*i));
@@ -346,7 +346,7 @@ void QIviSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObj
 }
 
 /*!
-    \qmlmethod IviSimulator::defaultValue(object data, string zone)
+    \qmlmethod IfSimulator::defaultValue(object data, string zone)
 
     Provides the default value stored in \a data for the given \a zone. If \a zone is undefined or
     the data doesn't provide a default value for the given \a zone, it returns the unzoned default
@@ -354,13 +354,13 @@ void QIviSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObj
 
     This is just a convenience function calling parseDomainValue() with the domain \e default.
 */
-QVariant QIviSimulationGlobalObject::defaultValue(const QVariantMap &data, const QString &zone)
+QVariant QIfSimulationGlobalObject::defaultValue(const QVariantMap &data, const QString &zone)
 {
     return parseDomainValue(data, QStringLiteral("default"), zone);
 }
 
 /*!
-    \qmlmethod IviSimulator::constraint(object data, string zone)
+    \qmlmethod IfSimulator::constraint(object data, string zone)
 
     Searches for all boundary settings in \a data for the given \a zone and returns the constraint
     (which is enforced for newly set values) in a human readable form.
@@ -369,7 +369,7 @@ QVariant QIviSimulationGlobalObject::defaultValue(const QVariantMap &data, const
 
     \sa checkSettings()
 */
-QString QIviSimulationGlobalObject::constraint(const QVariantMap &data, const QString &zone)
+QString QIfSimulationGlobalObject::constraint(const QVariantMap &data, const QString &zone)
 {
     const QVariant unsupportedDomain = parseDomainValue(data, unsupportedLiteral, zone);
     QVariant minDomain = parseDomainValue(data, minLiteral, zone);
@@ -401,7 +401,7 @@ QString QIviSimulationGlobalObject::constraint(const QVariantMap &data, const QS
 }
 
 /*!
-    \qmlmethod IviSimulator::checkSettings(object data, var value, string zone)
+    \qmlmethod IfSimulator::checkSettings(object data, var value, string zone)
 
     Searches for all boundary settings in \a data for the given \a zone and returns whether the
     provided \a value meets this constraint.
@@ -411,7 +411,7 @@ QString QIviSimulationGlobalObject::constraint(const QVariantMap &data, const QS
 
     \sa constraint()
 */
-bool QIviSimulationGlobalObject::checkSettings(const QVariantMap &data, const QVariant &value, const QString &zone)
+bool QIfSimulationGlobalObject::checkSettings(const QVariantMap &data, const QVariant &value, const QString &zone)
 {
     const QVariant unsupportedDomain = parseDomainValue(data, unsupportedLiteral, zone);
     QVariant minDomain = parseDomainValue(data, minLiteral, zone);
@@ -459,13 +459,13 @@ bool QIviSimulationGlobalObject::checkSettings(const QVariantMap &data, const QV
 }
 
 /*!
-    \qmlmethod IviSimulator::parseDomainValue(object data, string domain, string zone)
+    \qmlmethod IfSimulator::parseDomainValue(object data, string domain, string zone)
 
     Search for the \a domain in \a data for the given \a zone. If \a zone is undefined or
     the data doesn't provide this domain for the given \a zone, it returns the unzoned domain
     value if available.
 */
-QVariant QIviSimulationGlobalObject::parseDomainValue(const QVariantMap &data, const QString &domain, const QString &zone)
+QVariant QIfSimulationGlobalObject::parseDomainValue(const QVariantMap &data, const QString &domain, const QString &zone)
 {
     if (!data.contains(domain))
         return QVariant();
@@ -478,13 +478,13 @@ QVariant QIviSimulationGlobalObject::parseDomainValue(const QVariantMap &data, c
             z = QStringLiteral("=");
 
         if (domainMap.contains(z))
-            return qtivi_convertFromJSON(domainMap.value(z));
+            return qtif_convertFromJSON(domainMap.value(z));
     }
 
-    return qtivi_convertFromJSON(domainData);
+    return qtif_convertFromJSON(domainData);
 }
 
-QGenericArgument QIviSimulationGlobalObject::createArgument(const QVariant &variant)
+QGenericArgument QIfSimulationGlobalObject::createArgument(const QVariant &variant)
 {
     return QGenericArgument(variant.typeName(), variant.data());
 }

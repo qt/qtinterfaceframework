@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIREMOTEOBJECTPENDINGRESULT_H
-#define QIVIREMOTEOBJECTPENDINGRESULT_H
+#ifndef QIFREMOTEOBJECTPENDINGRESULT_H
+#define QIFREMOTEOBJECTPENDINGRESULT_H
 
 #include <QtCore/QDataStream>
 #include <QtCore/QObject>
@@ -47,19 +47,19 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace qtivi_private {
-    Q_DECLARE_LOGGING_CATEGORY(qLcQtIviRoHelper)
+namespace qtif_private {
+    Q_DECLARE_LOGGING_CATEGORY(qLcQtIfRoHelper)
 }
 
-class QIviRemoteObjectPendingResult
+class QIfRemoteObjectPendingResult
 {
     Q_GADGET
 
     Q_PROPERTY(quint64 id READ id WRITE setId)
     Q_PROPERTY(bool failed READ failed WRITE setFailed)
 public:
-    QIviRemoteObjectPendingResult();
-    explicit QIviRemoteObjectPendingResult(quint64 id, bool failed);
+    QIfRemoteObjectPendingResult();
+    explicit QIfRemoteObjectPendingResult(quint64 id, bool failed);
     quint64 id() const;
     void setId(quint64 id);
     bool failed() const;
@@ -70,23 +70,23 @@ private:
 };
 
 //POD, passing by value should be fine
-inline bool operator==(QIviRemoteObjectPendingResult left, QIviRemoteObjectPendingResult right) Q_DECL_NOTHROW {
+inline bool operator==(QIfRemoteObjectPendingResult left, QIfRemoteObjectPendingResult right) Q_DECL_NOTHROW {
     return left.id() == right.id() && left.failed() == right.failed();
 }
-inline bool operator!=(QIviRemoteObjectPendingResult left, QIviRemoteObjectPendingResult right) Q_DECL_NOTHROW {
+inline bool operator!=(QIfRemoteObjectPendingResult left, QIfRemoteObjectPendingResult right) Q_DECL_NOTHROW {
     return !(left == right);
 }
 
-inline QDataStream &operator<<(QDataStream &ds, QIviRemoteObjectPendingResult obj) {
+inline QDataStream &operator<<(QDataStream &ds, QIfRemoteObjectPendingResult obj) {
     QtRemoteObjects::copyStoredProperties(&obj, ds);
     return ds;
 }
 
-inline QDataStream &operator>>(QDataStream &ds, QIviRemoteObjectPendingResult &obj) {
+inline QDataStream &operator>>(QDataStream &ds, QIfRemoteObjectPendingResult &obj) {
     QtRemoteObjects::copyStoredProperties(ds, &obj);
     return ds;
 }
 
 QT_END_NAMESPACE
 
-#endif //QIVIREMOTEOBJECTPENDINGRESULT_H
+#endif //QIFREMOTEOBJECTPENDINGRESULT_H

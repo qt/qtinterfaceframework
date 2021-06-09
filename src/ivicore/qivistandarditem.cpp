@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,31 +39,31 @@
 **
 ****************************************************************************/
 
-#include "qivistandarditem.h"
+#include "qifstandarditem.h"
 
 QT_BEGIN_NAMESPACE
 
-class QIviStandardItemPrivate : public QSharedData
+class QIfStandardItemPrivate : public QSharedData
 {
 public:
-    QIviStandardItemPrivate() = default;
-    QIviStandardItemPrivate(const QIviStandardItemPrivate &other) = default;
+    QIfStandardItemPrivate() = default;
+    QIfStandardItemPrivate(const QIfStandardItemPrivate &other) = default;
 
     QString m_id;
     QVariantMap m_data;
 };
 
 /*!
-    \class QIviStandardItem
-    \inmodule QtIviCore
-    \brief The QIviStandardItem is the base class of a row in the QIviPagingModel model and derived models.
+    \class QIfStandardItem
+    \inmodule QtInterfaceFramework
+    \brief The QIfStandardItem is the base class of a row in the QIfPagingModel model and derived models.
 */
 
 /*!
     \qmltype StandardItem
     \qmlabstract
-    \instantiates QIviStandardItem
-    \inqmlmodule QtIvi
+    \instantiates QIfStandardItem
+    \inqmlmodule QtInterfaceFramework
     \brief The StandardItem is the base class of a row in the PagingModel and derived models.
 
     \note This item is not creatable from QML.
@@ -77,7 +77,7 @@ public:
 */
 
 /*!
-    \property QIviStandardItem::id
+    \property QIfStandardItem::id
     A unique identifier, which can be used to identify this item.
 
     This is mainly used by the backend to implement filtering or browsing.
@@ -89,7 +89,7 @@ public:
 */
 
 /*!
-    \property QIviStandardItem::name
+    \property QIfStandardItem::name
     The name of the item. E.g. The name of a contact in a addressbook, or the artist-name in a list of artists.
 */
 
@@ -99,7 +99,7 @@ public:
 */
 
 /*!
-    \property QIviStandardItem::type
+    \property QIfStandardItem::type
     The type of the item. E.g. "artist", "track", "contact".
 */
 
@@ -112,23 +112,23 @@ public:
 */
 
 /*!
-    \property QIviStandardItem::data
+    \property QIfStandardItem::data
     A generic data field which can hold any data.
 
     This can be moved for storing additional data which is not part of the base class.
     E.g. the "composer" of an audio track.
 */
 
-QIviStandardItem::QIviStandardItem()
-    : d(new QIviStandardItemPrivate)
+QIfStandardItem::QIfStandardItem()
+    : d(new QIfStandardItemPrivate)
 {
 
 }
 
 //defined here as a inline default copy constructor leads to compilation errors
-QIviStandardItem::QIviStandardItem(const QIviStandardItem &rhs) = default;
+QIfStandardItem::QIfStandardItem(const QIfStandardItem &rhs) = default;
 
-QIviStandardItem &QIviStandardItem::operator=(const QIviStandardItem &rhs)
+QIfStandardItem &QIfStandardItem::operator=(const QIfStandardItem &rhs)
 {
     if (this != &rhs)
         d.operator=(rhs.d);
@@ -136,34 +136,34 @@ QIviStandardItem &QIviStandardItem::operator=(const QIviStandardItem &rhs)
 }
 
 //defined here as a inline default destructor leads to compilation errors
-QIviStandardItem::~QIviStandardItem() = default;
+QIfStandardItem::~QIfStandardItem() = default;
 
-QString QIviStandardItem::id() const
+QString QIfStandardItem::id() const
 {
     return d->m_id;
 }
 
-void QIviStandardItem::setId(const QString &id)
+void QIfStandardItem::setId(const QString &id)
 {
     d->m_id = id;
 }
 
-QString QIviStandardItem::name() const
+QString QIfStandardItem::name() const
 {
     return QString();
 }
 
-QString QIviStandardItem::type() const
+QString QIfStandardItem::type() const
 {
     return QString();
 }
 
-QVariantMap QIviStandardItem::data() const
+QVariantMap QIfStandardItem::data() const
 {
     return d->m_data;
 }
 
-void QIviStandardItem::setData(const QVariantMap &data)
+void QIfStandardItem::setData(const QVariantMap &data)
 {
     d->m_data = data;
 }
@@ -173,13 +173,13 @@ void QIviStandardItem::setData(const QVariantMap &data)
 
     \sa operator!=()
 */
-bool QIviStandardItem::operator==(const QIviStandardItem &other) const
+bool QIfStandardItem::operator==(const QIfStandardItem &other) const
 {
     return (d->m_id == other.d->m_id);
 }
 
 /*!
-    \fn bool QIviStandardItem::operator!=(const QIviStandardItem &other)
+    \fn bool QIfStandardItem::operator!=(const QIfStandardItem &other)
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 

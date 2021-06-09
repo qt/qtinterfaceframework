@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -53,8 +53,8 @@
 import QtQuick 2.6
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.1
-import QtIvi 1.0
-import QtIvi.Media 1.0
+import QtInterfaceFramework 1.0
+import QtInterfaceFramework.Media 1.0
 
 ApplicationWindow {
     visible: true
@@ -214,11 +214,11 @@ ApplicationWindow {
                     }
                 }
 
-                model: SearchAndBrowseModel {
+                model: FilterAndBrowseModel {
                     id: searchModel
                     serviceObject: mediaPlayer.serviceObject
                     contentType: "artist"
-                    loadingType: SearchAndBrowseModel.FetchMore
+                    loadingType: FilterAndBrowseModel.FetchMore
                     query: filterEdit.text
                     onQueryChanged: filterEdit.text = query
                 }
@@ -243,7 +243,7 @@ ApplicationWindow {
                             if (item.type === "audiotrack")
                                 mediaPlayer.playQueue.insert(0, item)
                             else
-                                searchModel.goForward(index, SearchAndBrowseModel.InModelNavigation)
+                                searchModel.goForward(index, FilterAndBrowseModel.InModelNavigation)
                         }
                     }
                 }
@@ -289,7 +289,7 @@ ApplicationWindow {
                     }
                 }
 
-                SearchAndBrowseModel {
+                FilterAndBrowseModel {
                     id: filterModel
                     contentType: "file"
                 }
@@ -316,7 +316,7 @@ ApplicationWindow {
                                 return;
                             }
 
-                            filterModel.goForward(index, SearchAndBrowseModel.InModelNavigation)
+                            filterModel.goForward(index, FilterAndBrowseModel.InModelNavigation)
                         }
                     }
                 }

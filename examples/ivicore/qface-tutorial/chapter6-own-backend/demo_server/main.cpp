@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     InstrumentClusterAdaptor adaptor(&cluster);
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.registerObject("/", &cluster);
-    connection.registerService("Example.IVI.InstrumentCluster");
+    connection.registerService("Example.If.InstrumentCluster");
 
     return app.exec();
 }

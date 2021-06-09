@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -42,11 +42,11 @@
 #ifndef USBDEVICE_H
 #define USBDEVICE_H
 
-#include <QtIviMedia/QIviMediaDevice>
+#include <QtIfMedia/QIfMediaDevice>
 
 class UsbBrowseBackend;
 
-class USBDevice : public QIviMediaUsbDevice
+class USBDevice : public QIfMediaUsbDevice
 {
     Q_OBJECT
 public:
@@ -58,7 +58,7 @@ public:
     QString folder() const;
 
     QStringList interfaces() const override;
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override;
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
 private:
     UsbBrowseBackend *m_browseModel;

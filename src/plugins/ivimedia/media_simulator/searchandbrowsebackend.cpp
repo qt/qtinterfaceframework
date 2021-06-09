@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -80,13 +80,13 @@ QDataStream &operator>>(QDataStream &stream, SearchAndBrowseItem &obj)
 }
 
 SearchAndBrowseBackend::SearchAndBrowseBackend(const QSqlDatabase &database, QObject *parent)
-    : QIviSearchAndBrowseModelInterface(parent)
+    : QIfFilterAndBrowseModelInterface(parent)
     , m_threadPool(new QThreadPool(this))
 {
     m_threadPool->setMaxThreadCount(1);
 
     qRegisterMetaType<SearchAndBrowseItem>();
-    qRegisterMetaType<QIviAudioTrackItem>();
+    qRegisterMetaType<QIfAudioTrackItem>();
 
     m_db = database;
     m_db.open();
@@ -127,7 +127,7 @@ void SearchAndBrowseBackend::setContentType(const QUuid &identifier, const QStri
     bool canGoBack = types.count() >= 2;
 
     if (!m_contentTypes.contains(current_type)) {
-        emit errorChanged(QIviAbstractFeature::InvalidOperation, QStringLiteral("The provided content type is not supported"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("The provided content type is not supported"));
         return;
     }
 
@@ -135,13 +135,13 @@ void SearchAndBrowseBackend::setContentType(const QUuid &identifier, const QStri
     if (current_type == artistLiteral || current_type == albumLiteral)
         identifiers = identifiersFromItem<SearchAndBrowseItem>();
     else
-        identifiers = identifiersFromItem<QIviAudioTrackItem>();
+        identifiers = identifiersFromItem<QIfAudioTrackItem>();
     emit queryIdentifiersChanged(identifier, identifiers);
     emit canGoBackChanged(identifier, canGoBack);
     emit contentTypeChanged(identifier, contentType);
 }
 
-void SearchAndBrowseBackend::setupFilter(const QUuid &identifier, QIviAbstractQueryTerm *term, const QList<QIviOrderTerm> &orderTerms)
+void SearchAndBrowseBackend::setupFilter(const QUuid &identifier, QIfAbstractQueryTerm *term, const QList<QIfOrderTerm> &orderTerms)
 {
     auto &state = m_state[identifier];
     state.queryTerm = term;
@@ -150,13 +150,13 @@ void SearchAndBrowseBackend::setupFilter(const QUuid &identifier, QIviAbstractQu
 
 void SearchAndBrowseBackend::fetchData(const QUuid &identifier, int start, int count)
 {
-    emit supportedCapabilitiesChanged(identifier, QtIviCoreModule::ModelCapabilities(
-                                          QtIviCoreModule::SupportsFiltering |
-                                          QtIviCoreModule::SupportsSorting |
-                                          QtIviCoreModule::SupportsAndConjunction |
-                                          QtIviCoreModule::SupportsOrConjunction |
-                                          QtIviCoreModule::SupportsStatelessNavigation |
-                                          QtIviCoreModule::SupportsGetSize
+    emit supportedCapabilitiesChanged(identifier, QtInterfaceFrameworkModule::ModelCapabilities(
+                                          QtInterfaceFrameworkModule::SupportsFiltering |
+                                          QtInterfaceFrameworkModule::SupportsSorting |
+                                          QtInterfaceFrameworkModule::SupportsAndConjunction |
+                                          QtInterfaceFrameworkModule::SupportsOrConjunction |
+                                          QtInterfaceFrameworkModule::SupportsStatelessNavigation |
+                                          QtInterfaceFrameworkModule::SupportsGetSize
                                           ));
 
     if (!m_state.contains(identifier)) {
@@ -249,7 +249,7 @@ void SearchAndBrowseBackend::search(const QUuid &identifier, const QString &quer
             QString album = query.value(1).toString();
 
             if (type == trackLiteral) {
-                QIviAudioTrackItem item;
+                QIfAudioTrackItem item;
                 item.setId(query.value(6).toString());
                 item.setTitle(query.value(2).toString());
                 item.setArtist(artist);
@@ -310,11 +310,11 @@ void SearchAndBrowseBackend::search(const QUuid &identifier, const QString &quer
         emit canGoForwardChanged(identifier, QVector<bool>(list.count(), true), start);
 }
 
-QString SearchAndBrowseBackend::createSortOrder(const QString &type, const QList<QIviOrderTerm> &orderTerms)
+QString SearchAndBrowseBackend::createSortOrder(const QString &type, const QList<QIfOrderTerm> &orderTerms)
 {
     QStringList order;
     int i = 0;
-    for (const QIviOrderTerm & term : orderTerms) {
+    for (const QIfOrderTerm & term : orderTerms) {
         if (i)
             order.append(QStringLiteral(","));
 
@@ -344,33 +344,33 @@ QString SearchAndBrowseBackend::mapIdentifiers(const QString &type, const QStrin
     return identifer;
 }
 
-QString SearchAndBrowseBackend::createWhereClause(const QString &type, QIviAbstractQueryTerm *term)
+QString SearchAndBrowseBackend::createWhereClause(const QString &type, QIfAbstractQueryTerm *term)
 {
     if (!term)
         return QString();
 
     switch (term->type()) {
-    case QIviAbstractQueryTerm::ScopeTerm: {
-        auto *scope = static_cast<QIviScopeTerm*>(term);
+    case QIfAbstractQueryTerm::ScopeTerm: {
+        auto *scope = static_cast<QIfScopeTerm*>(term);
         return QStringLiteral("%1 (%2)").arg(scope->isNegated() ? QStringLiteral("NOT") : QString(), createWhereClause(type, scope->term()));
     }
-    case QIviAbstractQueryTerm::ConjunctionTerm: {
-        auto *conjunctionTerm = static_cast<QIviConjunctionTerm*>(term);
+    case QIfAbstractQueryTerm::ConjunctionTerm: {
+        auto *conjunctionTerm = static_cast<QIfConjunctionTerm*>(term);
         QLatin1String conjunction = QLatin1String("AND");
-        if (conjunctionTerm->conjunction() == QIviConjunctionTerm::Or)
+        if (conjunctionTerm->conjunction() == QIfConjunctionTerm::Or)
             conjunction = QLatin1String("OR");
 
         QString string;
         const auto terms = conjunctionTerm->terms();
-        for (QIviAbstractQueryTerm *term : terms) {
+        for (QIfAbstractQueryTerm *term : terms) {
             string += createWhereClause(type, term) + QLatin1Char(' ') + conjunction + QLatin1Char(' ');
         }
         if (!string.isEmpty())
             string.chop(2 + conjunction.size()); // chop off trailing " AND " or " OR "
         return string;
     }
-    case QIviAbstractQueryTerm::FilterTerm: {
-        auto *filter = static_cast<QIviFilterTerm*>(term);
+    case QIfAbstractQueryTerm::FilterTerm: {
+        auto *filter = static_cast<QIfFilterTerm*>(term);
         QString operatorString;
         bool negated = filter->isNegated();
         QString value;
@@ -380,13 +380,13 @@ QString SearchAndBrowseBackend::createWhereClause(const QString &type, QIviAbstr
             value = filter->value().toString();
 
         switch (filter->operatorType()){
-            case QIviFilterTerm::Equals: operatorString = QStringLiteral("="); break;
-            case QIviFilterTerm::EqualsCaseInsensitive: operatorString = QStringLiteral("LIKE"); break;
-            case QIviFilterTerm::Unequals: operatorString = QStringLiteral("="); negated = !negated; break;
-            case QIviFilterTerm::GreaterThan: operatorString = QStringLiteral(">"); break;
-            case QIviFilterTerm::GreaterEquals: operatorString = QStringLiteral(">="); break;
-            case QIviFilterTerm::LowerThan: operatorString = QStringLiteral("<"); break;
-            case QIviFilterTerm::LowerEquals: operatorString = QStringLiteral("<="); break;
+            case QIfFilterTerm::Equals: operatorString = QStringLiteral("="); break;
+            case QIfFilterTerm::EqualsCaseInsensitive: operatorString = QStringLiteral("LIKE"); break;
+            case QIfFilterTerm::Unequals: operatorString = QStringLiteral("="); negated = !negated; break;
+            case QIfFilterTerm::GreaterThan: operatorString = QStringLiteral(">"); break;
+            case QIfFilterTerm::GreaterEquals: operatorString = QStringLiteral(">="); break;
+            case QIfFilterTerm::LowerThan: operatorString = QStringLiteral("<"); break;
+            case QIfFilterTerm::LowerEquals: operatorString = QStringLiteral("<="); break;
         }
 
         QStringList clause;
@@ -403,27 +403,27 @@ QString SearchAndBrowseBackend::createWhereClause(const QString &type, QIviAbstr
     return QString();
 }
 
-QIviPendingReply<QString> SearchAndBrowseBackend::goBack(const QUuid &identifier)
+QIfPendingReply<QString> SearchAndBrowseBackend::goBack(const QUuid &identifier)
 {
     auto &state = m_state[identifier];
     QStringList types = state.contentType.split('/');
 
     if (types.count() < 2)
-        return QIviPendingReply<QString>::createFailedReply();
+        return QIfPendingReply<QString>::createFailedReply();
 
     types.removeLast();
     types.replace(types.count() - 1, types.at(types.count() - 1).split('?').at(0));
 
-    return QIviPendingReply<QString>(types.join('/'));
+    return QIfPendingReply<QString>(types.join('/'));
 }
 
-QIviPendingReply<QString> SearchAndBrowseBackend::goForward(const QUuid &identifier, int index)
+QIfPendingReply<QString> SearchAndBrowseBackend::goForward(const QUuid &identifier, int index)
 {
     auto &state = m_state[identifier];
 
-    const QIviStandardItem *i = qtivi_gadgetFromVariant<QIviStandardItem>(this, state.items.value(index, QVariant()));
+    const QIfStandardItem *i = qtif_gadgetFromVariant<QIfStandardItem>(this, state.items.value(index, QVariant()));
     if (!i)
-        return QIviPendingReply<QString>::createFailedReply();
+        return QIfPendingReply<QString>::createFailedReply();
 
     QString itemId = i->id();
     QStringList types = state.contentType.split('/');
@@ -436,41 +436,41 @@ QIviPendingReply<QString> SearchAndBrowseBackend::goForward(const QUuid &identif
     else if (current_type == albumLiteral)
         new_type += QLatin1String("/track");
     else
-        return QIviPendingReply<QString>::createFailedReply();
+        return QIfPendingReply<QString>::createFailedReply();
 
-    return QIviPendingReply<QString>(new_type);
+    return QIfPendingReply<QString>(new_type);
 }
 
-QIviPendingReply<void> SearchAndBrowseBackend::insert(const QUuid &identifier, int index, const QVariant &item)
+QIfPendingReply<void> SearchAndBrowseBackend::insert(const QUuid &identifier, int index, const QVariant &item)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(index)
     Q_UNUSED(item)
 
-    return QIviPendingReply<void>::createFailedReply();
+    return QIfPendingReply<void>::createFailedReply();
 }
 
-QIviPendingReply<void> SearchAndBrowseBackend::remove(const QUuid &identifier, int index)
+QIfPendingReply<void> SearchAndBrowseBackend::remove(const QUuid &identifier, int index)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(index)
 
-    return QIviPendingReply<void>::createFailedReply();
+    return QIfPendingReply<void>::createFailedReply();
 }
 
-QIviPendingReply<void> SearchAndBrowseBackend::move(const QUuid &identifier, int currentIndex, int newIndex)
+QIfPendingReply<void> SearchAndBrowseBackend::move(const QUuid &identifier, int currentIndex, int newIndex)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(currentIndex)
     Q_UNUSED(newIndex)
 
-    return QIviPendingReply<void>::createFailedReply();
+    return QIfPendingReply<void>::createFailedReply();
 }
 
-QIviPendingReply<int> SearchAndBrowseBackend::indexOf(const QUuid &identifier, const QVariant &item)
+QIfPendingReply<int> SearchAndBrowseBackend::indexOf(const QUuid &identifier, const QVariant &item)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(item)
 
-    return QIviPendingReply<int>::createFailedReply();
+    return QIfPendingReply<int>::createFailedReply();
 }

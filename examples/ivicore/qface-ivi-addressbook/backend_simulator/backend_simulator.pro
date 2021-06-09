@@ -1,23 +1,23 @@
 TEMPLATE=lib
-TARGET = $$qtLibraryTarget(example_ivi_addressbook)
+TARGET = $$qtLibraryTarget(example_if_addressbook)
 
-QT_FOR_CONFIG += ivicore
-!qtConfig(ivigenerator): error("No ivigenerator available")
+QT_FOR_CONFIG += interfaceframework
+!qtConfig(ifcodegen): error("No ifcodegen available")
 
-LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIviAdressBookExample)
-DESTDIR = ../qtivi
+LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfAdressBookExample)
+DESTDIR = ../interfaceframework
 CONFIG += warn_off
 INCLUDEPATH += $$OUT_PWD/../frontend
-QT += core ivicore
-CONFIG += ivigenerator plugin
+QT += core interfaceframework
+CONFIG += ifcodegen plugin
 
 QFACE_FORMAT = backend_simulator
-QFACE_SOURCES = ../example-ivi-addressbook.qface
-PLUGIN_TYPE = qtivi
+QFACE_SOURCES = ../example-if-addressbook.qface
+PLUGIN_TYPE = interfaceframework
 PLUGIN_CLASS_NAME = AddressBookSimulatorPlugin
 
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-ivi-addressbook/qtivi/
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-if-addressbook/interfaceframework/
 INSTALLS += target
 
 #! [0]

@@ -5,7 +5,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -28,12 +28,12 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set class = '{0}BackendInterface'.format(interface) %}
 {% if interface.tags.config.zoned %}
-{%   set base_class = 'QIviZonedFeatureInterface' %}
+{%   set base_class = 'QIfZonedFeatureInterface' %}
 {% else %}
-{%   set base_class = 'QIviFeatureInterface' %}
+{%   set base_class = 'QIfFeatureInterface' %}
 {% endif %}
 {% set oncedefine = '{0}_{1}_H_'.format(module.module_name|upper, class|upper) %}
 {% set exportsymbol = 'Q_{0}_EXPORT'.format(module|upper|replace('.', '_')) %}
@@ -52,9 +52,9 @@
 {{inc}}
 {% endfor %}
 
-#include <QtIviCore/{{base_class}}>
-#include <QtIviCore/QIviPendingReply>
-#include <QtIviCore/QIviPagingModelInterface>
+#include <QtInterfaceFramework/{{base_class}}>
+#include <QtInterfaceFramework/QIfPendingReply>
+#include <QtInterfaceFramework/QIfPagingModelInterface>
 
 QT_BEGIN_NAMESPACE
 
@@ -68,19 +68,19 @@ public:
 
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
-    virtual {{ivi.prop_setter(property, zoned = interface.tags.config.zoned)}} = 0;
+    virtual {{if.prop_setter(property, zoned = interface.tags.config.zoned)}} = 0;
 {%   endif %}
 {% endfor %}
 {% for operation in interface.operations %}
-    virtual {{ivi.operation(operation, zoned = interface.tags.config.zoned)}} = 0;
+    virtual {{if.operation(operation, zoned = interface.tags.config.zoned)}} = 0;
 {% endfor %}
 
 Q_SIGNALS:
 {% for signal in interface.signals %}
-    {{ivi.signal(signal, zoned = interface.tags.config.zoned)}};
+    {{if.signal(signal, zoned = interface.tags.config.zoned)}};
 {% endfor %}
 {% for property in interface.properties %}
-    {{ivi.prop_notify(property, zoned = interface.tags.config.zoned, model_interface = true, default_values = true)}};
+    {{if.prop_notify(property, zoned = interface.tags.config.zoned, model_interface = true, default_values = true)}};
 {% endfor %}
 };
 

@@ -1,4 +1,4 @@
-TARGET = qface-ivi-remote
+TARGET = qface-if-remote
 QMAKE_PROJECT_NAME = $$TARGET
 TEMPLATE = app
 
@@ -7,7 +7,7 @@ CONFIG += c++11
 CONFIG -= app_bundle
 DESTDIR = ../
 
-LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIviRemoteExample)
+LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfRemoteExample)
 INCLUDEPATH += $$OUT_PWD/../frontend
 
 SOURCES += main.cpp
@@ -34,5 +34,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-ivi-remote
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-if-remote
 INSTALLS += target

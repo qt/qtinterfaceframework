@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,25 +39,25 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIGLOBAL_H
-#define QIVIGLOBAL_H
+#ifndef QIFGLOBAL_H
+#define QIFGLOBAL_H
 
 #include <QtCore/qglobal.h>
-#include <QtIviCore/qtivicore-config.h>
+#include <QtInterfaceFramework/qtinterfaceframework-config.h>
 
 QT_BEGIN_NAMESPACE
 
 #ifndef QT_STATIC
-#  if defined(QT_BUILD_IVICORE_LIB)
-#    define Q_QTIVICORE_EXPORT Q_DECL_EXPORT
+#  if defined(QT_BUILD_INTERFACEFRAMEWORK_LIB)
+#    define Q_QTINTERFACEFRAMEWORK_EXPORT Q_DECL_EXPORT
 #  else
-#    define Q_QTIVICORE_EXPORT Q_DECL_IMPORT
+#    define Q_QTINTERFACEFRAMEWORK_EXPORT Q_DECL_IMPORT
 #  endif
 #else
-#  define Q_QTIVICORE_EXPORT
+#  define Q_QTINTERFACEFRAMEWORK_EXPORT
 #endif
 
 QT_END_NAMESPACE
 
-#endif // QIVIGLOBAL_H
+#endif // QIFGLOBAL_H
 

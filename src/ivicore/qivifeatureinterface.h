@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,31 +39,31 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIFEATUREINTERFACE_H
-#define QIVIFEATUREINTERFACE_H
+#ifndef QIFFEATUREINTERFACE_H
+#define QIFFEATUREINTERFACE_H
 
-#include <QtIviCore/QIviAbstractFeature>
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/QIfAbstractFeature>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviFeatureInterface : public QObject
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFeatureInterface : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit QIviFeatureInterface(QObject *parent = nullptr);
+    explicit QIfFeatureInterface(QObject *parent = nullptr);
 
     virtual void initialize() = 0;
 
 protected:
-    QIviFeatureInterface(QObjectPrivate &dd, QObject *parent = nullptr);
+    QIfFeatureInterface(QObjectPrivate &dd, QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void errorChanged(QIviAbstractFeature::Error error, const QString &message = QString());
+    void errorChanged(QIfAbstractFeature::Error error, const QString &message = QString());
     void initializationDone();
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIFEATUREINTERFACE_H
+#endif // QIFFEATUREINTERFACE_H

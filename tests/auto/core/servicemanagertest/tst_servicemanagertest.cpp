@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -32,17 +32,17 @@
 #include <QtTest>
 #include <QQmlEngine>
 #include <QQmlComponent>
-#include <qiviservicemanager.h>
-#include <QtIviCore/private/qiviservicemanager_p.h>
-#include <qiviserviceinterface.h>
-#include <qiviserviceobject.h>
-#include <QIviProxyServiceObject>
-#include <private/qiviproxyserviceobject_p.h>
+#include <qifservicemanager.h>
+#include <QtInterfaceFramework/private/qifservicemanager_p.h>
+#include <qifserviceinterface.h>
+#include <qifserviceobject.h>
+#include <QIfProxyServiceObject>
+#include <private/qifproxyserviceobject_p.h>
 
-class MockServiceBackend : public QObject, public QIviServiceInterface
+class MockServiceBackend : public QObject, public QIfServiceInterface
 {
     Q_OBJECT
-    Q_INTERFACES(QIviServiceInterface)
+    Q_INTERFACES(QIfServiceInterface)
 
 public:
     MockServiceBackend(QObject *parent=0) : QObject(parent)
@@ -53,11 +53,11 @@ public:
         return m_serviceObjects.keys();
     }
 
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override {
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override {
         return m_serviceObjects.value(interface);
     }
 
-    void addServiceObject(const QString &interface, QIviFeatureInterface *serviceObject) {
+    void addServiceObject(const QString &interface, QIfFeatureInterface *serviceObject) {
         if (!serviceObject->parent())
             serviceObject->setParent(this);
 
@@ -65,15 +65,15 @@ public:
     }
 
 private:
-    QMap<QString, QIviFeatureInterface *> m_serviceObjects;
+    QMap<QString, QIfFeatureInterface *> m_serviceObjects;
 };
 
-class TestInterface : public QIviFeatureInterface
+class TestInterface : public QIfFeatureInterface
 {
     Q_OBJECT
 public:
     TestInterface(QObject *parent)
-        : QIviFeatureInterface(parent)
+        : QIfFeatureInterface(parent)
     {}
 
     void initialize() override
@@ -106,7 +106,7 @@ private Q_SLOTS:
     void pluginLoaderTest();
 
 private:
-    QIviServiceManager *manager;
+    QIfServiceManager *manager;
     QString m_simplePluginID;
 };
 
@@ -138,14 +138,14 @@ void ServiceManagerTest::initTestCase()
     // Make sure the dynamic plugins can't be found in the beginning
     QCoreApplication::setLibraryPaths(QStringList());
     ignoreStaticPluginWarnings();
-    manager = QIviServiceManager::instance();
+    manager = QIfServiceManager::instance();
 
-    QList<QIviServiceObject *> services = manager->findServiceByInterface("simple_plugin");
+    QList<QIfServiceObject *> services = manager->findServiceByInterface("simple_plugin");
     QCOMPARE(services.count(), 0);
 
     // Unload all plugins and don't search for the static plugins to trigger the 'no plugins found' warning
     manager->unloadAllBackends();
-    QIviServiceManagerPrivate::get(manager)->m_staticLoaded = true;
+    QIfServiceManagerPrivate::get(manager)->m_staticLoaded = true;
 
     QTest::ignoreMessage(QtWarningMsg, "No plugins found in search path:  \"\"");
     services = manager->findServiceByInterface("simple_plugin_static");
@@ -171,16 +171,16 @@ void ServiceManagerTest::cleanup()
     // Otherwise a findServiceByInterface call will implictly trigger it.
     ignoreStaticPluginWarnings();
     ignoreDynamicPluginWarnings();
-    QIviServiceManagerPrivate::get(manager)->searchPlugins();
+    QIfServiceManagerPrivate::get(manager)->searchPlugins();
 }
 
 void ServiceManagerTest::testRetakeSingleton()
 {
-    QPointer<QIviServiceManager> serviceManager = QIviServiceManager::instance();
+    QPointer<QIfServiceManager> serviceManager = QIfServiceManager::instance();
     QQmlEngine *engine = new QQmlEngine;
 
     QByteArray qml ("import QtQuick 2.0; \n\
-                     import QtIvi 1.0; \n\
+                     import QtInterfaceFramework 1.0; \n\
                      QtObject { \n\
                          Component.onCompleted: { \n\
                              var count = ServiceManager.count; \n\
@@ -225,33 +225,33 @@ void ServiceManagerTest::testHasInterface()
 
 void ServiceManagerTest::testFindServiceObjectsReturnInValidInstance()
 {
-    QList<QIviServiceObject*> list = manager->findServiceByInterface("NonExistingInterface");
+    QList<QIfServiceObject*> list = manager->findServiceByInterface("NonExistingInterface");
     QVERIFY(list.isEmpty());
 }
 
 void ServiceManagerTest::testFindServiceObjects_data()
 {
-    QTest::addColumn<QIviServiceManager::SearchFlags>("searchFlags");
-    QTest::newRow("AllBackends") << QIviServiceManager::SearchFlags(QIviServiceManager::IncludeAll);
-    QTest::newRow("OnlyProductionBackends") << QIviServiceManager::SearchFlags(QIviServiceManager::IncludeProductionBackends);
-    QTest::newRow("OnlySimulationBackends") << QIviServiceManager::SearchFlags(QIviServiceManager::IncludeSimulationBackends);
+    QTest::addColumn<QIfServiceManager::SearchFlags>("searchFlags");
+    QTest::newRow("AllBackends") << QIfServiceManager::SearchFlags(QIfServiceManager::IncludeAll);
+    QTest::newRow("OnlyProductionBackends") << QIfServiceManager::SearchFlags(QIfServiceManager::IncludeProductionBackends);
+    QTest::newRow("OnlySimulationBackends") << QIfServiceManager::SearchFlags(QIfServiceManager::IncludeSimulationBackends);
 }
 
 void ServiceManagerTest::testFindServiceObjects()
 {
-    QFETCH(QIviServiceManager::SearchFlags, searchFlags);
+    QFETCH(QIfServiceManager::SearchFlags, searchFlags);
     MockServiceBackend *backend = new MockServiceBackend(manager);
-    QIviServiceManager::BackendType type = QIviServiceManager::ProductionBackend;
-    if (searchFlags & QIviServiceManager::IncludeSimulationBackends)
-        type = QIviServiceManager::SimulationBackend;
+    QIfServiceManager::BackendType type = QIfServiceManager::ProductionBackend;
+    if (searchFlags & QIfServiceManager::IncludeSimulationBackends)
+        type = QIfServiceManager::SimulationBackend;
     bool regResult = manager->registerService(backend, QStringList() << "TestInterface", type);
     QCOMPARE(regResult, true);
-    QIviFeatureInterface *testObject = new TestInterface(backend);
+    QIfFeatureInterface *testObject = new TestInterface(backend);
     backend->addServiceObject("TestInterface", testObject);
 
-    QList<QIviServiceObject*> list = manager->findServiceByInterface("TestInterface", searchFlags);
+    QList<QIfServiceObject*> list = manager->findServiceByInterface("TestInterface", searchFlags);
     QVERIFY(!list.isEmpty());
-    QIviServiceObject *serviceObject = list.at(0);
+    QIfServiceObject *serviceObject = list.at(0);
     QVERIFY(serviceObject->interfaces().contains("TestInterface"));
     QCOMPARE(serviceObject->interfaceInstance("TestInterface"), testObject);
 }
@@ -293,19 +293,19 @@ void ServiceManagerTest::testManagerListModel()
     // Sanity check
     QCOMPARE(manager->rowCount(), backendCount);
     QCOMPARE(managerModelSpy.count(), 0);
-    QCOMPARE(manager->data(QModelIndex(), QIviServiceManager::NameRole), QVariant());
-    QCOMPARE(manager->data(QModelIndex(), QIviServiceManager::ServiceObjectRole), QVariant());
-    QCOMPARE(manager->data(QModelIndex(), QIviServiceManager::InterfacesRole), QVariant());
+    QCOMPARE(manager->data(QModelIndex(), QIfServiceManager::NameRole), QVariant());
+    QCOMPARE(manager->data(QModelIndex(), QIfServiceManager::ServiceObjectRole), QVariant());
+    QCOMPARE(manager->data(QModelIndex(), QIfServiceManager::InterfacesRole), QVariant());
 
     // Register backend-0 with 'Interface0'
     MockServiceBackend *backend0 = new MockServiceBackend(manager);
     bool regResult = manager->registerService(backend0, QStringList() << "Interface0");
     QCOMPARE(regResult, true);
     QCOMPARE(manager->rowCount(), backendCount + 1);
-    //QCOMPARE(manager->data(manager->index(0), Qt::DisplayRole).value<QIviServiceInterface*>(), backend0);
-    QCOMPARE(manager->data(manager->index(backendCount), QIviServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
-    QCOMPARE(manager->data(manager->index(backendCount), QIviServiceManager::ServiceObjectRole).value<QIviProxyServiceObject*>()->d_ptr->m_serviceInterface, backend0);
-    QCOMPARE(manager->data(manager->index(backendCount), QIviServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface0");
+    //QCOMPARE(manager->data(manager->index(0), Qt::DisplayRole).value<QIfServiceInterface*>(), backend0);
+    QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
+    QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::ServiceObjectRole).value<QIfProxyServiceObject*>()->d_ptr->m_serviceInterface, backend0);
+    QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface0");
     QCOMPARE(managerModelSpy.count(), 1);
     // Extendend sanity check
     QCOMPARE(manager->data(manager->index(0,0), Qt::UserRole + 200), QVariant());
@@ -315,12 +315,12 @@ void ServiceManagerTest::testManagerListModel()
     regResult = manager->registerService(backend1, QStringList() << "Interface1" << "Interface2");
     QCOMPARE(regResult, true);
     QCOMPARE(manager->rowCount(), backendCount + 2);
-    QCOMPARE(manager->data(manager->index(backendCount), QIviServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
-    QCOMPARE(manager->data(manager->index(backendCount), QIviServiceManager::ServiceObjectRole).value<QIviProxyServiceObject*>()->d_ptr->m_serviceInterface, backend0);
-    QCOMPARE(manager->data(manager->index(backendCount), QIviServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface0");
-    QCOMPARE(manager->data(manager->index(backendCount + 1), QIviServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
-    QCOMPARE(manager->data(manager->index(backendCount + 1), QIviServiceManager::ServiceObjectRole).value<QIviProxyServiceObject*>()->d_ptr->m_serviceInterface, backend1);
-    QCOMPARE(manager->data(manager->index(backendCount + 1), QIviServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface1" << "Interface2");
+    QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
+    QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::ServiceObjectRole).value<QIfProxyServiceObject*>()->d_ptr->m_serviceInterface, backend0);
+    QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface0");
+    QCOMPARE(manager->data(manager->index(backendCount + 1), QIfServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
+    QCOMPARE(manager->data(manager->index(backendCount + 1), QIfServiceManager::ServiceObjectRole).value<QIfProxyServiceObject*>()->d_ptr->m_serviceInterface, backend1);
+    QCOMPARE(manager->data(manager->index(backendCount + 1), QIfServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface1" << "Interface2");
     QCOMPARE(managerModelSpy.count(), 2);
 
     // Register backend-2 with 'Interface1' and 'Interface2'. Should not result in any model changes
@@ -334,18 +334,18 @@ void ServiceManagerTest::testManagerListModel()
 void ServiceManagerTest::pluginLoaderTest()
 {
     QVERIFY(manager->hasInterface("simple_plugin"));
-    QList<QIviServiceObject *> services = manager->findServiceByInterface("simple_plugin", QIviServiceManager::IncludeProductionBackends);
+    QList<QIfServiceObject *> services = manager->findServiceByInterface("simple_plugin", QIfServiceManager::IncludeProductionBackends);
     QCOMPARE(services.count(), 1);
     //Because we unloaded the backend and created a new instance of it we expect to get a different id for the ServiceObject as in initTestCase()
     QVERIFY(m_simplePluginID != services.at(0)->id());
 
     //Test whether the loading of static plugins works as well
-    services = manager->findServiceByInterface("simple_plugin_static", QIviServiceManager::IncludeSimulationBackends);
+    services = manager->findServiceByInterface("simple_plugin_static", QIfServiceManager::IncludeSimulationBackends);
     QCOMPARE(services.count(), 1);
 
     QVERIFY(manager->hasInterface("wrong_plugin"));
     QTest::ignoreMessage(QtWarningMsg, QRegularExpression("ServiceManager::serviceObjects - failed to cast to interface from '.*wrong_plugin.*'"));
-    QList<QIviServiceObject *> wServices = manager->findServiceByInterface("wrong_plugin");
+    QList<QIfServiceObject *> wServices = manager->findServiceByInterface("wrong_plugin");
     QCOMPARE(wServices.count(), 0);
 
     //Test that the plugin is unloaded (or at least removed from the registry)

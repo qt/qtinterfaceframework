@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAPLAYER_P_H
-#define QIVIMEDIAPLAYER_P_H
+#ifndef QIFMEDIAPLAYER_P_H
+#define QIFMEDIAPLAYER_P_H
 
 //
 //  W A R N I N G
@@ -53,44 +53,44 @@
 // We mean it.
 //
 
-#include "private/qtivimediaglobal_p.h"
-#include <QtIviCore/private/qiviabstractfeature_p.h>
+#include "private/qtifmediaglobal_p.h"
+#include <QtInterfaceFramework/private/qifabstractfeature_p.h>
 
-#include "qivimediaplayer.h"
-#include "qivimediaplayerbackendinterface.h"
+#include "qifmediaplayer.h"
+#include "qifmediaplayerbackendinterface.h"
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaPlayerPrivate : public QIviAbstractFeaturePrivate
+class QIfMediaPlayerPrivate : public QIfAbstractFeaturePrivate
 {
 public:
-    QIviMediaPlayerPrivate(const QString &interface, QIviMediaPlayer *parent);
+    QIfMediaPlayerPrivate(const QString &interface, QIfMediaPlayer *parent);
 
     void initialize() override;
     void clearToDefaults();
-    void onPlayModeChanged(QIviMediaPlayer::PlayMode playMode);
-    void onPlayStateChanged(QIviMediaPlayer::PlayState playState);
+    void onPlayModeChanged(QIfMediaPlayer::PlayMode playMode);
+    void onPlayStateChanged(QIfMediaPlayer::PlayState playState);
     void onCurrentTrackChanged(const QVariant &currentTrack);
     void onPositionChanged(qint64 position);
     void onDurationChanged(qint64 duration);
     void onVolumeChanged(int volume);
     void onMutedChanged(bool muted);
 
-    QIviMediaPlayerBackendInterface *playerBackend() const;
+    QIfMediaPlayerBackendInterface *playerBackend() const;
 
-    QIviMediaPlayer * const q_ptr;
-    QIviPlayQueue *m_playQueue;
-    QIviMediaPlayer::PlayMode m_playMode;
-    QIviMediaPlayer::PlayState m_playState;
+    QIfMediaPlayer * const q_ptr;
+    QIfPlayQueue *m_playQueue;
+    QIfMediaPlayer::PlayMode m_playMode;
+    QIfMediaPlayer::PlayState m_playState;
     QVariant m_currentTrackData;
-    const QIviPlayableItem *m_currentTrack;
+    const QIfPlayableItem *m_currentTrack;
     qint64 m_position;
     qint64 m_duration;
     int m_volume;
     bool m_muted;
-    Q_DECLARE_PUBLIC(QIviMediaPlayer)
+    Q_DECLARE_PUBLIC(QIfMediaPlayer)
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIAPLAYER_P_H
+#endif // QIFMEDIAPLAYER_P_H

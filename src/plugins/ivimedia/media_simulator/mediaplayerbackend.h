@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -42,7 +42,7 @@
 #ifndef MEDIAPLAYERBACKEND_H
 #define MEDIAPLAYERBACKEND_H
 
-#include <QtIviMedia/QIviMediaPlayerBackendInterface>
+#include <QtIfMedia/QIfMediaPlayerBackendInterface>
 
 #include <QSqlDatabase>
 #include <QtMultimedia/QMediaPlayer>
@@ -50,11 +50,11 @@
 QT_FORWARD_DECLARE_CLASS(QMediaPlaylist);
 QT_FORWARD_DECLARE_CLASS(QThreadPool);
 
-class MediaPlayerBackend : public QIviMediaPlayerBackendInterface
+class MediaPlayerBackend : public QIfMediaPlayerBackendInterface
 {
     Q_OBJECT
-    Q_PROPERTY(QIviMediaPlayer::PlayMode playMode READ playMode WRITE setPlayMode NOTIFY playModeChanged)
-    Q_PROPERTY(QIviMediaPlayer::PlayState playState READ playState NOTIFY playStateChanged)
+    Q_PROPERTY(QIfMediaPlayer::PlayMode playMode READ playMode WRITE setPlayMode NOTIFY playModeChanged)
+    Q_PROPERTY(QIfMediaPlayer::PlayState playState READ playState NOTIFY playStateChanged)
     Q_PROPERTY(qint64 position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged)
     Q_PROPERTY(QVariant currentTrack READ currentTrack NOTIFY currentTrackChanged)
@@ -82,8 +82,8 @@ public:
     void next() override;
     void previous() override;
 
-    QIviMediaPlayer::PlayMode playMode() const;
-    QIviMediaPlayer::PlayState playState() const;
+    QIfMediaPlayer::PlayMode playMode() const;
+    QIfMediaPlayer::PlayState playState() const;
     qint64 position() const;
     qint64 duration() const;
     QVariant currentTrack() const;
@@ -95,7 +95,7 @@ public:
 signals:
     void playTrack(const QUrl& url);
 public Q_SLOTS:
-    void setPlayMode(QIviMediaPlayer::PlayMode playMode) override;
+    void setPlayMode(QIfMediaPlayer::PlayMode playMode) override;
     void setPosition(qint64 position) override;
     void setCurrentIndex(int index) override;
     void setVolume(int volume) override;
@@ -120,9 +120,9 @@ private:
     int m_count;
     int m_currentIndex;
     QVariant m_currentTrack;
-    QIviMediaPlayer::PlayMode m_playMode;
-    QIviMediaPlayer::PlayState m_requestedState;
-    QIviMediaPlayer::PlayState m_state;
+    QIfMediaPlayer::PlayMode m_playMode;
+    QIfMediaPlayer::PlayState m_requestedState;
+    QIfMediaPlayer::PlayState m_state;
     QThreadPool *m_threadPool;
     QMediaPlayer *m_player;
     QSqlDatabase m_db;

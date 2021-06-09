@@ -1,3 +1,3 @@
-#include <QtIviCore/QtIviCore>
-#include <QtIviVehicleFunctions/QtIviVehicleFunctions>
-#include <QtIviMedia/QtIviMedia>
+#include <QtInterfaceFramework/QtInterfaceFramework>
+#include <QtIfVehicleFunctions/QtIfVehicleFunctions>
+#include <QtIfMedia/QtIfMedia>

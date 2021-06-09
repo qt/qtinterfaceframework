@@ -8,7 +8,7 @@ qt_find_package(WrapTagLib PROVIDED_TARGETS WrapTagLib::WrapTagLib) # special ca
 
 qt_internal_add_plugin(MediaPlugin
     OUTPUT_NAME media_simulator
-    TYPE qtivi
+    TYPE interfaceframework
     DEFAULT_IF FALSE
     SOURCES
         database_helper.h
@@ -24,8 +24,8 @@ qt_internal_add_plugin(MediaPlugin
         ${CMAKE_CURRENT_SOURCE_DIR}
     PUBLIC_LIBRARIES
         Qt::Core
-        Qt::IviCore
-        Qt::IviMedia
+        Qt::InterfaceFramework
+        Qt::IfMedia
         Qt::Multimedia
         Qt::Sql
         WrapTagLib::WrapTagLib
@@ -33,4 +33,4 @@ qt_internal_add_plugin(MediaPlugin
 
 #### Keys ignored in scope 1:.:.:media_simulator.pro:<TRUE>:
 # DISTFILES = "media_simulator.json"
-# PLUGIN_EXTENDS = "ivimedia"
+# PLUGIN_EXTENDS = "ifmedia"

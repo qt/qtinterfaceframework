@@ -12,13 +12,13 @@ qt_internal_add_test(tst_org-example-echo
     PUBLIC_LIBRARIES
         echo_frontend
         Qt::Core
-        Qt::IviCore
+        Qt::InterfaceFramework
         Qt::Test
 )
 set_target_properties(tst_org-example-echo PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-# IVI Generator:
-qt6_ivigenerator(tst_org-example-echo
+# Interface Framework Generator:
+qt6_ifcodegen(tst_org-example-echo
     QFACE_SOURCES ../../org.example.echo.qface
     QFACE_FORMAT test
 )

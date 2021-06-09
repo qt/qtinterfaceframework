@@ -6,7 +6,7 @@
 
 qt_internal_add_plugin(TunerPlugin
     OUTPUT_NAME tuner_simulator
-    TYPE qtivi
+    TYPE interfaceframework
     DEFAULT_IF FALSE
     SOURCES
         amfmtunerbackend.cpp amfmtunerbackend.h
@@ -14,10 +14,10 @@ qt_internal_add_plugin(TunerPlugin
         tunerplugin.cpp tunerplugin.h
     PUBLIC_LIBRARIES
         Qt::Core
-        Qt::IviCore
-        Qt::IviMedia
+        Qt::InterfaceFramework
+        Qt::IfMedia
 )
 
 #### Keys ignored in scope 1:.:.:tuner_simulator.pro:<TRUE>:
 # DISTFILES = "tuner_simulator.json"
-# PLUGIN_EXTENDS = "ivimedia"
+# PLUGIN_EXTENDS = "ifmedia"

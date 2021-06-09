@@ -4,9 +4,9 @@
 
 QT_BEGIN_NAMESPACE
 
-extern QVector<QIviFeatureInterface *> echoInterfaceBuilder(EchomoduleSimulatorPlugin *plugin)
+extern QVector<QIfFeatureInterface *> echoInterfaceBuilder(EchomoduleSimulatorPlugin *plugin)
 {
-    QVector<QIviFeatureInterface *> res;
+    QVector<QIfFeatureInterface *> res;
     res << new EchoBackend(plugin);
     res << new EchoZonedBackend(plugin);
     return res;

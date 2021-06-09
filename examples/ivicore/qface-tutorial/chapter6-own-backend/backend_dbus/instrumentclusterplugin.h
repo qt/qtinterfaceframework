@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -54,20 +54,20 @@
 #define INSTRUMENTCLUSTERPLUGIN_H
 
 #include <QObject>
-#include <QIviServiceInterface>
+#include <QIfServiceInterface>
 #include "instrumentclusterbackend.h"
 
-class InstrumentClusterPlugin : public QObject, public QIviServiceInterface
+class InstrumentClusterPlugin : public QObject, public QIfServiceInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID QIviServiceInterface_iid FILE "instrumentcluster_dbus.json")
-    Q_INTERFACES(QIviServiceInterface)
+    Q_PLUGIN_METADATA(IID QIfServiceInterface_iid FILE "instrumentcluster_dbus.json")
+    Q_INTERFACES(QIfServiceInterface)
 
 public:
     explicit InstrumentClusterPlugin(QObject *parent = nullptr);
 
     QStringList interfaces() const override;
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override;
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
 private:
     InstrumentClusterBackend *m_backend;

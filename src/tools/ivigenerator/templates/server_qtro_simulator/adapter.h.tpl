@@ -5,7 +5,7 @@
 ## Copyright (C) 2019 Luxoft Sweden AB
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}QtRoAdapter'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
@@ -36,11 +36,11 @@
 #ifndef {{oncedefine}}
 #define {{oncedefine}}
 
-#include <QIviRemoteObjectSourceHelper>
+#include <QIfRemoteObjectSourceHelper>
 
 #include "{{interface|lower}}backend.h"
 #include "rep_{{interface|lower}}_source.h"
-#include "rep_qivipagingmodel_source.h"
+#include "rep_qifpagingmodel_source.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -56,7 +56,7 @@ struct {{interface}}AddressWrapper: public {{interface}}SourceAPI<ObjectType> {
     {}
 };
 
-class QIviPagingModelQtRoAdapter;
+class QIfPagingModelQtRoAdapter;
 
 class {{class}} : public {{interface}}Source
 {
@@ -87,7 +87,7 @@ public Q_SLOTS:
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
 {%     if interface_zoned %}
-    {{ivi.prop_setter(property, zoned = true, default_zone = true)}} override;
+    {{if.prop_setter(property, zoned = true, default_zone = true)}} override;
 {%     else %}
 {%       set type = property|return_type %}
 {#  //repc doesn't generate proper const ref setters #}
@@ -97,14 +97,14 @@ public Q_SLOTS:
 {% endfor %}
 
 {% for operation in interface.operations %}
-    QVariant {{operation}}({{ivi.join_params(operation, zoned = interface_zoned)}}) override;
+    QVariant {{operation}}({{if.join_params(operation, zoned = interface_zoned)}}) override;
 {% endfor %}
 
 private:
     QString m_remoteObjectsLookupName;
     {{interface}}Backend *m_backend;
-    QMultiHash<QRemoteObjectHostBase *, QIviPagingModelQtRoAdapter *> m_modelAdapters;
-    QIviRemoteObjectSourceHelper<{{class}}> m_helper;
+    QMultiHash<QRemoteObjectHostBase *, QIfPagingModelQtRoAdapter *> m_modelAdapters;
+    QIfRemoteObjectSourceHelper<{{class}}> m_helper;
 };
 
 QT_END_NAMESPACE

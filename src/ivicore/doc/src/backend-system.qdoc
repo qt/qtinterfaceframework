@@ -38,8 +38,8 @@ Modern automotive systems are very complex, usually developed on a strict timefr
 it is efficient to reuse parts of previously developed systems, for a new system. At the same time,
 the main development is done by independent companies (tier-1). To make it possible to reuse code
 from previous projects, and also incorportae code from tier-1 partners, the APIs are split into two
-layers: a frontend and a backend. In Qt IVI, the frontend API is called a \b feature, as usually a
-specific class is responsible for a specific feature area, such as QIviClimateControl, which
+layers: a frontend and a backend. In Qt Interface Framework, the frontend API is called a \b feature, as usually a
+specific class is responsible for a specific feature area, such as QIfClimateControl, which
 controls the climate feature area.
 
 \section1 Backend
@@ -49,16 +49,16 @@ implement a corresponding feature backend interface. Only then, you can create a
 between the feature and its backend.
 
 Usually, every feature has only one backend interface class, which the backend needs to implement
-for the feature to work. Every backend interface is derived from QIviFeatureInterface, which
+for the feature to work. Every backend interface is derived from QIfFeatureInterface, which
 provides generic functions and signals that every feature needs, such as error handling.
 
 The backend implementations are grouped together and implemented inside a
 \l{How to Create Qt Plugins}{Qt plugin}. This makes it easy to provide multiple backends
 simultaneously and switch the backend at runtime. These backend plugins are loaded through
-\l{QtIviCore}. A plugin can provide backend implementations for multiple features; there is no
+\l{QtInterfaceFramework}. A plugin can provide backend implementations for multiple features; there is no
 need to create a separate plugin for each feature.
 
-Qt IVI also distinguishes between two types of backends:
+Qt Interface Framework also distinguishes between two types of backends:
 
 \list
     \li \b{production} - On a production system, you want to have only production backends running.
@@ -66,24 +66,24 @@ Qt IVI also distinguishes between two types of backends:
         backend that you can use for frontend development, until the backend services are usable.
 \endlist
 
-Qt IVI uses a simple naming scheme to identify whether a plugin provides simulation or production
+Qt Interface Framework uses a simple naming scheme to identify whether a plugin provides simulation or production
 backends. Every simulation plugin needs to have either "simulation" or "simulator" in its name.
 Alternatively, you can also set the "simulation" key in the plugin's metadata. This is especially
 useful for static plugins.
 
 \image backend-types.png "Types of Backend"
 
-\section1 QtIviCore
+\section1 QtInterfaceFramework
 
-The QtIviCore module provides all the classes that are needed to glue the parts together. In
-addition to providing the base classes like QIviAbstractFeature or QIviServiceObject, this module
-also provides the QIviServiceManager, responsible for loading the necessary backend plugins.
+The QtInterfaceFramework module provides all the classes that are needed to glue the parts together. In
+addition to providing the base classes like QIfAbstractFeature or QIfServiceObject, this module
+also provides the QIfServiceManager, responsible for loading the necessary backend plugins.
 
 \image feature-backend.png "Relationship between the Feature and the Backend"
 
-\section2 QIviServiceManager
+\section2 QIfServiceManager
 
-The QIviServiceManager is the central part of QtIviCore, keeping a record of all the available
+The QIfServiceManager is the central part of QtInterfaceFramework, keeping a record of all the available
 backends and their exported interfaces. The service manager scans through all available plugins and
 their accompanying metadata. This process gives it the ability to only load plugins that a Feature
 requires, to reduce the startup time. All of this information is collected in the service manager
@@ -92,7 +92,7 @@ in the form of a model, which enables developers to choose the plugin they want 
 \section2 ServiceObjects
 
 The ServiceObject concept keeps the features flexible, and makes it possible to switch between
-backends at runtime. A QIviServiceObject is a handle, which the feature uses to connect to the
+backends at runtime. A QIfServiceObject is a handle, which the feature uses to connect to the
 correct backend interface. This handle provides methods to query the backend interfaces available,
 which the ServiceObject implements. ServiceObjects automatically wrap around plugins, making it
 possible to share the ServiceObject between multiple features and to explicitly select which
@@ -103,13 +103,13 @@ backend to use for your feature instance.
 Based on the diagram above, the ServiceObject is the handle for a specific plugin. \b {Feature A}
 and \b {Feature B} both use the same ServiceObject, which returns an instance of \b
 Feature_A_Interface for \b {Feature A} and \b Feature_B_Interface for \b {Feature B}. The Feature
-classes derive from QIviAbstractFeature; the backend interfaces derive from QIviFeatureInterface.
+classes derive from QIfAbstractFeature; the backend interfaces derive from QIfFeatureInterface.
 
 \section2 ProxyServiceObjects
 
-In contrast to the normal QIviServiceObject, which represents a handle to a backend plugin, the
-QIviProxyServiceObject doesn't need a plugin to work. It can be instantiated on the application
-side and filled with any QIviFeatureInterface derived class. QIviProxyServiceObject is useful for
+In contrast to the normal QIfServiceObject, which represents a handle to a backend plugin, the
+QIfProxyServiceObject doesn't need a plugin to work. It can be instantiated on the application
+side and filled with any QIfFeatureInterface derived class. QIfProxyServiceObject is useful for
 scenarios when a backend implementation of a feature should not be done inside a separate plugin,
 but inside the application's code base itself.
 
@@ -121,16 +121,16 @@ details, see \l{Models}.
 \section1 How a Feature Finds its Backend
 
 Typically, all Features use the auto discovery mode. From QML, you can set the
-QIviAbstractFeature::discoveryMode property; from C++, you can start this with
-QIviAbstractFeature::startAutoDiscovery(). This property asks the QIviServiceManager for all the
+QIfAbstractFeature::discoveryMode property; from C++, you can start this with
+QIfAbstractFeature::startAutoDiscovery(). This property asks the QIfServiceManager for all the
 backends available, that implement the required interface for your feature. The manager then
-chooses the first matching backend and connects the feature to it. QIviAbstractFeature always
+chooses the first matching backend and connects the feature to it. QIfAbstractFeature always
 asks for production backends first; if none are available, it falls back to a simulation backend.
-This behavior can be controlled using the QIviAbstractFeature::discoveryMode, that defaults to
-QIviAbstractFeature::AutoDiscovery. The resulting backend type can be retrieved via
-QIviAbstractFeature::discoveryResult. After the feature has loaded a backend successfully, the
-QIviAbstractFeature::serviceObject property holds the loaded ServiceObject and
-QIviAbstractFeature::isValid returns \c true.
+This behavior can be controlled using the QIfAbstractFeature::discoveryMode, that defaults to
+QIfAbstractFeature::AutoDiscovery. The resulting backend type can be retrieved via
+QIfAbstractFeature::discoveryResult. After the feature has loaded a backend successfully, the
+QIfAbstractFeature::serviceObject property holds the loaded ServiceObject and
+QIfAbstractFeature::isValid returns \c true.
 
 \section2 Detailed Connection Order
 
@@ -138,12 +138,12 @@ Based on the aforementioned climate control example, the detailed connection wou
 
 \list 1
     \li A ClimateControl element is created in QML.
-    \li ClimateControl calls QIviAbstractFeature::startAutoDiscovery upon completion.
-    \li QIviAbstractFeature::startAutoDiscovery queries QIviServiceManager for all backends
+    \li ClimateControl calls QIfAbstractFeature::startAutoDiscovery upon completion.
+    \li QIfAbstractFeature::startAutoDiscovery queries QIfServiceManager for all backends
         available.
-    \li QIviServiceManager searches for all plugins available and the interfaces they implement;
+    \li QIfServiceManager searches for all plugins available and the interfaces they implement;
         this search is only done once.
-    \li QIviAbstractFeature accepts the first QIviServiceObject and connect to the corresponding
+    \li QIfAbstractFeature accepts the first QIfServiceObject and connect to the corresponding
         interface.
     \li The ClimateControl element is ready to be used.
 \endlist
@@ -151,7 +151,7 @@ Based on the aforementioned climate control example, the detailed connection wou
 \section2 Manual Assignment
 
 If you don't want your feature to use the auto discovery mechanism, set the discoveryMode to
-QIviAbstractFeature::NoAutoDiscovery. After that, the feature won't search for a backend anymore,
+QIfAbstractFeature::NoAutoDiscovery. After that, the feature won't search for a backend anymore,
 and you need to assign a ServiceObject manually.
 
 \section2 DiscoveryModels
@@ -180,16 +180,16 @@ capabilities between zones; for example, there's no steering wheel heater in a c
 
 Technically, a zoned feature consists of multiple instances of the same feature, a top-level
 instance which provides the zone-independent API and access to instances for a specific zone.
-The feature needs to derive from QIviAbstractZonedFeature and implement createZoneFeature() to
+The feature needs to derive from QIfAbstractZonedFeature and implement createZoneFeature() to
 provide zone-specific instances.
 
 The top-level interface can provide vehicle wide settings. For example, whether recirculation
 should be used in a climate control API. In contrast, the zoned interface provides per-zone
 functions, such as the desired temperature.
 
-Building a zoned feature requires the backend interface to be derived from QIviZonedFeatureInterface.
+Building a zoned feature requires the backend interface to be derived from QIfZonedFeatureInterface.
 This class provides the backend with an interface to enumerate the zones available. This interface
-also includes the necessary QIviZonedFeatureInterface::initialize method to initialize any
+also includes the necessary QIfZonedFeatureInterface::initialize method to initialize any
 properties.
 
 */

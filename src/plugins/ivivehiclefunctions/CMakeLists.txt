@@ -1,4 +1,4 @@
-# Generated from ivivehiclefunctions.pro.
+# Generated from ifvehiclefunctions.pro.
 
 if(QT_FEATURE_vehiclefunctions_simulation_backend)
     add_subdirectory(vehiclefunctions_simulator)

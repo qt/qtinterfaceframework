@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,30 +41,30 @@
 #ifndef MEDIAPLUGIN_H
 #define MEDIAPLUGIN_H
 
-#include <QtIviCore/QIviServiceInterface>
+#include <QtInterfaceFramework/QIfServiceInterface>
 
 class MediaPlayerBackend;
 class MediaIndexerBackend;
-class SearchAndBrowseModel;
+class FilterAndBrowseModel;
 class MediaDiscoveryBackend;
 
-class MediaQtROPlugin : public QObject, QIviServiceInterface
+class MediaQtROPlugin : public QObject, QIfServiceInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID QIviServiceInterface_iid FILE "media_qtro.json")
-    Q_INTERFACES(QIviServiceInterface)
+    Q_PLUGIN_METADATA(IID QIfServiceInterface_iid FILE "media_qtro.json")
+    Q_INTERFACES(QIfServiceInterface)
 
 public:
     explicit MediaQtROPlugin(QObject *parent = nullptr);
 
     QStringList interfaces() const override;
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override;
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
 private:
 
     MediaPlayerBackend *m_player;
     MediaIndexerBackend *m_indexer;
-    SearchAndBrowseModel *m_searchModel;
+    FilterAndBrowseModel *m_searchModel;
     MediaDiscoveryBackend *m_discovery;
 };
 

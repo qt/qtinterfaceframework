@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -38,29 +38,29 @@
 #define {{oncedefine}}
 
 #include <QVector>
-#include <QtIviCore/QIviServiceInterface>
+#include <QtInterfaceFramework/QIfServiceInterface>
 
 QT_BEGIN_NAMESPACE
 
-class QIviSimulationEngine;
+class QIfSimulationEngine;
 
-class {{class}} : public QObject, QIviServiceInterface
+class {{class}} : public QObject, QIfServiceInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID QIviServiceInterface_iid FILE "{{module.module_name|lower}}.json")
-    Q_INTERFACES(QIviServiceInterface)
+    Q_PLUGIN_METADATA(IID QIfServiceInterface_iid FILE "{{module.module_name|lower}}.json")
+    Q_INTERFACES(QIfServiceInterface)
 
 public:
-    typedef QVector<QIviFeatureInterface *> (InterfaceBuilder)({{class}} *);
+    typedef QVector<QIfFeatureInterface *> (InterfaceBuilder)({{class}} *);
 
     explicit {{class}}(QObject *parent = nullptr);
 
     QStringList interfaces() const override;
-    QIviFeatureInterface* interfaceInstance(const QString& interface) const override;
+    QIfFeatureInterface* interfaceInstance(const QString& interface) const override;
 
 private:
-    QVector<QIviFeatureInterface *> m_interfaces;
-    QIviSimulationEngine *m_simulationEngine;
+    QVector<QIfFeatureInterface *> m_interfaces;
+    QIfSimulationEngine *m_simulationEngine;
 };
 
 QT_END_NAMESPACE

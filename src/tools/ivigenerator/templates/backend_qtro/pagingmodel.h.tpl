@@ -5,7 +5,7 @@
 ## Copyright (C) 2019 Luxoft Sweden AB
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -35,12 +35,12 @@
 {% set class = '{0}RoModelBackend'.format(property|upperfirst) %}
 {% endif %}
 
-#include <QIviPagingModelInterface>
+#include <QIfPagingModelInterface>
 #include "{{property.type.nested|lower}}.h"
 
-#include "rep_qivipagingmodel_replica.h"
+#include "rep_qifpagingmodel_replica.h"
 
-class {{class}} : public QIviPagingModelInterface
+class {{class}} : public QIfPagingModelInterface
 {
     Q_OBJECT
 public:
@@ -57,8 +57,8 @@ private:
     bool connectToNode();
     void setupConnections();
 
-    QSharedPointer<QIviPagingModelReplica> m_replica;
-    QIviRemoteObjectReplicaHelper *m_helper;
+    QSharedPointer<QIfPagingModelReplica> m_replica;
+    QIfRemoteObjectReplicaHelper *m_helper;
     QRemoteObjectNode *m_node= nullptr;
     QString m_remoteObjectsLookupName;
     QUrl m_url;

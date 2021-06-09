@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,11 +39,11 @@
 **
 ****************************************************************************/
 
-#include "qiviservicemanager.h"
+#include "qifservicemanager.h"
 
-#include "qtivicoremodule.h"
-#include "qiviproxyserviceobject.h"
-#include "qiviservicemanager_p.h"
+#include "qtinterfaceframeworkmodule.h"
+#include "qifproxyserviceobject.h"
+#include "qifservicemanager_p.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -53,13 +53,13 @@
 #include <QModelIndex>
 #include <QStringList>
 
-#define QIVI_PLUGIN_DIRECTORY "qtivi"
+#define QIF_PLUGIN_DIRECTORY "interfaceframework"
 
 QT_BEGIN_NAMESPACE
 
-Q_LOGGING_CATEGORY(qLcIviServiceManagement, "qt.ivi.servicemanagement");
+Q_LOGGING_CATEGORY(qLcIfServiceManagement, "qt.if.servicemanagement");
 
-namespace qtivi_helper {
+namespace qtif_helper {
 #ifdef QT_DEBUG
     static const bool loadDebug = true;
 #else
@@ -94,22 +94,22 @@ namespace qtivi_helper {
     }
 }
 
-using namespace qtivi_helper;
+using namespace qtif_helper;
 
-QIviServiceManagerPrivate::QIviServiceManagerPrivate(QIviServiceManager *parent)
+QIfServiceManagerPrivate::QIfServiceManagerPrivate(QIfServiceManager *parent)
     : QObject(parent)
     , m_staticLoaded(false)
     , q_ptr(parent)
 {
 }
 
-QIviServiceManagerPrivate *QIviServiceManagerPrivate::get(QIviServiceManager *serviceManager)
+QIfServiceManagerPrivate *QIfServiceManagerPrivate::get(QIfServiceManager *serviceManager)
 {
     Q_ASSERT(serviceManager);
     return serviceManager->d_ptr;
 }
 
-bool QIviServiceManagerPrivate::isSimulation(const QVariantMap &metaData)
+bool QIfServiceManagerPrivate::isSimulation(const QVariantMap &metaData)
 {
     QString fileName = metaData[fileNameLiteral].toString();
     return fileName.contains(QLatin1String("_simulation")) ||
@@ -117,40 +117,40 @@ bool QIviServiceManagerPrivate::isSimulation(const QVariantMap &metaData)
             metaData[simulationLiteral].toBool();
 }
 
-QIviProxyServiceObject *QIviServiceManagerPrivate::createServiceObject(struct Backend *backend) const
+QIfProxyServiceObject *QIfServiceManagerPrivate::createServiceObject(struct Backend *backend) const
 {
     if (!backend)
         return nullptr;
 
     if (!backend->proxyServiceObject) {
-        QIviServiceInterface *backendInterface = loadServiceBackendInterface(backend);
+        QIfServiceInterface *backendInterface = loadServiceBackendInterface(backend);
         if (backendInterface)
-            backend->proxyServiceObject = new QIviProxyServiceObject(backendInterface);
+            backend->proxyServiceObject = new QIfProxyServiceObject(backendInterface);
     }
 
     if (backend->proxyServiceObject) {
         QString fileName = backend->metaData[fileNameLiteral].toString();
         if (fileName.isEmpty())
             fileName = QStringLiteral("static plugin");
-        qCDebug(qLcIviServiceManagement) << "Found: " << backend->proxyServiceObject << "from: " << fileName;
+        qCDebug(qLcIfServiceManagement) << "Found: " << backend->proxyServiceObject << "from: " << fileName;
         return backend->proxyServiceObject;
     }
 
     return nullptr;
 }
 
-QList<QIviServiceObject *> QIviServiceManagerPrivate::findServiceByInterface(const QString &interface, QIviServiceManager::SearchFlags searchFlags) const
+QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags) const
 {
-    QList<QIviServiceObject*> list;
-    qCDebug(qLcIviServiceManagement) << "Searching for a backend for:" << interface << "SearchFlags:" << searchFlags;
+    QList<QIfServiceObject*> list;
+    qCDebug(qLcIfServiceManagement) << "Searching for a backend for:" << interface << "SearchFlags:" << searchFlags;
 
     for (Backend *backend : m_backends) {
 
         if (backend->metaData[interfacesLiteral].toStringList().contains(interface)) {
-            bool isSimulation = QIviServiceManagerPrivate::isSimulation(backend->metaData);
-            if ((searchFlags & QIviServiceManager::IncludeSimulationBackends && isSimulation) ||
-                (searchFlags & QIviServiceManager::IncludeProductionBackends && !isSimulation)) {
-                QIviServiceObject *serviceObject = createServiceObject(backend);
+            bool isSimulation = QIfServiceManagerPrivate::isSimulation(backend->metaData);
+            if ((searchFlags & QIfServiceManager::IncludeSimulationBackends && isSimulation) ||
+                (searchFlags & QIfServiceManager::IncludeProductionBackends && !isSimulation)) {
+                QIfServiceObject *serviceObject = createServiceObject(backend);
                 if (serviceObject)
                     list.append(serviceObject);
             }
@@ -160,7 +160,7 @@ QList<QIviServiceObject *> QIviServiceManagerPrivate::findServiceByInterface(con
     return list;
 }
 
-void QIviServiceManagerPrivate::searchPlugins()
+void QIfServiceManagerPrivate::searchPlugins()
 {
     bool found = false;
 
@@ -174,7 +174,7 @@ void QIviServiceManagerPrivate::searchPlugins()
 #ifdef Q_OS_ANDROID
         QString path = pluginDir;
 #else
-        QString path = pluginDir + QDir::separator() + QLatin1String(QIVI_PLUGIN_DIRECTORY);
+        QString path = pluginDir + QDir::separator() + QLatin1String(QIF_PLUGIN_DIRECTORY);
 #endif
         QDir dir(path);
         //Check whether the directory exists
@@ -183,7 +183,7 @@ void QIviServiceManagerPrivate::searchPlugins()
 
         const QStringList plugins = QDir(path).entryList(
 #ifdef Q_OS_ANDROID
-                    QStringList(QLatin1String("libplugins_%1_*.so").arg(QLatin1String(QIVI_PLUGIN_DIRECTORY))),
+                    QStringList(QLatin1String("libplugins_%1_*.so").arg(QLatin1String(QIF_PLUGIN_DIRECTORY))),
 #endif
                     QDir::Files);
         for (const QString &pluginFileName : plugins) {
@@ -211,13 +211,13 @@ void QIviServiceManagerPrivate::searchPlugins()
         qWarning() << "No plugins found in search path: " << QCoreApplication::libraryPaths().join(QLatin1String(":"));
 }
 
-void QIviServiceManagerPrivate::registerBackend(const QString &fileName, const QJsonObject &metaData)
+void QIfServiceManagerPrivate::registerBackend(const QString &fileName, const QJsonObject &metaData)
 {
     QVariantMap backendMetaData = metaData.value(metaDataLiteral).toVariant().toMap();
 
     if (Q_UNLIKELY(backendMetaData[interfacesLiteral].isNull() ||
                    backendMetaData[interfacesLiteral].toList().isEmpty())) {
-        qCWarning(qLcIviServiceManagement, "PluginManager - Malformed metaData in '%s'. MetaData must contain a list of interfaces", qPrintable(fileName));
+        qCWarning(qLcIfServiceManagement, "PluginManager - Malformed metaData in '%s'. MetaData must contain a list of interfaces", qPrintable(fileName));
         return;
     }
 
@@ -234,20 +234,20 @@ void QIviServiceManagerPrivate::registerBackend(const QString &fileName, const Q
     addBackend(backend);
 }
 
-void QIviServiceManagerPrivate::registerStaticBackend(QStaticPlugin plugin)
+void QIfServiceManagerPrivate::registerStaticBackend(QStaticPlugin plugin)
 {
     QVariantMap backendMetaData = plugin.metaData().value(metaDataLiteral).toVariant().toMap();
     const char* pluginName = plugin.instance()->metaObject()->className();
 
     if (Q_UNLIKELY(backendMetaData[interfacesLiteral].isNull() ||
                    backendMetaData[interfacesLiteral].toList().isEmpty())) {
-        qCWarning(qLcIviServiceManagement, "PluginManager - Malformed metaData in static plugin '%s'. MetaData must contain a list of interfaces", pluginName);
+        qCWarning(qLcIfServiceManagement, "PluginManager - Malformed metaData in static plugin '%s'. MetaData must contain a list of interfaces", pluginName);
         return;
     }
 
-    QIviServiceInterface *backendInterface = qobject_cast<QIviServiceInterface*>(plugin.instance());
+    QIfServiceInterface *backendInterface = qobject_cast<QIfServiceInterface*>(plugin.instance());
     if (Q_UNLIKELY(!backendInterface))
-        qCWarning(qLcIviServiceManagement, "ServiceManager::serviceObjects - failed to cast to interface from '%s'", pluginName);
+        qCWarning(qLcIfServiceManagement, "ServiceManager::serviceObjects - failed to cast to interface from '%s'", pluginName);
 
     //TODO check for other metaData like name etc.
 
@@ -262,14 +262,14 @@ void QIviServiceManagerPrivate::registerStaticBackend(QStaticPlugin plugin)
     addBackend(backend);
 }
 
-bool QIviServiceManagerPrivate::registerBackend(QObject *serviceBackendInterface, const QStringList &interfaces, QIviServiceManager::BackendType backendType)
+bool QIfServiceManagerPrivate::registerBackend(QObject *serviceBackendInterface, const QStringList &interfaces, QIfServiceManager::BackendType backendType)
 {
     if (interfaces.isEmpty()) {
         return false;
     }
 
     // Verify that the object implements the ServiceBackendInterface
-    QIviServiceInterface *interface = qobject_cast<QIviServiceInterface*>(serviceBackendInterface);
+    QIfServiceInterface *interface = qobject_cast<QIfServiceInterface*>(serviceBackendInterface);
     if (!interface) {
         return false;
     }
@@ -277,7 +277,7 @@ bool QIviServiceManagerPrivate::registerBackend(QObject *serviceBackendInterface
     QVariantMap metaData = QVariantMap();
 
     metaData.insert(interfacesLiteral, interfaces);
-    if (backendType == QIviServiceManager::SimulationBackend)
+    if (backendType == QIfServiceManager::SimulationBackend)
         metaData.insert(simulationLiteral, true);
 
     auto *backend = new Backend;
@@ -293,9 +293,9 @@ bool QIviServiceManagerPrivate::registerBackend(QObject *serviceBackendInterface
     return true;
 }
 
-void QIviServiceManagerPrivate::unloadAllBackends()
+void QIfServiceManagerPrivate::unloadAllBackends()
 {
-    Q_Q(QIviServiceManager);
+    Q_Q(QIfServiceManager);
 
     q->beginResetModel();
     for (Backend* backend : qAsConst(m_backends)) {
@@ -318,14 +318,14 @@ void QIviServiceManagerPrivate::unloadAllBackends()
     m_staticLoaded = false;
 }
 
-void QIviServiceManagerPrivate::addBackend(Backend *backend)
+void QIfServiceManagerPrivate::addBackend(Backend *backend)
 {
-    Q_Q(QIviServiceManager);
+    Q_Q(QIfServiceManager);
     //Check whether the same plugin is already in (maybe also in a different configuration)
-    //The current configuration of QtIviCore decides which configuration takes precedence
+    //The current configuration of QtInterfaceFramework decides which configuration takes precedence
 
     const QString newBackendFile = backend->metaData.value(fileNameLiteral).toString();
-    const QString newBackendFileBase = qtivi_helper::backendBaseName(newBackendFile);
+    const QString newBackendFileBase = qtif_helper::backendBaseName(newBackendFile);
     const QStringList ifaceList = backend->metaData.value(interfacesLiteral).toStringList();
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     const QSet<QString> newInterfaces = QSet<QString>(ifaceList.begin(), ifaceList.end());
@@ -346,26 +346,26 @@ void QIviServiceManagerPrivate::addBackend(Backend *backend)
             if (interfaces == newInterfaces && b->name == backend->name) {
                 const QString fileName = b->metaData.value(fileNameLiteral).toString();
                 if (fileName == newBackendFile) {
-                    qCDebug(qLcIviServiceManagement, "SKIPPING %s: already in the list", qPrintable(newBackendFile));
+                    qCDebug(qLcIfServiceManagement, "SKIPPING %s: already in the list", qPrintable(newBackendFile));
                     return;
                 }
 
                 QString base = backendBaseName(fileName);
                 //check whether the plugins name are the same after removing the debug and library suffixes
                 if (newBackendFileBase == base) {
-                    qCInfo(qLcIviServiceManagement, "Found the same plugin in two configurations. "
+                    qCInfo(qLcIfServiceManagement, "Found the same plugin in two configurations. "
                                                     "Using the '%s' configuration: %s",
-                                                    qtivi_helper::loadDebug ? "debug" : "release",
-                                                    qPrintable(b->debug == qtivi_helper::loadDebug ? fileName : newBackendFile));
-                    if (b->debug != qtivi_helper::loadDebug) {
-                        qCDebug(qLcIviServiceManagement, "REPLACING %s with %s", qPrintable(fileName), qPrintable(newBackendFile));
+                                                    qtif_helper::loadDebug ? "debug" : "release",
+                                                    qPrintable(b->debug == qtif_helper::loadDebug ? fileName : newBackendFile));
+                    if (b->debug != qtif_helper::loadDebug) {
+                        qCDebug(qLcIfServiceManagement, "REPLACING %s with %s", qPrintable(fileName), qPrintable(newBackendFile));
                         addBackend = false;
                         m_backends[i] = backend;
                         emit q->dataChanged(q->index(i, 0), q->index(i, 0));
                         delete b;
                         break;
                     } else {
-                        qCDebug(qLcIviServiceManagement, "SKIPPING %s: wrong configuration", qPrintable(newBackendFile));
+                        qCDebug(qLcIfServiceManagement, "SKIPPING %s: wrong configuration", qPrintable(newBackendFile));
                         return;
                     }
                 }
@@ -373,7 +373,7 @@ void QIviServiceManagerPrivate::addBackend(Backend *backend)
         }
     }
     if (addBackend) {
-        qCDebug(qLcIviServiceManagement, "ADDING %s", qPrintable(newBackendFile.isEmpty() ? backend->name : newBackendFile));
+        qCDebug(qLcIfServiceManagement, "ADDING %s", qPrintable(newBackendFile.isEmpty() ? backend->name : newBackendFile));
         q->beginInsertRows(QModelIndex(), m_backends.count(), m_backends.count());
         m_backends.append(backend);
         q->endInsertRows();
@@ -385,7 +385,7 @@ void QIviServiceManagerPrivate::addBackend(Backend *backend)
 
 namespace {
 Q_NEVER_INLINE
-static QIviServiceInterface *warn(const char *what, const QPluginLoader *loader)
+static QIfServiceInterface *warn(const char *what, const QPluginLoader *loader)
 {
     qWarning("ServiceManager::serviceObjects - failed to %s '%s'",
              what, qPrintable(loader->fileName()));
@@ -394,7 +394,7 @@ static QIviServiceInterface *warn(const char *what, const QPluginLoader *loader)
 }
 } // unnamed namespace
 
-QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(struct Backend *backend) const
+QIfServiceInterface *QIfServiceManagerPrivate::loadServiceBackendInterface(struct Backend *backend) const
 {
     if (backend->interface) {
         return backend->interface;
@@ -405,7 +405,7 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
     if (Q_UNLIKELY(!plugin))
         return warn("load", loader);
 
-    QIviServiceInterface *backendInterface = qobject_cast<QIviServiceInterface*>(plugin);
+    QIfServiceInterface *backendInterface = qobject_cast<QIfServiceInterface*>(plugin);
     if (Q_UNLIKELY(!backendInterface))
         return warn("cast to interface from", loader);
 
@@ -415,14 +415,14 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
 }
 
 /*!
-    \class QIviServiceManager
-    \inmodule QtIviCore
-    \brief QIviServiceManager provides the backends to QIviAbstractFeature.
+    \class QIfServiceManager
+    \inmodule QtInterfaceFramework
+    \brief QIfServiceManager provides the backends to QIfAbstractFeature.
 
-    QIviServiceManager is the heart of QtIvi and provides you with an easy way to detect which
+    QIfServiceManager is the heart of QtInterfaceFramework and provides you with an easy way to detect which
     backends and interfaces are available.
 
-    By default, QIviServiceManager reads the metaData of all plugins within the \e qtivi folder
+    By default, QIfServiceManager reads the metaData of all plugins within the \e interfaceframework folder
     in your plugin path. The plugin itself is loaded when you request for it explicitly, using
     findServiceByInterface().
 
@@ -439,22 +439,22 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
     method.
 
     If you require more detailed information on which plugins are recognized, make sure you enable
-    the \c{qt.ivi.servicemanagement} logging category.
+    the \c{qt.if.servicemanagement} logging category.
 
     For more information on how backends are loaded, see \l {Dynamic Backend System}.
 
-    \note The QIviServiceManager only accepts plugins that match the build configuration used
-    for building qtivicore. This means a qtivicore "release" build won't accept plugins from a
+    \note The QIfServiceManager only accepts plugins that match the build configuration used
+    for building qtinterfaceframework. This means a qtinterfaceframework "release" build won't accept plugins from a
     "debug" build.
 */
 
 /*!
-    \enum QIviServiceManager::Roles
+    \enum QIfServiceManager::Roles
 
     \value NameRole
            The backend's name, such as MediaPlugin.
     \value ServiceObjectRole
-           The actual QIviServiceObject, which can be used to connect a frontend API to this
+           The actual QIfServiceObject, which can be used to connect a frontend API to this
            backend.
            \note When using this role in the data() function, the backend plugin is loaded and
            instantiated.
@@ -463,7 +463,7 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
 */
 
 /*!
-    \enum QIviServiceManager::SearchFlag
+    \enum QIfServiceManager::SearchFlag
 
     \value IncludeProductionBackends
            Include production backends in the search result. \sa ProductionBackend
@@ -474,7 +474,7 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
 */
 
 /*!
-    \enum QIviServiceManager::BackendType
+    \enum QIfServiceManager::BackendType
 
     \value ProductionBackend
            A backend controlling a real automotive interface, such as a climate control connected
@@ -486,8 +486,8 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
 
 /*!
     \qmltype ServiceManager
-    \instantiates QIviServiceManager
-    \inqmlmodule QtIvi
+    \instantiates QIfServiceManager
+    \inqmlmodule QtInterfaceFramework
     \brief The central instance that loads the backends and provides ServiceObjects.
 
     The ServiceManager singleton provides a model which can be used to list all available backends
@@ -512,7 +512,7 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
     \row
         \li \c serviceObject
         \li ServiceObject
-        \li The actual QIviServiceObject, which can be used to connect a frontend API to this backend.
+        \li The actual QIfServiceObject, which can be used to connect a frontend API to this backend.
             \note When using this role in the data() function, the backend plugin is loaded and
             instantiated.
     \row
@@ -521,23 +521,23 @@ QIviServiceInterface *QIviServiceManagerPrivate::loadServiceBackendInterface(str
         \li A list of interfaces implemented by the backend.
     \endtable
 
-    For more information about QIviServiceManager and how it works, see its \l{QIviServiceManager}{C++ documentation}.
+    For more information about QIfServiceManager and how it works, see its \l{QIfServiceManager}{C++ documentation}.
 */
 
-QIviServiceManager::QIviServiceManager()
+QIfServiceManager::QIfServiceManager()
     : QAbstractListModel(nullptr)
-    , d_ptr(new QIviServiceManagerPrivate(this))
+    , d_ptr(new QIfServiceManagerPrivate(this))
 {
-    QtIviCoreModule::registerTypes();
+    QtInterfaceFrameworkModule::registerTypes();
     d_ptr->searchPlugins();
 }
 
 /*!
     Returns the global service manager instance.
 */
-QIviServiceManager *QIviServiceManager::instance()
+QIfServiceManager *QIfServiceManager::instance()
 {
-    static auto *instance = new QIviServiceManager();
+    static auto *instance = new QIfServiceManager();
     return instance;
 }
 
@@ -550,9 +550,9 @@ QIviServiceManager *QIviServiceManager::instance()
     search result:
 
     \value IncludeProductionBackends
-           Include production backends in the search result. See also \l {QIviServiceManager::}{ProductionBackend}
+           Include production backends in the search result. See also \l {QIfServiceManager::}{ProductionBackend}
     \value IncludeSimulationBackends
-           Include simulation backends in the search result. See also \l {QIviServiceManager::}{SimulationBackend}
+           Include simulation backends in the search result. See also \l {QIfServiceManager::}{SimulationBackend}
     \value IncludeAll
            Include both production and simulation backends in the search result.
 */
@@ -562,26 +562,26 @@ QIviServiceManager *QIviServiceManager::instance()
     The \a searchFlags argument can be used to control which type of backends are included in the
     search result.
 */
-QList<QIviServiceObject *> QIviServiceManager::findServiceByInterface(const QString &interface, SearchFlags searchFlags)
+QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QString &interface, SearchFlags searchFlags)
 {
-    Q_D(QIviServiceManager);
+    Q_D(QIfServiceManager);
     d->searchPlugins();
     return d->findServiceByInterface(interface, searchFlags);
 }
 
 /*!
     Registers a backend. The \a serviceBackendInterface specified must implement the
-    QIviServiceInterface, otherwise the registration will fail. \a interfaces is a list of at least
+    QIfServiceInterface, otherwise the registration will fail. \a interfaces is a list of at least
     one interface, supported by the backend. The \a backendType indicates the type of the backend
     and influences whether the backend can be found by the Feature's auto discovery option.
 
     Returns \c true if the backend was successfully registered; otherwise \c false.
 
-    \sa QIviServiceInterface
+    \sa QIfServiceInterface
 */
-bool QIviServiceManager::registerService(QObject *serviceBackendInterface, const QStringList &interfaces, BackendType backendType)
+bool QIfServiceManager::registerService(QObject *serviceBackendInterface, const QStringList &interfaces, BackendType backendType)
 {
-    Q_D(QIviServiceManager);
+    Q_D(QIfServiceManager);
     return d->registerBackend(serviceBackendInterface, interfaces, backendType);
 }
 
@@ -590,9 +590,9 @@ bool QIviServiceManager::registerService(QObject *serviceBackendInterface, const
 
     Unloads all backends currently loaded . Commonly only used for unit testing.
 */
-void QIviServiceManager::unloadAllBackends()
+void QIfServiceManager::unloadAllBackends()
 {
-    Q_D(QIviServiceManager);
+    Q_D(QIfServiceManager);
     d->unloadAllBackends();
 }
 
@@ -604,9 +604,9 @@ void QIviServiceManager::unloadAllBackends()
 /*!
     Returns \c true if the specified \a interface has been registered.
 */
-bool QIviServiceManager::hasInterface(const QString &interface) const
+bool QIfServiceManager::hasInterface(const QString &interface) const
 {
-    Q_D(const QIviServiceManager);
+    Q_D(const QIfServiceManager);
     return d->m_interfaceNames.contains(interface);
 }
 
@@ -616,9 +616,9 @@ bool QIviServiceManager::hasInterface(const QString &interface) const
 
     \sa QAbstractListModel::data()
 */
-int QIviServiceManager::rowCount(const QModelIndex &parent) const
+int QIfServiceManager::rowCount(const QModelIndex &parent) const
 {
-    Q_D(const QIviServiceManager);
+    Q_D(const QIfServiceManager);
     return parent.isValid() ? 0 : d->m_backends.count();
 }
 
@@ -627,9 +627,9 @@ int QIviServiceManager::rowCount(const QModelIndex &parent) const
 
     \sa QAbstractListModel::data()
 */
-QVariant QIviServiceManager::data(const QModelIndex &index, int role) const
+QVariant QIfServiceManager::data(const QModelIndex &index, int role) const
 {
-    Q_D(const QIviServiceManager);
+    Q_D(const QIfServiceManager);
 
     if (!index.isValid())
         return QVariant();
@@ -654,7 +654,7 @@ QVariant QIviServiceManager::data(const QModelIndex &index, int role) const
 /*!
     \reimp
 */
-QHash<int, QByteArray> QIviServiceManager::roleNames() const
+QHash<int, QByteArray> QIfServiceManager::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {

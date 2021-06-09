@@ -3,7 +3,7 @@
 ** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -33,7 +33,7 @@
 #include <QScopedPointer>
 #include <QJsonDocument>
 
-#include <private/qivisimulationglobalobject_p.h>
+#include <private/qifsimulationglobalobject_p.h>
 
 class InvalidStruct {
     Q_GADGET
@@ -80,7 +80,7 @@ public:
 
 protected:
     Q_INVOKABLE void fromJSON(const QVariant &variant) {
-        QVariant value = qtivi_convertFromJSON(variant);
+        QVariant value = qtif_convertFromJSON(variant);
         // First try to convert the values to a Map or a List
         // This is needed as it could also store a QStringList or a Hash
         if (value.canConvert(QMetaType::fromType<QVariantMap>()))
@@ -106,16 +106,16 @@ private:
     bool m_boolProperty = false;
 };
 
-class TestStructModelBackend : public QIviPagingModelInterface
+class TestStructModelBackend : public QIfPagingModelInterface
 {
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)
 
 public:
     TestStructModelBackend(QObject* parent)
-        : QIviPagingModelInterface(parent)
+        : QIfPagingModelInterface(parent)
     {
-        qRegisterMetaType<QIviPagingModelInterface*>();
+        qRegisterMetaType<QIfPagingModelInterface*>();
     }
 
     void initialize() override {
@@ -155,7 +155,7 @@ class SimpleAPI: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int testProperty READ testProperty WRITE setTestProperty NOTIFY testPropertyChanged)
-    Q_PROPERTY(QIviPagingModelInterface *modelProperty READ modelProperty CONSTANT)
+    Q_PROPERTY(QIfPagingModelInterface *modelProperty READ modelProperty CONSTANT)
 
 public:
     enum TestEnum {
@@ -167,7 +167,7 @@ public:
 
     int testProperty() const { return m_testProperty; }
 
-    QIviPagingModelInterface *modelProperty() const { return m_modelProperty; }
+    QIfPagingModelInterface *modelProperty() const { return m_modelProperty; }
 
 public slots:
     void setTestProperty(int testProperty)
@@ -184,7 +184,7 @@ signals:
 
 public:
     int m_testProperty = -1;
-    QIviPagingModelInterface *m_modelProperty = new TestStructModelBackend(this);
+    QIfPagingModelInterface *m_modelProperty = new TestStructModelBackend(this);
 };
 
 class Zone: public QObject
@@ -234,7 +234,7 @@ public:
     QQmlPropertyMap *m_zones = new QQmlPropertyMap(this);
 };
 
-class tst_QIviSimulationGlobalObject : public QObject
+class tst_QIfSimulationGlobalObject : public QObject
 {
     Q_OBJECT
 
@@ -254,7 +254,7 @@ private Q_SLOTS:
     void testConstraint();
 };
 
-QVariant tst_QIviSimulationGlobalObject::parseJson(const QString &json, QString& error) const
+QVariant tst_QIfSimulationGlobalObject::parseJson(const QString &json, QString& error) const
 {
     QJsonParseError pe;
     QVariantMap data = QJsonDocument::fromJson(json.toUtf8(), &pe).toVariant().toMap();
@@ -263,7 +263,7 @@ QVariant tst_QIviSimulationGlobalObject::parseJson(const QString &json, QString&
 
     return data;
 }
-void tst_QIviSimulationGlobalObject::testFindData_data()
+void tst_QIfSimulationGlobalObject::testFindData_data()
 {
     QTest::addColumn<QString>("searchString");
     QTest::addColumn<QVariantMap>("expectedResult");
@@ -274,7 +274,7 @@ void tst_QIviSimulationGlobalObject::testFindData_data()
     QTest::newRow("not data complex") << "org.qt-project.AddressBook" << QVariantMap();
 }
 
-void tst_QIviSimulationGlobalObject::testFindData()
+void tst_QIfSimulationGlobalObject::testFindData()
 {
     QFETCH(QString, searchString);
     QFETCH(QVariantMap, expectedResult);
@@ -283,13 +283,13 @@ void tst_QIviSimulationGlobalObject::testFindData()
     QVariant data = parseJson("{ \"Dummy\": { \"test\": true }, \"qt-project.ClimateControl\": { \"test\": false } }", error);
     QVERIFY2(error.isEmpty(), qPrintable(error));
 
-    QIviSimulationGlobalObject globalObject;
+    QIfSimulationGlobalObject globalObject;
 
     QVariantMap foundData = globalObject.findData(data.toMap(), searchString);
     QCOMPARE(foundData, expectedResult);
 }
 
-void tst_QIviSimulationGlobalObject::testConvertFromJSONErrors_data()
+void tst_QIfSimulationGlobalObject::testConvertFromJSONErrors_data()
 {
     qRegisterMetaType<SimpleAPI*>();
     qRegisterMetaType<InvalidStruct2>();
@@ -312,7 +312,7 @@ void tst_QIviSimulationGlobalObject::testConvertFromJSONErrors_data()
                                        QStringList("Couldn't parse the enum definition *");
 }
 
-void tst_QIviSimulationGlobalObject::testConvertFromJSONErrors()
+void tst_QIfSimulationGlobalObject::testConvertFromJSONErrors()
 {
     QFETCH(QString, json);
     QFETCH(QStringList, warnings);
@@ -323,10 +323,10 @@ void tst_QIviSimulationGlobalObject::testConvertFromJSONErrors()
 
     for (const QString &warning : warnings)
         QTest::ignoreMessage(QtWarningMsg, QRegularExpression(warning));
-    QVariant result = qtivi_convertFromJSON(data);
+    QVariant result = qtif_convertFromJSON(data);
 }
 
-void tst_QIviSimulationGlobalObject::testParseDomainValue_data()
+void tst_QIfSimulationGlobalObject::testParseDomainValue_data()
 {
     qRegisterMetaType<SimpleAPI*>();
 
@@ -344,12 +344,12 @@ void tst_QIviSimulationGlobalObject::testParseDomainValue_data()
                                         << QVariant::fromValue(TestStruct(100, true));
 }
 
-void tst_QIviSimulationGlobalObject::testParseDomainValue()
+void tst_QIfSimulationGlobalObject::testParseDomainValue()
 {
     QFETCH(QString, json);
     QFETCH(QVariant, expectedResult);
 
-    QIviSimulationGlobalObject globalObject;
+    QIfSimulationGlobalObject globalObject;
 
     // Test normal unzoned data
     QString error;
@@ -372,9 +372,9 @@ void tst_QIviSimulationGlobalObject::testParseDomainValue()
     QCOMPARE(foundData, expectedResult);
 }
 
-void tst_QIviSimulationGlobalObject::testInitializeDefault()
+void tst_QIfSimulationGlobalObject::testInitializeDefault()
 {
-    QIviSimulationGlobalObject globalObject;
+    QIfSimulationGlobalObject globalObject;
     SimpleAPI simple;
     ZonedAPI zoned;
 
@@ -416,7 +416,7 @@ void tst_QIviSimulationGlobalObject::testInitializeDefault()
     QCOMPARE(zoneSpy.at(0).at(0).toInt(), 100);
 }
 
-void tst_QIviSimulationGlobalObject::testCheckSettings_data()
+void tst_QIfSimulationGlobalObject::testCheckSettings_data()
 {
     QTest::addColumn<QString>("json");
     QTest::addColumn<QVariant>("value");
@@ -437,13 +437,13 @@ void tst_QIviSimulationGlobalObject::testCheckSettings_data()
     QTest::newRow("domain false") << "{ \"domain\": [\"string1\", \"string2\"] }" << QVariant("invalid") << false;
 }
 
-void tst_QIviSimulationGlobalObject::testCheckSettings()
+void tst_QIfSimulationGlobalObject::testCheckSettings()
 {
     QFETCH(QString, json);
     QFETCH(QVariant, value);
     QFETCH(bool, expectedResult);
 
-    QIviSimulationGlobalObject globalObject;
+    QIfSimulationGlobalObject globalObject;
 
     QString error;
     QVariant data = parseJson(json, error);
@@ -453,7 +453,7 @@ void tst_QIviSimulationGlobalObject::testCheckSettings()
     QCOMPARE(result, expectedResult);
 }
 
-void tst_QIviSimulationGlobalObject::testConstraint_data()
+void tst_QIfSimulationGlobalObject::testConstraint_data()
 {
     QTest::addColumn<QString>("json");
     QTest::addColumn<QString>("expectedResult");
@@ -465,12 +465,12 @@ void tst_QIviSimulationGlobalObject::testConstraint_data()
     QTest::newRow("domain") << "{ \"domain\": [\"string1\", \"string2\"] }" << "[\"string1\",\"string2\"]";
 }
 
-void tst_QIviSimulationGlobalObject::testConstraint()
+void tst_QIfSimulationGlobalObject::testConstraint()
 {
     QFETCH(QString, json);
     QFETCH(QString, expectedResult);
 
-    QIviSimulationGlobalObject globalObject;
+    QIfSimulationGlobalObject globalObject;
 
     QString error;
     QVariant data = parseJson(json, error);
@@ -480,7 +480,7 @@ void tst_QIviSimulationGlobalObject::testConstraint()
     QCOMPARE(result, expectedResult);
 }
 
-QTEST_MAIN(tst_QIviSimulationGlobalObject)
+QTEST_MAIN(tst_QIfSimulationGlobalObject)
 
-#include "tst_qivisimulationglobalobject.moc"
+#include "tst_qifsimulationglobalobject.moc"
 

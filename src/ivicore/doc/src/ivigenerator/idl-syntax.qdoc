@@ -124,7 +124,7 @@ flag <Identifier> {
 A QFace document always describes one module. Each document can contain one or more interfaces,
 structs, enums, or flags. Each document can import other modules using the import statement.
 
-\note There are some limitations with the Qt Ivi generator that parses the QFace IDL file.
+\note There are some limitations with the Qt Interface Framework Generator that parses the QFace IDL file.
 For more information, see \l{known-limitations}{Known Limitations}.
 
 \section1 Module
@@ -197,7 +197,7 @@ interface Tuner {
 }
 \endcode
 
-\note There are some limitations with the Qt Ivi generator that parses the QFace IDL file.
+\note There are some limitations with the Qt Interface Framework Generator that parses the QFace IDL file.
 For more information, see \l{known-limitations}{Known Limitations}.
 
 \section1 Annotation
@@ -259,7 +259,7 @@ extension.
 Your document should resemble the following:
 
 \code
-com.pelagicore.ivi.Tuner:
+com.pelagicore.if.Tuner:
     service:
       port: 12345
 \endcode

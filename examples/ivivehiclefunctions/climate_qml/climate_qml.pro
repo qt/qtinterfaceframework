@@ -10,5 +10,5 @@ RESOURCES += qml.qrc
 QML_IMPORT_PATH =
 
 # install
-target.path = $$[QT_INSTALL_EXAMPLES]/ivivehiclefunctions/climate_qml
+target.path = $$[QT_INSTALL_EXAMPLES]/ifvehiclefunctions/climate_qml
 INSTALLS += target

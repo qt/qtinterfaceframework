@@ -9,15 +9,15 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-tutorial/chapter6-own-backend")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter6-own-backend")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS DBus)
 
 qt_add_plugin(instrumentcluster_dbus)
-set_target_properties(instrumentcluster_dbus PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../qtivi)
+set_target_properties(instrumentcluster_dbus PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 set_source_files_properties(../demo_server/instrumentcluster.xml PROPERTIES INCLUDE dbus_conversion.h)
 set(cluster_SRCS)
@@ -38,11 +38,11 @@ target_include_directories(instrumentcluster_dbus PRIVATE
 )
 
 target_link_libraries(instrumentcluster_dbus PUBLIC
-    QtIviInstrumentCluster_Chapter6
+    QtIfInstrumentCluster_Chapter6
     Qt::Core
     Qt::DBus
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 install(TARGETS instrumentcluster_dbus

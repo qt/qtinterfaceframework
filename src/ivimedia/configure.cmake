@@ -10,7 +10,7 @@ set_property(CACHE INPUT_taglib PROPERTY STRINGS undefined no qt system)
 
 #### Libraries
 
-qt_find_package(WrapSystemTagLib PROVIDED_TARGETS WrapSystemTagLib::WrapSystemTagLib MODULE_NAME ivimedia QMAKE_LIB taglib)
+qt_find_package(WrapSystemTagLib PROVIDED_TARGETS WrapSystemTagLib::WrapSystemTagLib MODULE_NAME ifmedia QMAKE_LIB taglib)
 
 
 #### Tests
@@ -23,7 +23,7 @@ qt_feature("taglib" PRIVATE
     LABEL "taglib"
     DISABLE INPUT_taglib STREQUAL 'no'
 )
-qt_feature_definition("taglib" "QTIVI_NO_TAGLIB" NEGATE)
+qt_feature_definition("taglib" "QTIF_NO_TAGLIB" NEGATE)
 qt_feature("system-taglib" PRIVATE
     LABEL "  Using system taglib"
     CONDITION QT_FEATURE_taglib AND WrapSystemTagLib_FOUND
@@ -46,11 +46,11 @@ qt_feature("media_qtro_simulation_server" PRIVATE
     LABEL "Mediaplayer Qt Remote Objects Simulation Server"
     CONDITION QT_FEATURE_remoteobjects AND TARGET Qt::Multimedia
 )
-qt_feature("ivimedia" PUBLIC
-    LABEL "Qt IVI Media"
-    CONDITION QT_FEATURE_ivicore
+qt_feature("ifmedia" PUBLIC
+    LABEL "Qt Interface Framework Media"
+    CONDITION QT_FEATURE_interfaceframework
 )
-qt_configure_add_summary_section(NAME "Qt IVI Media")
+qt_configure_add_summary_section(NAME "Qt Interface Framework Media")
 qt_configure_add_summary_entry(ARGS "taglib")
 qt_configure_add_summary_entry(ARGS "system-taglib")
 qt_configure_add_summary_entry(ARGS "media_qtro_simulation_server")
@@ -59,10 +59,10 @@ qt_configure_add_summary_entry(ARGS "media_simulation_backend")
 qt_configure_add_summary_entry(ARGS "media_qtro_backend")
 qt_configure_add_summary_entry(ARGS "tuner_simulation_backend")
 qt_configure_end_summary_section() # end of "Backends" section
-qt_configure_end_summary_section() # end of "Qt IVI Media" section
+qt_configure_end_summary_section() # end of "Qt Interface Framework Media" section
 qt_configure_add_summary_entry(
-    ARGS "ivimedia"
-    CONDITION NOT QT_FEATURE_ivimedia
+    ARGS "ifmedia"
+    CONDITION NOT QT_FEATURE_ifmedia
 )
 qt_configure_add_report_entry(
     TYPE ERROR

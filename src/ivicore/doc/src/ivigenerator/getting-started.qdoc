@@ -27,16 +27,16 @@
 **
 ****************************************************************************/
 /*!
-\page get-started-ivigenerator.html
-\title Get Started with the Qt IVI Generator
+\page get-started-ifcodegen.html
+\title Get Started with the Qt Interface Framework Generator
 
-This topic explains how to get started with the Qt IVI Generator. The generator can generate
+This topic explains how to get started with the Qt Interface Framework Generator. The generator can generate
 source code from an Interface Definition Language (IDL) file. The kind of code to generate is
 determined by the template that you select.
 
-The Qt IVI Generator is located in the \c bin folder of your Qt installation. If it is not
+The Qt Interface Framework Generator is located in the \c bin folder of your Qt installation. If it is not
 available, make sure that your configuration meets all of the prerequisites listed in the
-qmake configuration summary. For more details on how to configure Qt IVI, see \l {Configuration}.
+qmake configuration summary. For more details on how to configure Qt Interface Framework, see \l {Configuration}.
 
 \section1 Basics
 
@@ -60,7 +60,7 @@ the IDL.
 
 Using the previously defined IDL file, the \l {frontend-template}{frontend} template can generate
 a library providing an implementation of \c MyInterface. The generated class uses the
-\l {Dynamic Backend System} provided by Qt IVI for an abstraction of \c frontend and \c backend
+\l {Dynamic Backend System} provided by Qt Interface Framework for an abstraction of \c frontend and \c backend
 code.
 
 The implementation for the class behavior is done inside a \c backend plugin. A basic backend
@@ -69,7 +69,7 @@ For more information on how Qt locates and loads its plugins, see \l {How to Cre
 
 \section1 In-Depth Walkthrough
 
-For an in-depth walkthrough, see the \l {Qt IVI Generator Tutorial}, which contains step by
-step instructions on how to use the Qt IVI module to generate a Middlware API based on a QML
+For an in-depth walkthrough, see the \l {Qt Interface Framework Generator Tutorial}, which contains step by
+step instructions on how to use the Qt Interface Framework module to generate a Middlware API based on a QML
 application.
 */

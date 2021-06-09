@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,15 +41,15 @@
 #ifndef MEDIADISCOVERYBACKEND_H
 #define MEDIADISCOVERYBACKEND_H
 
-#include <QtIviMedia/QIviMediaDeviceDiscoveryModelBackendInterface>
-#include <QtIviCore/QIviServiceObject>
-#include <QIviRemoteObjectReplicaHelper>
+#include <QtIfMedia/QIfMediaDeviceDiscoveryModelBackendInterface>
+#include <QtInterfaceFramework/QIfServiceObject>
+#include <QIfRemoteObjectReplicaHelper>
 #include <QRemoteObjectNode>
 
-#include "rep_qivimediadiscoverymodel_replica.h"
+#include "rep_qifmediadiscoverymodel_replica.h"
 
 
-class MediaDiscoveryBackend : public QIviMediaDeviceDiscoveryModelBackendInterface
+class MediaDiscoveryBackend : public QIfMediaDeviceDiscoveryModelBackendInterface
 {
     Q_OBJECT
 
@@ -68,12 +68,12 @@ protected:
     bool connectToNode();
 
 private:
-    QSharedPointer<QIviMediaDiscoveryModelReplica> m_replica;
+    QSharedPointer<QIfMediaDiscoveryModelReplica> m_replica;
     QRemoteObjectNode *m_node;
     QUrl m_url;
-    QHash<QString, QIviServiceObject*> m_deviceMap;
+    QHash<QString, QIfServiceObject*> m_deviceMap;
     bool m_initialized;
-    QIviRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectReplicaHelper *m_helper;
 };
 
 #endif // MEDIADISCOVERYBACKEND_H

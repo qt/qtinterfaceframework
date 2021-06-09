@@ -1,7 +1,7 @@
-# Generated from qivipendingreply.pro.
+# Generated from qifpendingreply.pro.
 
 #####################################################################
-## tst_qivipendingreply Test:
+## tst_qifpendingreply Test:
 #####################################################################
 
 # Collect test data
@@ -10,19 +10,19 @@ file(GLOB_RECURSE test_data_glob
     testdata/*)
 list(APPEND test_data ${test_data_glob})
 
-qt_internal_add_test(tst_qivipendingreply
+qt_internal_add_test(tst_qifpendingreply
     SOURCES
-        tst_qivipendingreply.cpp
+        tst_qifpendingreply.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::IviCore
+        Qt::InterfaceFramework
         Qt::Qml
     TESTDATA ${test_data}
 )
 
-#### Keys ignored in scope 1:.:.:qivipendingreply.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:qifpendingreply.pro:<TRUE>:
 # OTHER_FILES = "testdata/*"
 # QMAKE_PROJECT_NAME = "$$TARGET"
 # TEMPLATE = "app"

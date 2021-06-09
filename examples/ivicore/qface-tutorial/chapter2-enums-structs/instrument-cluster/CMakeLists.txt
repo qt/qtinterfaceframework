@@ -9,7 +9,7 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-tutorial/chapter2-enums-structs")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter2-enums-structs")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
@@ -26,7 +26,7 @@ set_target_properties(chapter2-enums-structs PROPERTIES
 )
 
 target_link_libraries(chapter2-enums-structs PUBLIC
-    QtIviInstrumentCluster_Chapter2
+    QtIfInstrumentCluster_Chapter2
     Qt::Core
     Qt::Gui
     Qt::Qml

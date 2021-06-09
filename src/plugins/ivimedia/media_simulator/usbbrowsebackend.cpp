@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -47,7 +47,7 @@
 static const QString fileLiteral = QStringLiteral("file");
 
 UsbBrowseBackend::UsbBrowseBackend(const QString &path, QObject *parent)
-    : QIviSearchAndBrowseModelInterface(parent)
+    : QIfFilterAndBrowseModelInterface(parent)
     , m_rootFolder(path)
 {
     qRegisterMetaType<SearchAndBrowseItem>();
@@ -84,7 +84,7 @@ void UsbBrowseBackend::setContentType(const QUuid &identifier, const QString &co
     emit contentTypeChanged(identifier, contentType);
 }
 
-void UsbBrowseBackend::setupFilter(const QUuid &identifier, QIviAbstractQueryTerm *term, const QList<QIviOrderTerm> &orderTerms)
+void UsbBrowseBackend::setupFilter(const QUuid &identifier, QIfAbstractQueryTerm *term, const QList<QIfOrderTerm> &orderTerms)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(term)
@@ -93,10 +93,10 @@ void UsbBrowseBackend::setupFilter(const QUuid &identifier, QIviAbstractQueryTer
 
 void UsbBrowseBackend::fetchData(const QUuid &identifier, int start, int count)
 {
-    emit supportedCapabilitiesChanged(identifier, QtIviCoreModule::ModelCapabilities(
-                                          QtIviCoreModule::SupportsSorting |
-                                          QtIviCoreModule::SupportsStatelessNavigation |
-                                          QtIviCoreModule::SupportsGetSize
+    emit supportedCapabilitiesChanged(identifier, QtInterfaceFrameworkModule::ModelCapabilities(
+                                          QtInterfaceFrameworkModule::SupportsSorting |
+                                          QtInterfaceFrameworkModule::SupportsStatelessNavigation |
+                                          QtInterfaceFrameworkModule::SupportsGetSize
                                           ));
 
     auto &state = m_state[identifier];
@@ -127,7 +127,7 @@ void UsbBrowseBackend::fetchData(const QUuid &identifier, int start, int count)
     emit canGoForwardChanged(identifier, QVector<bool>(infoList.count(), true), 0);
 }
 
-QIviPendingReply<QString> UsbBrowseBackend::goBack(const QUuid &identifier)
+QIfPendingReply<QString> UsbBrowseBackend::goBack(const QUuid &identifier)
 {
     auto &state = m_state[identifier];
     QStringList types = state.contentType.split('/');
@@ -138,53 +138,53 @@ QIviPendingReply<QString> UsbBrowseBackend::goBack(const QUuid &identifier)
     types.removeLast();
     types.replace(types.count() - 1, types.at(types.count() - 1).split('?').at(0));
 
-    return QIviPendingReply<QString>(types.join('/'));
+    return QIfPendingReply<QString>(types.join('/'));
 }
 
-QIviPendingReply<QString> UsbBrowseBackend::goForward(const QUuid &identifier, int index)
+QIfPendingReply<QString> UsbBrowseBackend::goForward(const QUuid &identifier, int index)
 {
     auto &state = m_state[identifier];
 
-    const QIviStandardItem *i = qtivi_gadgetFromVariant<QIviStandardItem>(this, state.items.value(index, QVariant()));
+    const QIfStandardItem *i = qtif_gadgetFromVariant<QIfStandardItem>(this, state.items.value(index, QVariant()));
     if (!i)
-        return QIviPendingReply<QString>::createFailedReply();
+        return QIfPendingReply<QString>::createFailedReply();
 
     if (state.contentType != fileLiteral)
-        return QIviPendingReply<QString>(state.contentType + "/" + i->id());
+        return QIfPendingReply<QString>(state.contentType + "/" + i->id());
     else
-        return QIviPendingReply<QString>(i->id());
+        return QIfPendingReply<QString>(i->id());
 }
 
-QIviPendingReply<void> UsbBrowseBackend::insert(const QUuid &identifier, int index, const QVariant &item)
+QIfPendingReply<void> UsbBrowseBackend::insert(const QUuid &identifier, int index, const QVariant &item)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(index)
     Q_UNUSED(item)
 
-    return QIviPendingReply<void>::createFailedReply();
+    return QIfPendingReply<void>::createFailedReply();
 }
 
-QIviPendingReply<void> UsbBrowseBackend::remove(const QUuid &identifier, int index)
+QIfPendingReply<void> UsbBrowseBackend::remove(const QUuid &identifier, int index)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(index)
 
-    return QIviPendingReply<void>::createFailedReply();
+    return QIfPendingReply<void>::createFailedReply();
 }
 
-QIviPendingReply<void> UsbBrowseBackend::move(const QUuid &identifier, int currentIndex, int newIndex)
+QIfPendingReply<void> UsbBrowseBackend::move(const QUuid &identifier, int currentIndex, int newIndex)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(currentIndex)
     Q_UNUSED(newIndex)
 
-    return QIviPendingReply<void>::createFailedReply();
+    return QIfPendingReply<void>::createFailedReply();
 }
 
-QIviPendingReply<int> UsbBrowseBackend::indexOf(const QUuid &identifier, const QVariant &item)
+QIfPendingReply<int> UsbBrowseBackend::indexOf(const QUuid &identifier, const QVariant &item)
 {
     Q_UNUSED(identifier)
     Q_UNUSED(item)
 
-    return QIviPendingReply<int>::createFailedReply();
+    return QIfPendingReply<int>::createFailedReply();
 }

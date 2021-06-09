@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIADEVICEDISCOVERYMODEL_P_H
-#define QIVIMEDIADEVICEDISCOVERYMODEL_P_H
+#ifndef QIFMEDIADEVICEDISCOVERYMODEL_P_H
+#define QIFMEDIADEVICEDISCOVERYMODEL_P_H
 
 //
 //  W A R N I N G
@@ -53,34 +53,34 @@
 // We mean it.
 //
 
-#include "private/qtivimediaglobal_p.h"
-#include "private/qiviabstractfeaturelistmodel_p.h"
+#include "private/qtifmediaglobal_p.h"
+#include "private/qifabstractfeaturelistmodel_p.h"
 
-#include "qivimediadevicediscoverymodel.h"
-#include "qivimediadevicediscoverymodelbackendinterface.h"
+#include "qifmediadevicediscoverymodel.h"
+#include "qifmediadevicediscoverymodelbackendinterface.h"
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaDeviceDiscoveryModelPrivate : public QIviAbstractFeatureListModelPrivate
+class QIfMediaDeviceDiscoveryModelPrivate : public QIfAbstractFeatureListModelPrivate
 {
 public:
-    QIviMediaDeviceDiscoveryModelPrivate(const QString &interface, QIviMediaDeviceDiscoveryModel *parent);
+    QIfMediaDeviceDiscoveryModelPrivate(const QString &interface, QIfMediaDeviceDiscoveryModel *parent);
 
     void initialize() override;
     void clearToDefaults();
-    void resetModel(const QList<QIviServiceObject *> &deviceList);
-    void onDeviceAdded(QIviServiceObject *device);
-    void onDeviceRemoved(QIviServiceObject *device);
+    void resetModel(const QList<QIfServiceObject *> &deviceList);
+    void onDeviceAdded(QIfServiceObject *device);
+    void onDeviceRemoved(QIfServiceObject *device);
 
     //TODO rename me to something more handy ?
-    QIviMediaDeviceDiscoveryModelBackendInterface *discoveryBackend() const;
+    QIfMediaDeviceDiscoveryModelBackendInterface *discoveryBackend() const;
 
-    QIviMediaDeviceDiscoveryModel * const q_ptr;
+    QIfMediaDeviceDiscoveryModel * const q_ptr;
 
-    QList<QIviServiceObject *> m_deviceList;
-    Q_DECLARE_PUBLIC(QIviMediaDeviceDiscoveryModel)
+    QList<QIfServiceObject *> m_deviceList;
+    Q_DECLARE_PUBLIC(QIfMediaDeviceDiscoveryModel)
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIADEVICEDISCOVERYMODEL_P_H
+#endif // QIFMEDIADEVICEDISCOVERYMODEL_P_H

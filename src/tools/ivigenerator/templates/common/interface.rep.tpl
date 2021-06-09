@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -37,7 +37,7 @@
 // WARNING! All changes made in this file will be lost!
 /////////////////////////////////////////////////////////////////////////////
 {% set class = '{0}'.format(interface) %}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 {% if interface.module.tags.config.module %}
 #include <{{interface.module.tags.config.module}}/{{module.module_name|lower}}.h>
@@ -59,7 +59,7 @@ class {{class}}
 {%     if interface_zoned %}
     SLOT({{property|return_type|replace(" *", "")}} {{property|getter_name}}(const QString &zone))
 {%       if not property.readonly %}
-    SLOT({{ivi.prop_setter(property, zoned=true)}})
+    SLOT({{if.prop_setter(property, zoned=true)}})
 {%       endif %}
     SIGNAL({{property}}Changed({{property|parameter_type}}, const QString &zone))
 
@@ -74,11 +74,11 @@ class {{class}}
 {% endif %}
 
 {% for operation in interface.operations %}
-    SLOT(QVariant {{operation}}({{ivi.join_params(operation, zoned = interface_zoned)}}))
+    SLOT(QVariant {{operation}}({{if.join_params(operation, zoned = interface_zoned)}}))
 {% endfor %}
 
     SIGNAL(pendingResultAvailable(quint64 id, bool isSuccess, const QVariant &value))
 {% for signal in interface.signals %}
-    SIGNAL({{signal}}({{ivi.join_params(signal, zoned = interface_zoned)}}))
+    SIGNAL({{signal}}({{if.join_params(signal, zoned = interface_zoned)}}))
 {% endfor %}
 };

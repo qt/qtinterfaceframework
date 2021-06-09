@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,59 +38,59 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIREMOTEOBJECTREPLICAHELPER_H
-#define QIVIREMOTEOBJECTREPLICAHELPER_H
+#ifndef QIFREMOTEOBJECTREPLICAHELPER_H
+#define QIFREMOTEOBJECTREPLICAHELPER_H
 
-#include <QtIviCore/QIviPendingReply>
-#include <QtIviCore/QIviAbstractFeature>
+#include <QtInterfaceFramework/QIfPendingReply>
+#include <QtInterfaceFramework/QIfAbstractFeature>
 #include <QtRemoteObjects/QRemoteObjectNode>
 #include <QtRemoteObjects/QRemoteObjectReplica>
 #include <QtRemoteObjects/QRemoteObjectPendingCall>
 
-#include <QtIviRemoteObjectsHelper/qiviremoteobjectpendingresult.h>
+#include <QtIfRemoteObjectsHelper/qifremoteobjectpendingresult.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviRemoteObjectReplicaHelper : public QObject
+class QIfRemoteObjectReplicaHelper : public QObject
 {
     Q_OBJECT
 
 public:
-    QIviRemoteObjectReplicaHelper(const QLoggingCategory &category = qtivi_private::qLcQtIviRoHelper(), QObject *parent = nullptr);
+    QIfRemoteObjectReplicaHelper(const QLoggingCategory &category = qtif_private::qLcQtIfRoHelper(), QObject *parent = nullptr);
 
     QVariant fromRemoteObjectVariant(const QVariant &variant) const;
 
-    template <class T> QIviPendingReply<T> toQIviPendingReply(const QRemoteObjectPendingCall &reply)
+    template <class T> QIfPendingReply<T> toQIfPendingReply(const QRemoteObjectPendingCall &reply)
     {
         qCDebug(m_category) << "Analyzing QRemoteObjectPendingCall";
-        QIviPendingReply<T> iviReply;
+        QIfPendingReply<T> ifReply;
         auto watcher = new QRemoteObjectPendingCallWatcher(reply);
-        connect(watcher, &QRemoteObjectPendingCallWatcher::finished, watcher, [this, iviReply] (QRemoteObjectPendingCallWatcher *self) mutable {
+        connect(watcher, &QRemoteObjectPendingCallWatcher::finished, watcher, [this, ifReply] (QRemoteObjectPendingCallWatcher *self) mutable {
             if (self->error() == QRemoteObjectPendingCallWatcher::NoError) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 1)
                 QVariant value = self->returnValue();
 #else
                 QVariant value = self->returnValue().value<QVariant>();
 #endif
-                if (value.canConvert<QIviRemoteObjectPendingResult>()) {
-                    auto result = value.value<QIviRemoteObjectPendingResult>();
+                if (value.canConvert<QIfRemoteObjectPendingResult>()) {
+                    auto result = value.value<QIfRemoteObjectPendingResult>();
                     if (result.failed()) {
                         qCDebug(m_category) << "Pending Result with id:" << result.id() << "failed";
-                        iviReply.setFailed();
+                        ifReply.setFailed();
                     } else {
                         qCDebug(m_category) << "Result not available yet. Waiting for id:" << result.id();
-                        m_pendingReplies.insert(result.id(), iviReply);
+                        m_pendingReplies.insert(result.id(), ifReply);
                     }
                 } else {
                     qCDebug(m_category) << "Got the value right away:" << value;
-                    iviReply.setSuccess(value);
+                    ifReply.setSuccess(value);
                 }
             } else {
-                iviReply.setFailed();
+                ifReply.setFailed();
             }
             self->deleteLater();
         });
-        return iviReply;
+        return ifReply;
     }
 
 public Q_SLOTS:
@@ -99,13 +99,13 @@ public Q_SLOTS:
     void onNodeError(QRemoteObjectNode::ErrorCode code);
 
 Q_SIGNALS:
-    void errorChanged(QIviAbstractFeature::Error error, const QString &message = QString());
+    void errorChanged(QIfAbstractFeature::Error error, const QString &message = QString());
 
 private:
-    QHash<quint64, QIviPendingReplyBase> m_pendingReplies;
+    QHash<quint64, QIfPendingReplyBase> m_pendingReplies;
     const QLoggingCategory &m_category;
 };
 
 QT_END_NAMESPACE
 
-#endif //QIVIREMOTEOBJECTREPLICAHELPER_H
+#endif //QIFREMOTEOBJECTREPLICAHELPER_H

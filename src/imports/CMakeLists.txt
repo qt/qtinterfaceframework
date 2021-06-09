@@ -1,11 +1,11 @@
 # Generated from imports.pro.
 
-if(TARGET Qt::IviCore)
+if(TARGET Qt::InterfaceFramework)
     add_subdirectory(core)
 endif()
-if(TARGET Qt::IviMedia)
+if(TARGET Qt::IfMedia)
     add_subdirectory(media)
 endif()
-if(TARGET Qt::IviVehicleFunctions) # special case
+if(TARGET Qt::IfVehicleFunctions) # special case
     add_subdirectory(vehiclefunctions)
 endif()

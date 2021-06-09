@@ -9,16 +9,16 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-tutorial/chapter5-ipc/simulation_server")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter5-ipc/simulation_server")
 
 find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_executable(chapter5-ipc-server)
 set_target_properties(chapter5-ipc-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-# IVI Generator:
-qt6_ivigenerator(chapter5-ipc-server
+# Interface Framework Generator:
+qt6_ifcodegen(chapter5-ipc-server
     QFACE_SOURCES ../instrument-cluster.qface
     QFACE_FORMAT server_qtro_simulator
 )
@@ -28,9 +28,9 @@ set_target_properties(chapter5-ipc-server PROPERTIES
 )
 
 target_link_libraries(chapter5-ipc-server PUBLIC
-    QtIviInstrumentCluster_Chapter5
+    QtIfInstrumentCluster_Chapter5
     Qt::Core
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 

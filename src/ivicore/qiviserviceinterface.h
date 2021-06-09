@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,17 +39,17 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISERVICEINTERFACE_H
-#define QIVISERVICEINTERFACE_H
+#ifndef QIFSERVICEINTERFACE_H
+#define QIFSERVICEINTERFACE_H
 
-#include <QtIviCore/qivifeatureinterface.h>
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/qiffeatureinterface.h>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 #include <QtCore/QtPlugin>
 
 QT_BEGIN_NAMESPACE
 
-template <class T> T qivi_interface_cast(QObject *backend)
+template <class T> T qif_interface_cast(QObject *backend)
 {
     T inst = qobject_cast<T>(backend);
     static bool showOnce = true;
@@ -63,26 +63,26 @@ template <class T> T qivi_interface_cast(QObject *backend)
     return inst;
 }
 
-class Q_QTIVICORE_EXPORT QIviServiceInterface
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceInterface
 {
 public:
-    virtual ~QIviServiceInterface();
+    virtual ~QIfServiceInterface();
 
     virtual QStringList interfaces() const = 0;
-    virtual QIviFeatureInterface *interfaceInstance(const QString &interfaceName) const = 0;
+    virtual QIfFeatureInterface *interfaceInstance(const QString &interfaceName) const = 0;
 
     template <class T> T interfaceInstance(const QString &interfaceName) const {
-        T inst = qivi_interface_cast<T>(interfaceInstance(interfaceName));
+        T inst = qif_interface_cast<T>(interfaceInstance(interfaceName));
         return inst;
     }
 };
 
-#define QIviServiceInterface_iid "org.qt-project.qtivi.QIviServiceInterface/1.0"
-Q_DECLARE_INTERFACE(QIviServiceInterface, QIviServiceInterface_iid)
+#define QIfServiceInterface_iid "org.qt-project.interfaceframework.QIfServiceInterface/1.0"
+Q_DECLARE_INTERFACE(QIfServiceInterface, QIfServiceInterface_iid)
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QIviServiceInterface*)
+Q_DECLARE_METATYPE(QIfServiceInterface*)
 
-#endif // QIVISERVICEINTERFACE_H
+#endif // QIFSERVICEINTERFACE_H
 

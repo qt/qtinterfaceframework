@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,13 +41,13 @@
 
 #include "logging.h"
 
-#include <QtIviCore/QIviFeatureInterface>
+#include <QtInterfaceFramework/QIfFeatureInterface>
 
-Q_LOGGING_CATEGORY(media, "qt.ivi.media.media_simulator")
+Q_LOGGING_CATEGORY(media, "qt.if.media.media_simulator")
 
-void sqlError(QIviFeatureInterface *interface, const QString &query, const QString &error)
+void sqlError(QIfFeatureInterface *interface, const QString &query, const QString &error)
 {
     qCWarning(media) << "Error when executing SQL statement:" << query;
     qCWarning(media) << "ERROR:" << error;
-    emit interface->errorChanged(QIviAbstractFeature::Unknown, error);
+    emit interface->errorChanged(QIfAbstractFeature::Unknown, error);
 }

@@ -1,18 +1,18 @@
-TARGET = $$qtLibraryTarget(QtIviRemoteExample)
+TARGET = $$qtLibraryTarget(QtIfRemoteExample)
 TEMPLATE = lib
 DESTDIR = ..
 
 #! [0]
-QT_FOR_CONFIG += ivicore
-!qtConfig(ivigenerator): error("No ivigenerator available")
+QT_FOR_CONFIG += interfaceframework
+!qtConfig(ifcodegen): error("No ifcodegen available")
 #! [0]
-QT += ivicore ivicore-private qml quick
+QT += interfaceframework interfaceframework-private qml quick
 
-DEFINES += QT_BUILD_EXAMPLE_IVI_REMOTE_LIB
+DEFINES += QT_BUILD_EXAMPLE_IF_REMOTE_LIB
 #! [1]
-CONFIG += ivigenerator
-QFACE_SOURCES = ../example-ivi-remote.qface
+CONFIG += ifcodegen
+QFACE_SOURCES = ../example-if-remote.qface
 #! [1]
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-ivi-remote
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-if-remote
 INSTALLS += target

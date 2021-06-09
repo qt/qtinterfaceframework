@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,44 +39,44 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPLAYABLEITEM_H
-#define QIVIPLAYABLEITEM_H
+#ifndef QIFPLAYABLEITEM_H
+#define QIFPLAYABLEITEM_H
 
-#include <QtIviMedia/qtivimediaglobal.h>
-#include <QtIviCore/QIviSearchAndBrowseModel>
-#include <QtIviCore/QIviStandardItem>
+#include <QtIfMedia/qtifmediaglobal.h>
+#include <QtInterfaceFramework/QIfFilterAndBrowseModel>
+#include <QtInterfaceFramework/QIfStandardItem>
 #include <QtCore/QUrl>
 
 QT_BEGIN_NAMESPACE
 
-class QIviPlayableItemPrivate;
-class QIviAudioTrackItemPrivate;
+class QIfPlayableItemPrivate;
+class QIfAudioTrackItemPrivate;
 
-class Q_QTIVIMEDIA_EXPORT QIviPlayableItem : public QIviStandardItem
+class Q_QTIFMEDIA_EXPORT QIfPlayableItem : public QIfStandardItem
 {
     Q_GADGET
 
     Q_PROPERTY(QUrl url READ url WRITE setUrl)
 
 public:
-    explicit QIviPlayableItem();
-    explicit QIviPlayableItem(const QIviPlayableItem &);
-    QIviPlayableItem &operator=(const QIviPlayableItem &);
-    ~QIviPlayableItem();
+    explicit QIfPlayableItem();
+    explicit QIfPlayableItem(const QIfPlayableItem &);
+    QIfPlayableItem &operator=(const QIfPlayableItem &);
+    ~QIfPlayableItem();
 
     virtual QUrl url() const;
     virtual void setUrl(const QUrl &url);
     QString type() const override;
 
-    bool operator==(const QIviPlayableItem &other) const;
-    inline bool operator!=(const QIviPlayableItem &other) const { return !(*this == other); }
+    bool operator==(const QIfPlayableItem &other) const;
+    inline bool operator!=(const QIfPlayableItem &other) const { return !(*this == other); }
 
 private:
-    QSharedDataPointer<QIviPlayableItemPrivate> d;
+    QSharedDataPointer<QIfPlayableItemPrivate> d;
 };
-Q_DECLARE_TYPEINFO(QIviPlayableItem, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QIfPlayableItem, Q_MOVABLE_TYPE);
 
-class Q_QTIVIMEDIA_EXPORT QIviAudioTrackItem : public QIviPlayableItem
+class Q_QTIFMEDIA_EXPORT QIfAudioTrackItem : public QIfPlayableItem
 {
     Q_GADGET
 
@@ -91,10 +91,10 @@ class Q_QTIVIMEDIA_EXPORT QIviAudioTrackItem : public QIviPlayableItem
     Q_PROPERTY(int rating READ rating WRITE setRating)
 
 public:
-    QIviAudioTrackItem();
-    QIviAudioTrackItem(const QIviAudioTrackItem &);
-    QIviAudioTrackItem &operator=(const QIviAudioTrackItem &);
-    ~QIviAudioTrackItem();
+    QIfAudioTrackItem();
+    QIfAudioTrackItem(const QIfAudioTrackItem &);
+    QIfAudioTrackItem &operator=(const QIfAudioTrackItem &);
+    ~QIfAudioTrackItem();
 
     virtual QString title() const;
     virtual void setTitle(const QString &title);
@@ -117,20 +117,20 @@ public:
     QString name() const override;
     QString type() const override;
 
-    bool operator==(const QIviAudioTrackItem &other) const;
-    inline bool operator!=(const QIviAudioTrackItem &other) const { return !(*this == other); }
+    bool operator==(const QIfAudioTrackItem &other) const;
+    inline bool operator!=(const QIfAudioTrackItem &other) const { return !(*this == other); }
 
 private:
-    QSharedDataPointer<QIviAudioTrackItemPrivate> d;
+    QSharedDataPointer<QIfAudioTrackItemPrivate> d;
 };
-Q_DECLARE_TYPEINFO(QIviAudioTrackItem, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QIfAudioTrackItem, Q_MOVABLE_TYPE);
 
-Q_QTIVIMEDIA_EXPORT QDataStream &operator<<(QDataStream &stream, const QIviAudioTrackItem &obj);
-Q_QTIVIMEDIA_EXPORT QDataStream &operator>>(QDataStream &stream, QIviAudioTrackItem &obj);
+Q_QTIFMEDIA_EXPORT QDataStream &operator<<(QDataStream &stream, const QIfAudioTrackItem &obj);
+Q_QTIFMEDIA_EXPORT QDataStream &operator>>(QDataStream &stream, QIfAudioTrackItem &obj);
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QIviPlayableItem)
-Q_DECLARE_METATYPE(QIviAudioTrackItem)
+Q_DECLARE_METATYPE(QIfPlayableItem)
+Q_DECLARE_METATYPE(QIfAudioTrackItem)
 
-#endif // QIVIPLAYABLEITEM_H
+#endif // QIFPLAYABLEITEM_H

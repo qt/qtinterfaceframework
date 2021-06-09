@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -58,7 +58,7 @@ Window {
 
     width: 1920
     height: 720
-    title: qsTr("QtIVI Instrument Cluster")
+    title: qsTr("QtIF Instrument Cluster")
     visible: true
     color: "#0c0c0c"
 

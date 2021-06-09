@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}RoBackend'.format(interface) %}
 {% set zone_class = '{0}RoZone'.format(interface) %}
@@ -39,7 +39,7 @@
 #define {{oncedefine}}
 
 #include <QRemoteObjectNode>
-#include <QIviRemoteObjectReplicaHelper>
+#include <QIfRemoteObjectReplicaHelper>
 {% if module.tags.config.module %}
 #include <{{module.tags.config.module}}/{{interface}}BackendInterface>
 {% else %}
@@ -70,7 +70,7 @@ public:
 
 public Q_SLOTS:
 {% for property in interface.properties %}
-    {{ivi.prop_setter(property, model_interface = true)}};
+    {{if.prop_setter(property, model_interface = true)}};
 {% endfor %}
     void emitCurrentState();
 
@@ -84,7 +84,7 @@ private:
     QString m_zone;
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-    QIviPagingModelInterface *m_{{ property }};
+    QIfPagingModelInterface *m_{{ property }};
 {%   else %}
     {{ property|return_type }} m_{{ property }};
 {%   endif %}
@@ -108,7 +108,7 @@ public Q_SLOTS:
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const %}
 {%     if not property.is_model %}
-    {{ivi.prop_setter(property, zoned=interface_zoned)}} override;
+    {{if.prop_setter(property, zoned=interface_zoned)}} override;
 {%     endif %}
 {%   endif %}
 {% endfor %}
@@ -118,7 +118,7 @@ public Q_SLOTS:
 {% endif %}
 
 {% for operation in interface.operations %}
-    {{ivi.operation(operation, zoned=interface_zoned)}} override;
+    {{if.operation(operation, zoned=interface_zoned)}} override;
 {% endfor %}
 
 protected Q_SLOTS:
@@ -135,11 +135,11 @@ protected:
     QRemoteObjectNode* m_node= nullptr;
     QUrl m_url;
     QString m_remoteObjectsLookupName;
-    QHash<quint64, QIviPendingReplyBase> m_pendingReplies;
-    QIviRemoteObjectReplicaHelper *m_helper;
+    QHash<quint64, QIfPendingReplyBase> m_pendingReplies;
+    QIfRemoteObjectReplicaHelper *m_helper;
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-    QIviPagingModelInterface *m_{{property}};
+    QIfPagingModelInterface *m_{{property}};
 {%   endif %}
 {% endfor %}
 {% if interface_zoned %}

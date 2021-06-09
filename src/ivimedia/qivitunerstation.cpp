@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#include "qivitunerstation.h"
+#include "qiftunerstation.h"
 
 QT_BEGIN_NAMESPACE
 
-class QIviTunerStationPrivate : public QSharedData
+class QIfTunerStationPrivate : public QSharedData
 {
 public:
-    QIviTunerStationPrivate()
+    QIfTunerStationPrivate()
         : m_frequency(-1)
         , m_receptionQuality(-1)
     {}
 
-    QIviTunerStationPrivate(const QIviTunerStationPrivate &other)
+    QIfTunerStationPrivate(const QIfTunerStationPrivate &other)
         : QSharedData(other)
         , m_stationName(other.m_stationName)
         , m_frequency(other.m_frequency)
@@ -69,31 +69,31 @@ public:
     int m_receptionQuality;
 };
 
-class QIviAmFmTunerStationPrivate : public QSharedData
+class QIfAmFmTunerStationPrivate : public QSharedData
 {
 public:
-    QIviAmFmTunerStationPrivate()
-        : m_band(QIviAmFmTuner::FMBand)
+    QIfAmFmTunerStationPrivate()
+        : m_band(QIfAmFmTuner::FMBand)
     {}
 
-    QIviAmFmTunerStationPrivate(const QIviAmFmTunerStationPrivate &other)
+    QIfAmFmTunerStationPrivate(const QIfAmFmTunerStationPrivate &other)
         : QSharedData(other)
         , m_band(other.m_band)
     {}
 
-    QIviAmFmTuner::Band m_band;
+    QIfAmFmTuner::Band m_band;
 };
 
 /*!
-    \class QIviTunerStation
-    \inmodule QtIviMedia
-    \brief The QIviTunerStation represents a tuner station.
+    \class QIfTunerStation
+    \inmodule QtIfMedia
+    \brief The QIfTunerStation represents a tuner station.
 */
 
 /*!
     \qmltype TunerStation
-    \instantiates QIviTunerStation
-    \inqmlmodule QtIvi.Media
+    \instantiates QIfTunerStation
+    \inqmlmodule QtInterfaceFramework.Media
     \inherits StandardItem
     \brief The TunerStation represents a tuner station.
 
@@ -107,7 +107,7 @@ public:
 */
 
 /*!
-    \property QIviTunerStation::stationName
+    \property QIfTunerStation::stationName
 
     Holds the name of the tuner station.
 */
@@ -119,7 +119,7 @@ public:
 */
 
 /*!
-    \property QIviTunerStation::frequency
+    \property QIfTunerStation::frequency
 
     Holds the frequency of the tuner station.
 */
@@ -133,7 +133,7 @@ public:
 */
 
 /*!
-    \property QIviTunerStation::stationLogoUrl
+    \property QIfTunerStation::stationLogoUrl
 
     Holds the logo of this station.
 
@@ -149,7 +149,7 @@ public:
 */
 
 /*!
-    \property QIviTunerStation::category
+    \property QIfTunerStation::category
 
     Holds the category of the tuner station.
 
@@ -167,7 +167,7 @@ public:
 */
 
 /*!
-    \property QIviTunerStation::radioText
+    \property QIfTunerStation::radioText
 
     Holds the radio text transmitted by the tuner station.
 
@@ -185,93 +185,93 @@ public:
 */
 
 /*!
-    \property QIviTunerStation::receptionQuality
+    \property QIfTunerStation::receptionQuality
 
     Holds the reception quality of the tuner station.
 
     //TODO What's the usual unit and range of this ?
 */
 
-QIviTunerStation::QIviTunerStation()
-    : QIviStandardItem()
-    , d(new QIviTunerStationPrivate)
+QIfTunerStation::QIfTunerStation()
+    : QIfStandardItem()
+    , d(new QIfTunerStationPrivate)
 {
 }
 
-QIviTunerStation::QIviTunerStation(const QIviTunerStation &rhs)
-    : QIviStandardItem(rhs)
+QIfTunerStation::QIfTunerStation(const QIfTunerStation &rhs)
+    : QIfStandardItem(rhs)
     , d(rhs.d)
 {
 }
 
-QIviTunerStation &QIviTunerStation::operator=(const QIviTunerStation &rhs)
+QIfTunerStation &QIfTunerStation::operator=(const QIfTunerStation &rhs)
 {
-    QIviStandardItem::operator=(rhs);
+    QIfStandardItem::operator=(rhs);
     if (this != &rhs)
         d.operator=(rhs.d);
     return *this;
 }
 
-QIviTunerStation::~QIviTunerStation()
+QIfTunerStation::~QIfTunerStation()
 {
 }
 
-QString QIviTunerStation::stationName() const
+QString QIfTunerStation::stationName() const
 {
     return d->m_stationName;
 }
 
-void QIviTunerStation::setStationName(const QString &stationName)
+void QIfTunerStation::setStationName(const QString &stationName)
 {
     d->m_stationName = stationName;
 }
 
-int QIviTunerStation::frequency() const
+int QIfTunerStation::frequency() const
 {
     return d->m_frequency;
 }
 
-void QIviTunerStation::setFrequency(int frequency)
+void QIfTunerStation::setFrequency(int frequency)
 {
     d->m_frequency = frequency;
 }
 
-QString QIviTunerStation::stationLogoUrl() const
+QString QIfTunerStation::stationLogoUrl() const
 {
     return d->m_stationLogoUrl;
 }
 
-void QIviTunerStation::setStationLogoUrl(const QString &stationLogoUrl)
+void QIfTunerStation::setStationLogoUrl(const QString &stationLogoUrl)
 {
     d->m_stationLogoUrl = stationLogoUrl;
 }
 
-QString QIviTunerStation::category() const
+QString QIfTunerStation::category() const
 {
     return d->m_category;
 }
 
-void QIviTunerStation::setCategory(const QString &category)
+void QIfTunerStation::setCategory(const QString &category)
 {
     d->m_category = category;
 }
 
-QString QIviTunerStation::radioText() const
+QString QIfTunerStation::radioText() const
 {
     return d->m_radioText;
 }
 
-void QIviTunerStation::setRadioText(const QString &radioText)
+void QIfTunerStation::setRadioText(const QString &radioText)
 {
     d->m_radioText = radioText;
 }
 
-int QIviTunerStation::receptionQuality() const
+int QIfTunerStation::receptionQuality() const
 {
     return d->m_receptionQuality;
 }
 
-void QIviTunerStation::setReceptionQuality(int receptionQuality)
+void QIfTunerStation::setReceptionQuality(int receptionQuality)
 {
     d->m_receptionQuality = receptionQuality;
 }
@@ -279,7 +279,7 @@ void QIviTunerStation::setReceptionQuality(int receptionQuality)
 /*!
     \reimp
 */
-QString QIviTunerStation::name() const
+QString QIfTunerStation::name() const
 {
     return d->m_stationName;
 }
@@ -287,7 +287,7 @@ QString QIviTunerStation::name() const
 /*!
     \reimp
 */
-QString QIviTunerStation::type() const
+QString QIfTunerStation::type() const
 {
     return QLatin1String("tunerstation");
 }
@@ -297,9 +297,9 @@ QString QIviTunerStation::type() const
 
     \sa operator!=()
 */
-bool QIviTunerStation::operator==(const QIviTunerStation &other) const
+bool QIfTunerStation::operator==(const QIfTunerStation &other) const
 {
-    return (QIviStandardItem::operator==(other) &&
+    return (QIfStandardItem::operator==(other) &&
             d->m_stationName == other.d->m_stationName &&
             d->m_frequency == other.d->m_frequency &&
             d->m_stationLogoUrl == other.d->m_stationLogoUrl &&
@@ -309,7 +309,7 @@ bool QIviTunerStation::operator==(const QIviTunerStation &other) const
 }
 
 /*!
-    \fn bool QIviTunerStation::operator!=(const QIviTunerStation &other)
+    \fn bool QIfTunerStation::operator!=(const QIfTunerStation &other)
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 
@@ -317,15 +317,15 @@ bool QIviTunerStation::operator==(const QIviTunerStation &other) const
 */
 
 /*!
-    \class QIviAmFmTunerStation
-    \inmodule QtIviMedia
-    \brief The QIviTunerStation represents a tuner station.
+    \class QIfAmFmTunerStation
+    \inmodule QtIfMedia
+    \brief The QIfTunerStation represents a tuner station.
 */
 
 /*!
     \qmltype AmFmTunerStation
-    \instantiates QIviAmFmTunerStation
-    \inqmlmodule QtIvi.Media
+    \instantiates QIfAmFmTunerStation
+    \inqmlmodule QtInterfaceFramework.Media
     \inherits TunerStation
     \brief The TunerStation represents a tuner station.
 
@@ -347,41 +347,41 @@ bool QIviTunerStation::operator==(const QIviTunerStation &other) const
 */
 
 /*!
-    \property QIviAmFmTunerStation::band
+    \property QIfAmFmTunerStation::band
 
     Holds the band of the tuner station.
 */
 
-QIviAmFmTunerStation::QIviAmFmTunerStation()
-    : QIviTunerStation()
-    , d(new QIviAmFmTunerStationPrivate)
+QIfAmFmTunerStation::QIfAmFmTunerStation()
+    : QIfTunerStation()
+    , d(new QIfAmFmTunerStationPrivate)
 {
 }
 
-QIviAmFmTunerStation::QIviAmFmTunerStation(const QIviAmFmTunerStation &rhs)
-    : QIviTunerStation(rhs)
+QIfAmFmTunerStation::QIfAmFmTunerStation(const QIfAmFmTunerStation &rhs)
+    : QIfTunerStation(rhs)
     , d(rhs.d)
 {
 }
 
-QIviAmFmTunerStation &QIviAmFmTunerStation::operator=(const QIviAmFmTunerStation &rhs)
+QIfAmFmTunerStation &QIfAmFmTunerStation::operator=(const QIfAmFmTunerStation &rhs)
 {
-    QIviTunerStation::operator=(rhs);
+    QIfTunerStation::operator=(rhs);
     if (this != &rhs)
         d.operator=(rhs.d);
     return *this;
 }
 
-QIviAmFmTunerStation::~QIviAmFmTunerStation()
+QIfAmFmTunerStation::~QIfAmFmTunerStation()
 {
 }
 
-QIviAmFmTuner::Band QIviAmFmTunerStation::band() const
+QIfAmFmTuner::Band QIfAmFmTunerStation::band() const
 {
     return d->m_band;
 }
 
-void QIviAmFmTunerStation::setBand(QIviAmFmTuner::Band band)
+void QIfAmFmTunerStation::setBand(QIfAmFmTuner::Band band)
 {
     d->m_band = band;
 }
@@ -389,7 +389,7 @@ void QIviAmFmTunerStation::setBand(QIviAmFmTuner::Band band)
 /*!
     \reimp
 */
-QString QIviAmFmTunerStation::type() const
+QString QIfAmFmTunerStation::type() const
 {
     return QLatin1String("amfmtunerstation");
 }
@@ -399,14 +399,14 @@ QString QIviAmFmTunerStation::type() const
 
     \sa operator!=()
 */
-bool QIviAmFmTunerStation::operator==(const QIviAmFmTunerStation &other) const
+bool QIfAmFmTunerStation::operator==(const QIfAmFmTunerStation &other) const
 {
-    return (QIviTunerStation::operator==(other) &&
+    return (QIfTunerStation::operator==(other) &&
             d->m_band == other.d->m_band);
 }
 
 /*!
-    \fn bool QIviAmFmTunerStation::operator!=(const QIviAmFmTunerStation &other)
+    \fn bool QIfAmFmTunerStation::operator!=(const QIfAmFmTunerStation &other)
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 

@@ -12,13 +12,13 @@ qt_internal_add_test(tst_org-example-echo-noanno
     PUBLIC_LIBRARIES
         echo_noanno_frontend
         Qt::Core
-        Qt::IviCore
+        Qt::InterfaceFramework
         Qt::Test
 )
 set_target_properties(tst_org-example-echo-noanno PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-# IVI Generator:
-qt6_ivigenerator(tst_org-example-echo-noanno
+# Interface Framework Generator:
+qt6_ifcodegen(tst_org-example-echo-noanno
     QFACE_SOURCES ../../org.example.echo.noannotation.qface
     QFACE_FORMAT test
 )

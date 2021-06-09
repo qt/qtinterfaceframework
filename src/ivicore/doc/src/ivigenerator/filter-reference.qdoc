@@ -35,7 +35,7 @@
 
 In addition to the built-in Jinja filters listed \l
 {http://jinja.pocoo.org/docs/2.9/templates/#list-of-builtin-filters} {here}, the following
-additional features are implemented in the ivigenerator.
+additional features are implemented in the ifcodegen.
 
 \section1 Filters
 

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,44 +39,44 @@
 **
 ****************************************************************************/
 
-#include "qiviabstractfeature.h"
-#include "qiviabstractfeature_p.h"
-#include "qtiviglobal_p.h"
-#include "qtivicoremodule.h"
+#include "qifabstractfeature.h"
+#include "qifabstractfeature_p.h"
+#include "qtifglobal_p.h"
+#include "qtinterfaceframeworkmodule.h"
 
-#include "qiviservicemanager.h"
-#include "qiviservicemanager_p.h"
-#include "qiviserviceobject.h"
+#include "qifservicemanager.h"
+#include "qifservicemanager_p.h"
+#include "qifserviceobject.h"
 
 #include <QDebug>
 #include <QMetaEnum>
 
 QT_BEGIN_NAMESPACE
 
-QIviAbstractFeaturePrivate::QIviAbstractFeaturePrivate(const QString &interfaceName, QIviAbstractFeature *parent)
+QIfAbstractFeaturePrivate::QIfAbstractFeaturePrivate(const QString &interfaceName, QIfAbstractFeature *parent)
     : QObjectPrivate()
     , q_ptr(parent)
     , m_interface(interfaceName)
     , m_serviceObject(nullptr)
-    , m_discoveryMode(QIviAbstractFeature::AutoDiscovery)
-    , m_discoveryResult(QIviAbstractFeature::NoResult)
-    , m_error(QIviAbstractFeature::NoError)
+    , m_discoveryMode(QIfAbstractFeature::AutoDiscovery)
+    , m_discoveryResult(QIfAbstractFeature::NoResult)
+    , m_error(QIfAbstractFeature::NoError)
     , m_qmlCreation(false)
     , m_isInitialized(false)
     , m_isConnected(false)
     , m_supportsPropertyOverriding(false)
     , m_propertyOverride(nullptr)
 {
-    qRegisterMetaType<QIviAbstractFeature::Error>();
-    qRegisterMetaType<QIviAbstractFeature::DiscoveryMode>();
-    qRegisterMetaType<QIviAbstractFeature::DiscoveryResult>();
+    qRegisterMetaType<QIfAbstractFeature::Error>();
+    qRegisterMetaType<QIfAbstractFeature::DiscoveryMode>();
+    qRegisterMetaType<QIfAbstractFeature::DiscoveryResult>();
 }
 
-void QIviAbstractFeaturePrivate::initialize()
+void QIfAbstractFeaturePrivate::initialize()
 {
 }
 
-bool QIviAbstractFeaturePrivate::notify(const QByteArray &propertyName, const QVariant &value)
+bool QIfAbstractFeaturePrivate::notify(const QByteArray &propertyName, const QVariant &value)
 {
     Q_UNUSED(propertyName);
     Q_UNUSED(value);
@@ -92,50 +92,50 @@ bool QIviAbstractFeaturePrivate::notify(const QByteArray &propertyName, const QV
 
     If the derived class needs to connect to a different interface than the one defined by
     \c interfaceName or to an additional interface, it can still manually ask for the required
-    \c interfaceInstance using the QIviServiceObject directly.
+    \c interfaceInstance using the QIfServiceObject directly.
 */
-QIviFeatureInterface *QIviAbstractFeaturePrivate::backend() const
+QIfFeatureInterface *QIfAbstractFeaturePrivate::backend() const
 {
-    Q_Q(const QIviAbstractFeature);
+    Q_Q(const QIfAbstractFeature);
     if (m_serviceObject)
         return m_serviceObject->interfaceInstance(q->interfaceName());
     return nullptr;
 }
 
-QIviAbstractFeaturePrivate *QIviAbstractFeaturePrivate::get(QIviAbstractFeature *q)
+QIfAbstractFeaturePrivate *QIfAbstractFeaturePrivate::get(QIfAbstractFeature *q)
 {
-    return static_cast<QIviAbstractFeaturePrivate *>(q->d_ptr.data());
+    return static_cast<QIfAbstractFeaturePrivate *>(q->d_ptr.data());
 }
 
-void QIviAbstractFeaturePrivate::setDiscoveryResult(QIviAbstractFeature::DiscoveryResult discoveryResult)
+void QIfAbstractFeaturePrivate::setDiscoveryResult(QIfAbstractFeature::DiscoveryResult discoveryResult)
 {
     if (m_discoveryResult == discoveryResult)
         return;
 
     m_discoveryResult = discoveryResult;
-    Q_Q(QIviAbstractFeature);
+    Q_Q(QIfAbstractFeature);
     emit q->discoveryResultChanged(discoveryResult);
 }
 
-void QIviAbstractFeaturePrivate::onInitializationDone()
+void QIfAbstractFeaturePrivate::onInitializationDone()
 {
     if (m_isInitialized)
         return;
 
     m_isInitialized = true;
-    Q_Q(QIviAbstractFeature);
+    Q_Q(QIfAbstractFeature);
     emit q->isInitializedChanged(true);
 }
 
 /*!
-    \class QIviAbstractFeature
-    \inmodule QtIviCore
-    \brief The QIviAbstractFeature is the base class for all QtIvi Features.
+    \class QIfAbstractFeature
+    \inmodule QtInterfaceFramework
+    \brief The QIfAbstractFeature is the base class for all QtInterfaceFramework Features.
 
-    QIviAbstractFeature is the base class for the front-facing API towards the developer. Subclass
-    QIviAbstractFeature to create an API for your feature.
+    QIfAbstractFeature is the base class for the front-facing API towards the developer. Subclass
+    QIfAbstractFeature to create an API for your feature.
 
-    QIviAbstractFeature provides you with auto discovery: a way to automatically connect to a
+    QIfAbstractFeature provides you with auto discovery: a way to automatically connect to a
     backend that implements the required interface. To discover a backend, use the
     startAutoDiscovery() function. Once auto discovery is complete, use the isValid() function to
     check whether a suitable backend was found.
@@ -144,13 +144,13 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
     \c AutoDiscovery. This mode is enabled by default, which indicates that a production backend
     is always preferred over a simulation backend.
 
-    Alternatively, it's also possible to use QIviServiceManager to retrieve all backends. Then,
+    Alternatively, it's also possible to use QIfServiceManager to retrieve all backends. Then,
     manually search for the right backend and call setServiceObject() to connect it to the
-    QIviAbstractFeature.
+    QIfAbstractFeature.
 
     \section1 Write a Subclass
 
-    Your QIviAbstractFeature subclass must provide implementations for the following functions:
+    Your QIfAbstractFeature subclass must provide implementations for the following functions:
 
     \list
     \li acceptServiceObject()
@@ -159,9 +159,9 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
     \li clearServiceObject()
     \endlist
 
-    Once a QIviServiceObject has been set, either via startAutoDiscovery() or setServiceObject(),
+    Once a QIfServiceObject has been set, either via startAutoDiscovery() or setServiceObject(),
     call the acceptServiceObject() function to make sure that the feature you've implemented
-    can work with the QIviServiceObject and, in turn, the QIviServiceObject provides the required
+    can work with the QIfServiceObject and, in turn, the QIfServiceObject provides the required
     interface.
 
     If the interface provides signals, you need to make all the connect statements in
@@ -172,7 +172,7 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
 */
 
 /*!
-    \enum QIviAbstractFeature::Error
+    \enum QIfAbstractFeature::Error
 
     \value NoError
            No error
@@ -189,7 +189,7 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
 */
 
 /*!
-    \enum QIviAbstractFeature::DiscoveryMode
+    \enum QIfAbstractFeature::DiscoveryMode
 
     \value NoAutoDiscovery
            No auto discovery is done and the ServiceObject needs to be set manually.
@@ -203,7 +203,7 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
 */
 
 /*!
-    \enum QIviAbstractFeature::DiscoveryResult
+    \enum QIfAbstractFeature::DiscoveryResult
 
     \value NoResult
            Indicates that no auto discovery was started because the feature already has a valid
@@ -219,8 +219,8 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
 /*!
     \qmltype AbstractFeature
     \qmlabstract
-    \instantiates QIviAbstractFeature
-    \inqmlmodule QtIvi
+    \instantiates QIfAbstractFeature
+    \inqmlmodule QtInterfaceFramework
 
     \brief The AbstractFeature is not directly accessible. The QML type provides
     base QML properties for the feature, like autoDiscovery and isValid.
@@ -230,9 +230,9 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
 */
 
 /*!
-    \fn void QIviAbstractFeature::clearServiceObject()
+    \fn void QIfAbstractFeature::clearServiceObject()
 
-    This method is expected to be implemented by any class subclassing QIviAbstractFeature.
+    This method is expected to be implemented by any class subclassing QIfAbstractFeature.
 
     Called when no service object is available. The implementation is expected to set all
     properties to safe defaults and forget all links to the previous service object.
@@ -254,10 +254,10 @@ void QIviAbstractFeaturePrivate::onInitializationDone()
 
     The \a interfaceName argument is used to locate suitable service objects.
 */
-QIviAbstractFeature::QIviAbstractFeature(const QString &interfaceName, QObject *parent)
-    : QObject(*new QIviAbstractFeaturePrivate(interfaceName, this), parent)
+QIfAbstractFeature::QIfAbstractFeature(const QString &interfaceName, QObject *parent)
+    : QObject(*new QIfAbstractFeaturePrivate(interfaceName, this), parent)
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     d->initialize();
 }
 
@@ -268,33 +268,33 @@ QIviAbstractFeature::QIviAbstractFeature(const QString &interfaceName, QObject *
     As Features only expose the front API facing the developer, a service object implementing the
     actual function is required. This is usually retrieved through the auto discovery mechanism.
 
-    The setter for this property returns false if the \c QIviServiceObject is already set to this
-    particular instance or the QIviServiceObject isn't accepted by the feature.
+    The setter for this property returns false if the \c QIfServiceObject is already set to this
+    particular instance or the QIfServiceObject isn't accepted by the feature.
 
     \sa discoveryMode
 */
 /*!
-    \property QIviAbstractFeature::serviceObject
+    \property QIfAbstractFeature::serviceObject
     \brief Sets the service object for the feature.
 
     As Features only expose the front API facing the developer, a service object implementing the
     actual function is required. This is usually retrieved through the auto discovery mechanism.
 
-    The setter for this property returns false if the \c QIviServiceObject is already set to this
-    particular instance or the QIviServiceObject isn't accepted by the feature.
+    The setter for this property returns false if the \c QIfServiceObject is already set to this
+    particular instance or the QIfServiceObject isn't accepted by the feature.
 
     \sa discoveryMode
 */
-bool QIviAbstractFeature::setServiceObject(QIviServiceObject *so)
+bool QIfAbstractFeature::setServiceObject(QIfServiceObject *so)
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     if (d->m_serviceObject == so)
         return false;
 
     bool serviceObjectIsSet = d->m_serviceObject;
     if (d->m_serviceObject) {
         disconnectFromServiceObject(d->m_serviceObject);
-        disconnect(d->m_serviceObject, &QObject::destroyed, this, &QIviAbstractFeature::serviceObjectDestroyed);
+        disconnect(d->m_serviceObject, &QObject::destroyed, this, &QIfAbstractFeature::serviceObjectDestroyed);
     }
 
     d->m_serviceObject = nullptr;
@@ -321,11 +321,11 @@ bool QIviAbstractFeature::setServiceObject(QIviServiceObject *so)
         connectToServiceObject(d->m_serviceObject);
         if (!d->m_isConnected) {
             qCritical() << this <<
-                      "accepted the given QIviServiceObject, but didn't connect to it completely"
-                      ", as QIviAbstractFeature::connectToServiceObject wasn't called.";
+                      "accepted the given QIfServiceObject, but didn't connect to it completely"
+                      ", as QIfAbstractFeature::connectToServiceObject wasn't called.";
             return false;
         }
-        connect(so, &QObject::destroyed, this, &QIviAbstractFeature::serviceObjectDestroyed);
+        connect(so, &QObject::destroyed, this, &QIfAbstractFeature::serviceObjectDestroyed);
     }
 
     return true;
@@ -353,15 +353,15 @@ bool QIviAbstractFeature::setServiceObject(QIviServiceObject *so)
 */
 
 /*!
-    \property QIviAbstractFeature::discoveryMode
+    \property QIfAbstractFeature::discoveryMode
     \brief Holds the mode that is used for the autoDiscovery
 
     \note If you change this property after the feature is instantiated, make sure to call
     startAutoDiscovery() to search for a new service object.
 */
-void QIviAbstractFeature::setDiscoveryMode(QIviAbstractFeature::DiscoveryMode discoveryMode)
+void QIfAbstractFeature::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     if (d->m_discoveryMode == discoveryMode)
         return;
 
@@ -373,18 +373,18 @@ void QIviAbstractFeature::setDiscoveryMode(QIviAbstractFeature::DiscoveryMode di
     \internal
     \overload
 */
-void QIviAbstractFeature::classBegin()
+void QIfAbstractFeature::classBegin()
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     d->m_qmlCreation = true;
 }
 
 /*!
     Invoked automatically when used from QML. Calls \l startAutoDiscovery().
 */
-void QIviAbstractFeature::componentComplete()
+void QIfAbstractFeature::componentComplete()
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     d->m_qmlCreation = false;
     startAutoDiscovery();
 }
@@ -395,23 +395,23 @@ void QIviAbstractFeature::componentComplete()
     When the feature discovers a matching backend, this interface's name needs to be supported by
     the service object that the feature is connecting to.
 
-    See \l {Extending Qt IVI} for more information.
+    See \l {Extending Qt Interface Framework} for more information.
 */
-QString QIviAbstractFeature::interfaceName() const
+QString QIfAbstractFeature::interfaceName() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_interface;
 }
 
-QIviServiceObject *QIviAbstractFeature::serviceObject() const
+QIfServiceObject *QIfAbstractFeature::serviceObject() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_serviceObject;
 }
 
-QIviAbstractFeature::DiscoveryMode QIviAbstractFeature::discoveryMode() const
+QIfAbstractFeature::DiscoveryMode QIfAbstractFeature::discoveryMode() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_discoveryMode;
 }
 
@@ -432,14 +432,14 @@ QIviAbstractFeature::DiscoveryMode QIviAbstractFeature::discoveryMode() const
 */
 
 /*!
-    \property QIviAbstractFeature::discoveryResult
+    \property QIfAbstractFeature::discoveryResult
     \brief The result of the last autoDiscovery
 
     \sa startAutoDiscovery()
 */
-QIviAbstractFeature::DiscoveryResult QIviAbstractFeature::discoveryResult() const
+QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::discoveryResult() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_discoveryResult;
 }
 
@@ -448,14 +448,14 @@ QIviAbstractFeature::DiscoveryResult QIviAbstractFeature::discoveryResult() cons
 
     Emits errorChanged() signal.
 
-    \sa QIviAbstractZonedFeature::Error
+    \sa QIfAbstractZonedFeature::Error
 */
-void QIviAbstractFeature::setError(QIviAbstractFeature::Error error, const QString &message)
+void QIfAbstractFeature::setError(QIfAbstractFeature::Error error, const QString &message)
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     d->m_error = error;
     d->m_errorMessage = errorText() + QStringLiteral(" ") + message;
-    if (d->m_error == QIviAbstractFeature::NoError)
+    if (d->m_error == QIfAbstractFeature::NoError)
         d->m_errorMessage.clear();
     emit errorChanged(d->m_error, d->m_errorMessage);
 }
@@ -463,42 +463,42 @@ void QIviAbstractFeature::setError(QIviAbstractFeature::Error error, const QStri
 /*!
     Returns the last error code.
 
-    \sa QIviAbstractFeature::Error
+    \sa QIfAbstractFeature::Error
 */
-QIviAbstractFeature::Error QIviAbstractFeature::error() const
+QIfAbstractFeature::Error QIfAbstractFeature::error() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_error;
 }
 
 
 /*!
-    \qmlproperty string QIviAbstractFeature::error
+    \qmlproperty string QIfAbstractFeature::error
 
     Last error message of the feature. Empty if no error.
 */
 /*!
-    \property QIviAbstractFeature::error
+    \property QIfAbstractFeature::error
 
     Last error message of the feature. Empty if no error.
 */
-QString QIviAbstractFeature::errorMessage() const
+QString QIfAbstractFeature::errorMessage() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_errorMessage;
 }
 
 /*!
-    Returns the current error code converted from QIviAbstractFeature::Error to QString
+    Returns the current error code converted from QIfAbstractFeature::Error to QString
 
     \sa error
 */
-QString QIviAbstractFeature::errorText() const
+QString QIfAbstractFeature::errorText() const
 {
-    Q_D(const QIviAbstractFeature);
-    if (d->m_error == QIviAbstractFeature::NoError)
+    Q_D(const QIfAbstractFeature);
+    if (d->m_error == QIfAbstractFeature::NoError)
         return QString();
-    QMetaEnum metaEnum = QMetaEnum::fromType<QIviAbstractFeature::Error>();
+    QMetaEnum metaEnum = QMetaEnum::fromType<QIfAbstractFeature::Error>();
     return QLatin1String(metaEnum.valueToKey(d->m_error));
 }
 
@@ -515,8 +515,8 @@ QString QIviAbstractFeature::errorText() const
 
     This function returns either the type of the backend that was loaded; or an error.
 
-    If the \c discoveryMode is set to QIviAbstractFeature::NoAutoDiscovery, this function does
-    nothing and returns QIviAbstractFeature::NoResult.
+    If the \c discoveryMode is set to QIfAbstractFeature::NoAutoDiscovery, this function does
+    nothing and returns QIfAbstractFeature::NoResult.
 
     Return values are:
     \value NoResult
@@ -530,7 +530,7 @@ QString QIviAbstractFeature::errorText() const
     \value SimulationBackendLoaded
            A simulation backend was loaded, as a result of auto discovery.
 
-    \sa {Dynamic Backend System} QIviServiceManager
+    \sa {Dynamic Backend System} QIfServiceManager
 */
 
 /*!
@@ -543,33 +543,33 @@ QString QIviAbstractFeature::errorText() const
 
     Either the type of the backend which was loaded or an error is returned.
 
-    If the discoveryMode is set to QIviAbstractFeature::NoAutoDiscovery this function will
-    do nothing and return QIviAbstractFeature::NoResult.
+    If the discoveryMode is set to QIfAbstractFeature::NoAutoDiscovery this function will
+    do nothing and return QIfAbstractFeature::NoResult.
 
     \sa discoveryMode() {Dynamic Backend System}
 */
-QIviAbstractFeature::DiscoveryResult QIviAbstractFeature::startAutoDiscovery()
+QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::startAutoDiscovery()
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
 
      // No need to discover a new backend when we already have one
-    if (d->m_serviceObject || d->m_discoveryMode == QIviAbstractFeature::NoAutoDiscovery) {
+    if (d->m_serviceObject || d->m_discoveryMode == QIfAbstractFeature::NoAutoDiscovery) {
         d->setDiscoveryResult(NoResult);
         return NoResult;
     }
 
-    QIviServiceManager *serviceManager = QIviServiceManager::instance();
-    QList<QIviServiceObject*> serviceObjects;
+    QIfServiceManager *serviceManager = QIfServiceManager::instance();
+    QList<QIfServiceObject*> serviceObjects;
     DiscoveryResult result = NoResult;
     if (d->m_discoveryMode == AutoDiscovery || d->m_discoveryMode == LoadOnlyProductionBackends) {
-        serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIviServiceManager::IncludeProductionBackends);
+        serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeProductionBackends);
         result = ProductionBackendLoaded;
     }
 
     //Check whether we can use the found production backends
     bool serviceObjectSet = false;
-    for (QIviServiceObject *object : qAsConst(serviceObjects)) {
-        qCDebug(qLcIviServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
+    for (QIfServiceObject *object : qAsConst(serviceObjects)) {
+        qCDebug(qLcIfServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
         if (setServiceObject(object)) {
             serviceObjectSet = true;
             break;
@@ -583,13 +583,13 @@ QIviAbstractFeature::DiscoveryResult QIviAbstractFeature::startAutoDiscovery()
             qWarning() << "There is no production backend implementing" << d->m_interface << ".";
 
         if (d->m_discoveryMode == AutoDiscovery || d->m_discoveryMode == LoadOnlySimulationBackends) {
-            serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIviServiceManager::IncludeSimulationBackends);
+            serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeSimulationBackends);
             result = SimulationBackendLoaded;
             if (Q_UNLIKELY(serviceObjects.isEmpty()))
                 qWarning() << "There is no simulation backend implementing" << d->m_interface << ".";
 
-            for (QIviServiceObject* object : qAsConst(serviceObjects)) {
-                qCDebug(qLcIviServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
+            for (QIfServiceObject* object : qAsConst(serviceObjects)) {
+                qCDebug(qLcIfServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
                 if (setServiceObject(object)) {
                     serviceObjectSet = true;
                     break;
@@ -611,15 +611,15 @@ QIviAbstractFeature::DiscoveryResult QIviAbstractFeature::startAutoDiscovery()
     return result;
 }
 
-QIviAbstractFeature::QIviAbstractFeature(QIviAbstractFeaturePrivate &dd, QObject *parent)
+QIfAbstractFeature::QIfAbstractFeature(QIfAbstractFeaturePrivate &dd, QObject *parent)
     : QObject(dd, parent)
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     d->initialize();
 }
 
 /*!
-    This method is expected to be implemented by any class subclassing QIviAbstractFeature.
+    This method is expected to be implemented by any class subclassing QIfAbstractFeature.
 
     The method should return \c true if the given \a serviceObject is accepted and
     can be used, otherwise \c false.
@@ -632,13 +632,13 @@ QIviAbstractFeature::QIviAbstractFeature(QIviAbstractFeaturePrivate &dd, QObject
 
     \sa connectToServiceObject(), disconnectFromServiceObject(), clearServiceObject()
 */
-bool QIviAbstractFeature::acceptServiceObject(QIviServiceObject *serviceObject)
+bool QIfAbstractFeature::acceptServiceObject(QIfServiceObject *serviceObject)
 {
     return serviceObject->interfaces().contains(interfaceName());
 }
 
 /*!
-    This method is expected to be implemented by any class subclassing QIviAbstractFeature.
+    This method is expected to be implemented by any class subclassing QIfAbstractFeature.
 
     The implementation should connect to the \a serviceObject, and set up all
     properties to reflect the state of the service object.
@@ -649,13 +649,13 @@ bool QIviAbstractFeature::acceptServiceObject(QIviServiceObject *serviceObject)
     It is safe to assume that the \a serviceObject, has always been accepted through the
     \l acceptServiceObject method prior to being passed to this method.
 
-    The default implementation connects to the signals offered by QIviFeatureInterface and calls
-    QIviFeatureInterface::initialize() afterwards.
+    The default implementation connects to the signals offered by QIfFeatureInterface and calls
+    QIfFeatureInterface::initialize() afterwards.
 
     When reimplementing please keep in mind to connect all signals before calling this function. e.g.
 
    /code
-    void SimpleFeature::connectToServiceObject(QIviServiceObject *serviceObject)
+    void SimpleFeature::connectToServiceObject(QIfServiceObject *serviceObject)
    {
         SimpleFeatureBackendInterface *backend = backend(serviceObject);
         if (!backend)
@@ -666,7 +666,7 @@ bool QIviAbstractFeature::acceptServiceObject(QIviServiceObject *serviceObject)
                 this, &SimpleFeature::onPropertyChanged);
 
         // connects the base signals and call initialize()
-        QIviAbstractFeature::connectToServiceObject(serviceObject);
+        QIfAbstractFeature::connectToServiceObject(serviceObject);
 
         // Additional initialization functions can be added here
    }
@@ -674,16 +674,16 @@ bool QIviAbstractFeature::acceptServiceObject(QIviServiceObject *serviceObject)
 
     \sa acceptServiceObject(), disconnectFromServiceObject(), clearServiceObject()
 */
-void QIviAbstractFeature::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfAbstractFeature::connectToServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     Q_ASSERT(serviceObject);
-    QIviFeatureInterface *backend = d->backend();
+    QIfFeatureInterface *backend = d->backend();
 
     if (backend) {
-        connect(backend, &QIviFeatureInterface::errorChanged, this, &QIviAbstractFeature::onErrorChanged);
-        QObjectPrivate::connect(backend, &QIviFeatureInterface::initializationDone,
-                                d, &QIviAbstractFeaturePrivate::onInitializationDone);
+        connect(backend, &QIfFeatureInterface::errorChanged, this, &QIfAbstractFeature::onErrorChanged);
+        QObjectPrivate::connect(backend, &QIfFeatureInterface::initializationDone,
+                                d, &QIfAbstractFeaturePrivate::onInitializationDone);
         backend->initialize();
     }
 
@@ -707,9 +707,9 @@ void QIviAbstractFeature::connectToServiceObject(QIviServiceObject *serviceObjec
 
     \sa acceptServiceObject(), connectToServiceObject(), clearServiceObject()
 */
-void QIviAbstractFeature::disconnectFromServiceObject(QIviServiceObject *serviceObject)
+void QIfAbstractFeature::disconnectFromServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     Q_ASSERT(serviceObject);
     QObject *backend = d->backend();
 
@@ -732,10 +732,10 @@ void QIviAbstractFeature::disconnectFromServiceObject(QIviServiceObject *service
     The backend still might not have sent all properties yet and is not fully initialized.
     Use isInitialized instead to know when the feature holds all correct values.
 
-    \sa QIviServiceObject, discoveryMode, isInitialized
+    \sa QIfServiceObject, discoveryMode, isInitialized
 */
 /*!
-    \property QIviAbstractFeature::isValid
+    \property QIfAbstractFeature::isValid
     \brief Indicates whether the feature is ready to use.
 
     The property is \c true if the feature is ready to be used, otherwise \c false. Not being
@@ -745,11 +745,11 @@ void QIviAbstractFeature::disconnectFromServiceObject(QIviServiceObject *service
     The backend still might not have sent all properties yet and is not fully initialized.
     Use isInitialized instead to know when the feature holds all correct values.
 
-    \sa QIviServiceObject, discoveryMode, isInitialized
+    \sa QIfServiceObject, discoveryMode, isInitialized
 */
-bool QIviAbstractFeature::isValid() const
+bool QIfAbstractFeature::isValid() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_serviceObject != nullptr;
 }
 
@@ -757,23 +757,23 @@ bool QIviAbstractFeature::isValid() const
     \qmlproperty bool AbstractFeature::isInitialized
     \brief Indicates whether the feature has been initialized with all the values from the backend.
 
-    The property is \c true once the backend sends the QIviFeatureInterface::initializationDone signal
+    The property is \c true once the backend sends the QIfFeatureInterface::initializationDone signal
     to indicate that all values have now been initialized with values from the backend.
 
-    \sa isValid, QIviFeatureInterface::initializationDone
+    \sa isValid, QIfFeatureInterface::initializationDone
 */
 /*!
-    \property QIviAbstractFeature::isInitialized
+    \property QIfAbstractFeature::isInitialized
     \brief Indicates whether the feature has been initialized with all the values from the backend.
 
-    The property is \c true once the backend sends the QIviFeatureInterface::initializationDone signal
+    The property is \c true once the backend sends the QIfFeatureInterface::initializationDone signal
     to indicate that all values have now been initialized with values from the backend.
 
-    \sa isValid, QIviFeatureInterface::initializationDone
+    \sa isValid, QIfFeatureInterface::initializationDone
 */
-bool QIviAbstractFeature::isInitialized() const
+bool QIfAbstractFeature::isInitialized() const
 {
-    Q_D(const QIviAbstractFeature);
+    Q_D(const QIfAbstractFeature);
     return d->m_isInitialized;
 }
 
@@ -782,14 +782,14 @@ bool QIviAbstractFeature::isInitialized() const
 
     Use this slot when you implement a new feature to report generic errors.
 */
-void QIviAbstractFeature::onErrorChanged(QIviAbstractFeature::Error error, const QString &message)
+void QIfAbstractFeature::onErrorChanged(QIfAbstractFeature::Error error, const QString &message)
 {
     setError(error, message);
 }
 
-void QIviAbstractFeature::serviceObjectDestroyed()
+void QIfAbstractFeature::serviceObjectDestroyed()
 {
-    Q_D(QIviAbstractFeature);
+    Q_D(QIfAbstractFeature);
     d->m_serviceObject = nullptr;
     clearServiceObject();
     emit serviceObjectChanged();
@@ -797,4 +797,4 @@ void QIviAbstractFeature::serviceObjectDestroyed()
 
 QT_END_NAMESPACE
 
-#include "moc_qiviabstractfeature.cpp"
+#include "moc_qifabstractfeature.cpp"

@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}RoBackend'.format(interface) %}
 {% set zone_class = '{0}RoZone'.format(interface) %}
@@ -112,7 +112,7 @@ void {{zone_class}}::emitCurrentState()
 }
 
 {% for property in interface.properties %}
-{{ivi.prop_setter(property, zone_class, model_interface = true)}}
+{{if.prop_setter(property, zone_class, model_interface = true)}}
 {
     m_{{property}} = {{property}};
     Q_EMIT m_parent->{{property}}Changed({{property}}, m_zone);
@@ -124,7 +124,7 @@ void {{zone_class}}::emitCurrentState()
     : {{interface}}BackendInterface(parent)
     , m_node(nullptr)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
-    , m_helper(new QIviRemoteObjectReplicaHelper(qLcRO{{interface}}(), this))
+    , m_helper(new QIfRemoteObjectReplicaHelper(qLcRO{{interface}}(), this))
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {%     if interface_zoned %}
@@ -222,7 +222,7 @@ QStringList {{class}}::availableZones() const
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const %}
 {%     if not property.is_model %}
-{{ivi.prop_setter(property, class, zoned=interface_zoned)}}
+{{if.prop_setter(property, class, zoned=interface_zoned)}}
 {
     if (m_replica.isNull())
         return;
@@ -242,12 +242,12 @@ QStringList {{class}}::availableZones() const
 {% endfor %}
 
 {% for operation in interface.operations %}
-{{ ivi.operation(operation, class, zoned=interface_zoned) }}
+{{ if.operation(operation, class, zoned=interface_zoned) }}
 {
     if (m_replica.isNull())
-        return QIviPendingReply<{{operation|return_type}}>::createFailedReply();
+        return QIfPendingReply<{{operation|return_type}}>::createFailedReply();
     else if (static_cast<QRemoteObjectReplica*>(m_replica.get())->state() != QRemoteObjectReplica::Valid)
-        return QIviPendingReply<{{operation|return_type}}>::createFailedReply();
+        return QIfPendingReply<{{operation|return_type}}>::createFailedReply();
 
 {% set function_parameters = operation.parameters|join(', ') %}
 {% if interface_zoned %}
@@ -258,13 +258,13 @@ QStringList {{class}}::availableZones() const
 {% endif%}
     qCDebug(qLcRO{{interface}}) << "{{operation}} called";
     QRemoteObjectPendingReply<QVariant> reply = m_replica->{{operation}}({{function_parameters}});
-    auto iviReply = m_helper->toQIviPendingReply<{{operation|return_type}}>(reply);
+    auto ifReply = m_helper->toQIfPendingReply<{{operation|return_type}}>(reply);
 
     //Pass an empty std::function to only handle errors.
-    iviReply.then(std::function<void({{operation|return_type}})>(), [this]() {
-        Q_EMIT errorChanged(QIviAbstractFeature::InvalidOperation, QStringLiteral("{{class}}, remote call of method {{operation}} failed"));
+    ifReply.then(std::function<void({{operation|return_type}})>(), [this]() {
+        Q_EMIT errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("{{class}}, remote call of method {{operation}} failed"));
     });
-    return iviReply;
+    return ifReply;
 }
 
 {% endfor %}
@@ -306,11 +306,11 @@ bool {{class}}::connectToNode()
 
 void {{class}}::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIviRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIviRemoteObjectReplicaHelper::errorChanged, this, &QIviFeatureInterface::errorChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
 
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIviRemoteObjectReplicaHelper::onReplicaStateChanged);
-    connect(m_replica.data(), &{{interface}}Replica::pendingResultAvailable, m_helper, &QIviRemoteObjectReplicaHelper::onPendingResultAvailable);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_replica.data(), &{{interface}}Replica::pendingResultAvailable, m_helper, &QIfRemoteObjectReplicaHelper::onPendingResultAvailable);
 {% if interface_zoned %}
     connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &{{class}}::syncZones);
     connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, this, [this](QRemoteObjectReplica::State newState, QRemoteObjectReplica::State oldState){

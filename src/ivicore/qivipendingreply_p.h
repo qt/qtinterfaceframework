@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPENDINGREPLY_P_H
-#define QIVIPENDINGREPLY_P_H
+#ifndef QIFPENDINGREPLY_P_H
+#define QIFPENDINGREPLY_P_H
 
 //
 //  W A R N I N G
@@ -54,24 +54,24 @@
 //
 
 #include <private/qobject_p.h>
-#include <private/qtiviglobal_p.h>
+#include <private/qtifglobal_p.h>
 
-#include "qivipendingreply.h"
+#include "qifpendingreply.h"
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviPendingReplyWatcherPrivate : public QObjectPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyWatcherPrivate : public QObjectPrivate
 {
 public:
-    QIviPendingReplyWatcherPrivate(int userType, QIviPendingReplyWatcher *parent);
+    QIfPendingReplyWatcherPrivate(int userType, QIfPendingReplyWatcher *parent);
 
     void setSuccess(const QVariant &value);
     void callSuccessCallback();
     void callFailedCallback();
 
-    QIviPendingReplyWatcher * const q_ptr;
-    Q_DECLARE_PUBLIC(QIviPendingReplyWatcher)
-    Q_DISABLE_COPY(QIviPendingReplyWatcherPrivate)
+    QIfPendingReplyWatcher * const q_ptr;
+    Q_DECLARE_PUBLIC(QIfPendingReplyWatcher)
+    Q_DISABLE_COPY(QIfPendingReplyWatcherPrivate)
 
     int m_type;
     bool m_resultAvailable;
@@ -84,4 +84,4 @@ public:
 
 QT_END_NAMESPACE
 
-#endif // QIVIPENDINGREPLY_P_H
+#endif // QIFPENDINGREPLY_P_H

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -44,25 +44,25 @@
 #include <QtDebug>
 
 AmFmTunerBackend::AmFmTunerBackend(QObject *parent)
-    : QIviAmFmTunerBackendInterface(parent)
-    , m_band(QIviAmFmTuner::FMBand)
+    : QIfAmFmTunerBackendInterface(parent)
+    , m_band(QIfAmFmTuner::FMBand)
     , m_timerId(-1)
 {
-    qRegisterMetaType<QIviAmFmTunerStation>();
+    qRegisterMetaType<QIfAmFmTunerStation>();
 
-    QVector<QIviAmFmTunerStation> fm_stations;
-    QIviAmFmTunerStation radioQt;
+    QVector<QIfAmFmTunerStation> fm_stations;
+    QIfAmFmTunerStation radioQt;
     radioQt.setId(QStringLiteral("0"));
     radioQt.setStationName(QStringLiteral("Radio Qt"));
     radioQt.setFrequency(87500000);
-    radioQt.setBand(QIviAmFmTuner::FMBand);
+    radioQt.setBand(QIfAmFmTuner::FMBand);
     fm_stations.append(radioQt);
 
-    QIviAmFmTunerStation qtRocksNonStop;
+    QIfAmFmTunerStation qtRocksNonStop;
     qtRocksNonStop.setId(QStringLiteral("1"));
     qtRocksNonStop.setStationName(QStringLiteral("Qt Rocks non-stop"));
     qtRocksNonStop.setFrequency(102500000);
-    qtRocksNonStop.setBand(QIviAmFmTuner::FMBand);
+    qtRocksNonStop.setBand(QIfAmFmTuner::FMBand);
     fm_stations.append(qtRocksNonStop);
     BandData fmdata;
     fmdata.m_frequency = 87500000;
@@ -70,14 +70,14 @@ AmFmTunerBackend::AmFmTunerBackend(QObject *parent)
     fmdata.m_maximumFrequency = 108000000;
     fmdata.m_stepSize = 100000;
     fmdata.m_stations = fm_stations;
-    m_bandHash.insert(QIviAmFmTuner::FMBand, fmdata);
+    m_bandHash.insert(QIfAmFmTuner::FMBand, fmdata);
 
     BandData amdata;
     amdata.m_frequency = 535000;
     amdata.m_minimumFrequency = 535000;
     amdata.m_maximumFrequency = 1700000;
     amdata.m_stepSize = 10000;
-    m_bandHash.insert(QIviAmFmTuner::AMBand, amdata);
+    m_bandHash.insert(QIfAmFmTuner::AMBand, amdata);
 }
 
 void AmFmTunerBackend::initialize()
@@ -108,7 +108,7 @@ void AmFmTunerBackend::setFrequency(int frequency)
     emit stationChanged(stationAt(m_bandHash[m_band].m_frequency));
 }
 
-void AmFmTunerBackend::setBand(QIviAmFmTuner::Band band)
+void AmFmTunerBackend::setBand(QIfAmFmTuner::Band band)
 {
     if (m_band == band)
         return;
@@ -150,7 +150,7 @@ void AmFmTunerBackend::seekUp()
 {
     qWarning() << "SIMULATION Seek Up";
 
-    QVector<QIviAmFmTunerStation> stations = m_bandHash[m_band].m_stations;
+    QVector<QIfAmFmTunerStation> stations = m_bandHash[m_band].m_stations;
     if (stations.count() == 0) {
         return;
     } else if (stations.count() == 1) {
@@ -169,7 +169,7 @@ void AmFmTunerBackend::seekDown()
 {
     qWarning() << "SIMULATION Seek Down";
 
-    QVector<QIviAmFmTunerStation> stations = m_bandHash[m_band].m_stations;
+    QVector<QIfAmFmTunerStation> stations = m_bandHash[m_band].m_stations;
     if (stations.count() == 0) {
         return;
     } else if (stations.count() == 1) {
@@ -212,7 +212,7 @@ void AmFmTunerBackend::stopScan()
     emit scanStatusChanged(false);
 }
 
-void AmFmTunerBackend::setCurrentStation(const QIviAmFmTunerStation &station)
+void AmFmTunerBackend::setCurrentStation(const QIfAmFmTunerStation &station)
 {
     m_bandHash[m_band].m_frequency = station.frequency();
 
@@ -224,9 +224,9 @@ void AmFmTunerBackend::setCurrentStation(const QIviAmFmTunerStation &station)
 
 int AmFmTunerBackend::stationIndexFromFrequency(int frequency) const
 {
-    QVector<QIviAmFmTunerStation> stations = m_bandHash[m_band].m_stations;
+    QVector<QIfAmFmTunerStation> stations = m_bandHash[m_band].m_stations;
     for (int i=0; i < stations.count(); i++) {
-        const QIviAmFmTunerStation& station = stations.at(i);
+        const QIfAmFmTunerStation& station = stations.at(i);
         if (station.frequency() == frequency)
             return i;
     }
@@ -234,13 +234,13 @@ int AmFmTunerBackend::stationIndexFromFrequency(int frequency) const
     return -1;
 }
 
-QIviAmFmTunerStation AmFmTunerBackend::stationAt(int frequency) const
+QIfAmFmTunerStation AmFmTunerBackend::stationAt(int frequency) const
 {
     int index = stationIndexFromFrequency(frequency);
     if (index != -1)
         return m_bandHash[m_band].m_stations.at(index);
 
-    return QIviAmFmTunerStation();
+    return QIfAmFmTunerStation();
 }
 
 void AmFmTunerBackend::timerEvent(QTimerEvent *event)

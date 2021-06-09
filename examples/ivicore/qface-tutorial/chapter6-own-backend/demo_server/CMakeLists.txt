@@ -9,10 +9,10 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-tutorial/chapter6-own-backend")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter6-own-backend")
 
 find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS DBus)
 
 set_source_files_properties(instrumentcluster.xml PROPERTIES INCLUDE "")
@@ -37,10 +37,10 @@ set_target_properties(chapter6-demo-server PROPERTIES
 )
 
 target_link_libraries(chapter6-demo-server PUBLIC
-    QtIviInstrumentCluster_Chapter6
+    QtIfInstrumentCluster_Chapter6
     Qt::Core
     Qt::DBus
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 install(TARGETS chapter6-demo-server

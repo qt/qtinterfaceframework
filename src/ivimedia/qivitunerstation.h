@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#ifndef QIVITUNERSTATION_H
-#define QIVITUNERSTATION_H
+#ifndef QIFTUNERSTATION_H
+#define QIFTUNERSTATION_H
 
-#include <QtIviMedia/qtivimediaglobal.h>
-#include <QtIviMedia/QIviAmFmTuner>
-#include <QtIviCore/QIviStandardItem>
+#include <QtIfMedia/qtifmediaglobal.h>
+#include <QtIfMedia/QIfAmFmTuner>
+#include <QtInterfaceFramework/QIfStandardItem>
 
 QT_BEGIN_NAMESPACE
 
-class QIviTunerStationPrivate;
-class QIviAmFmTunerStationPrivate;
+class QIfTunerStationPrivate;
+class QIfAmFmTunerStationPrivate;
 
-class Q_QTIVIMEDIA_EXPORT QIviTunerStation : public QIviStandardItem
+class Q_QTIFMEDIA_EXPORT QIfTunerStation : public QIfStandardItem
 {
     Q_GADGET
 
@@ -63,10 +63,10 @@ class Q_QTIVIMEDIA_EXPORT QIviTunerStation : public QIviStandardItem
     Q_PROPERTY(int receptionQuality READ receptionQuality WRITE setReceptionQuality)
 
 public:
-    QIviTunerStation();
-    QIviTunerStation(const QIviTunerStation &);
-    QIviTunerStation &operator=(const QIviTunerStation &);
-    ~QIviTunerStation();
+    QIfTunerStation();
+    QIfTunerStation(const QIfTunerStation &);
+    QIfTunerStation &operator=(const QIfTunerStation &);
+    ~QIfTunerStation();
 
     virtual QString stationName() const;
     virtual void setStationName(const QString &stationName);
@@ -83,41 +83,41 @@ public:
     QString name() const override;
     QString type() const override;
 
-    bool operator==(const QIviTunerStation &other) const;
-    inline bool operator!=(const QIviTunerStation &other) const { return !(*this == other); }
+    bool operator==(const QIfTunerStation &other) const;
+    inline bool operator!=(const QIfTunerStation &other) const { return !(*this == other); }
 
 private:
-    QSharedDataPointer<QIviTunerStationPrivate> d;
+    QSharedDataPointer<QIfTunerStationPrivate> d;
 };
-Q_DECLARE_TYPEINFO(QIviTunerStation, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QIfTunerStation, Q_MOVABLE_TYPE);
 
-class Q_QTIVIMEDIA_EXPORT QIviAmFmTunerStation : public QIviTunerStation
+class Q_QTIFMEDIA_EXPORT QIfAmFmTunerStation : public QIfTunerStation
 {
     Q_GADGET
 
-    Q_PROPERTY(QIviAmFmTuner::Band band READ band WRITE setBand)
+    Q_PROPERTY(QIfAmFmTuner::Band band READ band WRITE setBand)
 
 public:
-    QIviAmFmTunerStation();
-    QIviAmFmTunerStation(const QIviAmFmTunerStation &);
-    QIviAmFmTunerStation &operator=(const QIviAmFmTunerStation &);
-    virtual ~QIviAmFmTunerStation();
+    QIfAmFmTunerStation();
+    QIfAmFmTunerStation(const QIfAmFmTunerStation &);
+    QIfAmFmTunerStation &operator=(const QIfAmFmTunerStation &);
+    virtual ~QIfAmFmTunerStation();
 
-    virtual QIviAmFmTuner::Band band() const;
-    virtual void setBand(QIviAmFmTuner::Band band);
+    virtual QIfAmFmTuner::Band band() const;
+    virtual void setBand(QIfAmFmTuner::Band band);
     QString type() const override;
 
-    bool operator==(const QIviAmFmTunerStation &other) const;
-    inline bool operator!=(const QIviAmFmTunerStation &other) const { return !(*this == other); }
+    bool operator==(const QIfAmFmTunerStation &other) const;
+    inline bool operator!=(const QIfAmFmTunerStation &other) const { return !(*this == other); }
 
 private:
-    QSharedDataPointer<QIviAmFmTunerStationPrivate> d;
+    QSharedDataPointer<QIfAmFmTunerStationPrivate> d;
 };
-Q_DECLARE_TYPEINFO(QIviAmFmTunerStation, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QIfAmFmTunerStation, Q_MOVABLE_TYPE);
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QIviTunerStation)
-Q_DECLARE_METATYPE(QIviAmFmTunerStation)
+Q_DECLARE_METATYPE(QIfTunerStation)
+Q_DECLARE_METATYPE(QIfAmFmTunerStation)
 
-#endif // QIVITUNERSTATION_H
+#endif // QIFTUNERSTATION_H

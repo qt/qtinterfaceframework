@@ -10,13 +10,13 @@ qt_internal_add_test(tst_vehiclefunctions_basic
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::IviCore
-        Qt::IviVehicleFunctions
+        Qt::InterfaceFramework
+        Qt::IfVehicleFunctions
 )
 
-# IVI Generator:
-qt_ivigenerator(tst_vehiclefunctions_basic
-    QFACE_SOURCES ../../../../src/ivivehiclefunctions/ivivehiclefunctions.qface
+# Interface Framework Generator:
+qt_ifcodegen(tst_vehiclefunctions_basic
+    QFACE_SOURCES ../../../../src/ifvehiclefunctions/ifvehiclefunctions.qface
     QFACE_FORMAT test
 )
 

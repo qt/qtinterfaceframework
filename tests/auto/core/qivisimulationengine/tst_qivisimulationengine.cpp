@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -29,15 +29,15 @@
 ****************************************************************************/
 
 #include <QtTest>
-#include <QIviSimulationEngine>
-#include <QIviPendingReply>
+#include <QIfSimulationEngine>
+#include <QIfPendingReply>
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QQmlComponent>
 #include <QScopedPointer>
 #include <QJsonDocument>
 
-#include <private/qivisimulationglobalobject_p.h>
+#include <private/qifsimulationglobalobject_p.h>
 
 class BaseClass : public QObject
 {
@@ -147,7 +147,7 @@ public:
 public slots:
     void setTestProperty(int testProperty)
     {
-        QIVI_SIMULATION_TRY_CALL(SimpleAPI, "setTestProperty", void, testProperty)
+        QIF_SIMULATION_TRY_CALL(SimpleAPI, "setTestProperty", void, testProperty)
 
         m_callCounter++;
         if (m_testProperty == testProperty)
@@ -159,7 +159,7 @@ public slots:
 
     void simpleFunction()
     {
-        QIVI_SIMULATION_TRY_CALL(SimpleAPI, "simpleFunction", void)
+        QIF_SIMULATION_TRY_CALL(SimpleAPI, "simpleFunction", void)
 
         m_callCounter++;
         emit simpleFunctionCalled();
@@ -167,7 +167,7 @@ public slots:
 
     void functionWithArguments(int intArgument, const QString &stringArgument)
     {
-        QIVI_SIMULATION_TRY_CALL(SimpleAPI, "functionWithArguments", void, intArgument, stringArgument)
+        QIF_SIMULATION_TRY_CALL(SimpleAPI, "functionWithArguments", void, intArgument, stringArgument)
 
         m_callCounter++;
         emit functionWithArgumentsCalled(intArgument, stringArgument);
@@ -175,23 +175,23 @@ public slots:
 
     int functionWithReturnValue(int intArgument)
     {
-        QIVI_SIMULATION_TRY_CALL(SimpleAPI, "functionWithReturnValue", int, intArgument)
+        QIF_SIMULATION_TRY_CALL(SimpleAPI, "functionWithReturnValue", int, intArgument)
 
         m_callCounter++;
         emit functionWithReturnValueCalled(intArgument);
         return intArgument;
     }
 
-    QIviPendingReply<void> functionWithVoidPendingReply()
+    QIfPendingReply<void> functionWithVoidPendingReply()
     {
         m_callCounter++;
-        return QIviPendingReply<void>::createFailedReply();
+        return QIfPendingReply<void>::createFailedReply();
     }
 
-    QIviPendingReply<int> functionWithIntPendingReply()
+    QIfPendingReply<int> functionWithIntPendingReply()
     {
         m_callCounter++;
-        return QIviPendingReply<int>::createFailedReply();
+        return QIfPendingReply<int>::createFailedReply();
     }
 
 signals:
@@ -237,7 +237,7 @@ QVariant callTestFunction(QObject* object, const QByteArray &function, QVariantL
     return retValue;
 }
 
-class tst_QIviSimulationEngine : public QObject
+class tst_QIfSimulationEngine : public QObject
 {
     Q_OBJECT
 
@@ -246,7 +246,7 @@ class tst_QIviSimulationEngine : public QObject
 private Q_SLOTS:
     void testUsageInCorrectEngine();
 
-    //QIviSimulationEngine
+    //QIfSimulationEngine
     void testOverrideEnvVariables();
     void testLoadSimulationData_data();
     void testLoadSimulationData();
@@ -276,7 +276,7 @@ private Q_SLOTS:
     void testMultipleInstances();
 };
 
-QVariant tst_QIviSimulationEngine::parseJson(const QString &json, QString& error) const
+QVariant tst_QIfSimulationEngine::parseJson(const QString &json, QString& error) const
 {
     QJsonParseError pe;
     QVariantMap data = QJsonDocument::fromJson(json.toUtf8(), &pe).toVariant().toMap();
@@ -286,16 +286,16 @@ QVariant tst_QIviSimulationEngine::parseJson(const QString &json, QString& error
     return data;
 }
 
-void tst_QIviSimulationEngine::testUsageInCorrectEngine()
+void tst_QIfSimulationEngine::testUsageInCorrectEngine()
 {
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
     verifyQml(&engine, "import TestAPI 1.0; BaseClass {}");
 
     QCOMPARE(testObject.propertyInBase(), -1);
-    QIviSimulationEngine engine2;
+    QIfSimulationEngine engine2;
     QQmlComponent component(&engine2);
     component.setData("import QtQuick 2.0; \n\
                        import TestAPI 1.0; \n\
@@ -305,18 +305,18 @@ void tst_QIviSimulationEngine::testUsageInCorrectEngine()
                             }\n\
                        } \n\
                        ", QUrl());
-    QTest::ignoreMessage(QtWarningMsg, QRegularExpression(".* QML BaseClass: QIviSimulationProxy can only be used in the same Engine it is registered in"));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression(".* QML BaseClass: QIfSimulationProxy can only be used in the same Engine it is registered in"));
     QScopedPointer<QObject> obj(component.create());
     QVERIFY2(obj, qPrintable(component.errorString()));
 
     QCOMPARE(testObject.propertyInBase(), -1);
 }
 
-void tst_QIviSimulationEngine::testOverrideEnvVariables()
+void tst_QIfSimulationEngine::testOverrideEnvVariables()
 {
-    qputenv("QTIVI_SIMULATION_OVERRIDE", "testEngine=test.qml;testEngine=invalidQml=;overrideTest=:/simple.qml");
-    qputenv("QTIVI_SIMULATION_DATA_OVERRIDE", "testEngine=test.json;testEngine=invalid=;overrideTest=:/simple.json");
-    QIviSimulationEngine engine(QStringLiteral("overrideTest"));
+    qputenv("QTIF_SIMULATION_OVERRIDE", "testEngine=test.qml;testEngine=invalidQml=;overrideTest=:/simple.qml");
+    qputenv("QTIF_SIMULATION_DATA_OVERRIDE", "testEngine=test.json;testEngine=invalid=;overrideTest=:/simple.json");
+    QIfSimulationEngine engine(QStringLiteral("overrideTest"));
 
     QTest::ignoreMessage(QtWarningMsg, "Ignoring malformed override: File does not exist: 'test.json'");
     QTest::ignoreMessage(QtWarningMsg, "Ignoring malformed override: 'testEngine=invalid='");
@@ -326,7 +326,7 @@ void tst_QIviSimulationEngine::testOverrideEnvVariables()
     QTest::ignoreMessage(QtWarningMsg, "Detected matching simulation data override: overrideTest=:/simple.json");
     engine.loadSimulationData(QStringLiteral("invalid.json"));
 
-    auto globalObject = engine.rootContext()->contextProperty(QStringLiteral("IviSimulator")).value<QIviSimulationGlobalObject*>();
+    auto globalObject = engine.rootContext()->contextProperty(QStringLiteral("IfSimulator")).value<QIfSimulationGlobalObject*>();
     QVariant simulationData = globalObject->simulationData();
     QVERIFY(simulationData.isValid());
 
@@ -334,7 +334,7 @@ void tst_QIviSimulationEngine::testOverrideEnvVariables()
     engine.loadSimulation(QStringLiteral("invalid.qml"));
 }
 
-void tst_QIviSimulationEngine::testLoadSimulationData_data()
+void tst_QIfSimulationEngine::testLoadSimulationData_data()
 {
     QTest::addColumn<QString>("simulationData");
     QTest::addColumn<QStringList>("expectedErrors");
@@ -343,21 +343,21 @@ void tst_QIviSimulationEngine::testLoadSimulationData_data()
     QTest::newRow("valid json") << ":/simple.json" << QStringList();
 }
 
-void tst_QIviSimulationEngine::testLoadSimulationData()
+void tst_QIfSimulationEngine::testLoadSimulationData()
 {
     QFETCH(QString, simulationData);
     QFETCH(QStringList, expectedErrors);
 
-    QIviSimulationEngine engine(QStringLiteral("loadingTest"));
+    QIfSimulationEngine engine(QStringLiteral("loadingTest"));
     for (const QString &error : expectedErrors)
         QTest::ignoreMessage(QtCriticalMsg, QRegularExpression(error));
     engine.loadSimulationData(simulationData);
 
-    auto globalObject = engine.rootContext()->contextProperty(QStringLiteral("IviSimulator")).value<QIviSimulationGlobalObject*>();
+    auto globalObject = engine.rootContext()->contextProperty(QStringLiteral("IfSimulator")).value<QIfSimulationGlobalObject*>();
     QCOMPARE(globalObject->simulationData().isValid(), expectedErrors.isEmpty());
 }
 
-void tst_QIviSimulationEngine::testPropertyRead_data()
+void tst_QIfSimulationEngine::testPropertyRead_data()
 {
     QTest::addColumn<QByteArray>("property");
     QTest::addColumn<QVariant>("intialValue");
@@ -366,12 +366,12 @@ void tst_QIviSimulationEngine::testPropertyRead_data()
     QTest::newRow("constantInBase") << QByteArray("constantInBase") << QVariant::fromValue(-1);
 }
 
-void tst_QIviSimulationEngine::testPropertyRead()
+void tst_QIfSimulationEngine::testPropertyRead()
 {
     QFETCH(QByteArray, property);
     QFETCH(QVariant, intialValue);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
@@ -398,7 +398,7 @@ void tst_QIviSimulationEngine::testPropertyRead()
     QCOMPARE(obj->property("bindingProperty"), intialValue);
 }
 
-void tst_QIviSimulationEngine::testPropertyReadDerived_data()
+void tst_QIfSimulationEngine::testPropertyReadDerived_data()
 {
     QTest::addColumn<QByteArray>("property");
     QTest::addColumn<QVariant>("intialValue");
@@ -411,12 +411,12 @@ void tst_QIviSimulationEngine::testPropertyReadDerived_data()
     QTest::newRow("complexPropertyInDerived") << QByteArray("complexPropertyInDerived") << QVariant::fromValue(false);
 }
 
-void tst_QIviSimulationEngine::testPropertyReadDerived()
+void tst_QIfSimulationEngine::testPropertyReadDerived()
 {
     QFETCH(QByteArray, property);
     QFETCH(QVariant, intialValue);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
@@ -443,7 +443,7 @@ void tst_QIviSimulationEngine::testPropertyReadDerived()
     QCOMPARE(obj->property("bindingProperty"), intialValue);
 }
 
-void tst_QIviSimulationEngine::testPropertyChange_data()
+void tst_QIfSimulationEngine::testPropertyChange_data()
 {
     QTest::addColumn<QByteArray>("property");
     QTest::addColumn<QByteArray>("slot");
@@ -453,14 +453,14 @@ void tst_QIviSimulationEngine::testPropertyChange_data()
     QTest::newRow("readOnlyInBase") << QByteArray("readOnlyInBase")<< QByteArray("onReadOnlyInBaseChanged")<< QByteArray("setReadOnlyInBase") << QVariant::fromValue(true);
 }
 
-void tst_QIviSimulationEngine::testPropertyChange()
+void tst_QIfSimulationEngine::testPropertyChange()
 {
     QFETCH(QByteArray, property);
     QFETCH(QByteArray, slot);
     QFETCH(QByteArray, setter);
     QFETCH(QVariant, value);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
@@ -489,7 +489,7 @@ void tst_QIviSimulationEngine::testPropertyChange()
     QCOMPARE(obj->property("bindingProperty"), value);
 }
 
-void tst_QIviSimulationEngine::testPropertyChangeDerived_data()
+void tst_QIfSimulationEngine::testPropertyChangeDerived_data()
 {
     QTest::addColumn<QByteArray>("property");
     QTest::addColumn<QByteArray>("slot");
@@ -502,14 +502,14 @@ void tst_QIviSimulationEngine::testPropertyChangeDerived_data()
     QTest::newRow("complexPropertyInDerived") << QByteArray("complexPropertyInDerived") << QByteArray("onComplexPropertyInDerivedChanged") << QByteArray("setComplexPropertyInDerived") << QVariant::fromValue(true);
 }
 
-void tst_QIviSimulationEngine::testPropertyChangeDerived()
+void tst_QIfSimulationEngine::testPropertyChangeDerived()
 {
     QFETCH(QByteArray, property);
     QFETCH(QByteArray, slot);
     QFETCH(QByteArray, setter);
     QFETCH(QVariant, value);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
@@ -538,7 +538,7 @@ void tst_QIviSimulationEngine::testPropertyChangeDerived()
     QCOMPARE(obj->property("bindingProperty"), value);
 }
 
-void tst_QIviSimulationEngine::testPropertyWrite_data()
+void tst_QIfSimulationEngine::testPropertyWrite_data()
 {
     QTest::addColumn<QByteArray>("property");
     QTest::addColumn<QByteArray>("slot");
@@ -546,13 +546,13 @@ void tst_QIviSimulationEngine::testPropertyWrite_data()
     QTest::newRow("propertyInBase") << QByteArray("propertyInBase") << QByteArray("onPropertyInBaseChanged") << QVariant::fromValue(10);
 }
 
-void tst_QIviSimulationEngine::testPropertyWrite()
+void tst_QIfSimulationEngine::testPropertyWrite()
 {
     QFETCH(QByteArray, property);
     QFETCH(QByteArray, slot);
     QFETCH(QVariant, value);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
@@ -582,7 +582,7 @@ void tst_QIviSimulationEngine::testPropertyWrite()
     QCOMPARE(obj->property("bindingProperty"), value);
 }
 
-void tst_QIviSimulationEngine::testPropertyWriteDerived_data()
+void tst_QIfSimulationEngine::testPropertyWriteDerived_data()
 {
     QTest::addColumn<QByteArray>("property");
     QTest::addColumn<QByteArray>("slot");
@@ -592,13 +592,13 @@ void tst_QIviSimulationEngine::testPropertyWriteDerived_data()
     QTest::newRow("complexPropertyInDerived") << QByteArray("complexPropertyInDerived") << QByteArray("onComplexPropertyInDerivedChanged")  << QVariant::fromValue(true);
 }
 
-void tst_QIviSimulationEngine::testPropertyWriteDerived()
+void tst_QIfSimulationEngine::testPropertyWriteDerived()
 {
     QFETCH(QByteArray, property);
     QFETCH(QByteArray, slot);
     QFETCH(QVariant, value);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
@@ -629,9 +629,9 @@ void tst_QIviSimulationEngine::testPropertyWriteDerived()
 }
 
 //Animations use a different way to access the properties, so we need to test this explicitly
-void tst_QIviSimulationEngine::testAnimations()
+void tst_QIfSimulationEngine::testAnimations()
 {
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
@@ -665,7 +665,7 @@ void tst_QIviSimulationEngine::testAnimations()
     QVERIFY2(spy.count() >= 2, qPrintable(QStringLiteral("Emitted signals: ") + QString::number(spy.count())));
 }
 
-void tst_QIviSimulationEngine::testFunctionCalls_data()
+void tst_QIfSimulationEngine::testFunctionCalls_data()
 {
     QTest::addColumn<QByteArray>("function");
     QTest::addColumn<QByteArray>("signal");
@@ -677,7 +677,7 @@ void tst_QIviSimulationEngine::testFunctionCalls_data()
     QTest::newRow("functionWithReturnValue") << QByteArray("functionWithReturnValue") << QByteArray(SIGNAL(functionWithReturnValueCalled(int))) << QVariant(100) << QVariant(100) << QVariant();
 }
 
-void tst_QIviSimulationEngine::testFunctionCalls()
+void tst_QIfSimulationEngine::testFunctionCalls()
 {
     QFETCH(QByteArray, function);
     QFETCH(QByteArray, signal);
@@ -685,7 +685,7 @@ void tst_QIviSimulationEngine::testFunctionCalls()
     QFETCH(QVariant, value1);
     QFETCH(QVariant, value2);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
@@ -718,7 +718,7 @@ void tst_QIviSimulationEngine::testFunctionCalls()
         QCOMPARE(retValue, returnValue);
 }
 
-void tst_QIviSimulationEngine::testFunctionOverride_data()
+void tst_QIfSimulationEngine::testFunctionOverride_data()
 {
     QTest::addColumn<QByteArray>("function");
     QTest::addColumn<QByteArray>("signal");
@@ -730,7 +730,7 @@ void tst_QIviSimulationEngine::testFunctionOverride_data()
     QTest::newRow("functionWithReturnValue") << QByteArray("functionWithReturnValue") << QByteArray(SIGNAL(functionWithReturnValueCalled(int))) << QVariant(100) << QVariant(100) << QVariant();
 }
 
-void tst_QIviSimulationEngine::testFunctionOverride()
+void tst_QIfSimulationEngine::testFunctionOverride()
 {
     QFETCH(QByteArray, function);
     QFETCH(QByteArray, signal);
@@ -738,7 +738,7 @@ void tst_QIviSimulationEngine::testFunctionOverride()
     QFETCH(QVariant, value1);
     QFETCH(QVariant, value2);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
@@ -781,7 +781,7 @@ void tst_QIviSimulationEngine::testFunctionOverride()
         QCOMPARE(retValue, returnValue);
 }
 
-void tst_QIviSimulationEngine::testCallingBaseFunction_data()
+void tst_QIfSimulationEngine::testCallingBaseFunction_data()
 {
     QTest::addColumn<QByteArray>("function");
     QTest::addColumn<QByteArray>("signal");
@@ -793,7 +793,7 @@ void tst_QIviSimulationEngine::testCallingBaseFunction_data()
     QTest::newRow("functionWithReturnValue") << QByteArray("functionWithReturnValue") << QByteArray(SIGNAL(functionWithReturnValueCalled(int))) << QVariant(100) << QVariant(100) << QVariant();
 }
 
-void tst_QIviSimulationEngine::testCallingBaseFunction()
+void tst_QIfSimulationEngine::testCallingBaseFunction()
 {
     QFETCH(QByteArray, function);
     QFETCH(QByteArray, signal);
@@ -801,7 +801,7 @@ void tst_QIviSimulationEngine::testCallingBaseFunction()
     QFETCH(QVariant, value1);
     QFETCH(QVariant, value2);
 
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
@@ -848,9 +848,9 @@ void tst_QIviSimulationEngine::testCallingBaseFunction()
         QCOMPARE(retValue, returnValue);
 }
 
-void tst_QIviSimulationEngine::testRecursionPrevention()
+void tst_QIfSimulationEngine::testRecursionPrevention()
 {
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
@@ -885,9 +885,9 @@ void tst_QIviSimulationEngine::testRecursionPrevention()
     QCOMPARE(spy.at(0), expectedValues);
 }
 
-void tst_QIviSimulationEngine::testMultipleInstances()
+void tst_QIfSimulationEngine::testMultipleInstances()
 {
-    QIviSimulationEngine engine;
+    QIfSimulationEngine engine;
 
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
@@ -972,7 +972,7 @@ void tst_QIviSimulationEngine::testMultipleInstances()
     QCOMPARE(returnValueSpy.at(0), expectedValues);
 }
 
-QTEST_MAIN(tst_QIviSimulationEngine)
+QTEST_MAIN(tst_QIfSimulationEngine)
 
-#include "tst_qivisimulationengine.moc"
+#include "tst_qifsimulationengine.moc"
 

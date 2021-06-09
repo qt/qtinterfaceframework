@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,12 +41,12 @@
 #ifndef MEDIAPLAYERBACKEND_H
 #define MEDIAPLAYERBACKEND_H
 
-#include <QtIviMedia/QIviMediaPlayerBackendInterface>
-#include <QIviRemoteObjectReplicaHelper>
+#include <QtIfMedia/QIfMediaPlayerBackendInterface>
+#include <QIfRemoteObjectReplicaHelper>
 #include <QRemoteObjectNode>
-#include "rep_qivimediaplayer_replica.h"
+#include "rep_qifmediaplayer_replica.h"
 
-class MediaPlayerBackend : public QIviMediaPlayerBackendInterface
+class MediaPlayerBackend : public QIfMediaPlayerBackendInterface
 {
 public:
     explicit MediaPlayerBackend(QObject *parent = nullptr);
@@ -59,7 +59,7 @@ public:
     void seek(qint64 offset) override;
     void next() override;
     void previous() override;
-    void setPlayMode(QIviMediaPlayer::PlayMode playMode) override;
+    void setPlayMode(QIfMediaPlayer::PlayMode playMode) override;
     void setPosition(qint64 position) override;
     void setCurrentIndex(int currentIndex) override;
     void setVolume(int volume) override;
@@ -74,10 +74,10 @@ protected:
     bool connectToNode();
 
 private:
-    QSharedPointer<QIviMediaPlayerReplica> m_replica;
+    QSharedPointer<QIfMediaPlayerReplica> m_replica;
     QRemoteObjectNode *m_node;
     QUrl m_url;
-    QIviRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectReplicaHelper *m_helper;
 };
 
 #endif // MEDIAPLAYERBACKEND_H

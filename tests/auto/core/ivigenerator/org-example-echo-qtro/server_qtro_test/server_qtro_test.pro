@@ -1,12 +1,12 @@
 TARGET = tst_org-example-echo-qtro
 QMAKE_PROJECT_NAME = $$TARGET
 QT -= gui
-QT += testlib ivicore iviremoteobjects_helper_private
+QT += testlib interfaceframework ifremoteobjects_helper_private
 LIBS += -L$$OUT_PWD/.. -l$$qtLibraryTarget(echo_frontend)
 
 DESTDIR = ..
 
-CONFIG += c++11 console ivigenerator testcase
+CONFIG += c++11 console ifcodegen testcase
 CONFIG -= app_bundle
 
 INCLUDEPATH += $$OUT_PWD/../frontend
@@ -30,4 +30,4 @@ HEADERS += \
     contactsmodelservice.h
 
 QMAKE_RPATHDIR += $$OUT_PWD/..
-QMAKE_RPATHDIR += $$OUT_PWD/../qtivi
+QMAKE_RPATHDIR += $$OUT_PWD/../interfaceframework

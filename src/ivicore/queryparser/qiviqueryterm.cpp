@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include "qiviqueryterm.h"
-#include "qiviqueryterm_p.h"
+#include "qifqueryterm.h"
+#include "qifqueryterm_p.h"
 
 #include <QDataStream>
 #include <QMetaEnum>
@@ -48,44 +48,44 @@
 
 QT_BEGIN_NAMESPACE
 
-QIviConjunctionTermPrivate::QIviConjunctionTermPrivate()
-    : m_conjunction(QIviConjunctionTerm::And)
+QIfConjunctionTermPrivate::QIfConjunctionTermPrivate()
+    : m_conjunction(QIfConjunctionTerm::And)
 {
 }
 
-QIviScopeTermPrivate::QIviScopeTermPrivate()
+QIfScopeTermPrivate::QIfScopeTermPrivate()
     : m_term(nullptr)
     , m_negated(false)
 {
 }
 
-QIviFilterTermPrivate::QIviFilterTermPrivate()
-    : m_operator(QIviFilterTerm::Equals)
+QIfFilterTermPrivate::QIfFilterTermPrivate()
+    : m_operator(QIfFilterTerm::Equals)
     , m_negated(false)
 {
 }
 
-QString QIviFilterTermPrivate::operatorToString() const
+QString QIfFilterTermPrivate::operatorToString() const
 {
     switch (m_operator){
-    case QIviFilterTerm::Equals: return QLatin1String("=");
-    case QIviFilterTerm::EqualsCaseInsensitive: return QLatin1String("~=");
-    case QIviFilterTerm::Unequals: return QLatin1String("!=");
-    case QIviFilterTerm::GreaterThan: return QLatin1String(">");
-    case QIviFilterTerm::GreaterEquals: return QLatin1String(">=");
-    case QIviFilterTerm::LowerThan: return QLatin1String("<");
-    case QIviFilterTerm::LowerEquals: return QLatin1String("<=");
+    case QIfFilterTerm::Equals: return QLatin1String("=");
+    case QIfFilterTerm::EqualsCaseInsensitive: return QLatin1String("~=");
+    case QIfFilterTerm::Unequals: return QLatin1String("!=");
+    case QIfFilterTerm::GreaterThan: return QLatin1String(">");
+    case QIfFilterTerm::GreaterEquals: return QLatin1String(">=");
+    case QIfFilterTerm::LowerThan: return QLatin1String("<");
+    case QIfFilterTerm::LowerEquals: return QLatin1String("<=");
     }
 
     return QLatin1String("unknown type");
 }
 
-QIviOrderTermPrivate::QIviOrderTermPrivate()
+QIfOrderTermPrivate::QIfOrderTermPrivate()
     : m_ascending(false)
 {
 }
 
-QIviOrderTermPrivate::QIviOrderTermPrivate(const QIviOrderTermPrivate &other)
+QIfOrderTermPrivate::QIfOrderTermPrivate(const QIfOrderTermPrivate &other)
     : QSharedData(other)
     , m_ascending(other.m_ascending)
     , m_propertyName(other.m_propertyName)
@@ -94,18 +94,18 @@ QIviOrderTermPrivate::QIviOrderTermPrivate(const QIviOrderTermPrivate &other)
 }
 
 /*!
-    \class QIviAbstractQueryTerm
-    \inmodule QtIviCore
+    \class QIfAbstractQueryTerm
+    \inmodule QtInterfaceFramework
     \brief The base class of all query terms.
 
     Following terms are supported:
-    \annotatedlist qtivi_queryterms
+    \annotatedlist qtif_queryterms
 
-    See \l {Qt IVI Query Language} for how it can be used.
+    See \l {Qt Interface Framework Query Language} for how it can be used.
 */
 
 /*!
-    \enum QIviAbstractQueryTerm::Type
+    \enum QIfAbstractQueryTerm::Type
     \value FilterTerm
            A filter term stands for a filter which checks a specific identifier against a given value.
     \value ConjunctionTerm
@@ -115,44 +115,44 @@ QIviOrderTermPrivate::QIviOrderTermPrivate(const QIviOrderTermPrivate &other)
 */
 
 /*!
-    \fn QIviAbstractQueryTerm::Type QIviAbstractQueryTerm::type() const
+    \fn QIfAbstractQueryTerm::Type QIfAbstractQueryTerm::type() const
 
     Returns the type of this query term.
 */
 
 /*!
-    \fn QString QIviAbstractQueryTerm::toString() const
+    \fn QString QIfAbstractQueryTerm::toString() const
 
     Returns a string representation of the query.
 */
 
-QIviAbstractQueryTerm::~QIviAbstractQueryTerm()
+QIfAbstractQueryTerm::~QIfAbstractQueryTerm()
 {
 }
 
 /*!
-    \class QIviConjunctionTerm
-    \inmodule QtIviCore
-    \ingroup qtivi_queryterms
-    \brief The QIviConjunctionTerm is the representation of a conjunction between two query terms.
+    \class QIfConjunctionTerm
+    \inmodule QtInterfaceFramework
+    \ingroup qtif_queryterms
+    \brief The QIfConjunctionTerm is the representation of a conjunction between two query terms.
 */
 
 /*!
-    \enum QIviConjunctionTerm::Conjunction
+    \enum QIfConjunctionTerm::Conjunction
     \value And
            The AND conjunction combines the filters to only match when all supplied filters are \c true.
     \value Or
            The OR conjunction combines the filters to match when one of the supplied filters are \c true.
 */
 
-QIviConjunctionTerm::QIviConjunctionTerm()
-    : d_ptr(new QIviConjunctionTermPrivate)
+QIfConjunctionTerm::QIfConjunctionTerm()
+    : d_ptr(new QIfConjunctionTermPrivate)
 {
 }
 
-QIviConjunctionTerm::~QIviConjunctionTerm()
+QIfConjunctionTerm::~QIfConjunctionTerm()
 {
-    Q_D(QIviConjunctionTerm);
+    Q_D(QIfConjunctionTerm);
     qDeleteAll(d->m_terms);
     delete d_ptr;
 }
@@ -160,22 +160,22 @@ QIviConjunctionTerm::~QIviConjunctionTerm()
 /*!
     \reimp
 */
-QIviAbstractQueryTerm::Type QIviConjunctionTerm::type() const
+QIfAbstractQueryTerm::Type QIfConjunctionTerm::type() const
 {
-    return QIviAbstractQueryTerm::ConjunctionTerm;
+    return QIfAbstractQueryTerm::ConjunctionTerm;
 }
 
 /*!
     \reimp
 */
-QString QIviConjunctionTerm::toString() const
+QString QIfConjunctionTerm::toString() const
 {
-    Q_D(const QIviConjunctionTerm);
+    Q_D(const QIfConjunctionTerm);
     const QChar conjunction = d->m_conjunction == Or ? QLatin1Char('|') : QLatin1Char('&');
 
     QString string;
     if (!d->m_terms.empty()) {
-        for (QIviAbstractQueryTerm *term : d->m_terms)
+        for (QIfAbstractQueryTerm *term : d->m_terms)
             string += term->toString() + QLatin1Char(' ') + conjunction + QLatin1Char(' ');
         string.chop(3); // remove trailing " & " or " | "
     }
@@ -185,35 +185,35 @@ QString QIviConjunctionTerm::toString() const
 /*!
     Returns the type of the conjunction.
 */
-QIviConjunctionTerm::Conjunction QIviConjunctionTerm::conjunction() const
+QIfConjunctionTerm::Conjunction QIfConjunctionTerm::conjunction() const
 {
-    Q_D(const QIviConjunctionTerm);
+    Q_D(const QIfConjunctionTerm);
     return d->m_conjunction;
 }
 
 /*!
     Returns the terms which are conjuncted together.
 */
-QList<QIviAbstractQueryTerm *> QIviConjunctionTerm::terms() const
+QList<QIfAbstractQueryTerm *> QIfConjunctionTerm::terms() const
 {
-    Q_D(const QIviConjunctionTerm);
+    Q_D(const QIfConjunctionTerm);
     return d->m_terms;
 }
 
 /*!
-    \class QIviScopeTerm
-    \inmodule QtIviCore
-    \ingroup qtivi_queryterms
-    \brief The QIviScopeTerm is the representation of a scope which can hold another term.
+    \class QIfScopeTerm
+    \inmodule QtInterfaceFramework
+    \ingroup qtif_queryterms
+    \brief The QIfScopeTerm is the representation of a scope which can hold another term.
 */
-QIviScopeTerm::QIviScopeTerm()
-    : d_ptr(new QIviScopeTermPrivate)
+QIfScopeTerm::QIfScopeTerm()
+    : d_ptr(new QIfScopeTermPrivate)
 {
 }
 
-QIviScopeTerm::~QIviScopeTerm()
+QIfScopeTerm::~QIfScopeTerm()
 {
-    Q_D(QIviScopeTerm);
+    Q_D(QIfScopeTerm);
     delete d->m_term;
     delete d_ptr;
 }
@@ -221,17 +221,17 @@ QIviScopeTerm::~QIviScopeTerm()
 /*!
     \reimp
 */
-QIviAbstractQueryTerm::Type QIviScopeTerm::type() const
+QIfAbstractQueryTerm::Type QIfScopeTerm::type() const
 {
-    return QIviAbstractQueryTerm::ScopeTerm;
+    return QIfAbstractQueryTerm::ScopeTerm;
 }
 
 /*!
     \reimp
 */
-QString QIviScopeTerm::toString() const
+QString QIfScopeTerm::toString() const
 {
-    Q_D(const QIviScopeTerm);
+    Q_D(const QIfScopeTerm);
     QString string = QLatin1String("(") + d->m_term->toString() + QLatin1String(")");
     if (d->m_negated)
         string.prepend(QLatin1String("!"));
@@ -242,9 +242,9 @@ QString QIviScopeTerm::toString() const
 /*!
     Returns \c true when this term is negated, otherwise \c false
 */
-bool QIviScopeTerm::isNegated() const
+bool QIfScopeTerm::isNegated() const
 {
-    Q_D(const QIviScopeTerm);
+    Q_D(const QIfScopeTerm);
     return d->m_negated;
 }
 
@@ -253,17 +253,17 @@ bool QIviScopeTerm::isNegated() const
 
     This term can be a conjunction term if there are multiple terms inside.
 */
-QIviAbstractQueryTerm *QIviScopeTerm::term() const
+QIfAbstractQueryTerm *QIfScopeTerm::term() const
 {
-    Q_D(const QIviScopeTerm);
+    Q_D(const QIfScopeTerm);
     return d->m_term;
 }
 
 /*!
-    \class QIviFilterTerm
-    \inmodule QtIviCore
-    \ingroup qtivi_queryterms
-    \brief The QIviFilterTerm is the representation of a filter.
+    \class QIfFilterTerm
+    \inmodule QtInterfaceFramework
+    \ingroup qtif_queryterms
+    \brief The QIfFilterTerm is the representation of a filter.
 
     The filter is either in the form:
 
@@ -279,7 +279,7 @@ QIviAbstractQueryTerm *QIviScopeTerm::term() const
 */
 
 /*!
-    \enum QIviFilterTerm::Operator
+    \enum QIfFilterTerm::Operator
     \value Equals
            Tests whether the value from the identifier is the equal to the passed value. In case of a string the comparison is case-senstitive.
     \value EqualsCaseInsensitive
@@ -296,12 +296,12 @@ QIviAbstractQueryTerm *QIviScopeTerm::term() const
            Tests whether the value from the identifier is lower than or equal to the passed value. This does only work for numbers.
 */
 
-QIviFilterTerm::QIviFilterTerm()
-    : d_ptr(new QIviFilterTermPrivate)
+QIfFilterTerm::QIfFilterTerm()
+    : d_ptr(new QIfFilterTermPrivate)
 {
 }
 
-QIviFilterTerm::~QIviFilterTerm()
+QIfFilterTerm::~QIfFilterTerm()
 {
     delete d_ptr;
 }
@@ -309,17 +309,17 @@ QIviFilterTerm::~QIviFilterTerm()
 /*!
     \reimp
 */
-QIviAbstractQueryTerm::Type QIviFilterTerm::type() const
+QIfAbstractQueryTerm::Type QIfFilterTerm::type() const
 {
-    return QIviAbstractQueryTerm::FilterTerm;
+    return QIfAbstractQueryTerm::FilterTerm;
 }
 
 /*!
     \reimp
 */
-QString QIviFilterTerm::toString() const
+QString QIfFilterTerm::toString() const
 {
-    Q_D(const QIviFilterTerm);
+    Q_D(const QIfFilterTerm);
     QString string;
 
     string = d->m_property + d->operatorToString() + d->m_value.toString();
@@ -333,59 +333,59 @@ QString QIviFilterTerm::toString() const
 /*!
     Returns the operator of this filter.
 */
-QIviFilterTerm::Operator QIviFilterTerm::operatorType() const
+QIfFilterTerm::Operator QIfFilterTerm::operatorType() const
 {
-    Q_D(const QIviFilterTerm);
+    Q_D(const QIfFilterTerm);
     return d->m_operator;
 }
 
 /*!
     Returns the value of the filter.
 */
-QVariant QIviFilterTerm::value() const
+QVariant QIfFilterTerm::value() const
 {
-    Q_D(const QIviFilterTerm);
+    Q_D(const QIfFilterTerm);
     return d->m_value;
 }
 
 /*!
     Returns the property this filter should act on.
 */
-QString QIviFilterTerm::propertyName() const
+QString QIfFilterTerm::propertyName() const
 {
-    Q_D(const QIviFilterTerm);
+    Q_D(const QIfFilterTerm);
     return d->m_property;
 }
 
 /*!
     Returns \c true when this term is negated, otherwise \c false
 */
-bool QIviFilterTerm::isNegated() const
+bool QIfFilterTerm::isNegated() const
 {
-    Q_D(const QIviFilterTerm);
+    Q_D(const QIfFilterTerm);
     return d->m_negated;
 }
 
 /*!
-    \class QIviOrderTerm
-    \inmodule QtIviCore
-    \brief The QIviOrderTerm is the representation of a scope which can hold another term.
+    \class QIfOrderTerm
+    \inmodule QtInterfaceFramework
+    \brief The QIfOrderTerm is the representation of a scope which can hold another term.
 */
-QIviOrderTerm::QIviOrderTerm()
-    : d(new QIviOrderTermPrivate)
+QIfOrderTerm::QIfOrderTerm()
+    : d(new QIfOrderTermPrivate)
 {
 }
 
-QIviOrderTerm::QIviOrderTerm(const QIviOrderTerm &other)
+QIfOrderTerm::QIfOrderTerm(const QIfOrderTerm &other)
     : d(other.d)
 {
 }
 
-QIviOrderTerm::~QIviOrderTerm()
+QIfOrderTerm::~QIfOrderTerm()
 {
 }
 
-QIviOrderTerm &QIviOrderTerm::operator =(const QIviOrderTerm &other)
+QIfOrderTerm &QIfOrderTerm::operator =(const QIfOrderTerm &other)
 {
     d = other.d;
     return *this;
@@ -395,7 +395,7 @@ QIviOrderTerm &QIviOrderTerm::operator =(const QIviOrderTerm &other)
     Returns \c true when it should be sorted in ascending order.
     Returns \c false when it should be sorted in descending order.
 */
-bool QIviOrderTerm::isAscending() const
+bool QIfOrderTerm::isAscending() const
 {
     return d->m_ascending;
 }
@@ -403,61 +403,61 @@ bool QIviOrderTerm::isAscending() const
 /*!
     Returns the property which should be used for sorting.
 */
-QString QIviOrderTerm::propertyName() const
+QString QIfOrderTerm::propertyName() const
 {
     return d->m_propertyName;
 }
 
-QDataStream &operator<<(QDataStream &out, QIviConjunctionTerm::Conjunction var)
+QDataStream &operator<<(QDataStream &out, QIfConjunctionTerm::Conjunction var)
 {
     out << int(var);
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, QIviConjunctionTerm::Conjunction &var)
+QDataStream &operator>>(QDataStream &in, QIfConjunctionTerm::Conjunction &var)
 {
     int val;
     in >> val;
-    QMetaEnum metaEnum = QMetaEnum::fromType<QIviConjunctionTerm::Conjunction>();
+    QMetaEnum metaEnum = QMetaEnum::fromType<QIfConjunctionTerm::Conjunction>();
     if (metaEnum.valueToKey(val) == nullptr)
-        qWarning() << "Received an invalid enum value for type QIviConjunctionTerm::Conjunction, value =" << val;
-    var = QIviConjunctionTerm::Conjunction(val);
+        qWarning() << "Received an invalid enum value for type QIfConjunctionTerm::Conjunction, value =" << val;
+    var = QIfConjunctionTerm::Conjunction(val);
     return in;
 }
 
-QDataStream &operator<<(QDataStream &out, QIviFilterTerm::Operator var)
+QDataStream &operator<<(QDataStream &out, QIfFilterTerm::Operator var)
 {
     out << int(var);
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, QIviFilterTerm::Operator &var)
+QDataStream &operator>>(QDataStream &in, QIfFilterTerm::Operator &var)
 {
     int val;
     in >> val;
-    QMetaEnum metaEnum = QMetaEnum::fromType<QIviFilterTerm::Operator>();
+    QMetaEnum metaEnum = QMetaEnum::fromType<QIfFilterTerm::Operator>();
     if (metaEnum.valueToKey(val) == nullptr)
-        qWarning() << "Received an invalid enum value for type QIviFilterTerm::Operator, value =" << val;
-    var = QIviFilterTerm::Operator(val);
+        qWarning() << "Received an invalid enum value for type QIfFilterTerm::Operator, value =" << val;
+    var = QIfFilterTerm::Operator(val);
     return in;
 }
 
-QDataStream &operator<<(QDataStream &out, QIviAbstractQueryTerm *var)
+QDataStream &operator<<(QDataStream &out, QIfAbstractQueryTerm *var)
 {
-    if (var->type() == QIviAbstractQueryTerm::FilterTerm) {
-        auto *term = static_cast<QIviFilterTerm*>(var);
+    if (var->type() == QIfAbstractQueryTerm::FilterTerm) {
+        auto *term = static_cast<QIfFilterTerm*>(var);
         out << QStringLiteral("filter");
         out << term->operatorType();
         out << term->value();
         out << term->propertyName();
         out << term->isNegated();
-    } else if (var->type() == QIviAbstractQueryTerm::ScopeTerm) {
-        auto *term = static_cast<QIviScopeTerm*>(var);
+    } else if (var->type() == QIfAbstractQueryTerm::ScopeTerm) {
+        auto *term = static_cast<QIfScopeTerm*>(var);
         out << QStringLiteral("scope");
         out << term->isNegated();
         out << term->term();
     } else {
-        auto *term = static_cast<QIviConjunctionTerm*>(var);
+        auto *term = static_cast<QIfConjunctionTerm*>(var);
         out << QStringLiteral("conjunction");
         out << term->conjunction();
         const auto subTerms = term->terms();
@@ -468,32 +468,32 @@ QDataStream &operator<<(QDataStream &out, QIviAbstractQueryTerm *var)
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, QIviAbstractQueryTerm **var)
+QDataStream &operator>>(QDataStream &in, QIfAbstractQueryTerm **var)
 {
     QString type;
-    QIviAbstractQueryTerm *aTerm=nullptr;
+    QIfAbstractQueryTerm *aTerm=nullptr;
     in >> type;
     if (type == QStringLiteral("filter")) {
-        auto term = new QIviFilterTerm();
+        auto term = new QIfFilterTerm();
         aTerm = term;
         in >> term->d_ptr->m_operator;
         in >> term->d_ptr->m_value;
         in >> term->d_ptr->m_property;
         in >> term->d_ptr->m_negated;
     } else if (type == QStringLiteral("scope")) {
-        auto term = new QIviScopeTerm();
+        auto term = new QIfScopeTerm();
         aTerm = term;
         in >> term->d_ptr->m_negated;
         in >> &term->d_ptr->m_term;
     } else {
         Q_ASSERT(type == QStringLiteral("conjunction"));
-        auto term = new QIviConjunctionTerm();
+        auto term = new QIfConjunctionTerm();
         aTerm = term;
         qsizetype count = 0;
         in >> term->d_ptr->m_conjunction;
         in >> count;
         for (int i = 0; i < count; ++i) {
-            QIviAbstractQueryTerm *subTerm=nullptr;
+            QIfAbstractQueryTerm *subTerm=nullptr;
             in >> &subTerm;
             term->d_ptr->m_terms.append(subTerm);
         }
@@ -502,14 +502,14 @@ QDataStream &operator>>(QDataStream &in, QIviAbstractQueryTerm **var)
     return in;
 }
 
-QDataStream &operator<<(QDataStream &out, const QIviOrderTerm &var)
+QDataStream &operator<<(QDataStream &out, const QIfOrderTerm &var)
 {
     out << var.propertyName();
     out << var.isAscending();
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, QIviOrderTerm &var)
+QDataStream &operator>>(QDataStream &in, QIfOrderTerm &var)
 {
     in >> var.d->m_propertyName;
     in >> var.d->m_ascending;

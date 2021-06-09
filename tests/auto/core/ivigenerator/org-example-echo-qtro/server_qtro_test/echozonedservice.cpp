@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -29,7 +29,7 @@
 
 #include "echozonedservice.h"
 
-#include <QtIviRemoteObjectsHelper>
+#include <QtIfRemoteObjectsHelper>
 #include <QTimer>
 
 #define SET_VALUE(m_VALUE, VALUE, CHANGED_SIGNAL) \
@@ -258,7 +258,7 @@ QVariant EchoZonedService::getCombo(const QString &zone)
 QVariant EchoZonedService::timer(int interval, const QString &zone)
 {
     static quint64 counter = 0;
-    QIviRemoteObjectPendingResult pendingResult(counter++, false);
+    QIfRemoteObjectPendingResult pendingResult(counter++, false);
     QTimer::singleShot(interval, this, [this, pendingResult, zone](){
         emit pendingResultAvailable(pendingResult.id(), true, zone);
     });

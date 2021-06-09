@@ -8,8 +8,8 @@ set(CMAKE_AUTOUIC ON)
 add_library(echo_qtro_frontend)
 set_target_properties(echo_qtro_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-# IVI Generator:
-qt6_ivigenerator(echo_qtro_frontend
+# Interface Framework Generator:
+qt6_ifcodegen(echo_qtro_frontend
     QFACE_SOURCES ../../org.example.echo.qface
     QFACE_FORMAT frontend
 )
@@ -20,8 +20,8 @@ target_include_directories(echo_qtro_frontend PUBLIC
 target_link_libraries(echo_qtro_frontend PUBLIC
     Qt::Core
     Qt::Gui
-    Qt::IviCore
-    Qt::IviCorePrivate
+    Qt::InterfaceFramework
+    Qt::InterfaceFrameworkPrivate
     Qt::Qml
     Qt::Quick
 )

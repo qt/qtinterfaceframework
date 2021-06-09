@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -60,7 +60,7 @@ QStringList {{class}}::interfaces() const
     return list;
 }
 
-QIviFeatureInterface *{{class}}::interfaceInstance(const QString &interface) const
+QIfFeatureInterface *{{class}}::interfaceInstance(const QString &interface) const
 {
      int index = interfaces().indexOf(interface);
      return index < 0 ? nullptr : m_interfaces.at(index);

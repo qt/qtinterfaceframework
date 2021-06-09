@@ -16,14 +16,14 @@ qt_internal_add_test(tst_org-example-echo-qtro
     PUBLIC_LIBRARIES
         echo_qtro_frontend
         Qt::Core
-        Qt::IviCore
+        Qt::InterfaceFramework
         Qt::Test
-        Qt::IviRemoteObjectsHelper
+        Qt::IfRemoteObjectsHelper
 )
 set_target_properties(tst_org-example-echo-qtro PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-# IVI Generator:
-qt6_ivigenerator(tst_org-example-echo-qtro
+# Interface Framework Generator:
+qt6_ifcodegen(tst_org-example-echo-qtro
     QFACE_SOURCES ../../org.example.echo.qface
     QFACE_FORMAT server_qtro
 )

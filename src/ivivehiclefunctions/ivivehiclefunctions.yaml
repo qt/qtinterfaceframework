@@ -1,100 +1,100 @@
-QtIviVehicleFunctions.QIviClimateControl:
+QtIfVehicleFunctions.QIfClimateControl:
     config_simulator:
         zoned: true
         zones: [ FrontLeft, FrontRight, Rear ]
 
-QtIviVehicleFunctions.QIviClimateControl#airConditioningEnabled:
+QtIfVehicleFunctions.QIfClimateControl#airConditioningEnabled:
     config_simulator:
         default: true
 
-QtIviVehicleFunctions.QIviClimateControl#heaterEnabled:
+QtIfVehicleFunctions.QIfClimateControl#heaterEnabled:
     config_simulator:
         default: true
 
-QtIviVehicleFunctions.QIviClimateControl#recirculationEnabled:
+QtIfVehicleFunctions.QIfClimateControl#recirculationEnabled:
     config_simulator:
         default: false
 
-QtIviVehicleFunctions.QIviClimateControl#zoneSynchronizationEnabled:
+QtIfVehicleFunctions.QIfClimateControl#zoneSynchronizationEnabled:
     config_simulator:
         default: false
 
-QtIviVehicleFunctions.QIviClimateControl#defrostEnabled:
+QtIfVehicleFunctions.QIfClimateControl#defrostEnabled:
     config_simulator:
         default: false
 
-QtIviVehicleFunctions.QIviClimateControl#steeringWheelHeater:
+QtIfVehicleFunctions.QIfClimateControl#steeringWheelHeater:
     config_simulator:
         default: 0
 
-QtIviVehicleFunctions.QIviClimateControl#fanSpeedLevel:
+QtIfVehicleFunctions.QIfClimateControl#fanSpeedLevel:
     config_simulator:
         default: 2
 
-QtIviVehicleFunctions.QIviClimateControl#recirculationMode:
+QtIfVehicleFunctions.QIfClimateControl#recirculationMode:
     config_simulator:
         default: RecirculationMode.RecirculationOff
 
-QtIviVehicleFunctions.QIviClimateControl#recirculationSensitivityLevel:
+QtIfVehicleFunctions.QIfClimateControl#recirculationSensitivityLevel:
     config_simulator:
         unsupported: true
         default: 0
 
-QtIviVehicleFunctions.QIviClimateControl#climateMode:
+QtIfVehicleFunctions.QIfClimateControl#climateMode:
     config_simulator:
         unsupported: true
         default: ClimateMode.ClimateOn
 
-QtIviVehicleFunctions.QIviClimateControl#automaticClimateFanIntensityLevel:
+QtIfVehicleFunctions.QIfClimateControl#automaticClimateFanIntensityLevel:
     config_simulator:
         unsupported: true
         default: 0
 
-QtIviVehicleFunctions.QIviClimateControl#targetTemperature:
+QtIfVehicleFunctions.QIfClimateControl#targetTemperature:
     config_simulator:
         default: { FrontLeft: 21.0, FrontRight: 22.5, =: 0.0 }
         zoned: true
 
-QtIviVehicleFunctions.QIviClimateControl#seatCooler:
+QtIfVehicleFunctions.QIfClimateControl#seatCooler:
     config_simulator:
         default: 0
         zoned: true
 
-QtIviVehicleFunctions.QIviClimateControl#seatHeater:
+QtIfVehicleFunctions.QIfClimateControl#seatHeater:
     config_simulator:
         default: 0
         zoned: true
 
-QtIviVehicleFunctions.QIviClimateControl#outsideTemperature:
+QtIfVehicleFunctions.QIfClimateControl#outsideTemperature:
     config_simulator:
         default: 15
 
-QtIviVehicleFunctions.QIviWindowControl:
+QtIfVehicleFunctions.QIfWindowControl:
     config_simulator:
         zoned: true
         zones: [ FrontLeft, FrontRight, RearLeft, RearRight, Rear, Roof ]
 
-QtIviVehicleFunctions.QIviWindowControl#heaterMode:
+QtIfVehicleFunctions.QIfWindowControl#heaterMode:
     config_simulator:
         default: HeaterMode.HeaterOff
         zoned: true
 
-QtIviVehicleFunctions.QIviWindowControl#heater:
+QtIfVehicleFunctions.QIfWindowControl#heater:
     config_simulator:
         default: false
         zoned: true
 
-QtIviVehicleFunctions.QIviWindowControl#state:
+QtIfVehicleFunctions.QIfWindowControl#state:
     config_simulator:
         default: WindowState.Closed
         zoned: true
 
-QtIviVehicleFunctions.QIviWindowControl#blindMode:
+QtIfVehicleFunctions.QIfWindowControl#blindMode:
     config_simulator:
         default: BlindMode.AutoBlind
         zoned: true
 
-QtIviVehicleFunctions.QIviWindowControl#blindState:
+QtIfVehicleFunctions.QIfWindowControl#blindState:
     config_simulator:
         default: WindowState.Closed
         zoned: true

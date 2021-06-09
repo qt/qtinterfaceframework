@@ -27,47 +27,47 @@
 **
 ****************************************************************************/
 /*!
-    \page qtivi-modules.html
-    \title Qt IVI C++ Classes
+    \page interfaceframework-modules.html
+    \title Qt Interface Framework C++ Classes
 
-    \brief C++ classes for Qt IVI.
+    \brief C++ classes for Qt Interface Framework.
 
     \section1 Modules
 
-    Qt IVI contains the following modules:
-    \annotatedlist qtivi_modules
+    Qt Interface Framework contains the following modules:
+    \annotatedlist qtif_modules
 
     \section1 Classes
 
-    \section2 Qt IVI Core C++ Classes
-    \generatelist classesbymodule QtIviCore
+    \section2 Qt Interface Framework Core C++ Classes
+    \generatelist classesbymodule QtInterfaceFramework
 
-    \section2 Qt IVI Vehicle Functions C++ Classes
-    \generatelist classesbymodule QtIviVehicleFunctions
+    \section2 Qt Interface Framework Vehicle Functions C++ Classes
+    \generatelist classesbymodule QtIfVehicleFunctions
 
-    \section2 Qt IVI Media C++ Classes
-    \generatelist classesbymodule QtIviMedia
+    \section2 Qt Interface Framework Media C++ Classes
+    \generatelist classesbymodule QtIfMedia
 */
 
 /*!
-    \page qtivi-qmlmodules.html
-    \title Qt IVI QML Types
+    \page interfaceframework-qmlmodules.html
+    \title Qt Interface Framework QML Types
 
-    \brief QML types for Qt IVI.
+    \brief QML types for Qt Interface Framework.
 
     \section1 QML Modules
 
-    Qt IVI contains the following QML modules:
-    \annotatedlist qtivi_qmlmodules
+    Qt Interface Framework contains the following QML modules:
+    \annotatedlist qtif_qmlmodules
 
     \section1 QML Types
 
-    \section2 Qt IVI Core QML Types
-    \generatelist qmltypesbymodule QtIvi
+    \section2 Qt Interface Framework Core QML Types
+    \generatelist qmltypesbymodule QtInterfaceFramework
 
-    \section2 Qt IVI VehicleFunctions QML Types
-    \generatelist qmltypesbymodule QtIvi.VehicleFunctions
+    \section2 Qt Interface Framework VehicleFunctions QML Types
+    \generatelist qmltypesbymodule QtInterfaceFramework.VehicleFunctions
 
-    \section2 Qt IVI Media QML Types
-    \generatelist qmltypesbymodule QtIvi.Media
+    \section2 Qt Interface Framework Media QML Types
+    \generatelist qmltypesbymodule QtInterfaceFramework.Media
 */

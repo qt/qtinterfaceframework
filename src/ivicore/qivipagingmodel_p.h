@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPAGINGMODEL_P_H
-#define QIVIPAGINGMODEL_P_H
+#ifndef QIFPAGINGMODEL_P_H
+#define QIFPAGINGMODEL_P_H
 
 //
 //  W A R N I N G
@@ -53,42 +53,42 @@
 // We mean it.
 //
 
-#include <QtIviCore/private/qiviabstractfeaturelistmodel_p.h>
-#include <private/qtiviglobal_p.h>
+#include <QtInterfaceFramework/private/qifabstractfeaturelistmodel_p.h>
+#include <private/qtifglobal_p.h>
 
-#include "qivipagingmodel.h"
-#include "qivipagingmodelinterface.h"
-#include "qivistandarditem.h"
+#include "qifpagingmodel.h"
+#include "qifpagingmodelinterface.h"
+#include "qifstandarditem.h"
 
 #include <QBitArray>
 #include <QUuid>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviPagingModelPrivate : public QIviAbstractFeatureListModelPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPagingModelPrivate : public QIfAbstractFeatureListModelPrivate
 {
 public:
-    QIviPagingModelPrivate(const QString &interface, QIviPagingModel *model);
-    ~QIviPagingModelPrivate() override;
+    QIfPagingModelPrivate(const QString &interface, QIfPagingModel *model);
+    ~QIfPagingModelPrivate() override;
 
     void initialize() override;
     void onInitializationDone();
-    void onCapabilitiesChanged(const QUuid &identifier, QtIviCoreModule::ModelCapabilities capabilities);
+    void onCapabilitiesChanged(const QUuid &identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities);
     void onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable);
     void onCountChanged(const QUuid &identifier, int new_length);
     void onDataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count);
     void onFetchMoreThresholdReached();
     virtual void resetModel();
     virtual void clearToDefaults();
-    const QIviStandardItem *itemAt(int i) const;
+    const QIfStandardItem *itemAt(int i) const;
     void fetchData(int startIndex);
 
-    QIviPagingModelInterface *backend() const;
+    QIfPagingModelInterface *backend() const;
 
-    QIviPagingModel * const q_ptr;
-    Q_DECLARE_PUBLIC(QIviPagingModel)
+    QIfPagingModel * const q_ptr;
+    Q_DECLARE_PUBLIC(QIfPagingModel)
 
-    QtIviCoreModule::ModelCapabilities m_capabilities;
+    QtInterfaceFrameworkModule::ModelCapabilities m_capabilities;
     int m_chunkSize;
 
     QList<QVariant> m_itemList;
@@ -98,9 +98,9 @@ public:
     QUuid m_identifier;
     int m_fetchMoreThreshold;
     int m_fetchedDataCount;
-    QIviPagingModel::LoadingType m_loadingType;
+    QIfPagingModel::LoadingType m_loadingType;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIPAGINGMODEL_P_H
+#endif // QIFPAGINGMODEL_P_H

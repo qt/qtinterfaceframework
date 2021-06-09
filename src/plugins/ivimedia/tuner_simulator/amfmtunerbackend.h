@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -43,10 +43,10 @@
 #define AMFMTUNERBACKEND_H
 
 #include <QtCore/QVector>
-#include <QtIviMedia/QIviAmFmTunerBackendInterface>
-#include <QtIviMedia/QIviTunerStation>
+#include <QtIfMedia/QIfAmFmTunerBackendInterface>
+#include <QtIfMedia/QIfTunerStation>
 
-class AmFmTunerBackend : public QIviAmFmTunerBackendInterface
+class AmFmTunerBackend : public QIfAmFmTunerBackendInterface
 {
     Q_OBJECT
 public:
@@ -54,7 +54,7 @@ public:
 
     void initialize() override;
     void setFrequency(int frequency) override;
-    void setBand(QIviAmFmTuner::Band band) override;
+    void setBand(QIfAmFmTuner::Band band) override;
     void stepUp() override;
     void stepDown() override;
     void seekUp() override;
@@ -63,20 +63,20 @@ public:
     void stopScan() override;
 
 private:
-    void setCurrentStation(const QIviAmFmTunerStation &station);
+    void setCurrentStation(const QIfAmFmTunerStation &station);
     int stationIndexFromFrequency(int frequency) const;
-    QIviAmFmTunerStation stationAt(int frequency) const;
+    QIfAmFmTunerStation stationAt(int frequency) const;
     void timerEvent(QTimerEvent *event) override;
 
-    QIviAmFmTuner::Band m_band;
+    QIfAmFmTuner::Band m_band;
     struct BandData {
-        QVector<QIviAmFmTunerStation> m_stations;
+        QVector<QIfAmFmTunerStation> m_stations;
         int m_stepSize;
         int m_frequency;
         int m_minimumFrequency;
         int m_maximumFrequency;
     };
-    QHash<QIviAmFmTuner::Band, BandData> m_bandHash;
+    QHash<QIfAmFmTuner::Band, BandData> m_bandHash;
     int m_timerId;
 
     friend class SearchAndBrowseBackend;

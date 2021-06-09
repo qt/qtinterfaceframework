@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -34,13 +34,13 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
-#include <QtIviCore/QIviServiceInterface>
+#include <QtInterfaceFramework/QIfServiceInterface>
 
-class WrongMetadataStaticPlugin : public QObject, public QIviServiceInterface
+class WrongMetadataStaticPlugin : public QObject, public QIfServiceInterface
 {
     Q_OBJECT
-    Q_INTERFACES(QIviServiceInterface)
-    Q_PLUGIN_METADATA(IID QIviServiceInterface_iid FILE "wrongmetadata.json")
+    Q_INTERFACES(QIfServiceInterface)
+    Q_PLUGIN_METADATA(IID QIfServiceInterface_iid FILE "wrongmetadata.json")
 public:
     explicit WrongMetadataStaticPlugin();
     ~WrongMetadataStaticPlugin() {}
@@ -49,7 +49,7 @@ public:
         return QStringList() << "wrongmetadata_static";
     }
 
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override {
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override {
         Q_UNUSED(interface)
         return 0;
     }

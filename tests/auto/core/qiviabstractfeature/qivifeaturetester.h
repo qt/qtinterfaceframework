@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -28,63 +28,63 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIFEATURETESTER_H
-#define QIVIFEATURETESTER_H
+#ifndef QIFFEATURETESTER_H
+#define QIFFEATURETESTER_H
 
-#include <QIviAbstractFeature>
-#include <QIviAbstractFeatureListModel>
+#include <QIfAbstractFeature>
+#include <QIfAbstractFeatureListModel>
 
 QT_BEGIN_NAMESPACE
 
-class QIviFeatureTester : public QObject
+class QIfFeatureTester : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QIviAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
-    Q_PROPERTY(QIviAbstractFeature::DiscoveryResult discoveryResult READ discoveryResult NOTIFY discoveryResultChanged)
-    Q_PROPERTY(QIviServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged)
+    Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
+    Q_PROPERTY(QIfAbstractFeature::DiscoveryResult discoveryResult READ discoveryResult NOTIFY discoveryResultChanged)
+    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged)
     Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
     Q_PROPERTY(bool isInitialized READ isInitialized NOTIFY isInitializedChanged)
     Q_PROPERTY(QString error READ errorMessage NOTIFY errorChanged)
 
 public:
-    explicit QIviFeatureTester(QIviAbstractFeature *feature, QObject *parent = nullptr)
+    explicit QIfFeatureTester(QIfAbstractFeature *feature, QObject *parent = nullptr)
         : QObject(parent)
         , m_feature(feature)
         , m_featureListModel(nullptr)
     {
-        connect(m_feature, &QIviAbstractFeature::discoveryModeChanged, this, &QIviFeatureTester::discoveryModeChanged);
-        connect(m_feature, &QIviAbstractFeature::discoveryResultChanged, this, &QIviFeatureTester::discoveryResultChanged);
-        connect(m_feature, &QIviAbstractFeature::serviceObjectChanged, this, &QIviFeatureTester::serviceObjectChanged);
-        connect(m_feature, &QIviAbstractFeature::isValidChanged, this, &QIviFeatureTester::isValidChanged);
-        connect(m_feature, &QIviAbstractFeature::isInitializedChanged, this, &QIviFeatureTester::isInitializedChanged);
-        connect(m_feature, &QIviAbstractFeature::errorChanged, this, &QIviFeatureTester::errorChanged);
+        connect(m_feature, &QIfAbstractFeature::discoveryModeChanged, this, &QIfFeatureTester::discoveryModeChanged);
+        connect(m_feature, &QIfAbstractFeature::discoveryResultChanged, this, &QIfFeatureTester::discoveryResultChanged);
+        connect(m_feature, &QIfAbstractFeature::serviceObjectChanged, this, &QIfFeatureTester::serviceObjectChanged);
+        connect(m_feature, &QIfAbstractFeature::isValidChanged, this, &QIfFeatureTester::isValidChanged);
+        connect(m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfFeatureTester::isInitializedChanged);
+        connect(m_feature, &QIfAbstractFeature::errorChanged, this, &QIfFeatureTester::errorChanged);
     }
 
-    explicit QIviFeatureTester(QIviAbstractFeatureListModel *featureModel, QObject *parent = nullptr)
+    explicit QIfFeatureTester(QIfAbstractFeatureListModel *featureModel, QObject *parent = nullptr)
         : QObject(parent)
         , m_feature(nullptr)
         , m_featureListModel(featureModel)
     {
-        connect(m_featureListModel, &QIviAbstractFeatureListModel::discoveryModeChanged, this, &QIviFeatureTester::discoveryModeChanged);
-        connect(m_featureListModel, &QIviAbstractFeatureListModel::discoveryResultChanged, this, &QIviFeatureTester::discoveryResultChanged);
-        connect(m_featureListModel, &QIviAbstractFeatureListModel::serviceObjectChanged, this, &QIviFeatureTester::serviceObjectChanged);
-        connect(m_featureListModel, &QIviAbstractFeatureListModel::isValidChanged, this, &QIviFeatureTester::isValidChanged);
-        connect(m_featureListModel, &QIviAbstractFeatureListModel::isInitializedChanged, this, &QIviFeatureTester::isInitializedChanged);
-        connect(m_featureListModel, &QIviAbstractFeatureListModel::errorChanged, this, &QIviFeatureTester::errorChanged);
+        connect(m_featureListModel, &QIfAbstractFeatureListModel::discoveryModeChanged, this, &QIfFeatureTester::discoveryModeChanged);
+        connect(m_featureListModel, &QIfAbstractFeatureListModel::discoveryResultChanged, this, &QIfFeatureTester::discoveryResultChanged);
+        connect(m_featureListModel, &QIfAbstractFeatureListModel::serviceObjectChanged, this, &QIfFeatureTester::serviceObjectChanged);
+        connect(m_featureListModel, &QIfAbstractFeatureListModel::isValidChanged, this, &QIfFeatureTester::isValidChanged);
+        connect(m_featureListModel, &QIfAbstractFeatureListModel::isInitializedChanged, this, &QIfFeatureTester::isInitializedChanged);
+        connect(m_featureListModel, &QIfAbstractFeatureListModel::errorChanged, this, &QIfFeatureTester::errorChanged);
     }
 
-    QIviServiceObject *serviceObject() const
+    QIfServiceObject *serviceObject() const
     {
         return m_feature ? m_feature->serviceObject() : m_featureListModel->serviceObject();
     }
 
-    QIviAbstractFeature::DiscoveryMode discoveryMode() const
+    QIfAbstractFeature::DiscoveryMode discoveryMode() const
     {
         return m_feature ? m_feature->discoveryMode() : m_featureListModel->discoveryMode();
     }
 
-    QIviAbstractFeature::DiscoveryResult discoveryResult() const
+    QIfAbstractFeature::DiscoveryResult discoveryResult() const
     {
         return m_feature ? m_feature->discoveryResult() : m_featureListModel->discoveryResult();
     }
@@ -99,7 +99,7 @@ public:
         return m_feature ? m_feature->isInitialized() : m_featureListModel->isInitialized();
     }
 
-    QIviAbstractFeature::Error error() const
+    QIfAbstractFeature::Error error() const
     {
         return m_feature ? m_feature->error() : m_featureListModel->error();
     }
@@ -115,32 +115,32 @@ public:
     }
 
 public Q_SLOTS:
-    bool setServiceObject(QIviServiceObject *so)
+    bool setServiceObject(QIfServiceObject *so)
     {
         return m_feature ? m_feature->setServiceObject(so) : m_featureListModel->setServiceObject(so);
     }
-    void setDiscoveryMode(QIviAbstractFeature::DiscoveryMode discoveryMode)
+    void setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode)
     {
         return m_feature ? m_feature->setDiscoveryMode(discoveryMode) : m_featureListModel->setDiscoveryMode(discoveryMode);
     }
-    QIviAbstractFeature::DiscoveryResult startAutoDiscovery()
+    QIfAbstractFeature::DiscoveryResult startAutoDiscovery()
     {
         return m_feature ? m_feature->startAutoDiscovery() : m_featureListModel->startAutoDiscovery();
     }
 
 Q_SIGNALS:
     void serviceObjectChanged();
-    void discoveryModeChanged(QIviAbstractFeature::DiscoveryMode discoveryMode);
-    void discoveryResultChanged(QIviAbstractFeature::DiscoveryResult discoveryResult);
+    void discoveryModeChanged(QIfAbstractFeature::DiscoveryMode discoveryMode);
+    void discoveryResultChanged(QIfAbstractFeature::DiscoveryResult discoveryResult);
     void isValidChanged(bool arg);
     void isInitializedChanged(bool isInitialized);
-    void errorChanged(QIviAbstractFeature::Error error, const QString &message);
+    void errorChanged(QIfAbstractFeature::Error error, const QString &message);
 
 private:
-    QIviAbstractFeature *m_feature;
-    QIviAbstractFeatureListModel *m_featureListModel;
+    QIfAbstractFeature *m_feature;
+    QIfAbstractFeatureListModel *m_featureListModel;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIFEATURETESTER_H
+#endif // QIFFEATURETESTER_H

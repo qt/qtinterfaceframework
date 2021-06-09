@@ -1,29 +1,29 @@
 # Generated from vehiclefunctions-simulation-server.pro.
 
 #####################################################################
-## ivivehiclefunctions-simulation-server Tool:
+## ifvehiclefunctions-simulation-server Tool:
 #####################################################################
 
-qt_get_tool_target_name(target_name ivivehiclefunctions-simulation-server)
+qt_get_tool_target_name(target_name ifvehiclefunctions-simulation-server)
 qt_internal_add_tool(${target_name}
-     TOOLS_TARGET IviVehicleFunctions
+     TOOLS_TARGET IfVehicleFunctions
      LIBRARIES
-        Qt::IviCore
-        Qt::IviVehicleFunctions
+        Qt::InterfaceFramework
+        Qt::IfVehicleFunctions
      PUBLIC_LIBRARIES
-        Qt::IviCore
-        Qt::IviVehicleFunctions
+        Qt::InterfaceFramework
+        Qt::IfVehicleFunctions
 )
 
 # Resources:
-set_source_files_properties("../../plugins/ivivehiclefunctions/vehiclefunctions_simulator/QIviConcreteWindowControlSimulation.qml"
-    PROPERTIES QT_RESOURCE_ALIAS "QIviConcreteWindowControlSimulation.qml"
+set_source_files_properties("../../plugins/ifvehiclefunctions/vehiclefunctions_simulator/QIfConcreteWindowControlSimulation.qml"
+    PROPERTIES QT_RESOURCE_ALIAS "QIfConcreteWindowControlSimulation.qml"
 )
-set_source_files_properties("../../plugins/ivivehiclefunctions/vehiclefunctions_simulator/simulation.qml"
+set_source_files_properties("../../plugins/ifvehiclefunctions/vehiclefunctions_simulator/simulation.qml"
     PROPERTIES QT_RESOURCE_ALIAS "simulation.qml"
 )
 set(qml_resource_files
-    "QIviConcreteWindowControlSimulation.qml"
+    "QIfConcreteWindowControlSimulation.qml"
     "simulation.qml"
 )
 
@@ -31,26 +31,26 @@ qt_internal_add_resource(${target_name} "qml"
     PREFIX
         "/simulation"
     BASE
-        "../../plugins/ivivehiclefunctions/vehiclefunctions_simulator"
+        "../../plugins/ifvehiclefunctions/vehiclefunctions_simulator"
     FILES
         ${qml_resource_files}
 )
 
 
-# IVI Generator:
+# Interface Framework Generator:
 # When cross-compiling the tool might not be compiled and the target
 # doesn't exist in this case
 if (TARGET ${target_name})
-    qt_ivigenerator(${target_name}
-        QFACE_SOURCES ../../ivivehiclefunctions/ivivehiclefunctions.qface
+    qt_ifcodegen(${target_name}
+        QFACE_SOURCES ../../ifvehiclefunctions/ifvehiclefunctions.qface
         QFACE_FORMAT server_qtro_simulator
-        QFACE_MODULE_NAME QtIviVehicleFunctions
+        QFACE_MODULE_NAME QtIfVehicleFunctions
     )
 endif()
 
 #### Keys ignored in scope 1:.:.:vehiclefunctions-simulation-server.pro:<TRUE>:
 # QML_IMPORT_PATH = "$$OUT_PWD/qml"
-# QT_FOR_CONFIG = "ivicore"
+# QT_FOR_CONFIG = "interfaceframework"
 # TEMPLATE = "app"
 
 ## Scopes:

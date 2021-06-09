@@ -2,8 +2,8 @@ TARGET = tst_include
 QMAKE_PROJECT_NAME = $$TARGET
 DESTDIR = ../
 
-QT += testlib core ivicore
-CONFIG += c++11 ivigenerator testcase
+QT += testlib core interfaceframework
+CONFIG += c++11 ifcodegen testcase
 
 INCLUDEPATH += $$OUT_PWD/../frontend $$OUT_PWD/../common
 LIBS += -L$$OUT_PWD/.. -l$$qtLibraryTarget(include_test_frontend) -l$$qtLibraryTarget(include_test_common)

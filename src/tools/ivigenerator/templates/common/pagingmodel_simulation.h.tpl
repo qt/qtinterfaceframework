@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -37,10 +37,10 @@
 {% set class = '{0}ModelBackend'.format(property|upperfirst) %}
 {% endif %}
 
-#include <QIviPagingModelInterface>
+#include <QIfPagingModelInterface>
 #include "{{property.type.nested|lower}}.h"
 
-class {{class}} : public QIviPagingModelInterface
+class {{class}} : public QIfPagingModelInterface
 {
     Q_OBJECT
     Q_PROPERTY(int count READ count NOTIFY countChanged)

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIADEVICEDISCOVERYMODEL_H
-#define QIVIMEDIADEVICEDISCOVERYMODEL_H
+#ifndef QIFMEDIADEVICEDISCOVERYMODEL_H
+#define QIFMEDIADEVICEDISCOVERYMODEL_H
 
-#include <QtIviCore/QIviAbstractFeatureListModel>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtInterfaceFramework/QIfAbstractFeatureListModel>
+#include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaDeviceDiscoveryModelPrivate;
-class QIviMediaDevice;
+class QIfMediaDeviceDiscoveryModelPrivate;
+class QIfMediaDevice;
 
-//TODO Should we add a generic base class ? If not we should use QIviMediaDevice* internally
-class Q_QTIVIMEDIA_EXPORT QIviMediaDeviceDiscoveryModel : public QIviAbstractFeatureListModel
+//TODO Should we add a generic base class ? If not we should use QIfMediaDevice* internally
+class Q_QTIFMEDIA_EXPORT QIfMediaDeviceDiscoveryModel : public QIfAbstractFeatureListModel
 {
     Q_OBJECT
 
@@ -64,33 +64,33 @@ public:
         ServiceObjectRole = Qt::UserRole + 1
     };
 
-    explicit QIviMediaDeviceDiscoveryModel(QObject *parent = nullptr);
+    explicit QIfMediaDeviceDiscoveryModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    Q_INVOKABLE QIviMediaDevice *get(int i) const;
-    QIviMediaDevice *at(int i) const;
+    Q_INVOKABLE QIfMediaDevice *get(int i) const;
+    QIfMediaDevice *at(int i) const;
 
     QHash<int, QByteArray> roleNames() const override;
 
 Q_SIGNALS:
     void countChanged();
-    void deviceAdded(QIviMediaDevice *device);
-    void deviceRemoved(QIviMediaDevice *device);
+    void deviceAdded(QIfMediaDevice *device);
+    void deviceRemoved(QIfMediaDevice *device);
 
 protected:
-    QIviMediaDeviceDiscoveryModel(QIviMediaDeviceDiscoveryModelPrivate &dd, QObject *parent = nullptr);
+    QIfMediaDeviceDiscoveryModel(QIfMediaDeviceDiscoveryModelPrivate &dd, QObject *parent = nullptr);
 
-    void connectToServiceObject(QIviServiceObject *serviceObject) override;
+    void connectToServiceObject(QIfServiceObject *serviceObject) override;
     void clearServiceObject() override;
 
 private:
-    Q_DECLARE_PRIVATE(QIviMediaDeviceDiscoveryModel)
-    Q_PRIVATE_SLOT(d_func(), void resetModel(const QList<QIviServiceObject *> deviceList))
-    Q_PRIVATE_SLOT(d_func(), void onDeviceAdded(QIviServiceObject *device))
-    Q_PRIVATE_SLOT(d_func(), void onDeviceRemoved(QIviServiceObject *device))
+    Q_DECLARE_PRIVATE(QIfMediaDeviceDiscoveryModel)
+    Q_PRIVATE_SLOT(d_func(), void resetModel(const QList<QIfServiceObject *> deviceList))
+    Q_PRIVATE_SLOT(d_func(), void onDeviceAdded(QIfServiceObject *device))
+    Q_PRIVATE_SLOT(d_func(), void onDeviceRemoved(QIfServiceObject *device))
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIADEVICEDISCOVERYMODEL_H
+#endif // QIFMEDIADEVICEDISCOVERYMODEL_H

@@ -27,10 +27,10 @@
 **
 ****************************************************************************/
 /*!
-    \group qtivi-examples
-    \title Qt IVI Examples
+    \group interfaceframework-examples
+    \title Qt Interface Framework Examples
 
-    \brief All Qt IVI Examples by module
+    \brief All Qt Interface Framework Examples by module
 
-    These are the Qt IVI examples.
+    These are the Qt Interface Framework examples.
 */

@@ -30,37 +30,37 @@
 \page models.html
 \title Models
 \previouspage Dynamic Backend System
-\nextpage Qt IVI Query Language
+\nextpage Qt Interface Framework Query Language
 \contentspage Concepts
 
 To interact with lists in Qt applications, typically, you would use Qt's ListView classes, which
-are based on the Model-View-Controller (MVC) pattern. Similarly, QtIvi has the following classes
+are based on the Model-View-Controller (MVC) pattern. Similarly, QtInterfaceFramework has the following classes
 that support this use case, for you to provide your own models:
 
 \list
-   \li \l{ivi-abstract-feature-list-model}{QIviAbstractFeatureListModel}
-   \li \l{ivi-paging-model}{QIviPagingModel}
-   \li \l{ivi-search-and-browse-model}{QIviSearchAndBrowseModel}
+   \li \l{if-abstract-feature-list-model}{QIfAbstractFeatureListModel}
+   \li \l{if-paging-model}{QIfPagingModel}
+   \li \l{if-search-and-browse-model}{QIfFilterAndBrowseModel}
 \endlist
 
 Apart from creating standalone models using one of classes mentioned above, you can also provide
-\l{Models as properties of a QtIvi Feature}{models that are properties of an existing feature}.
+\l{Models as properties of a QtInterfaceFramework Feature}{models that are properties of an existing feature}.
 
-\target ivi-abstract-feature-list-model
-\section1 QIviAbstractFeatureListModel
+\target if-abstract-feature-list-model
+\section1 QIfAbstractFeatureListModel
 
 Suppose you have to design a feature like a Contact List in a connected Mobile Phone, you can use
-QtIvi's frontend/backend separation by deriving from QIviAbstractFeature. Then, you use your
+QtInterfaceFramework's frontend/backend separation by derifng from QIfAbstractFeature. Then, you use your
 subclass with a QAbstractItemView derived class to show your contacts in a list form.
 
-QtIviCore provides \l{QIviAbstractFeatureListModel::QIviAbstractFeatureListModel}{QIviAbstractFeatureListModel}
+QtInterfaceFramework provides \l{QIfAbstractFeatureListModel::QIfAbstractFeatureListModel}{QIfAbstractFeatureListModel}
 for this use case. The class is derived from QAbstractListModel, but also provides all the
-functionality from QIviAbstractFeature.
+functionality from QIfAbstractFeature.
 
-\target ivi-paging-model
-\section1 QIviPagingModel
+\target if-paging-model
+\section1 QIfPagingModel
 
-The \l{QIviPagingModel::QIviPagingModel}{QIviPagingModel} is a list model that uses the well-known
+The \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} is a list model that uses the well-known
 Pagination concept to only load content from the backend, when it is needed. This model provides
 two different modes that determine when and how data should be retrieved and the number of items
 to fetch in each stage.
@@ -68,98 +68,98 @@ to fetch in each stage.
 \section2 Fetch Modes
 
 Since we don't have control on the data providers' interfaces, the
-\l{QIviPagingModel::QIviPagingModel}{QIviPagingModel} supports two fetch modes:
+\l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} supports two fetch modes:
 
 \list 1
 \li If the number of items in the model is \b not known from the beginning, use the
-    \l{QIviPagingModel::FetchMore}{FetchMore} mode. This mode fetches a number of items from the
+    \l{QIfPagingModel::FetchMore}{FetchMore} mode. This mode fetches a number of items from the
     backend when they are needed; the backend tells the frontend whether there is more data to be
     fetched.
 
 \li If the number of items in the model is \b known from the beginning, use the
-    \l{QIviPagingModel::DataChanged}{DataChanged} mode. This mode fills the complete model with
+    \l{QIfPagingModel::DataChanged}{DataChanged} mode. This mode fills the complete model with
     empty data and then uses the \l{QAbstractItemModel::dataChanged()} signal to tell the view
     about the actual content.
 \endlist
 
-For more details on fetch modes, see \l{QIviPagingModel::QIviPagingModel}{QIviPagingModel}.
+For more details on fetch modes, see \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel}.
 
 \section2 Model Data
 
-\l{QIviPagingModel::QIviPagingModel}{QIviPagingModel} provides a classic item-based approach to
-working with the model; the items are provided by QIviStandardItem or classes derived from it. The
-best way to provide data to the QIviPagingModel is to create a new class derived from
-QIviStandardItem. Then, override the \c name() and \c type() accessor functions. The \c name and
-\c type properties for each QIviStandardItem can be retrieved directly from the model's \c data()
+\l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} provides a classic item-based approach to
+working with the model; the items are provided by QIfStandardItem or classes derived from it. The
+best way to provide data to the QIfPagingModel is to create a new class derived from
+QIfStandardItem. Then, override the \c name() and \c type() accessor functions. The \c name and
+\c type properties for each QIfStandardItem can be retrieved directly from the model's \c data()
 function. This function also exposes those properties to delegates in item views, such as ListView.
-In addition, the \l{QIviPagingModel::}{ItemRole} provides a const pointer to the QIviStandardItem
+In addition, the \l{QIfPagingModel::}{ItemRole} provides a const pointer to the QIfStandardItem
 stored. Using \l{The Meta-Object System}, all the properties from the derived type are also
 available in QML, directly, with this pointer. From C++, you can use the \c at() template function
 to cast this const pointer directly to the type you need.
 
-\target ivi-search-and-browse-model
-\section1 QIviSearchAndBrowseModel
+\target if-search-and-browse-model
+\section1 QIfFilterAndBrowseModel
 
-The \l{QIviSearchAndBrowseModel::QIviSearchAndBrowseModel}{QIviSearchAndBrowseModel} is derived
-from the \l{QIviPagingModel::QIviPagingModel}{QIviPagingModel} to extends its functionality. This
+The \l{QIfFilterAndBrowseModel::QIfFilterAndBrowseModel}{QIfFilterAndBrowseModel} is derived
+from the \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} to extends its functionality. This
 class provides a model that supports searching through its content and browsing through a set of
 model data.
 
 \section2 Search: Filter and Sort
 
 To filter and sort,
-\l{QIviSearchAndBrowseModel::QIviSearchAndBrowseModel}{QIviSearchAndBrowseModel} uses the
-\l{Qt IVI Query Language}; this makes the system both flexible and powerful.
+\l{QIfFilterAndBrowseModel::QIfFilterAndBrowseModel}{QIfFilterAndBrowseModel} uses the
+\l{Qt Interface Framework Query Language}; this makes the system both flexible and powerful.
 
 \section2 Browse
 
-Although the Qt IVI Query Language supports very complex queries, enabling you to filter content
+Although the Qt Interface Framework Query Language supports very complex queries, enabling you to filter content
 in a list, it may not suit all use cases. With the query language, the frontend developer defines
 which data is needed next. Sometimes, this is not possible, if the backend already has a fixed
 browsing order. For example, a DLNA backend already specifies that an artist needs to be selected
 first, only then is a list of all albums for that artist presented.
 
-For this scenario, the {QIviSearchAndBrowseModel::QIviSearchAndBrowseModel}{QIviSearchAndBrowseModel}
+For this scenario, the {QIfFilterAndBrowseModel::QIfFilterAndBrowseModel}{QIfFilterAndBrowseModel}
 provides some methods to navigate through the models:
 
 \list
-  \li \l{QIviSearchAndBrowseModel::canGoForward}{canGoForward(index)}
-  \li \l{QIviSearchAndBrowseModel::goForward}{goForward(index)}
-  \li \l{QIviSearchAndBrowseModel::canGoBack}{canGoBack()}
-  \li \l{QIviSearchAndBrowseModel::goBack}{goBack()}
+  \li \l{QIfFilterAndBrowseModel::canGoForward}{canGoForward(index)}
+  \li \l{QIfFilterAndBrowseModel::goForward}{goForward(index)}
+  \li \l{QIfFilterAndBrowseModel::canGoBack}{canGoBack()}
+  \li \l{QIfFilterAndBrowseModel::goBack}{goBack()}
 \endlist
 
 \section2 Capabilities
 
 You might not need all of the features above simultaneously; or your backend may not support all of
-them. In this case, the QIviSearchAndBrowseModel has a capabilities feature where the backend
+them. In this case, the QIfFilterAndBrowseModel has a capabilities feature where the backend
 reports which capabilities it can support. Based on that information, only the supported
 functionalities are enabled in the frontend API.
 
 \section2 Modify the Content
 
-{QIviSearchAndBrowseModel::QIviSearchAndBrowseModel}{QIviSearchAndBrowseModel} provides some
+{QIfFilterAndBrowseModel::QIfFilterAndBrowseModel}{QIfFilterAndBrowseModel} provides some
 generic methods to modify the contents of the model:
 
 \list
-  \li \l{QIviSearchAndBrowseModel::insert}{insert()}
-  \li \l{QIviSearchAndBrowseModel::remove}{remove()}
-  \li \l{QIviSearchAndBrowseModel::move}{move()}
+  \li \l{QIfFilterAndBrowseModel::insert}{insert()}
+  \li \l{QIfFilterAndBrowseModel::remove}{remove()}
+  \li \l{QIfFilterAndBrowseModel::move}{move()}
 \endlist
 
 \target models-as-properties
-\section1 Models as Properties of a QtIvi Feature
+\section1 Models as Properties of a QtInterfaceFramework Feature
 
-In some cases, you might need a model as a property of a specific QtIvi Feature. A good example
+In some cases, you might need a model as a property of a specific QtInterfaceFramework Feature. A good example
 is a MediaPlayer feature, where you provide the basic player functionality like the play state. In
 addition you also want to provide the current play queue as a model to display it nicely inside a
 ListView.
 
 This play queue might be long, a vector or list is not a suitable container for it. Using the
-{QIviPagingModel::QIviPagingModel}{QIviPagingModel} to only load the items, is a logical
+{QIfPagingModel::QIfPagingModel}{QIfPagingModel} to only load the items, is a logical
 conclusion.
 
-As the {QIviPagingModel::QIviPagingModel}{QIviPagingModel} is a also a QtIvi Feature, it has its
+As the {QIfPagingModel::QIfPagingModel}{QIfPagingModel} is a also a QtInterfaceFramework Feature, it has its
 own backend interface which the backend plugin needs to implement.
 
 \image models-as-properties.png
@@ -168,8 +168,8 @@ Each model property needs to map to a unique model interface implementation in t
 each model is filled with different data and the data is requested at a different time.
 Ultimately, every model instance needs to maintain its own state.
 
-To implement this concept, we use the QIviProxyServiceObject to connect the
-{QIviPagingModel::QIviPagingModel}{QIviPagingModel} instance provided with the correct backend
+To implement this concept, we use the QIfProxyServiceObject to connect the
+{QIfPagingModel::QIfPagingModel}{QIfPagingModel} instance provided with the correct backend
 interface instance.
 
 \image models-as-properties-details.png
@@ -179,23 +179,23 @@ For the MediaPlayer play queue example, we would implement the following:
 \list a
     \li For the Backend
     \list 1
-        \li Implement the QIviPagingModelInterface to retrieve the play queue items
+        \li Implement the QIfPagingModelInterface to retrieve the play queue items
         \li Implement the MediaPlayer feature interface and return a pointer to the
-            QIviPagingModelInterface implementation for the play queue property
+            QIfPagingModelInterface implementation for the play queue property
     \endlist
 
     \li For the Frontend
     \list 1
-        \li Retrieve the QIviPagingModelInterface pointer from the backend
-        \li Create a QIviProxyServiceObject that holds the QIviPagingModelInterface
-        \li Create a \l{QIviPagingModel::QIviPagingModel}{QIviPagingModel} instance and set the
-            QIviProxyServiceObject on it
-        \li Return the \l{QIviPagingModel::QIviPagingModel}{QIviPagingModel} instance to the
+        \li Retrieve the QIfPagingModelInterface pointer from the backend
+        \li Create a QIfProxyServiceObject that holds the QIfPagingModelInterface
+        \li Create a \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} instance and set the
+            QIfProxyServiceObject on it
+        \li Return the \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} instance to the
             developer
     \endlist
 \endlist
 
-All these steps are already implemented in the IVIGenerator, via \c model type for a
+All these steps are already implemented in the Qt Interface Framework Generator, via \c model type for a
 property in an \c interface.
 
 */

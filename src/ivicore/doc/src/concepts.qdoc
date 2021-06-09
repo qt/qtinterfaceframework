@@ -30,14 +30,14 @@
 \page concepts.html
 \title Concepts and Architecture
 
-All Qt IVI feature APIs depend on the following set of key concepts:
+All Qt Interface Framework feature APIs depend on the following set of key concepts:
 
 \list
     \li \l {Dynamic Backend System}
-    \li \l {Qt IVI Generator}
+    \li \l {Qt Interface Framework Generator}
     \li \l {Models}
-    \li \l {Qt IVI Query Language}
-    \li \l {Qt IVI Simulation System}
-    \li \l {Qt IVI Inter-Process Communication Integration}
+    \li \l {Qt Interface Framework Query Language}
+    \li \l {Qt Interface Framework Simulation System}
+    \li \l {Qt Interface Framework Inter-Process Communication Integration}
 \endlist
 */

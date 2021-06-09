@@ -1,35 +1,35 @@
-# Generated from ivicore.pro.
+# Generated from interfaceframework.pro.
 
 #####################################################################
-## IviCore Module:
+## InterfaceFramework Module:
 #####################################################################
 
-qt_internal_add_module(IviCore
-    PLUGIN_TYPES qtivi
+qt_internal_add_module(InterfaceFramework
+    PLUGIN_TYPES interfaceframework
     SOURCES
-        qiviabstractfeature.cpp qiviabstractfeature.h qiviabstractfeature_p.h
-        qiviabstractfeaturelistmodel.cpp qiviabstractfeaturelistmodel.h qiviabstractfeaturelistmodel_p.h
-        qiviabstractzonedfeature.cpp qiviabstractzonedfeature.h qiviabstractzonedfeature_p.h
-        qividefaultpropertyoverrider.cpp qividefaultpropertyoverrider_p.h
-        qivifeatureinterface.cpp qivifeatureinterface.h
-        qivipagingmodel.cpp qivipagingmodel.h qivipagingmodel_p.h
-        qivipagingmodelinterface.cpp qivipagingmodelinterface.h
-        qivipendingreply.cpp qivipendingreply.h qivipendingreply_p.h
-        qiviproxyserviceobject.cpp qiviproxyserviceobject.h qiviproxyserviceobject_p.h
-        qiviqmlconversion_helper.cpp qiviqmlconversion_helper.h
-        qivisearchandbrowsemodel.cpp qivisearchandbrowsemodel.h qivisearchandbrowsemodel_p.h
-        qivisearchandbrowsemodelinterface.cpp qivisearchandbrowsemodelinterface.h
-        qiviserviceinterface.cpp qiviserviceinterface.h
-        qiviservicemanager.cpp qiviservicemanager.h qiviservicemanager_p.h
-        qiviserviceobject.cpp qiviserviceobject.h
-        qivisimulationengine.cpp qivisimulationengine.h
-        qivisimulationglobalobject.cpp qivisimulationglobalobject_p.h
-        qivisimulationproxy.cpp qivisimulationproxy.h
-        qivistandarditem.cpp qivistandarditem.h
-        qivizonedfeatureinterface.cpp qivizonedfeatureinterface.h
-        qtivicoremodule.cpp qtivicoremodule.h
-        qtiviglobal.h qtiviglobal_p.h
-        queryparser/qiviqueryterm.cpp queryparser/qiviqueryterm.h queryparser/qiviqueryterm_p.h
+        qifabstractfeature.cpp qifabstractfeature.h qifabstractfeature_p.h
+        qifabstractfeaturelistmodel.cpp qifabstractfeaturelistmodel.h qifabstractfeaturelistmodel_p.h
+        qifabstractzonedfeature.cpp qifabstractzonedfeature.h qifabstractzonedfeature_p.h
+        qifdefaultpropertyoverrider.cpp qifdefaultpropertyoverrider_p.h
+        qiffeatureinterface.cpp qiffeatureinterface.h
+        qifpagingmodel.cpp qifpagingmodel.h qifpagingmodel_p.h
+        qifpagingmodelinterface.cpp qifpagingmodelinterface.h
+        qifpendingreply.cpp qifpendingreply.h qifpendingreply_p.h
+        qifproxyserviceobject.cpp qifproxyserviceobject.h qifproxyserviceobject_p.h
+        qifqmlconversion_helper.cpp qifqmlconversion_helper.h
+        qiffilterandbrowsemodel.cpp qiffilterandbrowsemodel.h qiffilterandbrowsemodel_p.h
+        qiffilterandbrowsemodelinterface.cpp qiffilterandbrowsemodelinterface.h
+        qifserviceinterface.cpp qifserviceinterface.h
+        qifservicemanager.cpp qifservicemanager.h qifservicemanager_p.h
+        qifserviceobject.cpp qifserviceobject.h
+        qifsimulationengine.cpp qifsimulationengine.h
+        qifsimulationglobalobject.cpp qifsimulationglobalobject_p.h
+        qifsimulationproxy.cpp qifsimulationproxy.h
+        qifstandarditem.cpp qifstandarditem.h
+        qifzonedfeatureinterface.cpp qifzonedfeatureinterface.h
+        qtinterfaceframeworkmodule.cpp qtinterfaceframeworkmodule.h
+        qtifglobal.h qtifglobal_p.h
+        queryparser/qifqueryterm.cpp queryparser/qifqueryterm.h queryparser/qifqueryterm_p.h
     LIBRARIES
         Qt::CorePrivate
         Qt::QmlPrivate
@@ -40,14 +40,14 @@ qt_internal_add_module(IviCore
         Qt::CorePrivate
         Qt::QmlPrivate
     EXTRA_CMAKE_FILES
-        Qt6IviCoreConfigExtras.cmake.in
-        Qt6IviCoreMacros.cmake
+        Qt6InterfaceFrameworkConfigExtras.cmake.in
+        Qt6InterfaceFrameworkMacros.cmake
 )
 
-#### Keys ignored in scope 1:.:.:ivicore.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:interfaceframework.pro:<TRUE>:
 # CMAKE_MODULE_TESTS = "'-'"
-# DISTFILES = "$$PWD/doc/*.qdocconf" "$$PWD/doc/online/*.qdocconf" "$$PWD/doc/src/*.qdoc" "$$PWD/doc/src/ivigenerator/*.qdoc" "$$PWD/doc/images/*.jpg" "$$PWD/doc/images/*.png"
-# QMAKE_DOCS_TARGETDIR = "qtivi"
+# DISTFILES = "$$PWD/doc/*.qdocconf" "$$PWD/doc/online/*.qdocconf" "$$PWD/doc/src/*.qdoc" "$$PWD/doc/src/ifcodegen/*.qdoc" "$$PWD/doc/images/*.jpg" "$$PWD/doc/images/*.png"
+# QMAKE_DOCS_TARGETDIR = "interfaceframework"
 
 ## Scopes:
 #####################################################################
@@ -65,10 +65,10 @@ qt_internal_add_module(IviCore
 # qlalr.input = "QLALR"
 # qlalr.output = "$$PWD/${QMAKE_FILE_BASE}_p.h"
 
-qt_internal_extend_target(IviCore CONDITION NOT enable-qlalr
+qt_internal_extend_target(InterfaceFramework CONDITION NOT enable-qlalr
     SOURCES
-        queryparser/qiviqueryparser_p.h
-        queryparser/qiviqueryparser_flex_p.h
+        queryparser/qifqueryparser_p.h
+        queryparser/qifqueryparser_flex_p.h
 )
 
 #### Keys ignored in scope 7:.:queryparser:queryparser/queryparser.pri:else:

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -42,16 +42,16 @@
 #ifndef SEARCHBACKEND_H
 #define SEARCHBACKEND_H
 
-#include <QtIviCore/QIviSearchAndBrowseModel>
-#include <QtIviCore/QIviSearchAndBrowseModelInterface>
-#include <QtIviMedia/QIviAudioTrackItem>
+#include <QtInterfaceFramework/QIfFilterAndBrowseModel>
+#include <QtInterfaceFramework/QIfFilterAndBrowseModelInterface>
+#include <QtIfMedia/QIfAudioTrackItem>
 
 #include <QSqlDatabase>
 #include <QStack>
 
 QT_FORWARD_DECLARE_CLASS(QThreadPool);
 
-class SearchAndBrowseItem : public QIviPlayableItem
+class SearchAndBrowseItem : public QIfPlayableItem
 {
     Q_GADGET
 
@@ -71,7 +71,7 @@ Q_DECLARE_METATYPE(SearchAndBrowseItem)
 QDataStream &operator<<(QDataStream &stream, const SearchAndBrowseItem &obj);
 QDataStream &operator>>(QDataStream &stream, SearchAndBrowseItem &obj);
 
-class SearchAndBrowseBackend : public QIviSearchAndBrowseModelInterface
+class SearchAndBrowseBackend : public QIfFilterAndBrowseModelInterface
 {
     Q_OBJECT
 
@@ -85,20 +85,20 @@ public:
     void registerInstance(const QUuid &identifier) override;
     void unregisterInstance(const QUuid &identifier) override;
     void setContentType(const QUuid &identifier, const QString &contentType) override;
-    void setupFilter(const QUuid &identifier, QIviAbstractQueryTerm *term, const QList<QIviOrderTerm> &orderTerms) override;
+    void setupFilter(const QUuid &identifier, QIfAbstractQueryTerm *term, const QList<QIfOrderTerm> &orderTerms) override;
     void fetchData(const QUuid &identifier, int start, int count) override;
-    QIviPendingReply<QString> goBack(const QUuid &identifier) override;
-    QIviPendingReply<QString> goForward(const QUuid &identifier, int index) override;
+    QIfPendingReply<QString> goBack(const QUuid &identifier) override;
+    QIfPendingReply<QString> goForward(const QUuid &identifier, int index) override;
 
-    QIviPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &item) override;
-    QIviPendingReply<void> remove(const QUuid &identifier, int index) override;
-    QIviPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) override;
-    QIviPendingReply<int> indexOf(const QUuid &identifier, const QVariant &item) override;
+    QIfPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &item) override;
+    QIfPendingReply<void> remove(const QUuid &identifier, int index) override;
+    QIfPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) override;
+    QIfPendingReply<int> indexOf(const QUuid &identifier, const QVariant &item) override;
 
 private slots:
     void search(const QUuid &identifier, const QString &queryString, const QString &type, int start, int count);
-    QString createSortOrder(const QString &type, const QList<QIviOrderTerm> &orderTerms);
-    QString createWhereClause(const QString &type, QIviAbstractQueryTerm *term);
+    QString createSortOrder(const QString &type, const QList<QIfOrderTerm> &orderTerms);
+    QString createWhereClause(const QString &type, QIfAbstractQueryTerm *term);
 private:
     QString mapIdentifiers(const QString &type, const QString &identifer);
 
@@ -107,8 +107,8 @@ private:
     QStringList m_contentTypes;
     struct State {
         QString contentType;
-        QIviAbstractQueryTerm *queryTerm = nullptr;
-        QList<QIviOrderTerm> orderTerms;
+        QIfAbstractQueryTerm *queryTerm = nullptr;
+        QList<QIfOrderTerm> orderTerms;
         QVariantList items;
     };
     QMap<QUuid, State> m_state;

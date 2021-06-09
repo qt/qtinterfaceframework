@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -51,31 +51,31 @@
 ****************************************************************************/
 
 /*!
-     \example ivivehiclefunctions/climate_widget
+     \example ifvehiclefunctions/climate_widget
      \title Climate Control Widget Example
-     \ingroup qtivivehiclefunctions-examples
+     \ingroup qtifvehiclefunctions-examples
 
      \brief This example shows how to access the climate control from C++.
      \image examples_climate_widget.png
 
      This example shows how to access the climate control from the C++.
 
-     The first thing to do is to create a QIviClimateControl instance in our
+     The first thing to do is to create a QIfClimateControl instance in our
      MainWindow constructor. As we only have one Climate backend and don't want
-     to choose which one to use, we call \l {QIviAbstractFeature::}{startAutoDiscovery}
+     to choose which one to use, we call \l {QIfAbstractFeature::}{startAutoDiscovery}
      to start searching for a suitable backend right away and pick the first one
      that matches.
 
      \note To simplify the deployment process, this example loads a simulation backend.
 
-     \l {QIviClimateControl::}{isValid()} is used for verifying that the
+     \l {QIfClimateControl::}{isValid()} is used for verifying that the
      autoDiscovery found a backend:
-     \snippet ivivehiclefunctions/climate_widget/mainwindow.cpp 1
+     \snippet ifvehiclefunctions/climate_widget/mainwindow.cpp 1
 
      The constructor then continues to connect the climate control
      attribute change signals to the UI components:
-     \snippet ivivehiclefunctions/climate_widget/mainwindow.cpp 2
+     \snippet ifvehiclefunctions/climate_widget/mainwindow.cpp 2
 
      Airflow direction is controlled using these functions:
-     \snippet ivivehiclefunctions/climate_widget/mainwindow.cpp 3
+     \snippet ifvehiclefunctions/climate_widget/mainwindow.cpp 3
 */

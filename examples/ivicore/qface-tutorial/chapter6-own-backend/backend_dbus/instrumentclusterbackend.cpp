@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -80,18 +80,18 @@ void InstrumentClusterBackend::initialize()
 void InstrumentClusterBackend::setupConnection()
 {
     qInfo() << "Connecting to the Server";
-    m_client = new ExampleIVIInstrumentClusterInterface("Example.IVI.InstrumentCluster", "/", QDBusConnection::sessionBus());
-    connect(m_client, &ExampleIVIInstrumentClusterInterface::speedChanged,
+    m_client = new ExampleIfInstrumentClusterInterface("Example.If.InstrumentCluster", "/", QDBusConnection::sessionBus());
+    connect(m_client, &ExampleIfInstrumentClusterInterface::speedChanged,
             this, &InstrumentClusterBackend::onSpeedChanged);
-    connect(m_client, &ExampleIVIInstrumentClusterInterface::rpmChanged,
+    connect(m_client, &ExampleIfInstrumentClusterInterface::rpmChanged,
             this, &InstrumentClusterBackend::onRpmChanged);
-    connect(m_client, &ExampleIVIInstrumentClusterInterface::fuelChanged,
+    connect(m_client, &ExampleIfInstrumentClusterInterface::fuelChanged,
             this, &InstrumentClusterBackend::onFuelChanged);
-    connect(m_client, &ExampleIVIInstrumentClusterInterface::temperatureChanged,
+    connect(m_client, &ExampleIfInstrumentClusterInterface::temperatureChanged,
             this, &InstrumentClusterBackend::onTemperaturChanged);
-    connect(m_client, &ExampleIVIInstrumentClusterInterface::systemTypeChanged,
+    connect(m_client, &ExampleIfInstrumentClusterInterface::systemTypeChanged,
             this, &InstrumentClusterBackend::onSystemTypeChanged);
-    connect(m_client, &ExampleIVIInstrumentClusterInterface::currentWarningChanged,
+    connect(m_client, &ExampleIfInstrumentClusterInterface::currentWarningChanged,
             this, &InstrumentClusterBackend::onCurrentWarningChanged);
     fetchSpeed();
     fetchRpm();

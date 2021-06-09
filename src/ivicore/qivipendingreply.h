@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPENDINGREPLY_H
-#define QIVIPENDINGREPLY_H
+#ifndef QIFPENDINGREPLY_H
+#define QIFPENDINGREPLY_H
 
 #include <QJSValue>
 #include <QObject>
@@ -49,15 +49,15 @@
 #include <QDebug>
 #include <QMetaEnum>
 
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviPendingReplyWatcherPrivate;
+class QIfPendingReplyWatcherPrivate;
 
-Q_QTIVICORE_EXPORT void qiviRegisterPendingReplyBasicTypes();
+Q_QTINTERFACEFRAMEWORK_EXPORT void qifRegisterPendingReplyBasicTypes();
 
-class Q_QTIVICORE_EXPORT QIviPendingReplyWatcher : public QObject
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyWatcher : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QVariant value READ value NOTIFY valueChanged)
@@ -81,29 +81,29 @@ Q_SIGNALS:
     void valueChanged(const QVariant &value);
 
 private:
-    explicit QIviPendingReplyWatcher(int userType);
-    Q_DECLARE_PRIVATE(QIviPendingReplyWatcher)
-    friend class QIviPendingReplyBase;
+    explicit QIfPendingReplyWatcher(int userType);
+    Q_DECLARE_PRIVATE(QIfPendingReplyWatcher)
+    friend class QIfPendingReplyBase;
 };
 
-class Q_QTIVICORE_EXPORT QIviPendingReplyBase
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyBase
 {
     Q_GADGET
-    Q_PROPERTY(QIviPendingReplyWatcher* watcher READ watcher)
+    Q_PROPERTY(QIfPendingReplyWatcher* watcher READ watcher)
     Q_PROPERTY(QVariant value READ value)
     Q_PROPERTY(bool valid READ isValid)
     Q_PROPERTY(bool resultAvailable READ isResultAvailable)
     Q_PROPERTY(bool success READ isSuccessful)
 
 public:
-    explicit QIviPendingReplyBase(int userType);
-    QIviPendingReplyBase() = default;
-    QIviPendingReplyBase(const QIviPendingReplyBase & other);
-    ~QIviPendingReplyBase() = default;
-    QIviPendingReplyBase& operator=(const QIviPendingReplyBase&) = default;
-    QIviPendingReplyBase& operator=(QIviPendingReplyBase&&) = default;
+    explicit QIfPendingReplyBase(int userType);
+    QIfPendingReplyBase() = default;
+    QIfPendingReplyBase(const QIfPendingReplyBase & other);
+    ~QIfPendingReplyBase() = default;
+    QIfPendingReplyBase& operator=(const QIfPendingReplyBase&) = default;
+    QIfPendingReplyBase& operator=(QIfPendingReplyBase&&) = default;
 
-    QIviPendingReplyWatcher* watcher() const;
+    QIfPendingReplyWatcher* watcher() const;
     QVariant value() const;
     bool isValid() const;
     bool isResultAvailable() const;
@@ -116,23 +116,23 @@ public:
 protected:
     void setSuccessNoCheck(const QVariant & value);
 
-    QSharedPointer<QIviPendingReplyWatcher> m_watcher;
+    QSharedPointer<QIfPendingReplyWatcher> m_watcher;
 };
 
-template <typename T> class QIviPendingReply : public QIviPendingReplyBase
+template <typename T> class QIfPendingReply : public QIfPendingReplyBase
 {
 public:
-    QIviPendingReply(const T &successValue)
-        : QIviPendingReply()
+    QIfPendingReply(const T &successValue)
+        : QIfPendingReply()
     {
         setSuccess(successValue);
     }
 
-    QIviPendingReply()
-        : QIviPendingReplyBase(qMetaTypeId<T>())
+    QIfPendingReply()
+        : QIfPendingReplyBase(qMetaTypeId<T>())
     {}
 
-    using QIviPendingReplyBase::setSuccess;
+    using QIfPendingReplyBase::setSuccess;
 
     void setSuccess(const T &val)
     {
@@ -141,7 +141,7 @@ public:
 
     T reply() const { return m_watcher->value().template value<T>(); }
 
-    using QIviPendingReplyBase::then;
+    using QIfPendingReplyBase::then;
 
     void then(const std::function<void(const T &)> &success, const std::function<void()> &failed = std::function<void()>()) {
         if (isResultAvailable()) {
@@ -150,39 +150,39 @@ public:
             else if (failed)
                 failed();
         } else {
-            QSharedPointer<QIviPendingReplyWatcher> w = m_watcher;
+            QSharedPointer<QIfPendingReplyWatcher> w = m_watcher;
             if (success) {
-                QObject::connect(watcher(), &QIviPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
                     success(w->value().value<T>());
                 });
             }
             if (failed) {
-                QObject::connect(watcher(), &QIviPendingReplyWatcher::replyFailed, watcher(), [failed]() {
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), [failed]() {
                     failed();
                 });
             }
         }
     }
 
-    static QIviPendingReply createFailedReply()
+    static QIfPendingReply createFailedReply()
     {
-        QIviPendingReply<T> reply;
+        QIfPendingReply<T> reply;
         reply.setFailed();
         return reply;
     }
 };
 
-template <> class QIviPendingReply <QVariant> : public QIviPendingReplyBase
+template <> class QIfPendingReply <QVariant> : public QIfPendingReplyBase
 {
 public:
-    QIviPendingReply(const QVariant &successValue)
-        : QIviPendingReply()
+    QIfPendingReply(const QVariant &successValue)
+        : QIfPendingReply()
     {
         setSuccess(successValue);
     }
 
-    QIviPendingReply()
-        : QIviPendingReplyBase(qMetaTypeId<QVariant>())
+    QIfPendingReply()
+        : QIfPendingReplyBase(qMetaTypeId<QVariant>())
     {}
 
     void setSuccess(const QVariant &val)
@@ -199,36 +199,36 @@ public:
             else if (failed)
                 failed();
         } else {
-            QSharedPointer<QIviPendingReplyWatcher> w = m_watcher;
+            QSharedPointer<QIfPendingReplyWatcher> w = m_watcher;
             if (success) {
-                QObject::connect(watcher(), &QIviPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
                     success(w->value());
                 });
             }
             if (failed) {
-                QObject::connect(watcher(), &QIviPendingReplyWatcher::replyFailed, watcher(), [failed]() {
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), [failed]() {
                     failed();
                 });
             }
         }
     }
 
-    static QIviPendingReply createFailedReply()
+    static QIfPendingReply createFailedReply()
     {
-        QIviPendingReply<QVariant> reply;
+        QIfPendingReply<QVariant> reply;
         reply.setFailed();
         return reply;
     }
 };
 
-template <> class QIviPendingReply <void> : public QIviPendingReplyBase
+template <> class QIfPendingReply <void> : public QIfPendingReplyBase
 {
 public:
-    QIviPendingReply()
-        : QIviPendingReplyBase(qMetaTypeId<void>())
+    QIfPendingReply()
+        : QIfPendingReplyBase(qMetaTypeId<void>())
     {}
 
-    using QIviPendingReplyBase::setSuccess;
+    using QIfPendingReplyBase::setSuccess;
 
     void setSuccess()
     {
@@ -244,23 +244,23 @@ public:
             else if (failed)
                 failed();
         } else {
-            QSharedPointer<QIviPendingReplyWatcher> w = m_watcher;
+            QSharedPointer<QIfPendingReplyWatcher> w = m_watcher;
             if (success) {
-                QObject::connect(watcher(), &QIviPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
                     success();
                 });
             }
             if (failed) {
-                QObject::connect(watcher(), &QIviPendingReplyWatcher::replyFailed, watcher(), [failed]() {
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), [failed]() {
                     failed();
                 });
             }
         }
     }
 
-    static QIviPendingReply createFailedReply()
+    static QIfPendingReply createFailedReply()
     {
-        QIviPendingReply<void> reply;
+        QIfPendingReply<void> reply;
         reply.setFailed();
         return reply;
     }
@@ -268,7 +268,7 @@ public:
 
 //Workaround for QTBUG-83664
 //If T is a enum
-template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<QtPrivate::IsQEnumHelper<T>::Value, void>::type qIviRegisterPendingReplyType(const char *name = nullptr)
+template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<QtPrivate::IsQEnumHelper<T>::Value, void>::type qIfRegisterPendingReplyType(const char *name = nullptr)
 {
     qRegisterMetaType<T>();
     QString n;
@@ -282,19 +282,19 @@ template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<QtPrivate::IsQEn
             n = QLatin1String(QMetaType(qMetaTypeId<T>()).name());
     }
 
-    const QString t_name = QStringLiteral("QIviPendingReply<") + n + QStringLiteral(">");
-    qRegisterMetaType<QIviPendingReplyBase>(qPrintable(t_name));
+    const QString t_name = QStringLiteral("QIfPendingReply<") + n + QStringLiteral(">");
+    qRegisterMetaType<QIfPendingReplyBase>(qPrintable(t_name));
 }
 
 //If T is NOT a enum
-template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<!QtPrivate::IsQEnumHelper<T>::Value, void>::type qIviRegisterPendingReplyType(const char *name = nullptr)
+template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<!QtPrivate::IsQEnumHelper<T>::Value, void>::type qIfRegisterPendingReplyType(const char *name = nullptr)
 {
     qRegisterMetaType<T>();
     const char* n = name ? name : QMetaType(qMetaTypeId<T>()).name();
-    const QString t_name = QStringLiteral("QIviPendingReply<") + QLatin1String(n) + QStringLiteral(">");
-    qRegisterMetaType<QIviPendingReplyBase>(qPrintable(t_name));
+    const QString t_name = QStringLiteral("QIfPendingReply<") + QLatin1String(n) + QStringLiteral(">");
+    qRegisterMetaType<QIfPendingReplyBase>(qPrintable(t_name));
 }
 
 QT_END_NAMESPACE
 
-#endif // QIVIPENDINGREPLY_H
+#endif // QIFPENDINGREPLY_H

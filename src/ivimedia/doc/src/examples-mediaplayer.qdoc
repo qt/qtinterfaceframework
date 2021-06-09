@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -51,9 +51,9 @@
 ****************************************************************************/
 
 /*!
-     \example ivimedia/mediaplayer
+     \example ifmedia/mediaplayer
      \title QML Media Player Example
-     \ingroup qtivimedia-examples
+     \ingroup qtifmedia-examples
 
      \brief The Example shows how to use the MediaPlayer API from QML.
      \image examples_mediaplayer.png

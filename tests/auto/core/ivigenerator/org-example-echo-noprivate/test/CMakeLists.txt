@@ -12,13 +12,13 @@ qt_internal_add_test(tst_org-example-echo-noprivate
     PUBLIC_LIBRARIES
         echo_noprivate_frontend
         Qt::Core
-        Qt::IviCore
+        Qt::InterfaceFramework
         Qt::Test
 )
 set_target_properties(tst_org-example-echo-noprivate PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-# IVI Generator:
-qt6_ivigenerator(tst_org-example-echo-noprivate
+# Interface Framework Generator:
+qt6_ifcodegen(tst_org-example-echo-noprivate
     QFACE_SOURCES ../../org.example.echo.qface
     QFACE_FORMAT test
     QFACE_ANNOTATIONS ../../no-private.yaml

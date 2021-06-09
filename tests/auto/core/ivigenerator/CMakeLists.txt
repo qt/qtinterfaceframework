@@ -1,4 +1,4 @@
-# Generated from ivigenerator.pro.
+# Generated from ifcodegen.pro.
 
 add_subdirectory(custom-template)
 add_subdirectory(org-example-echo)

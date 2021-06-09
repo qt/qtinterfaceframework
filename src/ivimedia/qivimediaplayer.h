@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,26 +39,26 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAPLAYER_H
-#define QIVIMEDIAPLAYER_H
+#ifndef QIFMEDIAPLAYER_H
+#define QIFMEDIAPLAYER_H
 
-#include <QtIviCore/QIviAbstractFeature>
-#include <QtIviMedia/QIviPlayableItem>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtInterfaceFramework/QIfAbstractFeature>
+#include <QtIfMedia/QIfPlayableItem>
+#include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviMediaPlayerPrivate;
-class QIviPlayQueue;
+class QIfMediaPlayerPrivate;
+class QIfPlayQueue;
 
-class Q_QTIVIMEDIA_EXPORT QIviMediaPlayer : public QIviAbstractFeature
+class Q_QTIFMEDIA_EXPORT QIfMediaPlayer : public QIfAbstractFeature
 {
     Q_OBJECT
 
     //TODO Status
-    Q_PROPERTY(QIviPlayQueue *playQueue READ playQueue CONSTANT)
-    Q_PROPERTY(QIviMediaPlayer::PlayMode playMode READ playMode WRITE setPlayMode NOTIFY playModeChanged)
-    Q_PROPERTY(QIviMediaPlayer::PlayState playState READ playState NOTIFY playStateChanged)
+    Q_PROPERTY(QIfPlayQueue *playQueue READ playQueue CONSTANT)
+    Q_PROPERTY(QIfMediaPlayer::PlayMode playMode READ playMode WRITE setPlayMode NOTIFY playModeChanged)
+    Q_PROPERTY(QIfMediaPlayer::PlayState playState READ playState NOTIFY playStateChanged)
     Q_PROPERTY(QVariant currentTrack READ currentTrack NOTIFY currentTrackChanged)
     Q_PROPERTY(qint64 position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged)
@@ -81,9 +81,9 @@ public:
     };
     Q_ENUM(PlayState)
 
-    explicit QIviMediaPlayer(QObject *parent = nullptr);
+    explicit QIfMediaPlayer(QObject *parent = nullptr);
 
-    QIviPlayQueue *playQueue() const;
+    QIfPlayQueue *playQueue() const;
     PlayMode playMode() const;
     PlayState playState() const;
     QVariant currentTrack() const;
@@ -93,7 +93,7 @@ public:
     bool isMuted() const;
 
 public Q_SLOTS:
-    void setPlayMode(QIviMediaPlayer::PlayMode playMode);
+    void setPlayMode(QIfMediaPlayer::PlayMode playMode);
     void setPosition(qint64 position);
     void play();
     void pause();
@@ -105,8 +105,8 @@ public Q_SLOTS:
     void setMuted(bool muted);
 
 Q_SIGNALS:
-    void playModeChanged(QIviMediaPlayer::PlayMode playMode);
-    void playStateChanged(QIviMediaPlayer::PlayState playState);
+    void playModeChanged(QIfMediaPlayer::PlayMode playMode);
+    void playStateChanged(QIfMediaPlayer::PlayState playState);
     void currentTrackChanged(const QVariant &currentTrack);
     void positionChanged(qint64 position);
     void durationChanged(qint64 duration);
@@ -114,29 +114,29 @@ Q_SIGNALS:
     void mutedChanged(bool muted);
 
 protected:
-    QIviMediaPlayer(QIviMediaPlayerPrivate &dd, QObject *parent = nullptr);
+    QIfMediaPlayer(QIfMediaPlayerPrivate &dd, QObject *parent = nullptr);
 
-    void connectToServiceObject(QIviServiceObject *serviceObject) override;
+    void connectToServiceObject(QIfServiceObject *serviceObject) override;
     void clearServiceObject() override;
 
 private:
-    Q_DECLARE_PRIVATE(QIviMediaPlayer)
-    Q_PRIVATE_SLOT(d_func(), void onPlayModeChanged(QIviMediaPlayer::PlayMode playMode))
-    Q_PRIVATE_SLOT(d_func(), void onPlayStateChanged(QIviMediaPlayer::PlayState playState))
+    Q_DECLARE_PRIVATE(QIfMediaPlayer)
+    Q_PRIVATE_SLOT(d_func(), void onPlayModeChanged(QIfMediaPlayer::PlayMode playMode))
+    Q_PRIVATE_SLOT(d_func(), void onPlayStateChanged(QIfMediaPlayer::PlayState playState))
     Q_PRIVATE_SLOT(d_func(), void onCurrentTrackChanged(const QVariant &currentTrack))
     Q_PRIVATE_SLOT(d_func(), void onPositionChanged(qint64 position))
     Q_PRIVATE_SLOT(d_func(), void onDurationChanged(qint64 duration))
     Q_PRIVATE_SLOT(d_func(), void onVolumeChanged(int volume))
     Q_PRIVATE_SLOT(d_func(), void onMutedChanged(bool muted))
 
-    friend class QIviPlayQueuePrivate;
+    friend class QIfPlayQueuePrivate;
 };
 
-Q_QTIVIMEDIA_EXPORT QDataStream &operator<<(QDataStream &out, QIviMediaPlayer::PlayMode var);
-Q_QTIVIMEDIA_EXPORT QDataStream &operator>>(QDataStream &in, QIviMediaPlayer::PlayMode &var);
-Q_QTIVIMEDIA_EXPORT QDataStream &operator<<(QDataStream &out, QIviMediaPlayer::PlayState var);
-Q_QTIVIMEDIA_EXPORT QDataStream &operator>>(QDataStream &in, QIviMediaPlayer::PlayState &var);
+Q_QTIFMEDIA_EXPORT QDataStream &operator<<(QDataStream &out, QIfMediaPlayer::PlayMode var);
+Q_QTIFMEDIA_EXPORT QDataStream &operator>>(QDataStream &in, QIfMediaPlayer::PlayMode &var);
+Q_QTIFMEDIA_EXPORT QDataStream &operator<<(QDataStream &out, QIfMediaPlayer::PlayState var);
+Q_QTIFMEDIA_EXPORT QDataStream &operator>>(QDataStream &in, QIfMediaPlayer::PlayState &var);
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIAPLAYER_H
+#endif // QIFMEDIAPLAYER_H

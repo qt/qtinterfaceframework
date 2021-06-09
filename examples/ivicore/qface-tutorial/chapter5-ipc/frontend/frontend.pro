@@ -1,13 +1,13 @@
-TARGET = $$qtLibraryTarget(QtIviInstrumentCluster)
+TARGET = $$qtLibraryTarget(QtIfInstrumentCluster)
 TEMPLATE = lib
 DESTDIR = ..
 
-QT += ivicore ivicore-private qml quick
+QT += interfaceframework interfaceframework-private qml quick
 
-DEFINES += QT_BUILD_EXAMPLE_IVI_INSTRUMENTCLUSTER_LIB
-CONFIG += ivigenerator
+DEFINES += QT_BUILD_EXAMPLE_IF_INSTRUMENTCLUSTER_LIB
+CONFIG += ifcodegen
 QFACE_SOURCES = ../instrument-cluster.qface
 
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-tutorial/chapter5-ipc
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-tutorial/chapter5-ipc
 INSTALLS += target

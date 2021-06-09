@@ -5,8 +5,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-# IVI Generator:
-qt6_ivigenerator(echo_frontend_noprivate_qmlplugin # special case
+# Interface Framework Generator:
+qt6_ifcodegen(echo_frontend_noprivate_qmlplugin # special case
     QFACE_SOURCES ../../org.example.echo.qface
     QFACE_FORMAT qmlplugin
     QFACE_ANNOTATIONS ../../no-private.yaml
@@ -14,6 +14,6 @@ qt6_ivigenerator(echo_frontend_noprivate_qmlplugin # special case
 
 target_link_libraries(echo_frontend_noprivate_qmlplugin PRIVATE # special case
     echo_noprivate_frontend
-    Qt::IviCore
-    Qt::IviVehicleFunctions
+    Qt::InterfaceFramework
+    Qt::IfVehicleFunctions
 )

@@ -5,7 +5,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -28,12 +28,12 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set class = '{0}'.format(interface) %}
 {% if interface.tags.config.zoned %}
-{%   set base_class = 'QIviAbstractZonedFeature' %}
+{%   set base_class = 'QIfAbstractZonedFeature' %}
 {% else %}
-{%   set base_class = 'QIviAbstractFeature' %}
+{%   set base_class = 'QIfAbstractFeature' %}
 {% endif %}
 {% set oncedefine = '{0}_{1}PRIVATE_H_'.format(module.module_name|upper, class|upper) %}
 {% include 'common/generated_comment.cpp.tpl' %}
@@ -54,25 +54,25 @@
 
 #include "{{module.module_name|lower}}.h"
 
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
 #include <QObject>
 {% else %}
-#include <QtIviCore/private/{{base_class|lower}}_p.h>
+#include <QtInterfaceFramework/private/{{base_class|lower}}_p.h>
 {% endif %}
-#include <QIviPagingModelInterface>
+#include <QIfPagingModelInterface>
 
 QT_BEGIN_NAMESPACE
 
 class {{class}};
 
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
 class {{class}}Private : public QObject
 {% else %}
 class {{class}}Private : public {{base_class}}Private
 {% endif %}
 {
 public:
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
     {{class}}Private({{class}} *parent);
 {% else %}
 {%   if interface.tags.config.zoned %}
@@ -89,13 +89,13 @@ public:
     void clearToDefaults();
 
 {% for property in interface.properties %}
-    {{ivi.on_prop_changed(property, zoned = interface.tags.config.zoned, model_interface = true)}};
+    {{if.on_prop_changed(property, zoned = interface.tags.config.zoned, model_interface = true)}};
 {% endfor %}
 {% for signal in interface.signals %}
-    void on{{signal|upperfirst}}({{ivi.join_params(signal, zoned = interface.tags.config.zoned)}});
+    void on{{signal|upperfirst}}({{if.join_params(signal, zoned = interface.tags.config.zoned)}});
 {% endfor %}
 
-{% if not module.tags.config.disablePrivateIVI %}
+{% if not module.tags.config.disablePrivateIF %}
     bool notify(const QByteArray &propertyName, const QVariant &value) override;
 
     {{class}} * const q_ptr;
@@ -104,7 +104,7 @@ public:
     {{property|return_type}} m_{{property}};
 {% endfor %}
 
-{% if not module.tags.config.disablePrivateIVI %}
+{% if not module.tags.config.disablePrivateIF %}
     Q_DECLARE_PUBLIC({{class}})
 {% endif %}
 };

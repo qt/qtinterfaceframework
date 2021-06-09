@@ -28,32 +28,32 @@
 ****************************************************************************/
 /*!
 \page reference-api.html
-\title Use the Qt IVI Reference API
+\title Use the Qt Interface Framework Reference API
 
 \section1 Overview
 
-The Qt IVI module contains a reference API that provides interfaces to common automotive
+The Qt Interface Framework module contains a reference API that provides interfaces to common automotive
 functionality. These APIs rely on the separation of the frontend API from the backend
-implementation. The Qt IVI module also introduces a set of concepts used in the APIs, such as
+implementation. The Qt Interface Framework module also introduces a set of concepts used in the APIs, such as
 zones and property attributes. For more about concepts, see \l{Concepts and Architecture}.
 
 \section1 Modules
 
-Qt IVI consists of the following C++ modules:
+Qt Interface Framework consists of the following C++ modules:
 
-\annotatedlist qtivi_modules
+\annotatedlist qtif_modules
 
-\b {Qt IVI Core} provides core base classes for the Qt IVI features, and handles the discovery of
-Qt IVI backend plugins. Application developers do not need to use Qt IVI Core directly. This
-module is only necessary when you implement a new IVI feature, such as Qt IVI Vehicle Functions
+\b {Qt Interface Framework Core} provides core base classes for the Qt Interface Framework features, and handles the discovery of
+Qt Interface Framework backend plugins. Application developers do not need to use Qt Interface Framework Core directly. This
+module is only necessary when you implement a new Interface Framework feature, such as Qt Interface Framework Vehicle Functions
 ClimateControl.
 
-\b {Qt IVI Vehicle Functions} provides interfaces to access vehicle features.
+\b {Qt Interface Framework Vehicle Functions} provides interfaces to access vehicle features.
 
-\b {Qt IVI Media} provides interfaces to access media related APIs, such as to manage your music
+\b {Qt Interface Framework Media} provides interfaces to access media related APIs, such as to manage your music
 playlist or to control the radio tuner.
 
 The functionality provided by these modules is available to QML applications:
 
-\annotatedlist qtivi_qmlmodules
+\annotatedlist qtif_qmlmodules
 */

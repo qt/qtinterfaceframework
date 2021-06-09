@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -52,14 +52,14 @@
 
 import QtQuick 2.1
 import QtQuick.Window 2.2
-import Example.IVI.InstrumentClusterModule 1.0
+import Example.If.InstrumentClusterModule 1.0
 
 Window {
     id: root
 
     width: 1920
     height: 720
-    title: qsTr("QtIVI Instrument Cluster Chapter 4")
+    title: qsTr("QtIF Instrument Cluster Chapter 4")
     visible: true
     color: "#0c0c0c"
 

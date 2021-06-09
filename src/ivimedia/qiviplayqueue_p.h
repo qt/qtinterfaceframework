@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPLAYQUEUE_P_H
-#define QIVIPLAYQUEUE_P_H
+#ifndef QIFPLAYQUEUE_P_H
+#define QIFPLAYQUEUE_P_H
 
 //
 //  W A R N I N G
@@ -53,20 +53,20 @@
 // We mean it.
 //
 
-#include "private/qtivimediaglobal_p.h"
+#include "private/qtifmediaglobal_p.h"
 #include "private/qabstractitemmodel_p.h"
 
-#include "qiviplayqueue.h"
-#include "qiviplayableitem.h"
-#include "qivimediaplayer_p.h"
+#include "qifplayqueue.h"
+#include "qifplayableitem.h"
+#include "qifmediaplayer_p.h"
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVIMEDIA_EXPORT QIviPlayQueuePrivate : public QAbstractItemModelPrivate
+class Q_QTIFMEDIA_EXPORT QIfPlayQueuePrivate : public QAbstractItemModelPrivate
 {
 public:
-    QIviPlayQueuePrivate(QIviMediaPlayer *player, QIviPlayQueue *model);
-    ~QIviPlayQueuePrivate();
+    QIfPlayQueuePrivate(QIfMediaPlayer *player, QIfPlayQueue *model);
+    ~QIfPlayQueuePrivate();
 
     void initialize();
     void onInitializationDone();
@@ -78,14 +78,14 @@ public:
     void onFetchMoreThresholdReached();
     void resetModel();
     void clearToDefaults();
-    const QIviPlayableItem *itemAt(int i) const;
+    const QIfPlayableItem *itemAt(int i) const;
 
-    QIviMediaPlayerBackendInterface *playerBackend() const;
+    QIfMediaPlayerBackendInterface *playerBackend() const;
 
-    QIviPlayQueue * const q_ptr;
-    Q_DECLARE_PUBLIC(QIviPlayQueue)
+    QIfPlayQueue * const q_ptr;
+    Q_DECLARE_PUBLIC(QIfPlayQueue)
 
-    QIviMediaPlayer *m_player;
+    QIfMediaPlayer *m_player;
     QUuid m_identifier;
     int m_currentIndex;
     int m_chunkSize;
@@ -94,9 +94,9 @@ public:
     int m_fetchMoreThreshold;
     int m_fetchedDataCount;
     bool m_canReportCount;
-    QIviPlayQueue::LoadingType m_loadingType;
+    QIfPlayQueue::LoadingType m_loadingType;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIPLAYQUEUE_P_H
+#endif // QIFPLAYQUEUE_P_H

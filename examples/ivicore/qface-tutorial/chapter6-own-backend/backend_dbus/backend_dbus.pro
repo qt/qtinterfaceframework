@@ -1,15 +1,15 @@
 TEMPLATE = lib
 TARGET = $$qtLibraryTarget(instrumentcluster_dbus)
-DESTDIR = ../qtivi
+DESTDIR = ../interfaceframework
 
-QT += ivicore dbus
+QT += interfaceframework dbus
 CONFIG += plugin
 
-LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIviInstrumentCluster)
+LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfInstrumentCluster)
 INCLUDEPATH += $$OUT_PWD/../frontend $$PWD/../demo_server
 QMAKE_RPATHDIR += $$QMAKE_REL_RPATH_BASE/../
 
-PLUGIN_TYPE = qtivi
+PLUGIN_TYPE = interfaceframework
 
 cluster.files = ../demo_server/instrumentcluster.xml
 cluster.header_flags += -i dbus_conversion.h
@@ -29,5 +29,5 @@ OTHER_FILES += \
     instrumentcluster_dbus.json
 
 CONFIG += install_ok  # Do not cargo-cult this!
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-tutorial/chapter6-own-backend
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-tutorial/chapter6-own-backend
 INSTALLS += target

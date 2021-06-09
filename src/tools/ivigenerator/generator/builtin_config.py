@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB)
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -40,8 +40,8 @@ config = {}
 def parse(here):
     global config
     builtin_config_path = here / '.config'
-    if 'IVIGENERATOR_CONFIG' in os.environ:
-        builtin_config_path = os.environ['IVIGENERATOR_CONFIG']
+    if 'IFGENERATOR_CONFIG' in os.environ:
+        builtin_config_path = os.environ['IFGENERATOR_CONFIG']
     config = yaml.load(open(builtin_config_path), Loader=yaml.SafeLoader)
     if 'VERSION' not in config or 'FEATURES' not in config:
         sys.exit("Invalid builtin config")

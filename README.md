@@ -14,6 +14,6 @@ due to dependencies missing.
 Please read this configuration output first and try to fix the dependencies before creating bug reports.
 
 The configuration step is based on Qt's configure system and also offers some command-line arguments for enabling/disabling
-certain features. More about how to configure qtivi can be found here:
+certain features. More about how to configure interfaceframework can be found here:
 
-https://doc-snapshots.qt.io/qtivi/configuration.html
+https://doc-snapshots.qt.io/interfaceframework/configuration.html

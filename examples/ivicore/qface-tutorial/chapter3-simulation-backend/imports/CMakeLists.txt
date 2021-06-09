@@ -9,24 +9,24 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-tutorial/chapter3-simulation-backend/imports")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter3-simulation-backend/imports")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 
-# IVI Generator:
-qt6_ivigenerator(instrument_cluster_chapter3_imports # special case
+# Interface Framework Generator:
+qt6_ifcodegen(instrument_cluster_chapter3_imports # special case
     QFACE_SOURCES ../instrument-cluster.qface
     QFACE_FORMAT qmlplugin
 )
 
 target_link_libraries(instrument_cluster_chapter3_imports PUBLIC # special case
-    QtIviInstrumentCluster_Chapter3
+    QtIfInstrumentCluster_Chapter3
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 install(TARGETS instrument_cluster_chapter3_imports # special case

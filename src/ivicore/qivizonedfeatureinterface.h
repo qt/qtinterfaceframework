@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,20 +39,20 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIZONEDFEATUREINTERFACE_H
-#define QIVIZONEDFEATUREINTERFACE_H
+#ifndef QIFZONEDFEATUREINTERFACE_H
+#define QIFZONEDFEATUREINTERFACE_H
 
-#include <QtIviCore/QIviAbstractZonedFeature>
-#include <QtIviCore/QIviFeatureInterface>
+#include <QtInterfaceFramework/QIfAbstractZonedFeature>
+#include <QtInterfaceFramework/QIfFeatureInterface>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviZonedFeatureInterface : public QIviFeatureInterface
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfZonedFeatureInterface : public QIfFeatureInterface
 {
     Q_OBJECT
 
 public:
-    explicit QIviZonedFeatureInterface(QObject *parent = nullptr);
+    explicit QIfZonedFeatureInterface(QObject *parent = nullptr);
 
     virtual QStringList availableZones() const = 0;
 
@@ -62,5 +62,5 @@ Q_SIGNALS:
 
 QT_END_NAMESPACE
 
-#endif // QIVIZONEDFEATUREINTERFACE_H
+#endif // QIFZONEDFEATUREINTERFACE_H
 

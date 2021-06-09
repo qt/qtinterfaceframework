@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,27 +38,27 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAINDEXERQTROADAPTER_H
-#define QIVIMEDIAINDEXERQTROADAPTER_H
+#ifndef QIFMEDIAINDEXERQTROADAPTER_H
+#define QIFMEDIAINDEXERQTROADAPTER_H
 
 #include "mediaindexerbackend.h"
-#include "rep_qivimediaindexer_source.h"
+#include "rep_qifmediaindexer_source.h"
 
 template <class ObjectType>
-struct QIviMediaIndexerAddressWrapper: public QIviMediaIndexerSourceAPI<ObjectType> {
-    QIviMediaIndexerAddressWrapper(ObjectType *object)
-        : QIviMediaIndexerSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
+struct QIfMediaIndexerAddressWrapper: public QIfMediaIndexerSourceAPI<ObjectType> {
+    QIfMediaIndexerAddressWrapper(ObjectType *object)
+        : QIfMediaIndexerSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
     {}
 };
 
-class QIviMediaIndexerQtRoAdapter : public QIviMediaIndexerSource
+class QIfMediaIndexerQtRoAdapter : public QIfMediaIndexerSource
 {
 public:
-    QIviMediaIndexerQtRoAdapter(MediaIndexerBackend *parent);
-    QIviMediaIndexerQtRoAdapter(const QString& remoteObjectsLookupName, MediaIndexerBackend *parent);
+    QIfMediaIndexerQtRoAdapter(MediaIndexerBackend *parent);
+    QIfMediaIndexerQtRoAdapter(const QString& remoteObjectsLookupName, MediaIndexerBackend *parent);
 
     QString remoteObjectsLookupName() const;
-    QIviMediaIndexerControl::State state() const override;
+    QIfMediaIndexerControl::State state() const override;
     qreal progress() const override;
 
 public Q_SLOTS:
@@ -70,4 +70,4 @@ private:
     MediaIndexerBackend *m_backend;
 };
 
-#endif // QIVIMEDIAINDEXERQTROADAPTER_H
+#endif // QIFMEDIAINDEXERQTROADAPTER_H

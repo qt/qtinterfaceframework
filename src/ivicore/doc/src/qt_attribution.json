@@ -1,7 +1,7 @@
 {
     "Id": "jinja-documentation",
     "Name": "Jinja Documentation",
-    "QDocModule": "qtivi",
+    "QDocModule": "interfaceframework",
     "QtUsage": "Used in the Documentation of the Jinja template language",
     "Path": "template-syntax.qdoc",
 

@@ -1,13 +1,13 @@
 /**
  * Test module
  */
-module Example.IVI.ClimateModule 1.0;
+module Example.If.ClimateModule 1.0;
 
 /**
  * The ClimateControl provides a QML interface to the climate control
  * of the vehicle.
  */
-@config: { zoned: true, id: "example.qtivi.ClimateControl/1.0", qml_type: "UiClimateControl" }
+@config: { zoned: true, id: "example.interfaceframework.ClimateControl/1.0", qml_type: "UiClimateControl" }
 interface ClimateControl {
     /**
      * \brief Value is true if the air conditioning is enabled.

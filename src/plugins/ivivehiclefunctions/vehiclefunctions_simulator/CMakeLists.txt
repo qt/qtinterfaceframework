@@ -1,26 +1,26 @@
 # Generated from vehiclefunctions_simulator.pro.
 
 #####################################################################
-## QtIviVehicleFunctionsSimulatorPlugin Plugin:
+## QtIfVehicleFunctionsSimulatorPlugin Plugin:
 #####################################################################
 
-qt_internal_add_plugin(QtIviVehicleFunctionsSimulatorPlugin
+qt_internal_add_plugin(QtIfVehicleFunctionsSimulatorPlugin
     OUTPUT_NAME vehiclefunction_simulator
-    TYPE qtivi
+    TYPE interfaceframework
     DEFAULT_IF FALSE
     PUBLIC_LIBRARIES
         Qt::Core
-        Qt::IviCore
-        Qt::IviVehicleFunctions
+        Qt::InterfaceFramework
+        Qt::IfVehicleFunctions
 )
 
 # Resources:
 set(qml_resource_files
-    "QIviConcreteWindowControlSimulation.qml"
+    "QIfConcreteWindowControlSimulation.qml"
     "simulation.qml"
 )
 
-qt_internal_add_resource(QtIviVehicleFunctionsSimulatorPlugin "qml"
+qt_internal_add_resource(QtIfVehicleFunctionsSimulatorPlugin "qml"
     PREFIX
         "/simulation"
     FILES
@@ -28,14 +28,14 @@ qt_internal_add_resource(QtIviVehicleFunctionsSimulatorPlugin "qml"
 )
 
 
-# IVI Generator:
-qt_ivigenerator(QtIviVehicleFunctionsSimulatorPlugin
-    QFACE_SOURCES ../../../ivivehiclefunctions/ivivehiclefunctions.qface
+# Interface Framework Generator:
+qt_ifcodegen(QtIfVehicleFunctionsSimulatorPlugin
+    QFACE_SOURCES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
     QFACE_FORMAT backend_simulator
-    QFACE_MODULE_NAME QtIviVehicleFunctions
+    QFACE_MODULE_NAME QtIfVehicleFunctions
 )
 
 #### Keys ignored in scope 1:.:.:vehiclefunctions_simulator.pro:<TRUE>:
 # CMAKE_MODULE_TESTS = "'-'"
-# PLUGIN_EXTENDS = "ivivehiclefunctions"
+# PLUGIN_EXTENDS = "ifvehiclefunctions"
 # QML_IMPORT_PATH = "$$OUT_PWD/qml"

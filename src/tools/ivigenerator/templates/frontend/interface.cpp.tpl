@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set class = '{0}'.format(interface) %}
 {% include 'common/generated_comment.cpp.tpl' %}
 
@@ -38,15 +38,15 @@
 #include "{{class|lower}}backendinterface.h"
 
 #include <QQmlEngine>
-#include <QIviServiceObject>
-#include <QIviProxyServiceObject>
+#include <QIfServiceObject>
+#include <QIfProxyServiceObject>
 
 QT_BEGIN_NAMESPACE
 
 /*!
     \class {{interface}}
     \inmodule {{module}}
-{{ ivi.format_comments(interface.comment) }}
+{{ if.format_comments(interface.comment) }}
 */
 
 /*!
@@ -59,20 +59,20 @@ QT_BEGIN_NAMESPACE
     \inherits AbstractFeature
 {% endif %}
 
-{{ ivi.format_comments(interface.comment) }}
+{{ if.format_comments(interface.comment) }}
 */
 
 /*! \internal */
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
 {{class}}Private::{{class}}Private({{class}} *q)
     : QObject(q)
 {% else %}
 {%   if interface.tags.config.zoned %}
 {{class}}Private::{{class}}Private(const QString &interface, const QString &zone, {{class}} *parent)
-    : QIviAbstractZonedFeaturePrivate(interface, zone, parent)
+    : QIfAbstractZonedFeaturePrivate(interface, zone, parent)
 {%   else %}
 {{class}}Private::{{class}}Private(const QString &interface, {{class}} *parent)
-    : QIviAbstractFeaturePrivate(interface, parent)
+    : QIfAbstractFeaturePrivate(interface, parent)
 {%   endif %}
     , q_ptr(parent)
 {% endif %}
@@ -80,7 +80,7 @@ QT_BEGIN_NAMESPACE
     , m_{{property}}({{property|default_type_value}})
 {% endfor %}
 {
-{% if not module.tags.config.disablePrivateIVI %}
+{% if not module.tags.config.disablePrivateIF %}
     m_supportsPropertyOverriding = true;
 {% endif %}
 }
@@ -88,7 +88,7 @@ QT_BEGIN_NAMESPACE
 /*! \internal */
 {{class}}Private *{{class}}Private::get({{class}} *v)
 {
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
     return v->m_helper;
 {% else %}
     return reinterpret_cast<{{class}}Private *>(v->d_ptr.data());
@@ -98,7 +98,7 @@ QT_BEGIN_NAMESPACE
 /*! \internal */
 const {{class}}Private *{{class}}Private::get(const {{class}} *v)
 {
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
     return v->m_helper;
 {% else %}
     return reinterpret_cast<const {{class}}Private *>(v->d_ptr.data());
@@ -108,7 +108,7 @@ const {{class}}Private *{{class}}Private::get(const {{class}} *v)
 /*! \internal */
 {{class}} *{{class}}Private::getParent()
 {
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
     return qobject_cast<{{class}} *>(parent());
 {% else %}
     return q_ptr;
@@ -130,7 +130,7 @@ void {{class}}Private::clearToDefaults()
 {% for property in interface.properties %}
 /*! \internal */
 {%   if interface.tags.config.zoned %}
-{{ivi.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
+{{if.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
 {
     auto q = getParent();
     auto f = qobject_cast<{{class}}*>(q->zoneAt(zone));
@@ -138,7 +138,7 @@ void {{class}}Private::clearToDefaults()
         f = q;
     if (f->zone() != zone)
         return;
-{% if not module.tags.config.disablePrivateIVI and not property.type.is_model %}
+{% if not module.tags.config.disablePrivateIF and not property.type.is_model %}
     if (Q_UNLIKELY(m_propertyOverride)) {
         const int pi = f->metaObject()->indexOfProperty("{{property}}");
         if (m_propertyOverride->isOverridden(pi)) {
@@ -151,8 +151,8 @@ void {{class}}Private::clearToDefaults()
 {% if property.type.is_model %}
     {{property|return_type}} old = {{class}}Private::get(f)->m_{{property}};
     if ({{property}}) {
-        auto model = new QIviPagingModel();
-        model->setServiceObject(new QIviProxyServiceObject({ {QIviPagingModel_iid, {{property}} } }));;
+        auto model = new QIfPagingModel();
+        model->setServiceObject(new QIfProxyServiceObject({ {QIfPagingModel_iid, {{property}} } }));;
         {{class}}Private::get(f)->m_{{property}} = model;
         Q_EMIT f->{{property}}Changed(model);
     } else {
@@ -171,13 +171,13 @@ void {{class}}Private::clearToDefaults()
 {% endif %}
 }
 {%   else %}
-{{ivi.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
+{{if.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
 {
 {% if property.type.is_model %}
     {{property|return_type}} old = m_{{property}};
     if ({{property}}) {
-        auto model = new QIviPagingModel();
-        model->setServiceObject(new QIviProxyServiceObject({ {QIviPagingModel_iid, {{property}} } }));
+        auto model = new QIfPagingModel();
+        model->setServiceObject(new QIfProxyServiceObject({ {QIfPagingModel_iid, {{property}} } }));
         m_{{property}} = model;
         auto q = getParent();
         Q_EMIT q->{{property}}Changed(model);
@@ -204,7 +204,7 @@ void {{class}}Private::clearToDefaults()
 {% for signal in interface.signals %}
 /*! \internal */
 {%   if interface.tags.config.zoned %}
-void {{class}}Private::on{{signal|upperfirst}}({{ivi.join_params(signal, true)}})
+void {{class}}Private::on{{signal|upperfirst}}({{if.join_params(signal, true)}})
 {
     auto q = getParent();
     auto f = qobject_cast<{{class}}*>(q->zoneAt(zone));
@@ -215,7 +215,7 @@ void {{class}}Private::on{{signal|upperfirst}}({{ivi.join_params(signal, true)}}
     Q_EMIT f->{{signal}}({{signal.parameters|join(', ')}});
 }
 {%   else %}
-void {{class}}Private::on{{signal|upperfirst}}({{ivi.join_params(signal)}})
+void {{class}}Private::on{{signal|upperfirst}}({{if.join_params(signal)}})
 {
     auto q = getParent();
     Q_EMIT q->{{signal}}({{signal.parameters|join(', ')}});
@@ -224,7 +224,7 @@ void {{class}}Private::on{{signal|upperfirst}}({{ivi.join_params(signal)}})
 
 {% endfor %}
 
-{% if not module.tags.config.disablePrivateIVI %}
+{% if not module.tags.config.disablePrivateIF %}
 bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &value)
 {
 {%   if interface.properties %}
@@ -237,30 +237,30 @@ bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &va
 {%     endfor %}
 {%   endif %}
 {%   if interface.tags.config.zoned %}
-    return QIviAbstractZonedFeaturePrivate::notify(propertyName, value);
+    return QIfAbstractZonedFeaturePrivate::notify(propertyName, value);
 {%   else %}
-    return QIviAbstractFeaturePrivate::notify(propertyName, value);
+    return QIfAbstractFeaturePrivate::notify(propertyName, value);
 {%   endif %}
 }
 {% endif %}
 
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
 {%   if interface.tags.config.zoned %}
 /*!
    Default constructs an instance of {{class}} to the given \a zone.
 
    If \a zone is not provided the General zone will be created.
 
-   The \a parent argument is passed on to the \l QIviAbstractZonedFeature base class.
+   The \a parent argument is passed on to the \l QIfAbstractZonedFeature base class.
 */
 {{class}}::{{class}}(const QString &zone, QObject *parent)
-    : QIviAbstractZonedFeature(QLatin1String({{module.module_name|upperfirst}}_{{interface}}_iid), zone, parent)
+    : QIfAbstractZonedFeature(QLatin1String({{module.module_name|upperfirst}}_{{interface}}_iid), zone, parent)
 {%   else %}
 /*!
     Default constructs an instance of {{class}}.
 */
 {{class}}::{{class}}(QObject *parent)
-    : QIviAbstractFeature({{module.module_name|upperfirst}}_{{interface}}_iid, parent)
+    : QIfAbstractFeature({{module.module_name|upperfirst}}_{{interface}}_iid, parent)
 {%   endif %}
     , m_helper(new {{class}}Private(this))
 {% else %}
@@ -270,16 +270,16 @@ bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &va
 
    If \a zone is not provided the General zone will be created.
 
-   The \a parent argument is passed on to the \l QIviAbstractZonedFeature base class.
+   The \a parent argument is passed on to the \l QIfAbstractZonedFeature base class.
 */
 {{class}}::{{class}}(const QString &zone, QObject *parent)
-    : QIviAbstractZonedFeature(*new {{class}}Private(QLatin1String({{module.module_name|upperfirst}}_{{interface}}_iid), zone, this), parent)
+    : QIfAbstractZonedFeature(*new {{class}}Private(QLatin1String({{module.module_name|upperfirst}}_{{interface}}_iid), zone, this), parent)
 {%   else %}
 /*!
     Default constructs an instance of {{class}}.
 */
 {{class}}::{{class}}(QObject *parent)
-    : QIviAbstractFeature(*new {{class}}Private(QLatin1String({{module.module_name|upperfirst}}_{{interface}}_iid), this), parent)
+    : QIfAbstractFeature(*new {{class}}Private(QLatin1String({{module.module_name|upperfirst}}_{{interface}}_iid), this), parent)
 {%   endif %}
 {% endif %}
 {
@@ -288,7 +288,7 @@ bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &va
 /*! \internal */
 {{class}}::~{{class}}()
 {
-{% if module.tags.config.disablePrivateIVI %}
+{% if module.tags.config.disablePrivateIF %}
     delete m_helper;
 {% endif %}
 }
@@ -307,7 +307,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 
 /*!
     \property {{class}}::{{property}}
-{{ ivi.format_comments(property.comment) }}
+{{ if.format_comments(property.comment) }}
 {% if property.const %}
     \note This property is constant and the value will not change once the plugin is initialized.
 {% endif %}
@@ -315,7 +315,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 
 /*!
     \qmlproperty {{property|return_type}} {{interface|qml_type}}::{{property}}
-{{ ivi.format_comments(property.comment) }}
+{{ if.format_comments(property.comment) }}
 
 {% if property.type.is_enum or property.type.is_flag %}
     Available values are:
@@ -325,10 +325,10 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
     \note This property is constant and the value will not change once the plugin is initialized.
 {% endif %}
 */
-{{ivi.prop_getter(property, class)}}
+{{if.prop_getter(property, class)}}
 {
     const auto d = {{class}}Private::get(this);
-{% if not module.tags.config.disablePrivateIVI %}
+{% if not module.tags.config.disablePrivateIF %}
     if (Q_UNLIKELY(d->m_propertyOverride))
         return d->m_propertyOverride->property(metaObject()->indexOfProperty("{{property}}")).value<{{property|return_type}}>();
 {% endif %}
@@ -336,11 +336,11 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 }
 {%   if not property.readonly and not property.const and not property.type.is_model %}
 
-{{ivi.prop_setter(property, class)}}
+{{if.prop_setter(property, class)}}
 {
     auto d = {{class}}Private::get(this);
     bool forceUpdate = false;
-{% if not module.tags.config.disablePrivateIVI %}
+{% if not module.tags.config.disablePrivateIF %}
     if (Q_UNLIKELY(d->m_propertyOverride)) {
         const int pi = metaObject()->indexOfProperty("{{property}}");
         if (d->m_propertyOverride->isOverridden(pi)) {
@@ -367,8 +367,8 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 
 {%- for operation in interface.operations %}
 /*!
-    \qmlmethod {{interface|qml_type}}::{{operation}}({{ivi.join_params(operation)}})
-{{ ivi.format_comments(operation.comment) }}
+    \qmlmethod {{interface|qml_type}}::{{operation}}({{if.join_params(operation)}})
+{{ if.format_comments(operation.comment) }}
 
 {% for param in operation.parameters %}
 {%   if param.type.is_enum or param.type.is_flag %}
@@ -383,9 +383,9 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 {%   endif %}
 */
 /*!
-{{ ivi.format_comments(operation.comment) }}
+{{ if.format_comments(operation.comment) }}
 */
-{{ivi.operation(operation, class)}}
+{{if.operation(operation, class)}}
 {
     if ({{class}}BackendInterface *backend = {{interface|lower}}Backend())
 {% if interface.tags.config.zoned %}
@@ -397,21 +397,21 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 {% else %}
         return backend->{{operation}}({{operation.parameters|join(', ')}});
 {% endif %}
-    return QIviPendingReply<{{operation|return_type}}>::createFailedReply();
+    return QIfPendingReply<{{operation|return_type}}>::createFailedReply();
 }
 
 {% endfor %}
 
 {% if interface.tags.config.zoned %}
 /*! \internal */
-QIviAbstractZonedFeature *{{class}}::createZoneFeature(const QString &zone)
+QIfAbstractZonedFeature *{{class}}::createZoneFeature(const QString &zone)
 {
     return new {{class}}(zone, this);
 }
 {% endif %}
 
 /*! \internal */
-void {{class}}::connectToServiceObject(QIviServiceObject *serviceObject)
+void {{class}}::connectToServiceObject(QIfServiceObject *serviceObject)
 {
 {% if interface.properties or interface.signals %}
     auto d = {{class}}Private::get(this);
@@ -422,22 +422,22 @@ void {{class}}::connectToServiceObject(QIviServiceObject *serviceObject)
         return;
 
 {% for property in interface.properties %}
-{% if module.tags.config.disablePrivateIVI %}{% set Connect = 'QObject::connect' %}
+{% if module.tags.config.disablePrivateIF %}{% set Connect = 'QObject::connect' %}
 {% else %}{% set Connect = 'QObjectPrivate::connect' %}{% endif %}
     {{Connect}}(backend, &{{class}}BackendInterface::{{property}}Changed,
         d, &{{class}}Private::on{{property|upperfirst}}Changed);
 {% endfor %}
 {% for signal in interface.signals %}
-{% if module.tags.config.disablePrivateIVI %}{% set Connect = 'QObject::connect' %}
+{% if module.tags.config.disablePrivateIF %}{% set Connect = 'QObject::connect' %}
 {% else %}{% set Connect = 'QObjectPrivate::connect' %}{% endif %}
     {{Connect}}(backend, &{{class}}BackendInterface::{{signal}},
         d, &{{class}}Private::on{{signal|upperfirst}});
 {% endfor %}
 
 {% if interface.tags.config.zoned %}
-    QIviAbstractZonedFeature::connectToServiceObject(serviceObject);
+    QIfAbstractZonedFeature::connectToServiceObject(serviceObject);
 {% else %}
-    QIviAbstractFeature::connectToServiceObject(serviceObject);
+    QIfAbstractFeature::connectToServiceObject(serviceObject);
 {% endif %}
 }
 
@@ -447,7 +447,7 @@ void {{class}}::clearServiceObject()
     auto d = {{class}}Private::get(this);
     d->clearToDefaults();
 {% if interface.tags.config.zoned %}
-    QIviAbstractZonedFeature::clearServiceObject();
+    QIfAbstractZonedFeature::clearServiceObject();
 {% endif %}
 }
 
@@ -455,13 +455,13 @@ void {{class}}::clearServiceObject()
 /*! \internal */
 {{class}}BackendInterface *{{class}}::{{interface|lower}}Backend() const
 {
-    return qivi_interface_cast<{{class}}BackendInterface*>(backend());
+    return qif_interface_cast<{{class}}BackendInterface*>(backend());
 }
 {% else %}
 /*! \internal */
 {{class}}BackendInterface *{{class}}::{{interface|lower}}Backend() const
 {
-    if (QIviServiceObject *so = serviceObject())
+    if (QIfServiceObject *so = serviceObject())
         return so->interfaceInstance<{{class}}BackendInterface*>(interfaceName());
     return nullptr;
 }
@@ -469,8 +469,8 @@ void {{class}}::clearServiceObject()
 
 {% for signal in interface.signals %}
 /*!
-    \qmlsignal {{interface|qml_type}}::{{signal}}({{ivi.join_params(signal)}})
-{{ ivi.format_comments(signal.comment) }}
+    \qmlsignal {{interface|qml_type}}::{{signal}}({{if.join_params(signal)}})
+{{ if.format_comments(signal.comment) }}
 
 {% for param in signal.parameters %}
 {%   if param.type.is_enum or param.type.is_flag %}
@@ -481,8 +481,8 @@ void {{class}}::clearServiceObject()
 {% endfor %}
 */
 /*!
-    \fn {{ivi.signal(signal, class)}}
-{{ ivi.format_comments(signal.comment) }}
+    \fn {{if.signal(signal, class)}}
+{{ if.format_comments(signal.comment) }}
 */
 {% endfor %}
 QT_END_NAMESPACE

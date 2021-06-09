@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -42,12 +42,12 @@
 #ifndef MEDIADISCOVERYBACKEND_H
 #define MEDIADISCOVERYBACKEND_H
 
-#include <QtIviMedia/QIviMediaDeviceDiscoveryModel>
-#include <QtIviMedia/QIviMediaDeviceDiscoveryModelBackendInterface>
+#include <QtIfMedia/QIfMediaDeviceDiscoveryModel>
+#include <QtIfMedia/QIfMediaDeviceDiscoveryModelBackendInterface>
 
 #include <QFileSystemWatcher>
 
-class MediaDiscoveryBackend : public QIviMediaDeviceDiscoveryModelBackendInterface
+class MediaDiscoveryBackend : public QIfMediaDeviceDiscoveryModelBackendInterface
 {
     Q_OBJECT
 
@@ -56,7 +56,7 @@ public:
 
     void initialize() override;
 
-    QMap<QString, QIviServiceObject*> deviceMap() const;
+    QMap<QString, QIfServiceObject*> deviceMap() const;
 
 private slots:
     void onDirectoryChanged(const QString &path);
@@ -70,7 +70,7 @@ private:
 #ifndef QT_NO_FILESYSTEMWATCHER
     QFileSystemWatcher m_watcher;
 #endif
-    QMap<QString, QIviServiceObject*> m_deviceMap;
+    QMap<QString, QIfServiceObject*> m_deviceMap;
 };
 
 #endif // MEDIADISCOVERYBACKEND_H

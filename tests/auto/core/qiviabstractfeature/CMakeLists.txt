@@ -1,7 +1,7 @@
-# Generated from qiviabstractfeature.pro.
+# Generated from qifabstractfeature.pro.
 
 #####################################################################
-## tst_qiviabstractfeature Test:
+## tst_qifabstractfeature Test:
 #####################################################################
 
 # Collect test data
@@ -10,20 +10,20 @@ file(GLOB_RECURSE test_data_glob
     testdata/*)
 list(APPEND test_data ${test_data_glob})
 
-qt_internal_add_test(tst_qiviabstractfeature
+qt_internal_add_test(tst_qifabstractfeature
     SOURCES
-        qivifeaturetester.h
-        tst_qiviabstractfeature.cpp
+        qiffeaturetester.h
+        tst_qifabstractfeature.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::IviCore
-        Qt::IviCorePrivate
+        Qt::InterfaceFramework
+        Qt::InterfaceFrameworkPrivate
         Qt::Qml
     TESTDATA ${test_data}
 )
 
-#### Keys ignored in scope 1:.:.:qiviabstractfeature.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:qifabstractfeature.pro:<TRUE>:
 # QMAKE_PROJECT_NAME = "$$TARGET"
 # TEMPLATE = "app"

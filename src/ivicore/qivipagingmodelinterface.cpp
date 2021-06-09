@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,63 +39,63 @@
 **
 ****************************************************************************/
 
-#include "qivipagingmodelinterface.h"
+#include "qifpagingmodelinterface.h"
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class QIviPagingModelInterface
-    \inmodule QtIviCore
+    \class QIfPagingModelInterface
+    \inmodule QtInterfaceFramework
     \ingroup backends
     \inherits QObject
-    \keyword org.qt-project.qtivi.PagingModel/1.0
-    \brief The QIviPagingModelInterface defines the interface for backends to the
-    QIviPagingModel feature class.
+    \keyword org.qt-project.interfaceframework.PagingModel/1.0
+    \brief The QIfPagingModelInterface defines the interface for backends to the
+    QIfPagingModel feature class.
 
-    The QIviPagingModelInterface is the interface used by \l QIviPagingModel
+    The QIfPagingModelInterface is the interface used by \l QIfPagingModel
 
-    The interface is discovered by a \l QIviPagingModel object, which connects to it and sets it up.
+    The interface is discovered by a \l QIfPagingModel object, which connects to it and sets it up.
 
-    Every QIviPagingModel generates its own QUuid which is passed to the backend interface and can
+    Every QIfPagingModel generates its own QUuid which is passed to the backend interface and can
     be used to identify a model instance.
 
-    \sa QIviPagingModel
+    \sa QIfPagingModel
 
     //TODO explain how the interface works on a example
     <example of a fully featured backend>
 */
 
 /*!
-    \fn QIviPagingModelInterface::QIviPagingModelInterface(QObject *parent = nullptr)
+    \fn QIfPagingModelInterface::QIfPagingModelInterface(QObject *parent = nullptr)
 
     Constructs a backend interface.
 
     The \a parent is sent to the QObject constructor.
 */
-QIviPagingModelInterface::QIviPagingModelInterface(QObject *parent)
-    : QIviFeatureInterface(parent)
+QIfPagingModelInterface::QIfPagingModelInterface(QObject *parent)
+    : QIfFeatureInterface(parent)
 {}
 
-QIviPagingModelInterface::QIviPagingModelInterface(QObjectPrivate &dd, QObject *parent)
-    : QIviFeatureInterface(dd, parent)
+QIfPagingModelInterface::QIfPagingModelInterface(QObjectPrivate &dd, QObject *parent)
+    : QIfFeatureInterface(dd, parent)
 {
 }
 
 /*!
-    \fn void QIviPagingModelInterface::registerInstance(const QUuid &identifier)
+    \fn void QIfPagingModelInterface::registerInstance(const QUuid &identifier)
 
-    Registers the instance of QIviPagingModel identified by \a identifier with this backend. This
-    function will be called by QIviPagingModel and all its derived classes after the initialize()
+    Registers the instance of QIfPagingModel identified by \a identifier with this backend. This
+    function will be called by QIfPagingModel and all its derived classes after the initialize()
     function, but before any data will be requested e.g. via fetchData().
 
     \sa unregisterInstance
 */
 
 /*!
-    \fn void QIviPagingModelInterface::unregisterInstance(const QUuid &identifier)
+    \fn void QIfPagingModelInterface::unregisterInstance(const QUuid &identifier)
 
-    Unregisters the instance of QIviPagingModel identified by \a identifier with this backend. This
-    function will be called by QIviPagingModel and all its derived classes before the
+    Unregisters the instance of QIfPagingModel identified by \a identifier with this backend. This
+    function will be called by QIfPagingModel and all its derived classes before the
     ServiceObject gets disconnected and can be used to cleanup all cached data for this \a
     identifier.
 
@@ -103,9 +103,9 @@ QIviPagingModelInterface::QIviPagingModelInterface(QObjectPrivate &dd, QObject *
 */
 
 /*!
-    \fn void QIviPagingModelInterface::fetchData(const QUuid &identifier, int start, int count)
+    \fn void QIfPagingModelInterface::fetchData(const QUuid &identifier, int start, int count)
 
-    This function is called whenever new data needs to be retrieved by a QIviPagingModel identified by \a identifier.
+    This function is called whenever new data needs to be retrieved by a QIfPagingModel identified by \a identifier.
 
     The parameters \a start and \a count define the range of data which should be fetched. This method is expected to emit the dataFetched() signal once
     the new data is ready.
@@ -114,7 +114,7 @@ QIviPagingModelInterface::QIviPagingModelInterface(QObjectPrivate &dd, QObject *
 */
 
 /*!
-    \fn void QIviPagingModelInterface::supportedCapabilitiesChanged(const QUuid &identifier, QtIviCoreModule::ModelCapabilities capabilities)
+    \fn void QIfPagingModelInterface::supportedCapabilitiesChanged(const QUuid &identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities)
 
     Emitted when the \a capabilities of the model instance identified by \a identifier changed.
 
@@ -122,9 +122,9 @@ QIviPagingModelInterface::QIviPagingModelInterface(QObjectPrivate &dd, QObject *
 */
 
 /*!
-    \fn void QIviPagingModelInterface::countChanged(const QUuid &identifier, int count)
+    \fn void QIfPagingModelInterface::countChanged(const QUuid &identifier, int count)
 
-    This signal is emitted when the current number of items in the QIviPagingModel instance identified by \a identifier changed.
+    This signal is emitted when the current number of items in the QIfPagingModel instance identified by \a identifier changed.
     The new number of items is returned as \a count.
 
     This signal is expected to be emitted after the model instance has requested new data for the first time by calling fetchData() and
@@ -136,9 +136,9 @@ QIviPagingModelInterface::QIviPagingModelInterface(QObjectPrivate &dd, QObject *
 */
 
 /*!
-    \fn void QIviPagingModelInterface::dataFetched(const QUuid &identifier, const QList<QVariant> &data, int start, bool moreAvailable)
+    \fn void QIfPagingModelInterface::dataFetched(const QUuid &identifier, const QList<QVariant> &data, int start, bool moreAvailable)
 
-    This signal is emitted as a result of a call to fetchData() and returns the requested data in the argument \a data to the QIviPagingModel instance identified by \a identifier.
+    This signal is emitted as a result of a call to fetchData() and returns the requested data in the argument \a data to the QIfPagingModel instance identified by \a identifier.
     The arguments \a start holds the index where the data starts and \a moreAvailable holds whether there is more data available and a new fetchData() call can be used to retrieve this data.
 
     \note If a null QQuuid is used as a identifier, all model instances will be informed.
@@ -147,9 +147,9 @@ QIviPagingModelInterface::QIviPagingModelInterface(QObjectPrivate &dd, QObject *
 */
 
 /*!
-    \fn void QIviPagingModelInterface::dataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count)
+    \fn void QIfPagingModelInterface::dataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count)
 
-    This signal is emitted whenever the data in the QIviPagingModel instance identified by \a identifier changed and the model needs to be updated.
+    This signal is emitted whenever the data in the QIfPagingModel instance identified by \a identifier changed and the model needs to be updated.
     The new data is passed as \a data. The arguments \a start and \a count can be used to define the set of items which should be replaced with the new data.
 
     For inserting a new item, the item is passed in \a data and \a start is used for where the item should be inserted, the \a count argument needs to be 0 as we don't want to replace existing data:

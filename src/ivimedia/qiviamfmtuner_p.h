@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIAMFMTUNER_P_H
-#define QIVIAMFMTUNER_P_H
+#ifndef QIFAMFMTUNER_P_H
+#define QIFAMFMTUNER_P_H
 
 //
 //  W A R N I N G
@@ -53,44 +53,44 @@
 // We mean it.
 //
 
-#include "private/qtivimediaglobal_p.h"
-#include <QtIviCore/private/qiviabstractfeature_p.h>
+#include "private/qtifmediaglobal_p.h"
+#include <QtInterfaceFramework/private/qifabstractfeature_p.h>
 
-#include "qiviamfmtuner.h"
-#include "qiviamfmtunerbackendinterface.h"
+#include "qifamfmtuner.h"
+#include "qifamfmtunerbackendinterface.h"
 
-#include <QtIviMedia/QIviTunerStation>
+#include <QtIfMedia/QIfTunerStation>
 
 QT_BEGIN_NAMESPACE
 
-class QIviAmFmTunerPrivate : public QIviAbstractFeaturePrivate
+class QIfAmFmTunerPrivate : public QIfAbstractFeaturePrivate
 {
 public:
-    QIviAmFmTunerPrivate(const QString &interface, QIviAmFmTuner *parent);
+    QIfAmFmTunerPrivate(const QString &interface, QIfAmFmTuner *parent);
 
     void clearToDefaults();
     void onFrequencyChanged(int frequency);
     void onMinimumFrequencyChanged(int frequency);
     void onMaximumFrequencyChanged(int frequency);
     void onStepSizeChanged(int stepSize);
-    void onBandChanged(QIviAmFmTuner::Band band);
-    void onStationChanged(const QIviAmFmTunerStation &station);
+    void onBandChanged(QIfAmFmTuner::Band band);
+    void onStationChanged(const QIfAmFmTunerStation &station);
     void onScanStatusChanged(bool scanRunning);
 
-    QIviAmFmTunerBackendInterface *tunerBackend() const;
+    QIfAmFmTunerBackendInterface *tunerBackend() const;
 
-    QIviAmFmTuner * const q_ptr;
+    QIfAmFmTuner * const q_ptr;
     int m_frequency;
     int m_minimumFrequency;
     int m_maximumFrequency;
     int m_stepSize;
-    QIviAmFmTuner::Band m_band;
-    QIviAmFmTunerStation m_station;
+    QIfAmFmTuner::Band m_band;
+    QIfAmFmTunerStation m_station;
     bool m_scanRunning;
 
-    Q_DECLARE_PUBLIC(QIviAmFmTuner)
+    Q_DECLARE_PUBLIC(QIfAmFmTuner)
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIAMFMTUNER_P_H
+#endif // QIFAMFMTUNER_P_H

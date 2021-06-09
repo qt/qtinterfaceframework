@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,157 +38,157 @@
 **
 ****************************************************************************/
 
-#include "qivimediaplayerqtroadapter.h"
-#include "qiviqmlconversion_helper.h"
+#include "qifmediaplayerqtroadapter.h"
+#include "qifqmlconversion_helper.h"
 
-QIviMediaPlayerQtRoAdapter::QIviMediaPlayerQtRoAdapter(MediaPlayerBackend *parent)
-    : QIviMediaPlayerQtRoAdapter(QStringLiteral("QtIviMedia.QIviMediaPlayer"), parent)
+QIfMediaPlayerQtRoAdapter::QIfMediaPlayerQtRoAdapter(MediaPlayerBackend *parent)
+    : QIfMediaPlayerQtRoAdapter(QStringLiteral("QtIfMedia.QIfMediaPlayer"), parent)
 {
 }
 
-QIviMediaPlayerQtRoAdapter::QIviMediaPlayerQtRoAdapter(const QString& remoteObjectsLookupName, MediaPlayerBackend *parent)
-    : QIviMediaPlayerSource(parent)
+QIfMediaPlayerQtRoAdapter::QIfMediaPlayerQtRoAdapter(const QString& remoteObjectsLookupName, MediaPlayerBackend *parent)
+    : QIfMediaPlayerSource(parent)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
     , m_backend(parent)
     , m_helper(this)
 {
-    connect(m_backend, &MediaPlayerBackend::playModeChanged, this, &QIviMediaPlayerQtRoAdapter::playModeChanged);
-    connect(m_backend, &MediaPlayerBackend::playStateChanged, this, &QIviMediaPlayerQtRoAdapter::playStateChanged);
-    connect(m_backend, &MediaPlayerBackend::positionChanged, this, &QIviMediaPlayerQtRoAdapter::positionChanged);
-    connect(m_backend, &MediaPlayerBackend::durationChanged, this, &QIviMediaPlayerQtRoAdapter::durationChanged);
-    connect(m_backend, &MediaPlayerBackend::currentIndexChanged, this, &QIviMediaPlayerQtRoAdapter::currentIndexChanged);
+    connect(m_backend, &MediaPlayerBackend::playModeChanged, this, &QIfMediaPlayerQtRoAdapter::playModeChanged);
+    connect(m_backend, &MediaPlayerBackend::playStateChanged, this, &QIfMediaPlayerQtRoAdapter::playStateChanged);
+    connect(m_backend, &MediaPlayerBackend::positionChanged, this, &QIfMediaPlayerQtRoAdapter::positionChanged);
+    connect(m_backend, &MediaPlayerBackend::durationChanged, this, &QIfMediaPlayerQtRoAdapter::durationChanged);
+    connect(m_backend, &MediaPlayerBackend::currentIndexChanged, this, &QIfMediaPlayerQtRoAdapter::currentIndexChanged);
     connect(m_backend, &MediaPlayerBackend::currentTrackChanged, this, [this](const QVariant &currentTrack) {
         emit currentTrackChanged(QVariant(QMetaType(QMetaType::QVariant), &currentTrack));
     });
-    connect(m_backend, &MediaPlayerBackend::volumeChanged, this, &QIviMediaPlayerQtRoAdapter::volumeChanged);
-    connect(m_backend, &MediaPlayerBackend::mutedChanged, this, &QIviMediaPlayerQtRoAdapter::mutedChanged);
-    connect(m_backend, &MediaPlayerBackend::dataFetched, this, &QIviMediaPlayerQtRoAdapter::dataFetched);
-    connect(m_backend, &MediaPlayerBackend::dataChanged, this, &QIviMediaPlayerQtRoAdapter::dataChanged);
-    connect(m_backend, &MediaPlayerBackend::countChanged, this, &QIviMediaPlayerQtRoAdapter::countChanged);
+    connect(m_backend, &MediaPlayerBackend::volumeChanged, this, &QIfMediaPlayerQtRoAdapter::volumeChanged);
+    connect(m_backend, &MediaPlayerBackend::mutedChanged, this, &QIfMediaPlayerQtRoAdapter::mutedChanged);
+    connect(m_backend, &MediaPlayerBackend::dataFetched, this, &QIfMediaPlayerQtRoAdapter::dataFetched);
+    connect(m_backend, &MediaPlayerBackend::dataChanged, this, &QIfMediaPlayerQtRoAdapter::dataChanged);
+    connect(m_backend, &MediaPlayerBackend::countChanged, this, &QIfMediaPlayerQtRoAdapter::countChanged);
 }
 
 
-QString QIviMediaPlayerQtRoAdapter::remoteObjectsLookupName() const
+QString QIfMediaPlayerQtRoAdapter::remoteObjectsLookupName() const
 {
     return m_remoteObjectsLookupName;
 }
 
-QIviMediaPlayer::PlayMode QIviMediaPlayerQtRoAdapter::playMode() const
+QIfMediaPlayer::PlayMode QIfMediaPlayerQtRoAdapter::playMode() const
 {
     return m_backend->playMode();
 }
 
-QIviMediaPlayer::PlayState QIviMediaPlayerQtRoAdapter::playState() const
+QIfMediaPlayer::PlayState QIfMediaPlayerQtRoAdapter::playState() const
 {
     return m_backend->playState();
 }
 
-qint64 QIviMediaPlayerQtRoAdapter::position() const
+qint64 QIfMediaPlayerQtRoAdapter::position() const
 {
     return m_backend->position();
 }
 
-qint64 QIviMediaPlayerQtRoAdapter::duration() const
+qint64 QIfMediaPlayerQtRoAdapter::duration() const
 {
     return m_backend->duration();
 }
 
-QVariant QIviMediaPlayerQtRoAdapter::currentTrack() const
+QVariant QIfMediaPlayerQtRoAdapter::currentTrack() const
 {
     return m_helper.toRemoteObjectVariant(m_backend->currentTrack());
 }
 
-int QIviMediaPlayerQtRoAdapter::currentIndex() const
+int QIfMediaPlayerQtRoAdapter::currentIndex() const
 {
     return m_backend->currentIndex();
 }
 
-int QIviMediaPlayerQtRoAdapter::volume() const
+int QIfMediaPlayerQtRoAdapter::volume() const
 {
     return m_backend->volume();
 }
 
-bool QIviMediaPlayerQtRoAdapter::muted() const
+bool QIfMediaPlayerQtRoAdapter::muted() const
 {
     return m_backend->isMuted();
 }
 
-bool QIviMediaPlayerQtRoAdapter::canReportCount() const
+bool QIfMediaPlayerQtRoAdapter::canReportCount() const
 {
     return m_backend->canReportCount();
 }
 
-void QIviMediaPlayerQtRoAdapter::setPlayMode(QIviMediaPlayer::PlayMode playMode)
+void QIfMediaPlayerQtRoAdapter::setPlayMode(QIfMediaPlayer::PlayMode playMode)
 {
     m_backend->setPlayMode(playMode);
 }
 
-void QIviMediaPlayerQtRoAdapter::setPosition(qint64 position)
+void QIfMediaPlayerQtRoAdapter::setPosition(qint64 position)
 {
     m_backend->setPosition(position);
 }
 
-void QIviMediaPlayerQtRoAdapter::setCurrentIndex(int currentIndex)
+void QIfMediaPlayerQtRoAdapter::setCurrentIndex(int currentIndex)
 {
     m_backend->setCurrentIndex(currentIndex);
 }
 
-void QIviMediaPlayerQtRoAdapter::setVolume(int volume)
+void QIfMediaPlayerQtRoAdapter::setVolume(int volume)
 {
     m_backend->setVolume(volume);
 }
 
-void QIviMediaPlayerQtRoAdapter::setMuted(bool muted)
+void QIfMediaPlayerQtRoAdapter::setMuted(bool muted)
 {
     m_backend->setMuted(muted);
 }
 
-void QIviMediaPlayerQtRoAdapter::play()
+void QIfMediaPlayerQtRoAdapter::play()
 {
     m_backend->play();
 }
 
-void QIviMediaPlayerQtRoAdapter::pause()
+void QIfMediaPlayerQtRoAdapter::pause()
 {
     m_backend->pause();
 }
 
-void QIviMediaPlayerQtRoAdapter::stop()
+void QIfMediaPlayerQtRoAdapter::stop()
 {
     m_backend->stop();
 }
 
-void QIviMediaPlayerQtRoAdapter::seek(qint64 offset)
+void QIfMediaPlayerQtRoAdapter::seek(qint64 offset)
 {
     m_backend->seek(offset);
 }
 
-void QIviMediaPlayerQtRoAdapter::next()
+void QIfMediaPlayerQtRoAdapter::next()
 {
     m_backend->next();
 }
 
-void QIviMediaPlayerQtRoAdapter::previous()
+void QIfMediaPlayerQtRoAdapter::previous()
 {
     m_backend->previous();
 }
 
-void QIviMediaPlayerQtRoAdapter::fetchData(const QUuid &identifier, int start, int count)
+void QIfMediaPlayerQtRoAdapter::fetchData(const QUuid &identifier, int start, int count)
 {
     m_backend->fetchData(identifier, start, count);
 }
 
-void QIviMediaPlayerQtRoAdapter::insert(int index, const QVariant &item)
+void QIfMediaPlayerQtRoAdapter::insert(int index, const QVariant &item)
 {
     m_backend->insert(index, item);
 }
 
-void QIviMediaPlayerQtRoAdapter::remove(int index)
+void QIfMediaPlayerQtRoAdapter::remove(int index)
 {
     m_backend->remove(index);
 }
 
-void QIviMediaPlayerQtRoAdapter::move(int currentIndex, int newIndex)
+void QIfMediaPlayerQtRoAdapter::move(int currentIndex, int newIndex)
 {
     m_backend->move(currentIndex, newIndex);
 }

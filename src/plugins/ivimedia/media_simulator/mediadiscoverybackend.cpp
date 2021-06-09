@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -48,12 +48,12 @@
 #include <QtDebug>
 
 MediaDiscoveryBackend::MediaDiscoveryBackend(QObject *parent)
-    : QIviMediaDeviceDiscoveryModelBackendInterface(parent)
+    : QIfMediaDeviceDiscoveryModelBackendInterface(parent)
 {
     m_deviceFolder = QDir::homePath() + "/usb-simulation";
-    const QByteArray customDeviceFolder = qgetenv("QTIVIMEDIA_SIMULATOR_DEVICEFOLDER");
+    const QByteArray customDeviceFolder = qgetenv("QTIFMEDIA_SIMULATOR_DEVICEFOLDER");
     if (customDeviceFolder.isEmpty())
-        qCCritical(media) << "QTIVIMEDIA_SIMULATOR_DEVICEFOLDER environment variable is not set, falling back to:" << m_deviceFolder;
+        qCCritical(media) << "QTIFMEDIA_SIMULATOR_DEVICEFOLDER environment variable is not set, falling back to:" << m_deviceFolder;
     else
         m_deviceFolder = customDeviceFolder;
 
@@ -76,7 +76,7 @@ void MediaDiscoveryBackend::initialize()
     emit initializationDone();
 }
 
-QMap<QString, QIviServiceObject*> MediaDiscoveryBackend::deviceMap() const
+QMap<QString, QIfServiceObject*> MediaDiscoveryBackend::deviceMap() const
 {
     return m_deviceMap;
 }
@@ -91,7 +91,7 @@ void MediaDiscoveryBackend::onDirectoryChanged(const QString &path)
         const QString &folder = i.key();
         if (!deviceFolder.exists(folder)) {
             qCDebug(media) << "Removing USB Device for: " << folder;
-            QIviServiceObject *device = m_deviceMap.take(folder);
+            QIfServiceObject *device = m_deviceMap.take(folder);
             emit deviceRemoved(device);
             emit mediaDirectoryRemoved(deviceFolder.absoluteFilePath(folder));
         }

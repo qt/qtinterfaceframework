@@ -1,10 +1,10 @@
 TEMPLATE = subdirs
 
-QT_FOR_CONFIG += ivicore
-qtConfig(ivigenerator) {
-    SUBDIRS += qface-ivi-climate \
-               qface-ivi-addressbook
+QT_FOR_CONFIG += interfaceframework
+qtConfig(ifcodegen) {
+    SUBDIRS += qface-if-climate \
+               qface-if-addressbook
 }
-qtConfig(ivigenerator): qtConfig(remoteobjects): SUBDIRS += qface-ivi-remote
+qtConfig(ifcodegen): qtConfig(remoteobjects): SUBDIRS += qface-if-remote
 
-qtConfig(ivigenerator): qtConfig(remoteobjects): SUBDIRS += qface-tutorial
+qtConfig(ifcodegen): qtConfig(remoteobjects): SUBDIRS += qface-tutorial

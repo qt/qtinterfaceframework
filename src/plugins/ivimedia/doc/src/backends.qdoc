@@ -28,32 +28,32 @@
 ****************************************************************************/
 
 /*!
-\page qtivimedia-backends.html
-\title QtIviMedia Backends
-\ingroup qtivi_backend_groups
+\page qtifmedia-backends.html
+\title QtIfMedia Backends
+\ingroup qtif_backend_groups
 
-All backends supporting interfaces from QtIviMedia
+All backends supporting interfaces from QtIfMedia
 
-\annotatedlist qtivimedia_backend
+\annotatedlist qtifmedia_backend
 */
 
 /*!
-\page qtivimedia-tuner-simulation-backend.html
-\title QtIviMedia Tuner Simulation Backend
-\ingroup qtivimedia_backend
-\ingroup qtivi_backend
+\page qtifmedia-tuner-simulation-backend.html
+\title QtIfMedia Tuner Simulation Backend
+\ingroup qtifmedia_backend
+\ingroup qtif_backend
 
 \brief Provides a static tuner simulation.
 
 \section1 Supported interfaces
 \list
-    \li \l{org.qt-project.qtivi.AmFmTuner/1.0}
-    \li \l{org.qt-project.qtivi.SearchAndBrowseModel/1.0}
+    \li \l{org.qt-project.interfaceframework.AmFmTuner/1.0}
+    \li \l{org.qt-project.interfaceframework.FilterAndBrowseModel/1.0}
 \endlist
 
 The backend will return a fixed set of radio stations on the FM band and no stations on the AM band.
 
-For the SearchAndBrowseModel the following contenTypes are supported:
+For the FilterAndBrowseModel the following contenTypes are supported:
 \list
     \li \b station A list of all stations found.
     \li \b presets A list for storing the users favorite stations.
@@ -63,10 +63,10 @@ For the SearchAndBrowseModel the following contenTypes are supported:
 */
 
 /*!
-\page qtivimedia-player-simulation-backend.html
-\title QtIviMedia MediaPlayer Simulation Backend
-\ingroup qtivimedia_backend
-\ingroup qtivi_backend
+\page qtifmedia-player-simulation-backend.html
+\title QtIfMedia MediaPlayer Simulation Backend
+\ingroup qtifmedia_backend
+\ingroup qtif_backend
 
 \brief Provides a media player simulation using QtMultimedia.
 
@@ -78,16 +78,16 @@ For the SearchAndBrowseModel the following contenTypes are supported:
 
 \section1 Supported interfaces
 \list
-    \li \l{org.qt-project.qtivi.MediaPlayer/1.0}
-    \li \l{org.qt-project.qtivi.MediaIndexer/1.0}
-    \li \l{org.qt-project.qtivi.MediaDiscovery/1.0}
-    \li \l{org.qt-project.qtivi.SearchAndBrowseModel/1.0}
+    \li \l{org.qt-project.interfaceframework.MediaPlayer/1.0}
+    \li \l{org.qt-project.interfaceframework.MediaIndexer/1.0}
+    \li \l{org.qt-project.interfaceframework.MediaDiscovery/1.0}
+    \li \l{org.qt-project.interfaceframework.FilterAndBrowseModel/1.0}
 \endlist
 
 The backend uses QtMultimedia to offer real media playback on various platforms.
 The indexer will automatically start to index all \c .mp3 files in the media folder.
 
-For the SearchAndBrowseModel the following contenTypes are supported:
+For the FilterAndBrowseModel the following contenTypes are supported:
 \list
     \li \b artist A list of all artists.
     \li \b album A list of all albums.
@@ -106,14 +106,14 @@ the following navigation paths:
 the media database can't be created.
 
 The MediaDiscoveryModel provides a simulation of USB thumb drives and can be configured using the the
-\c QTIVIMEDIA_SIMULATOR_DEVICEFOLDER environment variable, which needs to be set to an absolute path.
+\c QTIFMEDIA_SIMULATOR_DEVICEFOLDER environment variable, which needs to be set to an absolute path.
 Every sub-folder within that path is recognized as a new USB thumb drive.
 
-Using the SearchAndBrowseModel on the discovered media devices, the \c file contentType can be used to
+Using the FilterAndBrowseModel on the discovered media devices, the \c file contentType can be used to
 navigate through the device's folder structure.
 
 Every new device discovered is automatically indexed and all \c .mp3 files can be retrieved using the
-the SearchAndBrowseModel connected to the media player's service object to browse the library.
+the FilterAndBrowseModel connected to the media player's service object to browse the library.
 
 \section1 Configuration
 
@@ -126,16 +126,16 @@ database is not saved, but recreated on every start of the app.
     \li Name
     \li Description
 \row
-    \li QTIVIMEDIA_TEMPORARY_DATABASE
+    \li QTIFMEDIA_TEMPORARY_DATABASE
     \li The database is written to a temporary location and deleted when the application is stopped.
 \row
-    \li QTIVIMEDIA_SIMULATOR_DATABASE
+    \li QTIFMEDIA_SIMULATOR_DATABASE
     \li A path to the media database which should be used.
 \row
-    \li QTIVIMEDIA_SIMULATOR_LOCALMEDIAFOLDER
+    \li QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER
     \li The local media directory (default: all media locations of the user - see also QStandardPaths)
 \row
-    \li QTIVIMEDIA_SIMULATOR_DEVICEFOLDER
+    \li QTIFMEDIA_SIMULATOR_DEVICEFOLDER
     \li The path which will be used by the DiscoveryModel for discovering media devices.
         (default: /home/<user>/usb-simulation)
 \endtable

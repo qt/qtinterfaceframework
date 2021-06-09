@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#ifndef QTIVICOREMODULE_H
-#define QTIVICOREMODULE_H
+#ifndef QTINTERFACEFRAMEWORKMODULE_H
+#define QTINTERFACEFRAMEWORKMODULE_H
 
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/qtifglobal.h>
 #include <QObject>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QtIviCoreModule : public QObject
+class Q_QTINTERFACEFRAMEWORK_EXPORT QtInterfaceFrameworkModule : public QObject
 {
     Q_OBJECT
 public:
-    explicit QtIviCoreModule(QObject *parent = nullptr);
+    explicit QtInterfaceFrameworkModule(QObject *parent = nullptr);
 
     enum ModelCapability {
         NoExtras = 0x0,
@@ -74,4 +74,4 @@ public:
 
 QT_END_NAMESPACE
 
-#endif // QTIVICOREMODULE_H
+#endif // QTINTERFACEFRAMEWORKMODULE_H

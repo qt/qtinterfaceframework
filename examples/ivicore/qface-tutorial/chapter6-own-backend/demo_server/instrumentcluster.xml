@@ -1,6 +1,6 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-  <interface name="Example.IVI.InstrumentCluster">
+  <interface name="Example.If.InstrumentCluster">
     <property name="speed" type="i" access="read"/>
     <property name="rpm" type="i" access="read"/>
     <property name="fuel" type="d" access="read"/>

@@ -1,9 +1,9 @@
-project                       = QtIvi
-description                   = QtIvi Reference Documentation
+project                       = QtInterfaceFramework
+description                   = QtInterfaceFramework Reference Documentation
 version                       = $QT_VERSION
-url                           = http://doc.qt.io/QtIVI
+url                           = http://doc.qt.io/QtIF
 
-moduleheader                  = QtIviDoc
+moduleheader                  = QtIfDoc
 includepaths                  = -I . \
                                 -I ..
 
@@ -20,54 +20,54 @@ exampledirs                  += ../../../examples \
 
 examples.fileextensions      += *.qface *.yaml
 
-include(../../ivivehiclefunctions/doc/qtivivehiclefunctions.qdocconf)
-include(../../ivimedia/doc/qtivimedia.qdocconf)
-include(exampleurl-qtivi.qdocconf)
+include(../../ifvehiclefunctions/doc/qtifvehiclefunctions.qdocconf)
+include(../../ifmedia/doc/qtifmedia.qdocconf)
+include(exampleurl-interfaceframework.qdocconf)
 
 # include the backend plugins documentation
-include(../../plugins/ivimedia/doc/qtivimedia_plugins.qdocconf)
-include(../../plugins/ivivehiclefunctions/doc/qtivivehiclefunctions_plugins.qdocconf)
+include(../../plugins/ifmedia/doc/qtifmedia_plugins.qdocconf)
+include(../../plugins/ifvehiclefunctions/doc/qtifvehiclefunctions_plugins.qdocconf)
 
 # include extra image to qhp (referred to in the generated examples-manifest.xml)
-HTML.extraimages             += images/qtivi-codesample.png
-qhp.QtIvi.extraFiles         += images/qtivi-codesample.png
+HTML.extraimages             += images/interfaceframework-codesample.png
+qhp.QtInterfaceFramework.extraFiles         += images/interfaceframework-codesample.png
 
-qhp.projects                  = QtIvi
+qhp.projects                  = QtInterfaceFramework
 
-qhp.QtIvi.file                = qtivi.qhp
-qhp.QtIvi.namespace           = org.qt-project.qtivi.$QT_VERSION_TAG
-qhp.QtIvi.virtualFolder       = qtivi
-qhp.QtIvi.indexTitle          = Qt IVI
-qhp.QtIvi.indexRoot           =
+qhp.QtInterfaceFramework.file                = interfaceframework.qhp
+qhp.QtInterfaceFramework.namespace           = org.qt-project.interfaceframework.$QT_VERSION_TAG
+qhp.QtInterfaceFramework.virtualFolder       = interfaceframework
+qhp.QtInterfaceFramework.indexTitle          = Qt Interface Framework
+qhp.QtInterfaceFramework.indexRoot           =
 
-qhp.QtIvi.filterAttributes    = qtivi $QT_VERSION qtrefdoc
-qhp.QtIvi.customFilters.Qt.name = QtIvi $QT_VERSION
-qhp.QtIvi.customFilters.Qt.filterAttributes = qtivi $QT_VERSION
+qhp.QtInterfaceFramework.filterAttributes    = interfaceframework $QT_VERSION qtrefdoc
+qhp.QtInterfaceFramework.customFilters.Qt.name = QtInterfaceFramework $QT_VERSION
+qhp.QtInterfaceFramework.customFilters.Qt.filterAttributes = interfaceframework $QT_VERSION
 
-qhp.QtIvi.subprojects         = classes qml examples
+qhp.QtInterfaceFramework.subprojects         = classes qml examples
 
-qhp.QtIvi.subprojects.classes.title = C++ Classes
-qhp.QtIvi.subprojects.classes.indexTitle = Qt IVI C++ Classes
-qhp.QtIvi.subprojects.classes.selectors = class fake:headerfile
-qhp.QtIvi.subprojects.classes.sortPages = true
+qhp.QtInterfaceFramework.subprojects.classes.title = C++ Classes
+qhp.QtInterfaceFramework.subprojects.classes.indexTitle = Qt Interface Framework C++ Classes
+qhp.QtInterfaceFramework.subprojects.classes.selectors = class fake:headerfile
+qhp.QtInterfaceFramework.subprojects.classes.sortPages = true
 
-qhp.QtIvi.subprojects.qml.title = QML Types
-qhp.QtIvi.subprojects.qml.indexTitle = Qt IVI QML Types
-qhp.QtIvi.subprojects.qml.selectors = qmlclass
-qhp.QtIvi.subprojects.qml.sortPages = true
+qhp.QtInterfaceFramework.subprojects.qml.title = QML Types
+qhp.QtInterfaceFramework.subprojects.qml.indexTitle = Qt Interface Framework QML Types
+qhp.QtInterfaceFramework.subprojects.qml.selectors = qmlclass
+qhp.QtInterfaceFramework.subprojects.qml.sortPages = true
 
-qhp.QtIvi.subprojects.examples.title = Examples
-qhp.QtIvi.subprojects.examples.indexTitle = Qt IVI Examples
-qhp.QtIvi.subprojects.examples.selectors = fake:example
-qhp.QtIvi.subprojects.examples.sortPages = true
+qhp.QtInterfaceFramework.subprojects.examples.title = Examples
+qhp.QtInterfaceFramework.subprojects.examples.indexTitle = Qt Interface Framework Examples
+qhp.QtInterfaceFramework.subprojects.examples.selectors = fake:example
+qhp.QtInterfaceFramework.subprojects.examples.sortPages = true
 
-tagfile                 = qtivi.tags
+tagfile                 = interfaceframework.tags
 
 depends += qtcore qtdbus qtwidgets qtdoc qtquick qtqml qtremoteobjects
 
-navigation.landingpage = "Qt IVI"
-navigation.cppclassespage = "Qt IVI C++ Classes"
-navigation.qmltypespage = "Qt IVI QML Types"
-buildversion = "Qt IVI $QT_VERSION"
+navigation.landingpage = "Qt Interface Framework"
+navigation.cppclassespage = "Qt Interface Framework C++ Classes"
+navigation.qmltypespage = "Qt Interface Framework QML Types"
+buildversion = "Qt Interface Framework $QT_VERSION"
 
-macro.fileLink = "\\l {https://code.qt.io/cgit/qt/qtivi.git/tree/\1?h=$QT_VER}{\2}"
+macro.fileLink = "\\l {https://code.qt.io/cgit/qt/interfaceframework.git/tree/\1?h=$QT_VER}{\2}"

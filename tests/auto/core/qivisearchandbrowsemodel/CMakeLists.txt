@@ -1,21 +1,21 @@
-# Generated from qivisearchandbrowsemodel.pro.
+# Generated from qiffilterandbrowsemodel.pro.
 
 #####################################################################
-## tst_qivisearchandbrowsemodel Test:
+## tst_qiffilterandbrowsemodel Test:
 #####################################################################
 
-qt_internal_add_test(tst_qivisearchandbrowsemodel
+qt_internal_add_test(tst_qiffilterandbrowsemodel
     SOURCES
-        tst_qivisearchandbrowsemodel.cpp
+        tst_qiffilterandbrowsemodel.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::IviCore
+        Qt::InterfaceFramework
         Qt::Quick
 )
 
-#### Keys ignored in scope 1:.:.:qivisearchandbrowsemodel.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:qiffilterandbrowsemodel.pro:<TRUE>:
 # DISTFILES = "testdata/*"
 # QMAKE_PROJECT_NAME = "$$TARGET"
 # TEMPLATE = "app"

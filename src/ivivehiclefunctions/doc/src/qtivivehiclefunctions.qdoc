@@ -28,27 +28,27 @@
 ****************************************************************************/
 
 /*!
-    \module QtIviVehicleFunctions
-    \title Qt IVI Vehicle Functions C++ Classes
+    \module QtIfVehicleFunctions
+    \title Qt Interface Framework Vehicle Functions C++ Classes
     \ingroup modules
-    \ingroup qtivi_modules
-    \qtvariable ivivehiclefunctions
+    \ingroup qtif_modules
+    \qtvariable ifvehiclefunctions
 
-    \brief C++ classes for the Qt IVI Vehicle Functions API.
+    \brief C++ classes for the Qt Interface Framework Vehicle Functions API.
 
-    Qt IVI Vehicle Functions provides C++ API.
+    Qt Interface Framework Vehicle Functions provides C++ API.
 
     \section1 Getting Started
 
-    To link against the Qt IVI Vehicle Feature module, add this line to your
+    To link against the Qt Interface Framework Vehicle Feature module, add this line to your
     \c qmake project file:
 
-    \snippet doc_src_ivivehiclefunctions.pro 0
+    \snippet doc_src_ifvehiclefunctions.pro 0
 
-    To use Qt IVI Vehicle Functions C++ classes in your application, use the
+    To use Qt Interface Framework Vehicle Functions C++ classes in your application, use the
     following include statement:
 
-    \snippet doc_src_qtivivehiclefunctions.cpp 0
+    \snippet doc_src_qtifvehiclefunctions.cpp 0
 
     \note If you are only using a few classes from this module, it's
     recommended to include only those specific classes instead of the
@@ -58,10 +58,10 @@
     the element:
 
     \code
-   #include <QtIviVehicleFunctions/QIviClimateControl>
+   #include <QtIfVehicleFunctions/QIfClimateControl>
    ...
-    QIviClimateControl* m_climateControl;
-    m_climateControl = new QIviClimateControl(this);
+    QIfClimateControl* m_climateControl;
+    m_climateControl = new QIfClimateControl(this);
     \endcode
 
     In order to trigger the auto discovery mechanism, call the startAutoDiscovery method. This will
@@ -88,19 +88,19 @@
     \endcode
 
     Some features, like climate control, are divided into several climate zones. The names
-    of the available zones can be checked using QIviAbstractZonedFeature::availableZones():
+    of the available zones can be checked using QIfAbstractZonedFeature::availableZones():
 
     \code
     QStringList zones = m_climateControl->availableZones();
     \endcode
 
-    You can use QIviAbstractZonedFeature::zoneAt() to access zone functions:
+    You can use QIfAbstractZonedFeature::zoneAt() to access zone functions:
 
     \code
     m_climateControl->zoneAt("FrontLeft")->setSeatHeater(false);
     \endcode
 
-    Looping zones is done with QIviAbstractZonedFeature::zones():
+    Looping zones is done with QIfAbstractZonedFeature::zones():
 
     \code
     const auto zones = m_climateControl->zones();
@@ -111,25 +111,25 @@
 */
 
 /*!
-    \qmlmodule QtIvi.VehicleFunctions 1.0
-    \title Qt IVI Vehicle Functions QML Types
+    \qmlmodule QtInterfaceFramework.VehicleFunctions 1.0
+    \title Qt Interface Framework Vehicle Functions QML Types
     \ingroup qmlmodules
-    \ingroup qtivi_qmlmodules
+    \ingroup qtif_qmlmodules
 
-    \brief QML types for the Qt IVI Vehicle Functions API.
+    \brief QML types for the Qt Interface Framework Vehicle Functions API.
 
-    The Qt IVI Vehicle Functions QML API provides a simple way to use vehicle
+    The Qt Interface Framework Vehicle Functions QML API provides a simple way to use vehicle
     features in QML applications.
 
     \section1 Getting Started
 
     The QML application relies on the QML plugin loading capabilities of the Qt QML runtime.
-    This means that an installed Qt IVI module is found automatically.
+    This means that an installed Qt Interface Framework module is found automatically.
 
-    To import the Qt IVI Vehicle Functions QML types, add the following import
+    To import the Qt Interface Framework Vehicle Functions QML types, add the following import
     statement to your \c .qml file:
 
-    \snippet doc_src_qmlivivehiclefunctions.cpp 0
+    \snippet doc_src_qmlifvehiclefunctions.cpp 0
 
     Then instantiate the feature element. For most elements, autoDiscovery is set to true when
     applicable, but in this example we set it explicitly.
@@ -182,12 +182,12 @@
 */
 
 /*!
-    \group qtivivehiclefunctions-examples
+    \group qtifvehiclefunctions-examples
     \ingroup all-examples
-    \ingroup qtivi-examples
-    \title Qt IVI Vehicle Functions Examples
+    \ingroup interfaceframework-examples
+    \title Qt Interface Framework Vehicle Functions Examples
 
-    \brief Examples for the Qt IVI Vehicle Functions module
+    \brief Examples for the Qt Interface Framework Vehicle Functions module
 
-    These are the Qt IVI Vehicle Functions examples.
+    These are the Qt Interface Framework Vehicle Functions examples.
 */

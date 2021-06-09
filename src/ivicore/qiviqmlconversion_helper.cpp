@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,7 +39,7 @@
 **
 ****************************************************************************/
 
-#include <qiviqmlconversion_helper.h>
+#include <qifqmlconversion_helper.h>
 
 #include <QtQml>
 #include <private/qv4engine_p.h>
@@ -48,19 +48,19 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace qtivi_helper {
+namespace qtif_helper {
     static const QString valueLiteral = QStringLiteral("value");
     static const QString typeLiteral = QStringLiteral("type");
 }
 
-using namespace qtivi_helper;
+using namespace qtif_helper;
 
-void qtivi_qmlOrCppWarning(const QObject *obj, const char *errorString)
+void qtif_qmlOrCppWarning(const QObject *obj, const char *errorString)
 {
-    qtivi_qmlOrCppWarning(obj, QLatin1String(errorString));
+    qtif_qmlOrCppWarning(obj, QLatin1String(errorString));
 }
 
-void qtivi_qmlOrCppWarning(const QObject *obj, const QString &errorString)
+void qtif_qmlOrCppWarning(const QObject *obj, const QString &errorString)
 {
     //If the object is not part of a javascript engine, print a normal warning
     QJSEngine *jsEngine = qjsEngine(obj);
@@ -87,14 +87,14 @@ void qtivi_qmlOrCppWarning(const QObject *obj, const QString &errorString)
 }
 
 /*!
-    \relates QIviSimulationEngine
+    \relates QIfSimulationEngine
 
     Converts \a value from JSON to valid C++ types.
 
-    The provided JSON value needs to follow the \l{IviSimulatorDataFormat}{IviSimulator Data
+    The provided JSON value needs to follow the \l{IfSimulatorDataFormat}{IfSimulator Data
     Format}.
 */
-QVariant qtivi_convertFromJSON(const QVariant &value)
+QVariant qtif_convertFromJSON(const QVariant &value)
 {
     QVariant val = value;
     // First try to convert the values to a Map or a List
@@ -158,7 +158,7 @@ QVariant qtivi_convertFromJSON(const QVariant &value)
                 int moIdx = mo->indexOfMethod("fromJSON(QVariant)");
                 if (Q_UNLIKELY(moIdx == -1)) {
                     qWarning("Couldn't find method: %s::fromJSON(QVariant)\n"
-                             "If your are using code created by the ivigenerator, please regenerate"
+                             "If your are using code created by the ifcodegen, please regenerate"
                              "your frontend code. See AUTOSUITE-1374 for why this is needed",
                              metaType.name());
                     return QVariant();
@@ -171,12 +171,12 @@ QVariant qtivi_convertFromJSON(const QVariant &value)
 
         QVariantMap convertedValues;
         for (auto i = map.constBegin(); i != map.constEnd(); ++i)
-            convertedValues.insert(i.key(), qtivi_convertFromJSON(i.value()));
+            convertedValues.insert(i.key(), qtif_convertFromJSON(i.value()));
         return convertedValues;
     } else if (val.metaType() == QMetaType::fromType<QVariantList>()) {
         QVariantList values = val.toList();
         for (auto i = values.begin(); i != values.end(); ++i)
-            *i = qtivi_convertFromJSON(*i);
+            *i = qtif_convertFromJSON(*i);
         return values;
     }
 

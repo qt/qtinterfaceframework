@@ -4,7 +4,7 @@
 ## Copyright (C) 2021 The Qt Company Ltd.
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -27,7 +27,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set module_qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 {% set default_category_name = module_qml_name %}
 {% if module.tags.designer and module.tags.designer.categoryName %}

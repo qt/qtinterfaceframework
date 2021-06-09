@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,44 +39,44 @@
 **
 ****************************************************************************/
 
-#include "qtivicoremodule.h"
-#include "qivipendingreply.h"
-#include "qiviabstractfeature.h"
-#include "qiviabstractzonedfeature.h"
-#include "qiviservicemanager.h"
-#include "qiviserviceobject.h"
-#include "qivipagingmodel.h"
-#include "qivisearchandbrowsemodel.h"
+#include "qtinterfaceframeworkmodule.h"
+#include "qifpendingreply.h"
+#include "qifabstractfeature.h"
+#include "qifabstractzonedfeature.h"
+#include "qifservicemanager.h"
+#include "qifserviceobject.h"
+#include "qifpagingmodel.h"
+#include "qiffilterandbrowsemodel.h"
 
 #include <QQmlEngine>
 
 /*! \internal */
-QObject* qtivicoremodule_singletontype_provider(QQmlEngine*, QJSEngine*)
+QObject* qtinterfaceframeworkmodule_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
-    return new QtIviCoreModule();
+    return new QtInterfaceFrameworkModule();
 }
 
 QObject* serviceManagerSingelton(QQmlEngine *, QJSEngine *)
 {
-    auto manager = QIviServiceManager::instance();
+    auto manager = QIfServiceManager::instance();
     QQmlEngine::setObjectOwnership(manager, QQmlEngine::CppOwnership);
     return manager;
 }
 
 /*!
-    \class QtIviCoreModule
-    \inmodule QtIviCore
+    \class QtInterfaceFrameworkModule
+    \inmodule QtInterfaceFramework
 
-    \brief The QtIviCoreModule class holds enums which are used by multiple classes of QtIviCore
+    \brief The QtInterfaceFrameworkModule class holds enums which are used by multiple classes of QtInterfaceFramework
     and provides convenience functions to register types to QML.
 */
 
 /*!
-    \qmltype QtIvi
-    \instantiates QtIviCoreModule
-    \inqmlmodule QtIvi
+    \qmltype QtInterfaceFramework
+    \instantiates QtInterfaceFrameworkModule
+    \inqmlmodule QtInterfaceFramework
 
-    \brief The QtIvi singleton holds enums, which are used by multiple Items of the QtIviCore module.
+    \brief The QtInterfaceFramework singleton holds enums, which are used by multiple Items of the QtInterfaceFramework module.
 
     The following enums are exported from this object:
 
@@ -84,20 +84,20 @@ QObject* serviceManagerSingelton(QQmlEngine *, QJSEngine *)
     \value NoExtras
            The backend does only support the minimum feature set and is stateful.
     \value SupportsGetSize
-           The backend can return the final number of items for a specific request. This makes it possible to support the QIviSearchAndBrowseModel::DataChanged loading
+           The backend can return the final number of items for a specific request. This makes it possible to support the QIfFilterAndBrowseModel::DataChanged loading
            type.
     \value SupportsFiltering
-           The backend supports filtering of the content. QIviSearchAndBrowseModelInterface::availableContentTypesChanged() and QIviSearchAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
-           \l {Qt IVI Query Language}.
+           The backend supports filtering of the content. QIfFilterAndBrowseModelInterface::availableContentTypesChanged() and QIfFilterAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
+           \l {Qt Interface Framework Query Language}.
     \value SupportsSorting
-           The backend supports sorting of the content. QIviSearchAndBrowseModelInterface::availableContentTypesChanged() and QIviSearchAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
-           \l {Qt IVI Query Language}.
+           The backend supports sorting of the content. QIfFilterAndBrowseModelInterface::availableContentTypesChanged() and QIfFilterAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
+           \l {Qt Interface Framework Query Language}.
     \value SupportsAndConjunction
            The backend supports handling multiple filters at the same time and these filters can be combined by using the AND conjunction.
     \value SupportsOrConjunction
            The backend supports handling multiple filters at the same time and these filters can be combined by using the OR conjunction.
     \value SupportsStatelessNavigation
-           The backend is stateless and supports handling multiple instances of a QIviSearchAndBrowseModel requesting different data at the same time.
+           The backend is stateless and supports handling multiple instances of a QIfFilterAndBrowseModel requesting different data at the same time.
            E.g. One request for artists, sorted by name and another request for tracks. The backend has to consider that both request come from models which are
            currently visible at the same time.
     \value SupportsInsert
@@ -107,31 +107,31 @@ QObject* serviceManagerSingelton(QQmlEngine *, QJSEngine *)
     \value SupportsRemove
            The backend supports removing items from the model.
 */
-QtIviCoreModule::QtIviCoreModule(QObject *parent)
+QtInterfaceFrameworkModule::QtInterfaceFrameworkModule(QObject *parent)
     : QObject(parent)
 {
 }
 
 
 /*!
-    \enum QtIviCoreModule::ModelCapability
+    \enum QtInterfaceFrameworkModule::ModelCapability
     \value NoExtras
            The backend does only support the minimum feature set and is stateful.
     \value SupportsGetSize
-           The backend can return the final number of items for a specific request. This makes it possible to support the QIviSearchAndBrowseModel::DataChanged loading
+           The backend can return the final number of items for a specific request. This makes it possible to support the QIfFilterAndBrowseModel::DataChanged loading
            type.
     \value SupportsFiltering
-           The backend supports filtering of the content. QIviSearchAndBrowseModelInterface::availableContentTypesChanged() and QIviSearchAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
-           \l {Qt IVI Query Language}.
+           The backend supports filtering of the content. QIfFilterAndBrowseModelInterface::availableContentTypesChanged() and QIfFilterAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
+           \l {Qt Interface Framework Query Language}.
     \value SupportsSorting
-           The backend supports sorting of the content. QIviSearchAndBrowseModelInterface::availableContentTypesChanged() and QIviSearchAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
-           \l {Qt IVI Query Language}.
+           The backend supports sorting of the content. QIfFilterAndBrowseModelInterface::availableContentTypesChanged() and QIfFilterAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
+           \l {Qt Interface Framework Query Language}.
     \value SupportsAndConjunction
            The backend supports handling multiple filters at the same time and these filters can be combined by using the AND conjunction.
     \value SupportsOrConjunction
            The backend supports handling multiple filters at the same time and these filters can be combined by using the OR conjunction.
     \value SupportsStatelessNavigation
-           The backend is stateless and supports handling multiple instances of a QIviSearchAndBrowseModel requesting different data at the same time.
+           The backend is stateless and supports handling multiple instances of a QIfFilterAndBrowseModel requesting different data at the same time.
            E.g. One request for artists, sorted by name and another request for tracks. The backend has to consider that both request come from models which are
            currently visible at the same time.
     \value SupportsInsert
@@ -145,28 +145,28 @@ QtIviCoreModule::QtIviCoreModule(QObject *parent)
 /*!
     Registers all enums in this class in the Qt MetaType system
 */
-void QtIviCoreModule::registerTypes()
+void QtInterfaceFrameworkModule::registerTypes()
 {
-    qRegisterMetaType<QIviServiceObject*>();
-    qRegisterMetaType<QList<QIviServiceObject*>>("QList<QIviServiceObject*>");
-    qRegisterMetaType<QtIviCoreModule::ModelCapabilities>();
-    qIviRegisterPendingReplyType<QtIviCoreModule::ModelCapabilities>();
+    qRegisterMetaType<QIfServiceObject*>();
+    qRegisterMetaType<QList<QIfServiceObject*>>("QList<QIfServiceObject*>");
+    qRegisterMetaType<QtInterfaceFrameworkModule::ModelCapabilities>();
+    qIfRegisterPendingReplyType<QtInterfaceFrameworkModule::ModelCapabilities>();
 }
 
 /*!
-    Registers the QtIviCore classes to the QML System in the library imported from \a uri having
+    Registers the QtInterfaceFramework classes to the QML System in the library imported from \a uri having
     the version number composed from \a majorVersion and \a minorVersion.
 */
-void QtIviCoreModule::registerQmlTypes(const QString &uri, int majorVersion, int minorVersion)
+void QtInterfaceFrameworkModule::registerQmlTypes(const QString &uri, int majorVersion, int minorVersion)
 {
     registerTypes();
     QByteArray u = uri.toLatin1();
-    qmlRegisterSingletonType<QtIviCoreModule>(u, majorVersion, minorVersion,
-                                        "QtIviCoreModule",
-                                        qtivicoremodule_singletontype_provider);
-    qmlRegisterUncreatableType<QIviAbstractFeature>(u, 1, 0, "AbstractFeature", QStringLiteral("AbstractFeature is not accessible directly"));
-    qmlRegisterUncreatableType<QIviAbstractZonedFeature>(u, 1, 0, "AbstractZonedFeature", QStringLiteral("AbstractZonedFeature is not accessible directly"));
-    qmlRegisterType<QIviPagingModel>(u, 1, 0, "PagingModel");
-    qmlRegisterType<QIviSearchAndBrowseModel>(u, 1, 0, "SearchAndBrowseModel");
-    qmlRegisterSingletonType<QIviServiceManager>(u, 1, 0, "ServiceManager", &serviceManagerSingelton);
+    qmlRegisterSingletonType<QtInterfaceFrameworkModule>(u, majorVersion, minorVersion,
+                                        "QtInterfaceFrameworkModule",
+                                        qtinterfaceframeworkmodule_singletontype_provider);
+    qmlRegisterUncreatableType<QIfAbstractFeature>(u, 1, 0, "AbstractFeature", QStringLiteral("AbstractFeature is not accessible directly"));
+    qmlRegisterUncreatableType<QIfAbstractZonedFeature>(u, 1, 0, "AbstractZonedFeature", QStringLiteral("AbstractZonedFeature is not accessible directly"));
+    qmlRegisterType<QIfPagingModel>(u, 1, 0, "PagingModel");
+    qmlRegisterType<QIfFilterAndBrowseModel>(u, 1, 0, "FilterAndBrowseModel");
+    qmlRegisterSingletonType<QIfServiceManager>(u, 1, 0, "ServiceManager", &serviceManagerSingelton);
 }

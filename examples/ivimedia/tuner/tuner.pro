@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick ivicore
+QT += qml quick interfaceframework
 
 CONFIG += c++11
 
@@ -12,5 +12,5 @@ RESOURCES += qml.qrc
 QML_IMPORT_PATH =
 
 # install
-target.path = $$[QT_INSTALL_EXAMPLES]/ivimedia/tuner
+target.path = $$[QT_INSTALL_EXAMPLES]/ifmedia/tuner
 INSTALLS += target

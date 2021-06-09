@@ -1,14 +1,14 @@
 TEMPLATE = lib
 CONFIG += plugin
-QT += ivicore
+QT += interfaceframework
 
-LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIviInstrumentCluster)
+LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfInstrumentCluster)
 INCLUDEPATH += $$OUT_PWD/../frontend
 
 QFACE_FORMAT = qmlplugin
 QFACE_SOURCES = ../instrument-cluster.qface
 
-load(ivigenerator)
+load(ifcodegen)
 
 DESTDIR = $$OUT_PWD/$$replace(URI, \\., /)
 QMAKE_RPATHDIR += $$QMAKE_REL_RPATH_BASE/../../../../
@@ -21,5 +21,5 @@ exists($$OUT_PWD/qmldir) {
     COPIES += cpqmldir
 }
 
-target.path = $$[QT_INSTALL_EXAMPLES]/ivicore/qface-tutorial/chapter4-simulation-behavior/imports
+target.path = $$[QT_INSTALL_EXAMPLES]/interfaceframework/qface-tutorial/chapter4-simulation-behavior/imports
 INSTALLS += target

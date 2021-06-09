@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,20 +39,20 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISEARCHANDBROWSEMODEL_H
-#define QIVISEARCHANDBROWSEMODEL_H
+#ifndef QIFSEARCHANDBROWSEMODEL_H
+#define QIFSEARCHANDBROWSEMODEL_H
 
-#include <QtIviCore/QIviPagingModel>
-#include <QtIviCore/QtIviCoreModule>
-#include <QtIviCore/QIviPendingReply>
-#include <QtIviCore/QIviServiceObject>
+#include <QtInterfaceFramework/QIfPagingModel>
+#include <QtInterfaceFramework/QtInterfaceFrameworkModule>
+#include <QtInterfaceFramework/QIfPendingReply>
+#include <QtInterfaceFramework/QIfServiceObject>
 #include <QtQml/QJSValue>
 
 QT_BEGIN_NAMESPACE
 
-class QIviSearchAndBrowseModelPrivate;
+class QIfFilterAndBrowseModelPrivate;
 
-class Q_QTIVICORE_EXPORT QIviSearchAndBrowseModel : public QIviPagingModel
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFilterAndBrowseModel : public QIfPagingModel
 {
     Q_OBJECT
 
@@ -64,7 +64,7 @@ class Q_QTIVICORE_EXPORT QIviSearchAndBrowseModel : public QIviPagingModel
 public:
 
     enum Roles {
-        CanGoForwardRole = QIviPagingModel::LastRole + 1,
+        CanGoForwardRole = QIfPagingModel::LastRole + 1,
         LastRole = CanGoForwardRole
     };
 
@@ -75,7 +75,7 @@ public:
     };
     Q_ENUM(NavigationType)
 
-    explicit QIviSearchAndBrowseModel(QObject *parent = nullptr);
+    explicit QIfFilterAndBrowseModel(QObject *parent = nullptr);
 
     QString query() const;
     void setQuery(const QString &query);
@@ -93,11 +93,11 @@ public:
 
     Q_INVOKABLE void goBack();
     Q_INVOKABLE bool canGoForward(int index) const;
-    Q_INVOKABLE QIviSearchAndBrowseModel *goForward(int index, QIviSearchAndBrowseModel::NavigationType navigationType);
-    Q_INVOKABLE QIviPendingReply<void> insert(int index, const QVariant &variant);
-    Q_INVOKABLE QIviPendingReply<void> remove(int index);
-    Q_INVOKABLE QIviPendingReply<void> move(int cur_index, int new_index);
-    Q_INVOKABLE QIviPendingReply<int> indexOf(const QVariant &variant);
+    Q_INVOKABLE QIfFilterAndBrowseModel *goForward(int index, QIfFilterAndBrowseModel::NavigationType navigationType);
+    Q_INVOKABLE QIfPendingReply<void> insert(int index, const QVariant &variant);
+    Q_INVOKABLE QIfPendingReply<void> remove(int index);
+    Q_INVOKABLE QIfPendingReply<void> move(int cur_index, int new_index);
+    Q_INVOKABLE QIfPendingReply<int> indexOf(const QVariant &variant);
 
 Q_SIGNALS:
     void queryChanged(const QString &query);
@@ -106,13 +106,13 @@ Q_SIGNALS:
     void canGoBackChanged(bool canGoBack);
 
 protected:
-    QIviSearchAndBrowseModel(QIviServiceObject *serviceObject, QObject *parent = nullptr);
-    QIviSearchAndBrowseModel(QIviSearchAndBrowseModelPrivate &dd, QObject *parent);
-    void connectToServiceObject(QIviServiceObject *serviceObject) override;
+    QIfFilterAndBrowseModel(QIfServiceObject *serviceObject, QObject *parent = nullptr);
+    QIfFilterAndBrowseModel(QIfFilterAndBrowseModelPrivate &dd, QObject *parent);
+    void connectToServiceObject(QIfServiceObject *serviceObject) override;
     void clearServiceObject() override;
 
 private:
-    Q_DECLARE_PRIVATE(QIviSearchAndBrowseModel)
+    Q_DECLARE_PRIVATE(QIfFilterAndBrowseModel)
     Q_PRIVATE_SLOT(d_func(), void onCanGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start))
     Q_PRIVATE_SLOT(d_func(), void onCanGoBackChanged(const QUuid &identifier, bool canGoBack))
     Q_PRIVATE_SLOT(d_func(), void onQueryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers))
@@ -122,4 +122,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // QIVISEARCHANDBROWSEMODEL_H
+#endif // QIFSEARCHANDBROWSEMODEL_H

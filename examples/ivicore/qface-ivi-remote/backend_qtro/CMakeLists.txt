@@ -9,26 +9,26 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-ivi-remote/qtivi/")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-if-remote/interfaceframework/")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_plugin(remote_backend_qtro)
-set_target_properties(remote_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../qtivi)
+set_target_properties(remote_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
-# IVI Generator:
-qt6_ivigenerator(remote_backend_qtro
-    QFACE_SOURCES ../example-ivi-remote.qface
+# Interface Framework Generator:
+qt6_ifcodegen(remote_backend_qtro
+    QFACE_SOURCES ../example-if-remote.qface
     QFACE_FORMAT backend_qtro
 )
 
 target_link_libraries(remote_backend_qtro PUBLIC
-    QtIviRemoteExample
+    QtIfRemoteExample
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 install(TARGETS remote_backend_qtro

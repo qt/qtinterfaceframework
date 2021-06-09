@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,26 +39,26 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIAMFMTUNERBACKENDINTERFACE_H
-#define QIVIAMFMTUNERBACKENDINTERFACE_H
+#ifndef QIFAMFMTUNERBACKENDINTERFACE_H
+#define QIFAMFMTUNERBACKENDINTERFACE_H
 
-#include <QtIviCore/QIviFeatureInterface>
-#include <QtIviMedia/qtivimediaglobal.h>
-#include <QtIviMedia/QIviAmFmTuner>
+#include <QtInterfaceFramework/QIfFeatureInterface>
+#include <QtIfMedia/qtifmediaglobal.h>
+#include <QtIfMedia/QIfAmFmTuner>
 
 QT_BEGIN_NAMESPACE
 
-class QIviPlayableItem;
+class QIfPlayableItem;
 
-class Q_QTIVIMEDIA_EXPORT QIviAmFmTunerBackendInterface : public QIviFeatureInterface
+class Q_QTIFMEDIA_EXPORT QIfAmFmTunerBackendInterface : public QIfFeatureInterface
 {
     Q_OBJECT
 
 public:
-    explicit QIviAmFmTunerBackendInterface(QObject *parent = nullptr);
+    explicit QIfAmFmTunerBackendInterface(QObject *parent = nullptr);
 
     virtual void setFrequency(int frequency) = 0;
-    virtual void setBand(QIviAmFmTuner::Band band) = 0;
+    virtual void setBand(QIfAmFmTuner::Band band) = 0;
     virtual void stepUp() = 0;
     virtual void stepDown() = 0;
     virtual void seekUp() = 0;
@@ -71,13 +71,13 @@ Q_SIGNALS:
     void minimumFrequencyChanged(int minimumFrequency);
     void maximumFrequencyChanged(int maximumFrequency);
     void stepSizeChanged(int stepSize);
-    void bandChanged(QIviAmFmTuner::Band band);
-    void stationChanged(const QIviAmFmTunerStation &station);
+    void bandChanged(QIfAmFmTuner::Band band);
+    void stationChanged(const QIfAmFmTunerStation &station);
     void scanStatusChanged(bool scanRunning);
 };
 
-#define QIviAmFmTuner_iid "org.qt-project.qtivi.AmFmTuner/1.0"
+#define QIfAmFmTuner_iid "org.qt-project.interfaceframework.AmFmTuner/1.0"
 
 QT_END_NAMESPACE
 
-#endif // QIVIAMFMTUNERBACKENDINTERFACE_H
+#endif // QIFAMFMTUNERBACKENDINTERFACE_H

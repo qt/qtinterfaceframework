@@ -5,8 +5,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-# IVI Generator:
-qt6_ivigenerator(qmlplugin
+# Interface Framework Generator:
+qt6_ifcodegen(qmlplugin
     QFACE_SOURCES ../../include-test.qface
     QFACE_FORMAT qmlplugin
     QFACE_IMPORT_PATH ../../qface\ imports
@@ -14,5 +14,5 @@ qt6_ivigenerator(qmlplugin
 
 target_link_libraries(qmlplugin PRIVATE
     include_test_frontend
-    Qt::IviCore
+    Qt::InterfaceFramework
 )

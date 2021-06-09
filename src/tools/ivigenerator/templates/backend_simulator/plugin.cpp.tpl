@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -40,7 +40,7 @@
 {% endfor %}
 
 #include <QStringList>
-#include <QtIviCore/QIviSimulationEngine>
+#include <QtInterfaceFramework/QIfSimulationEngine>
 
 QT_BEGIN_NAMESPACE
 
@@ -56,7 +56,7 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
 /*! \internal */
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
-    , m_simulationEngine(new QIviSimulationEngine(QStringLiteral("{{module.name|lower}}"), this))
+    , m_simulationEngine(new QIfSimulationEngine(QStringLiteral("{{module.name|lower}}"), this))
 {
 {% if module.tags.config.interfaceBuilder %}
     m_interfaces = {{module.tags.config.interfaceBuilder}}(this);
@@ -91,7 +91,7 @@ QStringList {{class}}::interfaces() const
 }
 
 /*! \internal */
-QIviFeatureInterface *{{class}}::interfaceInstance(const QString &interface) const
+QIfFeatureInterface *{{class}}::interfaceInstance(const QString &interface) const
 {
      int index = interfaces().indexOf(interface);
      return index < 0 ? nullptr : m_interfaces.at(index);

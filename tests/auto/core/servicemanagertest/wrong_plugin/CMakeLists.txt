@@ -6,13 +6,13 @@
 
 qt_internal_add_cmake_library(wrong_plugin
     MODULE
-    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../qtivi/"
+    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
     SOURCES
         wrongplugin.cpp wrongplugin.h
     PUBLIC_LIBRARIES
         Qt::Core
         Qt::Gui
-        Qt::IviCore
+        Qt::InterfaceFramework
 )
 
 #### Keys ignored in scope 1:.:.:wrong_plugin.pro:<TRUE>:

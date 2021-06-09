@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIABSTRACTZONEDFEATURE_P_H
-#define QIVIABSTRACTZONEDFEATURE_P_H
+#ifndef QIFABSTRACTZONEDFEATURE_P_H
+#define QIFABSTRACTZONEDFEATURE_P_H
 
 //
 //  W A R N I N G
@@ -53,23 +53,23 @@
 // We mean it.
 //
 
-#include "qiviabstractfeature_p.h"
-#include "qiviabstractzonedfeature.h"
-#include <private/qtiviglobal_p.h>
+#include "qifabstractfeature_p.h"
+#include "qifabstractzonedfeature.h"
+#include <private/qtifglobal_p.h>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviAbstractZonedFeaturePrivate : public QIviAbstractFeaturePrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractZonedFeaturePrivate : public QIfAbstractFeaturePrivate
 {
 public:
-    QIviAbstractZonedFeaturePrivate(const QString &interface, const QString &zone, QIviAbstractFeature *parent);
+    QIfAbstractZonedFeaturePrivate(const QString &interface, const QString &zone, QIfAbstractFeature *parent);
 
     QString m_zone;
-    QList<QIviAbstractZonedFeature*> m_zoneFeatures;
+    QList<QIfAbstractZonedFeature*> m_zoneFeatures;
     QVariantMap m_zoneFeatureMap;
     QVariantList m_zoneFeatureList;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIABSTRACTZONEDFEATURE_P_H
+#endif // QIFABSTRACTZONEDFEATURE_P_H

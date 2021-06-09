@@ -1,7 +1,7 @@
 # Generated from frontend.pro.
 
 cmake_minimum_required(VERSION 3.14)
-project(QtIviRemoteExample LANGUAGES CXX)
+project(QtIfRemoteExample LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -13,38 +13,38 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-ivi-remote")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-if-remote")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-add_library(QtIviRemoteExample)
+add_library(QtIfRemoteExample)
 
-# IVI Generator:
-qt6_ivigenerator(QtIviRemoteExample
-    QFACE_SOURCES ../example-ivi-remote.qface
+# Interface Framework Generator:
+qt6_ifcodegen(QtIfRemoteExample
+    QFACE_SOURCES ../example-if-remote.qface
     QFACE_FORMAT frontend
 )
 
-set_target_properties(QtIviRemoteExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
+set_target_properties(QtIfRemoteExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
-target_include_directories(QtIviRemoteExample PUBLIC
+target_include_directories(QtIfRemoteExample PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_link_libraries(QtIviRemoteExample PUBLIC
+target_link_libraries(QtIfRemoteExample PUBLIC
     Qt::Core
     Qt::Gui
-    Qt::IviCore
-    Qt::IviCorePrivate
+    Qt::InterfaceFramework
+    Qt::InterfaceFrameworkPrivate
     Qt::Qml
     Qt::Quick
 )
 
-install(TARGETS QtIviRemoteExample
+install(TARGETS QtIfRemoteExample
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

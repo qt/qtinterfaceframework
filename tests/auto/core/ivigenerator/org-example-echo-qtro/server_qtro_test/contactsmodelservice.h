@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -32,9 +32,9 @@
 #define CONTACTSMODELSERVICE_H
 
 #include "contact.h"
-#include "rep_qivipagingmodel_source.h"
+#include "rep_qifpagingmodel_source.h"
 
-class ContactsModelService : public QIviPagingModelSimpleSource
+class ContactsModelService : public QIfPagingModelSimpleSource
 {
 public:
     ContactsModelService(QObject* parent = nullptr);

@@ -5,7 +5,7 @@
 ## Copyright (C) 2019 Luxoft Sweden AB
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -28,13 +28,13 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}QtRoAdapter'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 #include "{{interface|lower}}adapter.h"
 
-#include <QIviPagingModelAddressWrapper>
+#include <QIfPagingModelAddressWrapper>
 
 Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lower}}backend.remoteobjects", QtInfoMsg)
 
@@ -42,7 +42,7 @@ Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lo
 * A simple QtRO Adapter which is derived from the repc generated *Source class
 * Every setter/getter and signal is simply forwarded to the original backend
 * Every operation is adapted to use the special PendingResult class as a return value
-* to inform the client that the return value is not yet ready. Once the QIviPendingReply is ready
+* to inform the client that the return value is not yet ready. Once the QIfPendingReply is ready
 * the value is send with the pendingResultAvailable value
 */
 
@@ -79,8 +79,8 @@ void {{class}}::enableRemoting(QRemoteObjectHostBase *node)
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {%     if vars.update({ 'models': True}) %}{% endif %}
-    auto {{property|lowerfirst}}Adapter = new QIviPagingModelQtRoAdapter(QStringLiteral("{{interface.qualified_name}}.{{property}}"), m_backend->{{property|getter_name}}());
-    node->enableRemoting<QIviPagingModelAddressWrapper>({{property|lowerfirst}}Adapter);
+    auto {{property|lowerfirst}}Adapter = new QIfPagingModelQtRoAdapter(QStringLiteral("{{interface.qualified_name}}.{{property}}"), m_backend->{{property|getter_name}}());
+    node->enableRemoting<QIfPagingModelAddressWrapper>({{property|lowerfirst}}Adapter);
     m_modelAdapters.insert(node, {{property|lowerfirst}}Adapter);
 {%   endif %}
 {% endfor %}
@@ -90,8 +90,8 @@ void {{class}}::enableRemoting(QRemoteObjectHostBase *node)
     for (const QString &zone : zones) {
 {%   for property in interface.properties %}
 {%     if property.type.is_model %}
-        auto {{property|lowerfirst}}Adapter = new QIviPagingModelQtRoAdapter(QStringLiteral("{{interface.qualified_name}}.{{property}}.") + zone, m_backend->zoneAt(zone)->{{property|getter_name}}());
-        node->enableRemoting<QIviPagingModelAddressWrapper>({{property|lowerfirst}}Adapter);
+        auto {{property|lowerfirst}}Adapter = new QIfPagingModelQtRoAdapter(QStringLiteral("{{interface.qualified_name}}.{{property}}.") + zone, m_backend->zoneAt(zone)->{{property|getter_name}}());
+        node->enableRemoting<QIfPagingModelAddressWrapper>({{property|lowerfirst}}Adapter);
         m_modelAdapters.insert(node, {{property|lowerfirst}}Adapter);
 {%     endif %}
 {%   endfor %}
@@ -103,7 +103,7 @@ void {{class}}::disableRemoting(QRemoteObjectHostBase *node)
 {
     node->disableRemoting(this);
     const auto adapterList = m_modelAdapters.values(node);
-    for (QIviPagingModelQtRoAdapter *adapter : adapterList) {
+    for (QIfPagingModelQtRoAdapter *adapter : adapterList) {
         node->disableRemoting(adapter);
         delete adapter;
     }
@@ -144,7 +144,7 @@ QStringList {{class}}::availableZones()
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
 {%     if interface_zoned %}
-{{ivi.prop_setter(property, class, zoned = true)}}
+{{if.prop_setter(property, class, zoned = true)}}
 {%     else %}
 {%       set type = property|return_type %}
 {#       //repc doesn't generate proper const ref setters #}
@@ -162,7 +162,7 @@ void {{class}}::{{property|setter_name}}({{type}} {{property}})
 {% endfor %}
 
 {% for operation in interface.operations %}
-QVariant {{class}}::{{operation}}({{ivi.join_params(operation, zoned = interface_zoned)}})
+QVariant {{class}}::{{operation}}({{if.join_params(operation, zoned = interface_zoned)}})
 {
 {%   set function_parameters = operation.parameters|join(', ') %}
 {%   if interface_zoned %}
@@ -171,7 +171,7 @@ QVariant {{class}}::{{operation}}({{ivi.join_params(operation, zoned = interface
 {%     endif %}
 {%     set function_parameters = function_parameters + 'zone' %}
 {%   endif%}
-    QIviPendingReplyBase pendingReply = m_backend->{{operation}}({{function_parameters}});
+    QIfPendingReplyBase pendingReply = m_backend->{{operation}}({{function_parameters}});
     qCDebug(qLcRO{{interface}}) << Q_FUNC_INFO;
     return m_helper.fromPendingReply(pendingReply);
 }

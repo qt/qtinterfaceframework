@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,31 +39,31 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIADEVICEDISCOVERYMODELBACKENDINTERFACE_H
-#define QIVIMEDIADEVICEDISCOVERYMODELBACKENDINTERFACE_H
+#ifndef QIFMEDIADEVICEDISCOVERYMODELBACKENDINTERFACE_H
+#define QIFMEDIADEVICEDISCOVERYMODELBACKENDINTERFACE_H
 
-#include <QtIviCore/QIviFeatureInterface>
-#include <QtIviCore/QIviServiceObject>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtInterfaceFramework/QIfFeatureInterface>
+#include <QtInterfaceFramework/QIfServiceObject>
+#include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVIMEDIA_EXPORT QIviMediaDeviceDiscoveryModelBackendInterface : public QIviFeatureInterface
+class Q_QTIFMEDIA_EXPORT QIfMediaDeviceDiscoveryModelBackendInterface : public QIfFeatureInterface
 {
     Q_OBJECT
 public:
-    explicit QIviMediaDeviceDiscoveryModelBackendInterface(QObject *parent = nullptr);
+    explicit QIfMediaDeviceDiscoveryModelBackendInterface(QObject *parent = nullptr);
 
 Q_SIGNALS:
 
     //The ownership will be transferred to discoveryModel. This will reset the model with the new content, using add/remove is recommended
-    void availableDevices(const QList<QIviServiceObject*> devices);
-    void deviceAdded(QIviServiceObject *device);
-    void deviceRemoved(QIviServiceObject *device);
+    void availableDevices(const QList<QIfServiceObject*> devices);
+    void deviceAdded(QIfServiceObject *device);
+    void deviceRemoved(QIfServiceObject *device);
 };
 
-#define QIviMediaDeviceDiscovery_iid "org.qt-project.qtivi.MediaDiscovery/1.0"
+#define QIfMediaDeviceDiscovery_iid "org.qt-project.interfaceframework.MediaDiscovery/1.0"
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIADEVICEDISCOVERYMODELBACKENDINTERFACE_H
+#endif // QIFMEDIADEVICEDISCOVERYMODELBACKENDINTERFACE_H

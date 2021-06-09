@@ -8,7 +8,7 @@ qt_add_executable(queryparser
     GUI
     SOURCES
         main.cpp
-        qiviqueryterm.cpp qiviqueryterm.h qiviqueryterm_p.h
+        qifqueryterm.cpp qifqueryterm.h qifqueryterm_p.h
     PUBLIC_LIBRARIES
         Qt::Gui
 )
@@ -31,8 +31,8 @@ qt_add_executable(queryparser
 
 qt_internal_extend_target(queryparser CONDITION NOT enable-qlalr
     SOURCES
-        qiviqueryparser_p.h
-        qiviqueryparser_flex_p.h
+        qifqueryparser_p.h
+        qifqueryparser_flex_p.h
 )
 
 #### Keys ignored in scope 5:.:.:queryparser.pri:else:

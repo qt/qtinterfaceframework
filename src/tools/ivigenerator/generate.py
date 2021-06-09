@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB)
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -194,7 +194,7 @@ def run(format, moduleConfig, annotations, imports, src, dst):
 
 def app(src, dst, format, reload, module, force, annotations, imports):
     """
-    The QtIvi Autogenerator (ivigenerator)
+    The QtInterfaceFramework Autogenerator (ifcodegen)
 
     It takes several files or directories as src and generates the code
     in the given dst directory.

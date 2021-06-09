@@ -27,11 +27,11 @@
 **
 ****************************************************************************/
 /*!
-\page ivigenerator.html
-\title Qt IVI Generator
+\page ifcodegen.html
+\title Qt Interface Framework Generator
 \keyword QFace
 
-Qt IVI provides a way for you to describe interfaces using its own Interface Definition Language
+Qt Interface Framework provides a way for you to describe interfaces using its own Interface Definition Language
 (IDL) and then generate Qt/QML API code based on this definition. This generator is based on the
 QFace library, that provides a generic autogeneration framework.
 
@@ -41,14 +41,14 @@ QFace library, that provides a generic autogeneration framework.
     \li \l {Use the Generator}
     \li \l {Filter Reference}
     \li \l {QMake Integration}
-    \li \l {Qt IVI Inter-Process Communication Integration}{IPC Integration}
-    \li \l {Get Started with the Qt IVI Generator}
+    \li \l {Qt Interface Framework Inter-Process Communication Integration}{IPC Integration}
+    \li \l {Get Started with the Qt Interface Framework Generator}
 \endlist
 
 \target known-limitations
 \section1 Known Limitations
 
-Currently, Qt IVI generator has the following limitations:
+Currently, Qt Interface Framework generator has the following limitations:
 
 \list
     \li There's no support for external C++ types, outside of the IDL, such as reusing a

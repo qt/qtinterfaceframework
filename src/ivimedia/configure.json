@@ -1,8 +1,8 @@
 {
-    "module": "ivimedia",
+    "module": "ifmedia",
     "testDir": "../../config.tests",
     "depends": [
-        "ivicore"
+        "interfaceframework"
     ],
 
     "commandline": {
@@ -36,7 +36,7 @@
             "disable": "input.taglib == 'no'",
             "output": [
                 "privateFeature",
-                { "type": "define", "negative": true, "name": "QTIVI_NO_TAGLIB" }
+                { "type": "define", "negative": true, "name": "QTIF_NO_TAGLIB" }
             ]
         },
         "system-taglib": {
@@ -66,9 +66,9 @@
             "condition": "features.remoteobjects && module.multimedia",
             "output": [ "privateFeature" ]
         },
-        "ivimedia" : {
-            "label": "Qt IVI Media",
-            "condition": "features.ivicore",
+        "ifmedia" : {
+            "label": "Qt Interface Framework Media",
+            "condition": "features.interfaceframework",
             "output": [ "publicFeature" ]
         }
     },
@@ -100,8 +100,8 @@ Please make sure the QtMultimedia module is available."
 
     "summary": [
         {
-            "section": "Qt IVI Media",
-            "condition": "features.ivimedia",
+            "section": "Qt Interface Framework Media",
+            "condition": "features.ifmedia",
             "entries": [
                 "taglib",
                 "system-taglib",
@@ -118,8 +118,8 @@ Please make sure the QtMultimedia module is available."
         },
         {
             "type": "feature",
-            "args": "ivimedia",
-            "condition": "!features.ivimedia"
+            "args": "ifmedia",
+            "condition": "!features.ifmedia"
         }
     ]
 }

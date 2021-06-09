@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -29,7 +29,7 @@
 ****************************************************************************/
 
 #include "echoservice.h"
-#include <QtIviRemoteObjectsHelper>
+#include <QtIfRemoteObjectsHelper>
 #include <QTimer>
 
 EchoService::EchoService()
@@ -77,7 +77,7 @@ QVariant EchoService::voidSlot2(int param)
 QVariant EchoService::timer(int interval)
 {
     static quint64 counter = 0;
-    QIviRemoteObjectPendingResult pendingResult(counter++, false);
+    QIfRemoteObjectPendingResult pendingResult(counter++, false);
     QTimer::singleShot(interval, this, [this, pendingResult](){
         emit pendingResultAvailable(pendingResult.id(), true, QVariant());
     });

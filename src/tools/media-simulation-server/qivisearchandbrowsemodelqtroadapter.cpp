@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,114 +38,114 @@
 **
 ****************************************************************************/
 
-#include "qivisearchandbrowsemodelqtroadapter.h"
-#include "qiviqmlconversion_helper.h"
+#include "qiffilterandbrowsemodelqtroadapter.h"
+#include "qifqmlconversion_helper.h"
 
-Q_LOGGING_CATEGORY(qLcROQIviSearchAndBrowseModel, "qt.ivi.qivisearchandbrowsemodel.remoteobjects", QtInfoMsg)
+Q_LOGGING_CATEGORY(qLcROQIfFilterAndBrowseModel, "qt.if.qiffilterandbrowsemodel.remoteobjects", QtInfoMsg)
 
-QIviSearchAndBrowseModelQtRoAdapter::QIviSearchAndBrowseModelQtRoAdapter(QIviSearchAndBrowseModelInterface *parent)
-    : QIviSearchAndBrowseModelQtRoAdapter(QStringLiteral("QIviSearchAndBrowseModel"), parent)
+QIfFilterAndBrowseModelQtRoAdapter::QIfFilterAndBrowseModelQtRoAdapter(QIfFilterAndBrowseModelInterface *parent)
+    : QIfFilterAndBrowseModelQtRoAdapter(QStringLiteral("QIfFilterAndBrowseModel"), parent)
 {
 }
 
-QIviSearchAndBrowseModelQtRoAdapter::QIviSearchAndBrowseModelQtRoAdapter(const QString &remoteObjectsLookupName, QIviSearchAndBrowseModelInterface *parent)
-    : QIviSearchAndBrowseModelSource(parent)
+QIfFilterAndBrowseModelQtRoAdapter::QIfFilterAndBrowseModelQtRoAdapter(const QString &remoteObjectsLookupName, QIfFilterAndBrowseModelInterface *parent)
+    : QIfFilterAndBrowseModelSource(parent)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
     , m_backend(parent)
-    , m_helper(this, qLcROQIviSearchAndBrowseModel())
+    , m_helper(this, qLcROQIfFilterAndBrowseModel())
 {
-    connect(m_backend, &SearchAndBrowseBackend::dataFetched, this, &QIviSearchAndBrowseModelQtRoAdapter::dataFetched);
-    connect(m_backend, &SearchAndBrowseBackend::dataChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::dataChanged);
-    connect(m_backend, &SearchAndBrowseBackend::countChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::countChanged);
-    connect(m_backend, &SearchAndBrowseBackend::canGoBackChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::canGoBackChanged);
-    connect(m_backend, &SearchAndBrowseBackend::canGoForwardChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::canGoForwardChanged);
-    connect(m_backend, &SearchAndBrowseBackend::supportedCapabilitiesChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::supportedCapabilitiesChanged);
-    connect(m_backend, &SearchAndBrowseBackend::availableContentTypesChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::availableContentTypesChanged);
-    connect(m_backend, &SearchAndBrowseBackend::contentTypeChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::contentTypeChanged);
-    connect(m_backend, &SearchAndBrowseBackend::queryIdentifiersChanged, this, &QIviSearchAndBrowseModelQtRoAdapter::queryIdentifiersChanged);
+    connect(m_backend, &SearchAndBrowseBackend::dataFetched, this, &QIfFilterAndBrowseModelQtRoAdapter::dataFetched);
+    connect(m_backend, &SearchAndBrowseBackend::dataChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::dataChanged);
+    connect(m_backend, &SearchAndBrowseBackend::countChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::countChanged);
+    connect(m_backend, &SearchAndBrowseBackend::canGoBackChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::canGoBackChanged);
+    connect(m_backend, &SearchAndBrowseBackend::canGoForwardChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::canGoForwardChanged);
+    connect(m_backend, &SearchAndBrowseBackend::supportedCapabilitiesChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::supportedCapabilitiesChanged);
+    connect(m_backend, &SearchAndBrowseBackend::availableContentTypesChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::availableContentTypesChanged);
+    connect(m_backend, &SearchAndBrowseBackend::contentTypeChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::contentTypeChanged);
+    connect(m_backend, &SearchAndBrowseBackend::queryIdentifiersChanged, this, &QIfFilterAndBrowseModelQtRoAdapter::queryIdentifiersChanged);
 }
 
-QString QIviSearchAndBrowseModelQtRoAdapter::remoteObjectsLookupName() const
+QString QIfFilterAndBrowseModelQtRoAdapter::remoteObjectsLookupName() const
 {
     return m_remoteObjectsLookupName;
 }
 
-QStringList QIviSearchAndBrowseModelQtRoAdapter::availableContentTypes() const
+QStringList QIfFilterAndBrowseModelQtRoAdapter::availableContentTypes() const
 {
     return m_backend->property("availableContentTypes").toStringList();
 }
 
-void QIviSearchAndBrowseModelQtRoAdapter::setContentType(const QUuid &identifier, const QString &contentType)
+void QIfFilterAndBrowseModelQtRoAdapter::setContentType(const QUuid &identifier, const QString &contentType)
 {
     m_backend->setContentType(identifier, contentType);
 }
 
-void QIviSearchAndBrowseModelQtRoAdapter::setupFilter(const QUuid &identifier, const QVariant &term, const QList<QIviOrderTerm> &orderTerms)
+void QIfFilterAndBrowseModelQtRoAdapter::setupFilter(const QUuid &identifier, const QVariant &term, const QList<QIfOrderTerm> &orderTerms)
 {
     QByteArray data = term.toByteArray();
     QDataStream stream(data);
-    QIviAbstractQueryTerm *t = nullptr;
+    QIfAbstractQueryTerm *t = nullptr;
     if (!data.isEmpty())
         stream >> &t;
     m_backend->setupFilter(identifier, t, orderTerms);
 }
 
-QVariant QIviSearchAndBrowseModelQtRoAdapter::goBack(const QUuid &identifier)
+QVariant QIfFilterAndBrowseModelQtRoAdapter::goBack(const QUuid &identifier)
 {
-    QIviPendingReplyBase pendingReply = m_backend->goBack(identifier);
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    QIfPendingReplyBase pendingReply = m_backend->goBack(identifier);
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     return m_helper.fromPendingReply(pendingReply);
 }
 
-QVariant QIviSearchAndBrowseModelQtRoAdapter::goForward(const QUuid &identifier, int index)
+QVariant QIfFilterAndBrowseModelQtRoAdapter::goForward(const QUuid &identifier, int index)
 {
-    QIviPendingReplyBase pendingReply = m_backend->goForward(identifier, index);
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    QIfPendingReplyBase pendingReply = m_backend->goForward(identifier, index);
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     return m_helper.fromPendingReply(pendingReply);
 }
 
-void QIviSearchAndBrowseModelQtRoAdapter::registerInstance(const QUuid &identifier)
+void QIfFilterAndBrowseModelQtRoAdapter::registerInstance(const QUuid &identifier)
 {
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     m_backend->registerInstance(identifier);
 }
 
-void QIviSearchAndBrowseModelQtRoAdapter::unregisterInstance(const QUuid &identifier)
+void QIfFilterAndBrowseModelQtRoAdapter::unregisterInstance(const QUuid &identifier)
 {
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     m_backend->unregisterInstance(identifier);
 }
 
-void QIviSearchAndBrowseModelQtRoAdapter::fetchData(const QUuid &identifier, int start, int count)
+void QIfFilterAndBrowseModelQtRoAdapter::fetchData(const QUuid &identifier, int start, int count)
 {
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     m_backend->fetchData(identifier, start, count);
 }
 
-QVariant QIviSearchAndBrowseModelQtRoAdapter::insert(const QUuid &identifier, int index, const QVariant &item)
+QVariant QIfFilterAndBrowseModelQtRoAdapter::insert(const QUuid &identifier, int index, const QVariant &item)
 {
-    QIviPendingReplyBase pendingReply = m_backend->insert(identifier, index, item);
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    QIfPendingReplyBase pendingReply = m_backend->insert(identifier, index, item);
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     return m_helper.fromPendingReply(pendingReply);
 }
 
-QVariant QIviSearchAndBrowseModelQtRoAdapter::remove(const QUuid &identifier, int index)
+QVariant QIfFilterAndBrowseModelQtRoAdapter::remove(const QUuid &identifier, int index)
 {
-    QIviPendingReplyBase pendingReply = m_backend->remove(identifier, index);
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    QIfPendingReplyBase pendingReply = m_backend->remove(identifier, index);
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     return m_helper.fromPendingReply(pendingReply);
 }
 
-QVariant QIviSearchAndBrowseModelQtRoAdapter::move(const QUuid &identifier, int currentIndex, int newIndex)
+QVariant QIfFilterAndBrowseModelQtRoAdapter::move(const QUuid &identifier, int currentIndex, int newIndex)
 {
-    QIviPendingReplyBase pendingReply = m_backend->move(identifier, currentIndex, newIndex);
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    QIfPendingReplyBase pendingReply = m_backend->move(identifier, currentIndex, newIndex);
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     return m_helper.fromPendingReply(pendingReply);
 }
 
-QVariant QIviSearchAndBrowseModelQtRoAdapter::indexOf(const QUuid &identifier, const QVariant &item)
+QVariant QIfFilterAndBrowseModelQtRoAdapter::indexOf(const QUuid &identifier, const QVariant &item)
 {
-    QIviPendingReplyBase pendingReply = m_backend->indexOf(identifier, item);
-    qCDebug(qLcROQIviSearchAndBrowseModel) << Q_FUNC_INFO;
+    QIfPendingReplyBase pendingReply = m_backend->indexOf(identifier, item);
+    qCDebug(qLcROQIfFilterAndBrowseModel) << Q_FUNC_INFO;
     return m_helper.fromPendingReply(pendingReply);
 }

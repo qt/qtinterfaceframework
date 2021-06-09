@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,58 +39,58 @@
 **
 ****************************************************************************/
 
-#include "qivipagingmodel.h"
-#include "qivipagingmodel_p.h"
+#include "qifpagingmodel.h"
+#include "qifpagingmodel_p.h"
 
-#include "qivipagingmodelinterface.h"
-#include "qiviqmlconversion_helper.h"
+#include "qifpagingmodelinterface.h"
+#include "qifqmlconversion_helper.h"
 
 #include <QDebug>
 #include <QMetaObject>
 
 QT_BEGIN_NAMESPACE
 
-QIviPagingModelPrivate::QIviPagingModelPrivate(const QString &interface, QIviPagingModel *model)
-    : QIviAbstractFeatureListModelPrivate(interface, model)
+QIfPagingModelPrivate::QIfPagingModelPrivate(const QString &interface, QIfPagingModel *model)
+    : QIfAbstractFeatureListModelPrivate(interface, model)
     , q_ptr(model)
-    , m_capabilities(QtIviCoreModule::NoExtras)
+    , m_capabilities(QtInterfaceFrameworkModule::NoExtras)
     , m_chunkSize(30)
     , m_moreAvailable(false)
     , m_identifier(QUuid::createUuid())
     , m_fetchMoreThreshold(10)
     , m_fetchedDataCount(0)
-    , m_loadingType(QIviPagingModel::FetchMore)
+    , m_loadingType(QIfPagingModel::FetchMore)
 {
-    QtIviCoreModule::registerTypes();
-    qRegisterMetaType<QIviPagingModel::LoadingType>();
-    qRegisterMetaType<QIviStandardItem>();
-    qRegisterMetaType<QIviStandardItem>("QIviSearchAndBrowseModelItem");
+    QtInterfaceFrameworkModule::registerTypes();
+    qRegisterMetaType<QIfPagingModel::LoadingType>();
+    qRegisterMetaType<QIfStandardItem>();
+    qRegisterMetaType<QIfStandardItem>("QIfFilterAndBrowseModelItem");
 }
 
-QIviPagingModelPrivate::~QIviPagingModelPrivate()
+QIfPagingModelPrivate::~QIfPagingModelPrivate()
 {
 }
 
-void QIviPagingModelPrivate::initialize()
+void QIfPagingModelPrivate::initialize()
 {
-    QIviAbstractFeatureListModelPrivate::initialize();
+    QIfAbstractFeatureListModelPrivate::initialize();
 
-    Q_Q(QIviPagingModel);
-    q->setDiscoveryMode(QIviAbstractFeature::NoAutoDiscovery);
+    Q_Q(QIfPagingModel);
+    q->setDiscoveryMode(QIfAbstractFeature::NoAutoDiscovery);
 
     QObject::connect(q, &QAbstractListModel::rowsInserted,
-                     q, &QIviPagingModel::countChanged);
+                     q, &QIfPagingModel::countChanged);
     QObject::connect(q, &QAbstractListModel::rowsRemoved,
-                     q, &QIviPagingModel::countChanged);
+                     q, &QIfPagingModel::countChanged);
     QObject::connect(q, &QAbstractListModel::modelReset,
-                     q, &QIviPagingModel::countChanged);
-    QObjectPrivate::connect(q, &QIviPagingModel::fetchMoreThresholdReached,
-                            this, &QIviPagingModelPrivate::onFetchMoreThresholdReached);
+                     q, &QIfPagingModel::countChanged);
+    QObjectPrivate::connect(q, &QIfPagingModel::fetchMoreThresholdReached,
+                            this, &QIfPagingModelPrivate::onFetchMoreThresholdReached);
 }
 
-void QIviPagingModelPrivate::onInitializationDone()
+void QIfPagingModelPrivate::onInitializationDone()
 {
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
 
     if (q->isInitialized())
         return;
@@ -101,7 +101,7 @@ void QIviPagingModelPrivate::onInitializationDone()
     resetModel();
 }
 
-void QIviPagingModelPrivate::onCapabilitiesChanged(const QUuid &identifier, QtIviCoreModule::ModelCapabilities capabilities)
+void QIfPagingModelPrivate::onCapabilitiesChanged(const QUuid &identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities)
 {
     if (!identifier.isNull() && identifier != m_identifier)
         return;
@@ -109,12 +109,12 @@ void QIviPagingModelPrivate::onCapabilitiesChanged(const QUuid &identifier, QtIv
     if (m_capabilities == capabilities)
         return;
 
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
     m_capabilities = capabilities;
     emit q->capabilitiesChanged(capabilities);
 }
 
-void QIviPagingModelPrivate::onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable)
+void QIfPagingModelPrivate::onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable)
 {
     if (!identifier.isNull() && (!items.count() || identifier != m_identifier))
         return;
@@ -122,10 +122,10 @@ void QIviPagingModelPrivate::onDataFetched(const QUuid &identifier, const QList<
     Q_ASSERT(items.count() <= m_chunkSize);
     Q_ASSERT((start + items.count() - 1) / m_chunkSize == start / m_chunkSize);
 
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
     m_moreAvailable = moreAvailable;
 
-    if (m_loadingType == QIviPagingModel::FetchMore) {
+    if (m_loadingType == QIfPagingModel::FetchMore) {
         q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + items.count() -1);
         m_itemList += items;
         m_fetchedDataCount = m_itemList.count();
@@ -148,12 +148,12 @@ void QIviPagingModelPrivate::onDataFetched(const QUuid &identifier, const QList<
     }
 }
 
-void QIviPagingModelPrivate::onCountChanged(const QUuid &identifier, int new_length)
+void QIfPagingModelPrivate::onCountChanged(const QUuid &identifier, int new_length)
 {
-    if (m_loadingType != QIviPagingModel::DataChanged || (!identifier.isNull() && identifier != m_identifier) || m_itemList.count() == new_length)
+    if (m_loadingType != QIfPagingModel::DataChanged || (!identifier.isNull() && identifier != m_identifier) || m_itemList.count() == new_length)
         return;
 
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
     q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + new_length -1);
     for (int i = 0; i < new_length; i++)
         m_itemList.append(QVariant());
@@ -162,24 +162,24 @@ void QIviPagingModelPrivate::onCountChanged(const QUuid &identifier, int new_len
     m_availableChunks.resize(new_length / m_chunkSize + 1);
 }
 
-void QIviPagingModelPrivate::onDataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count)
+void QIfPagingModelPrivate::onDataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count)
 {
     if (!identifier.isNull() && identifier != m_identifier)
         return;
 
     if (start < 0 || start > m_itemList.count()) {
-        if (m_loadingType == QIviPagingModel::DataChanged)
+        if (m_loadingType == QIfPagingModel::DataChanged)
             qWarning("The provided start argument is out of range. Please make sure to emit the countChanged() before emitting dataChanged()");
         return;
     }
 
     if (count < 0 || count > m_itemList.count() - start) {
-        if (m_loadingType == QIviPagingModel::DataChanged)
+        if (m_loadingType == QIfPagingModel::DataChanged)
             qWarning("The provided start argument is out of range. Please make sure to emit the countChanged() before emitting dataChanged()");
         return;
     }
 
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
 
     //delta > 0 insert rows
     //delta < 0 remove rows
@@ -210,15 +210,15 @@ void QIviPagingModelPrivate::onDataChanged(const QUuid &identifier, const QList<
     }
 }
 
-void QIviPagingModelPrivate::onFetchMoreThresholdReached()
+void QIfPagingModelPrivate::onFetchMoreThresholdReached()
 {
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
     q->fetchMore(QModelIndex());
 }
 
-void QIviPagingModelPrivate::resetModel()
+void QIfPagingModelPrivate::resetModel()
 {
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
 
     q->beginResetModel();
     m_itemList.clear();
@@ -231,7 +231,7 @@ void QIviPagingModelPrivate::resetModel()
     q->fetchMore(QModelIndex());
 }
 
-void QIviPagingModelPrivate::fetchData(int startIndex)
+void QIfPagingModelPrivate::fetchData(int startIndex)
 {
     if (!backend())
         return;
@@ -244,9 +244,9 @@ void QIviPagingModelPrivate::fetchData(int startIndex)
     backend()->fetchData(m_identifier, start, m_chunkSize);
 }
 
-void QIviPagingModelPrivate::clearToDefaults()
+void QIfPagingModelPrivate::clearToDefaults()
 {
-    Q_Q(QIviPagingModel);
+    Q_Q(QIfPagingModel);
 
     m_chunkSize = 30;
     emit q->chunkSizeChanged(m_chunkSize);
@@ -255,58 +255,58 @@ void QIviPagingModelPrivate::clearToDefaults()
     m_fetchMoreThreshold = 10;
     emit q->fetchMoreThresholdChanged(m_fetchMoreThreshold);
     m_fetchedDataCount = 0;
-    m_loadingType = QIviPagingModel::FetchMore;
+    m_loadingType = QIfPagingModel::FetchMore;
     emit q->loadingTypeChanged(m_loadingType);
-    m_capabilities = QtIviCoreModule::NoExtras;
+    m_capabilities = QtInterfaceFrameworkModule::NoExtras;
     emit q->capabilitiesChanged(m_capabilities);
     m_itemList.clear();
 
     resetModel();
 }
 
-const QIviStandardItem *QIviPagingModelPrivate::itemAt(int i) const
+const QIfStandardItem *QIfPagingModelPrivate::itemAt(int i) const
 {
     const QVariant &var = m_itemList.at(i);
     if (!var.isValid())
         return nullptr;
 
-    return qtivi_gadgetFromVariant<QIviStandardItem>(q_ptr, var);
+    return qtif_gadgetFromVariant<QIfStandardItem>(q_ptr, var);
 }
 
-QIviPagingModelInterface *QIviPagingModelPrivate::backend() const
+QIfPagingModelInterface *QIfPagingModelPrivate::backend() const
 {
-    return QIviAbstractFeatureListModelPrivate::backend<QIviPagingModelInterface*>();
+    return QIfAbstractFeatureListModelPrivate::backend<QIfPagingModelInterface*>();
 }
 
 /*!
-    \class QIviPagingModel
-    \inmodule QtIviCore
-    \brief The QIviPagingModel is a generic model to load its data using the "Paging" aproach.
+    \class QIfPagingModel
+    \inmodule QtInterfaceFramework
+    \brief The QIfPagingModel is a generic model to load its data using the "Paging" aproach.
 
-    The QIviPagingModel should be used directly or as a base class whenever a lot of data needs to be
+    The QIfPagingModel should be used directly or as a base class whenever a lot of data needs to be
     presented in a ListView.
 
     The model only fetches the data it really needs and can it can be configured how this can be done using
     the loadingType property.
 
-    The backend filling the model with data needs to implement the QIviPagingModelInterface class.
+    The backend filling the model with data needs to implement the QIfPagingModelInterface class.
 
     \section1 Setting it up
-    The QIviPagingModel is using QtIviCore's \l {Dynamic Backend System} and is derived from QIviAbstractFeatureListModel.
-    Other than most "QtIvi Feature classes", the QIviPagingModel doesn't automatically connect to available backends.
+    The QIfPagingModel is using QtInterfaceFramework's \l {Dynamic Backend System} and is derived from QIfAbstractFeatureListModel.
+    Other than most "QtInterfaceFramework Feature classes", the QIfPagingModel doesn't automatically connect to available backends.
 
     The easiest approach to set it up, is to connect to the same backend used by another feature. E.g. for connecting to the
     media backend, use the instance from the mediaplayer feature:
     \code
-        QIviMediaPlayer *player = new QIviMediaPlayer();
+        QIfMediaPlayer *player = new QIfMediaPlayer();
         player->startAutoDiscovery();
-        QIviPagingModel *model = new QIviPagingModel();
+        QIfPagingModel *model = new QIfPagingModel();
         model->setServiceObject(player->serviceObject());
     \endcode
 
     \section1 Loading Types
 
-    Multiple loading types are supported, as the QIviPagingModel is made to work with asynchronous requests to
+    Multiple loading types are supported, as the QIfPagingModel is made to work with asynchronous requests to
     fetch its data. The FetchMore loading type is the default and is using the \l{QAbstractItemModel::}{canFetchMore()}/\l{QAbstractItemModel::}{fetchMore()} functions of
     QAbstractItemModel to fetch new data once the view hits the end of the currently available data. As fetching can take
     some time, there is the fetchMoreThreshold property which controls how much in advance a new fetch should be started.
@@ -315,14 +315,14 @@ QIviPagingModelInterface *QIviPagingModelPrivate::backend() const
     and the actual data for a specific row is fetched the first time the data() function is called. Once the data is available,
     the dataChanged() signal will be triggered for this row and the view will start to render the new data.
 
-    Please see the documentation of \l{QIviPagingModel::}{LoadingType} for more details on how the modes work and
+    Please see the documentation of \l{QIfPagingModel::}{LoadingType} for more details on how the modes work and
     when they are suitable to use.
 
-    See the \l{Models} section for more information about all models in QtIvi.
+    See the \l{Models} section for more information about all models in QtInterfaceFramework.
 */
 
 /*!
-    \enum QIviPagingModel::LoadingType
+    \enum QIfPagingModel::LoadingType
     \value FetchMore
            This is the default and can be used if you don't know the final size of the list (e.g. a infinite list).
            The list will detect that it is near the end (fetchMoreThreshold) and then fetch the next chunk of data using canFetchMore and fetchMore.
@@ -337,7 +337,7 @@ QIviPagingModelInterface *QIviPagingModelPrivate::backend() const
 */
 
 /*!
-    \enum QIviPagingModel::Roles
+    \enum QIfPagingModel::Roles
     \value NameRole
           The name of the item. E.g. The name of a contact in a addressbook, or the artist-name in a list of artists.
     \value TypeRole
@@ -349,8 +349,8 @@ QIviPagingModelInterface *QIviPagingModelPrivate::backend() const
 
 /*!
     \qmltype PagingModel
-    \instantiates QIviPagingModel
-    \inqmlmodule QtIvi
+    \instantiates QIfPagingModel
+    \inqmlmodule QtInterfaceFramework
     \inherits AbstractFeatureListModel
     \brief The PagingModel is a generic model to load its data using the "Paging" aproach.
 
@@ -384,8 +384,8 @@ QIviPagingModelInterface *QIviPagingModelPrivate::backend() const
     \endtable
 
     \section1 Setting it up
-    The PagingModel is using QtIviCore's \l {Dynamic Backend System} and is derived from QIviAbstractFeatureListModel.
-    Other than most "QtIvi Feature classes", the PagingModel doesn't automatically connect to available backends.
+    The PagingModel is using QtInterfaceFramework's \l {Dynamic Backend System} and is derived from QIfAbstractFeatureListModel.
+    Other than most "QtInterfaceFramework Feature classes", the PagingModel doesn't automatically connect to available backends.
 
     The easiest approach to set it up, is to connect to the same backend used by another feature. E.g. for connecting to the
     media backend, use the instance from the mediaplayer feature:
@@ -415,16 +415,16 @@ QIviPagingModelInterface *QIviPagingModelPrivate::backend() const
     Please see the documentation of loadingType for more details on how the modes work and
     when they are suitable to use.
 
-    See the \l{Models} section for more information about all models in QtIvi.
+    See the \l{Models} section for more information about all models in QtInterfaceFramework.
 */
 
 /*!
-    Constructs a QIviPagingModel.
+    Constructs a QIfPagingModel.
 
-    The \a parent argument is passed on to the \l QIviAbstractFeatureListModel base class.
+    The \a parent argument is passed on to the \l QIfAbstractFeatureListModel base class.
 */
-QIviPagingModel::QIviPagingModel(QObject *parent)
-    : QIviAbstractFeatureListModel(*new QIviPagingModelPrivate(QStringLiteral(QIviPagingModel_iid), this), parent)
+QIfPagingModel::QIfPagingModel(QObject *parent)
+    : QIfAbstractFeatureListModel(*new QIfPagingModelPrivate(QStringLiteral(QIfPagingModel_iid), this), parent)
 {
 }
 
@@ -438,20 +438,20 @@ QIviPagingModel::QIviPagingModel(QObject *parent)
     \value NoExtras
            The backend does only support the minimum feature set and is stateful.
     \value SupportsGetSize
-           The backend can return the final number of items for a specific request. This makes it possible to support the QIviPagingModel::DataChanged loading
+           The backend can return the final number of items for a specific request. This makes it possible to support the QIfPagingModel::DataChanged loading
            type.
     \value SupportsFiltering
-           The backend supports filtering of the content. QIviSearchAndBrowseModelInterface::availableContentTypesChanged() and QIviSearchAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
-           \l {Qt IVI Query Language}.
+           The backend supports filtering of the content. QIfFilterAndBrowseModelInterface::availableContentTypesChanged() and QIfFilterAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
+           \l {Qt Interface Framework Query Language}.
     \value SupportsSorting
-           The backend supports sorting of the content. QIviSearchAndBrowseModelInterface::availableContentTypesChanged() and QIviSearchAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
-           \l {Qt IVI Query Language}.
+           The backend supports sorting of the content. QIfFilterAndBrowseModelInterface::availableContentTypesChanged() and QIfFilterAndBrowseModelInterface::queryIdentifiersChanged() will be used as input for the
+           \l {Qt Interface Framework Query Language}.
     \value SupportsAndConjunction
            The backend supports handling multiple filters at the same time and these filters can be combined by using the AND conjunction.
     \value SupportsOrConjunction
            The backend supports handling multiple filters at the same time and these filters can be combined by using the OR conjunction.
     \value SupportsStatelessNavigation
-           The backend is stateless and supports handling multiple instances of a QIviSearchAndBrowseModel requesting different data at the same time.
+           The backend is stateless and supports handling multiple instances of a QIfFilterAndBrowseModel requesting different data at the same time.
            E.g. One request for artists, sorted by name and another request for tracks. The backend has to consider that both request come from models which are
            currently visible at the same time.
     \value SupportsInsert
@@ -463,15 +463,15 @@ QIviPagingModel::QIviPagingModel(QObject *parent)
 */
 
 /*!
-    \property QIviPagingModel::capabilities
+    \property QIfPagingModel::capabilities
     \brief Holds the capabilities of the backend for the current content of the model.
 
     The capabilities controls what the current contentType supports. e.g. filtering or sorting.
 */
 
-QtIviCoreModule::ModelCapabilities QIviPagingModel::capabilities() const
+QtInterfaceFrameworkModule::ModelCapabilities QIfPagingModel::capabilities() const
 {
-    Q_D(const QIviPagingModel);
+    Q_D(const QIfPagingModel);
     return d->m_capabilities;
 }
 
@@ -486,7 +486,7 @@ QtIviCoreModule::ModelCapabilities QIviPagingModel::capabilities() const
 */
 
 /*!
-    \property QIviPagingModel::chunkSize
+    \property QIfPagingModel::chunkSize
     \brief Holds the number of rows which are requested from the backend interface.
 
     This property can be used to fine tune the loading performance.
@@ -494,15 +494,15 @@ QtIviCoreModule::ModelCapabilities QIviPagingModel::capabilities() const
     Bigger chunks means less calls to the backend and to a potential IPC underneath, but more data
     to be transferred and probably longer waiting time until the request was finished.
 */
-int QIviPagingModel::chunkSize() const
+int QIfPagingModel::chunkSize() const
 {
-    Q_D(const QIviPagingModel);
+    Q_D(const QIfPagingModel);
     return d->m_chunkSize;
 }
 
-void QIviPagingModel::setChunkSize(int chunkSize)
+void QIfPagingModel::setChunkSize(int chunkSize)
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
     if (d->m_chunkSize == chunkSize)
         return;
 
@@ -524,7 +524,7 @@ void QIviPagingModel::setChunkSize(int chunkSize)
 */
 
 /*!
-    \property QIviPagingModel::fetchMoreThreshold
+    \property QIfPagingModel::fetchMoreThreshold
     \brief Holds the row delta to the end before the next chunk is loaded
 
     This property can be used to fine tune the loading performance. When the
@@ -535,15 +535,15 @@ void QIviPagingModel::setChunkSize(int chunkSize)
 
     \note This property is only used when loadingType is set to FetchMore.
 */
-int QIviPagingModel::fetchMoreThreshold() const
+int QIfPagingModel::fetchMoreThreshold() const
 {
-    Q_D(const QIviPagingModel);
+    Q_D(const QIfPagingModel);
     return d->m_fetchMoreThreshold;
 }
 
-void QIviPagingModel::setFetchMoreThreshold(int fetchMoreThreshold)
+void QIfPagingModel::setFetchMoreThreshold(int fetchMoreThreshold)
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
     if (d->m_fetchMoreThreshold == fetchMoreThreshold)
         return;
 
@@ -574,25 +574,25 @@ void QIviPagingModel::setFetchMoreThreshold(int fetchMoreThreshold)
 */
 
 /*!
-    \property QIviPagingModel::loadingType
+    \property QIfPagingModel::loadingType
     \brief Holds the currently used loading type used for loading the data.
 
     \note When changing this property the content will be reset.
 */
-QIviPagingModel::LoadingType QIviPagingModel::loadingType() const
+QIfPagingModel::LoadingType QIfPagingModel::loadingType() const
 {
-    Q_D(const QIviPagingModel);
+    Q_D(const QIfPagingModel);
     return d->m_loadingType;
 }
 
-void QIviPagingModel::setLoadingType(QIviPagingModel::LoadingType loadingType)
+void QIfPagingModel::setLoadingType(QIfPagingModel::LoadingType loadingType)
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
     if (d->m_loadingType == loadingType)
         return;
 
-    if (loadingType == QIviPagingModel::DataChanged && !d->m_capabilities.testFlag(QtIviCoreModule::SupportsGetSize)) {
-        qtivi_qmlOrCppWarning(this, "The backend doesn't support the DataChanged loading type. This call will have no effect");
+    if (loadingType == QIfPagingModel::DataChanged && !d->m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsGetSize)) {
+        qtif_qmlOrCppWarning(this, "The backend doesn't support the DataChanged loading type. This call will have no effect");
         return;
     }
 
@@ -607,12 +607,12 @@ void QIviPagingModel::setLoadingType(QIviPagingModel::LoadingType loadingType)
     \brief Holds the current number of rows in this model.
 */
 /*!
-    \property QIviPagingModel::count
+    \property QIfPagingModel::count
     \brief Holds the current number of rows in this model.
 */
-int QIviPagingModel::rowCount(const QModelIndex &parent) const
+int QIfPagingModel::rowCount(const QModelIndex &parent) const
 {
-    Q_D(const QIviPagingModel);
+    Q_D(const QIfPagingModel);
     if (parent.isValid())
         return 0;
 
@@ -622,9 +622,9 @@ int QIviPagingModel::rowCount(const QModelIndex &parent) const
 /*!
     \reimp
 */
-QVariant QIviPagingModel::data(const QModelIndex &index, int role) const
+QVariant QIfPagingModel::data(const QModelIndex &index, int role) const
 {
-    Q_D(const QIviPagingModel);
+    Q_D(const QIfPagingModel);
     Q_UNUSED(role)
     if (!index.isValid())
         return QVariant();
@@ -637,14 +637,14 @@ QVariant QIviPagingModel::data(const QModelIndex &index, int role) const
     const int chunkIndex = row / d->m_chunkSize;
     if (d->m_loadingType == DataChanged && !d->m_availableChunks.at(chunkIndex)) {
         //qWarning() << "Cache miss: Fetching Data for index " << row << "and following";
-        const_cast<QIviPagingModelPrivate*>(d)->fetchData(chunkIndex * d->m_chunkSize);
+        const_cast<QIfPagingModelPrivate*>(d)->fetchData(chunkIndex * d->m_chunkSize);
         return QVariant();
     }
 
     if (row >= d->m_fetchedDataCount - d->m_fetchMoreThreshold && canFetchMore(QModelIndex()))
         emit fetchMoreThresholdReached();
 
-    const QIviStandardItem *item = d->itemAt(row);
+    const QIfStandardItem *item = d->itemAt(row);
     if (!item) {
         //qWarning() << "Cache miss: Waiting for fetched Data";
         return QVariant();
@@ -660,7 +660,7 @@ QVariant QIviPagingModel::data(const QModelIndex &index, int role) const
 }
 
 /*!
-    \fn T QIviPagingModel::at(int i) const
+    \fn T QIfPagingModel::at(int i) const
 
     Returns the item at index \a i converted to the template type T.
 */
@@ -675,7 +675,7 @@ QVariant QIviPagingModel::data(const QModelIndex &index, int role) const
     This function is intended to be used from QML. For C++
     please use the at() instead.
 */
-QVariant QIviPagingModel::get(int i) const
+QVariant QIfPagingModel::get(int i) const
 {
     return data(index(i,0), ItemRole);
 }
@@ -688,18 +688,18 @@ QVariant QIviPagingModel::get(int i) const
 /*!
     Resets the model and starts fetching the content again.
 */
-void QIviPagingModel::reload()
+void QIfPagingModel::reload()
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
     d->resetModel();
 }
 
 /*!
     \reimp
 */
-bool QIviPagingModel::canFetchMore(const QModelIndex &parent) const
+bool QIfPagingModel::canFetchMore(const QModelIndex &parent) const
 {
-    Q_D(const QIviPagingModel);
+    Q_D(const QIfPagingModel);
     if (parent.isValid())
         return false;
 
@@ -709,9 +709,9 @@ bool QIviPagingModel::canFetchMore(const QModelIndex &parent) const
 /*!
     \reimp
 */
-void QIviPagingModel::fetchMore(const QModelIndex &parent)
+void QIfPagingModel::fetchMore(const QModelIndex &parent)
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
     if (parent.isValid())
         return;
 
@@ -725,7 +725,7 @@ void QIviPagingModel::fetchMore(const QModelIndex &parent)
 /*!
     \reimp
 */
-QHash<int, QByteArray> QIviPagingModel::roleNames() const
+QHash<int, QByteArray> QIfPagingModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
@@ -739,8 +739,8 @@ QHash<int, QByteArray> QIviPagingModel::roleNames() const
 /*!
     \internal
 */
-QIviPagingModel::QIviPagingModel(QIviServiceObject *serviceObject, QObject *parent)
-    : QIviPagingModel(parent)
+QIfPagingModel::QIfPagingModel(QIfServiceObject *serviceObject, QObject *parent)
+    : QIfPagingModel(parent)
 {
     setServiceObject(serviceObject);
 }
@@ -748,62 +748,62 @@ QIviPagingModel::QIviPagingModel(QIviServiceObject *serviceObject, QObject *pare
 /*!
     \internal
 */
-QIviPagingModel::QIviPagingModel(QIviPagingModelPrivate &dd, QObject *parent)
-    : QIviAbstractFeatureListModel(dd, parent)
+QIfPagingModel::QIfPagingModel(QIfPagingModelPrivate &dd, QObject *parent)
+    : QIfAbstractFeatureListModel(dd, parent)
 {
 }
 
 /*!
     \reimp
 */
-void QIviPagingModel::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfPagingModel::connectToServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
 
-    QIviPagingModelInterface *backend = d->backend();
+    QIfPagingModelInterface *backend = d->backend();
     if (!backend)
         return;
 
-    QObjectPrivate::connect(backend, &QIviPagingModelInterface::initializationDone,
-                            d, &QIviPagingModelPrivate::onInitializationDone);
-    QObjectPrivate::connect(backend, &QIviPagingModelInterface::supportedCapabilitiesChanged,
-                            d, &QIviPagingModelPrivate::onCapabilitiesChanged);
-    QObjectPrivate::connect(backend, &QIviPagingModelInterface::dataFetched,
-                            d, &QIviPagingModelPrivate::onDataFetched);
-    QObjectPrivate::connect(backend, &QIviPagingModelInterface::countChanged,
-                            d, &QIviPagingModelPrivate::onCountChanged);
-    QObjectPrivate::connect(backend, &QIviPagingModelInterface::dataChanged,
-                            d, &QIviPagingModelPrivate::onDataChanged);
+    QObjectPrivate::connect(backend, &QIfPagingModelInterface::initializationDone,
+                            d, &QIfPagingModelPrivate::onInitializationDone);
+    QObjectPrivate::connect(backend, &QIfPagingModelInterface::supportedCapabilitiesChanged,
+                            d, &QIfPagingModelPrivate::onCapabilitiesChanged);
+    QObjectPrivate::connect(backend, &QIfPagingModelInterface::dataFetched,
+                            d, &QIfPagingModelPrivate::onDataFetched);
+    QObjectPrivate::connect(backend, &QIfPagingModelInterface::countChanged,
+                            d, &QIfPagingModelPrivate::onCountChanged);
+    QObjectPrivate::connect(backend, &QIfPagingModelInterface::dataChanged,
+                            d, &QIfPagingModelPrivate::onDataChanged);
 
-    QIviAbstractFeatureListModel::connectToServiceObject(serviceObject);
+    QIfAbstractFeatureListModel::connectToServiceObject(serviceObject);
 }
 
 /*!
     \reimp
 */
-void QIviPagingModel::disconnectFromServiceObject(QIviServiceObject *serviceObject)
+void QIfPagingModel::disconnectFromServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
 
     auto backend = d->backend();
 
     if (backend)
         backend->unregisterInstance(d->m_identifier);
 
-    QIviAbstractFeatureListModel::disconnectFromServiceObject(serviceObject);
+    QIfAbstractFeatureListModel::disconnectFromServiceObject(serviceObject);
 }
 
 /*!
     \reimp
 */
-void QIviPagingModel::clearServiceObject()
+void QIfPagingModel::clearServiceObject()
 {
-    Q_D(QIviPagingModel);
+    Q_D(QIfPagingModel);
     d->clearToDefaults();
 }
 
 /*!
-    \fn void QIviPagingModel::fetchMoreThresholdReached() const
+    \fn void QIfPagingModel::fetchMoreThresholdReached() const
 
     This signal is emitted whenever the fetchMoreThreshold is reached and new data is requested from the backend.
 */
@@ -816,4 +816,4 @@ void QIviPagingModel::clearServiceObject()
 
 QT_END_NAMESPACE
 
-#include "moc_qivipagingmodel.cpp"
+#include "moc_qifpagingmodel.cpp"

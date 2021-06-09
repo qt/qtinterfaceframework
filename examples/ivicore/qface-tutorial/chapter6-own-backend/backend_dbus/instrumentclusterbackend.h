@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -83,7 +83,7 @@ public Q_SLOTS:
     void onCurrentWarningChanged(const Warning &warning);
 
 private:
-    ExampleIVIInstrumentClusterInterface *m_client;
+    ExampleIfInstrumentClusterInterface *m_client;
     QStringList m_fetchList;
     int m_speed;
     int m_rpm;

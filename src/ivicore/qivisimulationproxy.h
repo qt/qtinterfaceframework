@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,10 +39,10 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISIMULATIONPROXY_H
-#define QIVISIMULATIONPROXY_H
+#ifndef QIFSIMULATIONPROXY_H
+#define QIFSIMULATIONPROXY_H
 
-#include <QtIviCore/QtIviCoreModule>
+#include <QtInterfaceFramework/QtInterfaceFrameworkModule>
 
 #include <QtCore/QObject>
 #include <QtCore/QLoggingCategory>
@@ -52,24 +52,24 @@
 
 QT_BEGIN_NAMESPACE
 
-Q_DECLARE_LOGGING_CATEGORY(qLcIviSimulationEngine)
+Q_DECLARE_LOGGING_CATEGORY(qLcIfSimulationEngine)
 
-class QIviSimulationEngine;
+class QIfSimulationEngine;
 
 // The classes here can't be moved to a private header as they are used in macros in the user code
 // They are still considered private as they shouldn't be used directly by the user.
-namespace qtivi_private {
+namespace qtif_private {
 
     // This is needed as QVariant doesn't support returning void
     // It is used to cast the variant to the needed return type and use it in the return statement.
-    template <typename T> struct QIviReturnValueHelper {
+    template <typename T> struct QIfReturnValueHelper {
         static T value(const QVariant &var)
         {
             return var.value<T>();
         }
     };
 
-    template <> struct QIviReturnValueHelper <void> {
+    template <> struct QIfReturnValueHelper <void> {
         static void value(const QVariant &var)
         {
             Q_UNUSED(var);
@@ -77,12 +77,12 @@ namespace qtivi_private {
         }
     };
 
-    class Q_QTIVICORE_EXPORT QIviSimulationProxyBase : public QObject, public QQmlParserStatus
+    class Q_QTINTERFACEFRAMEWORK_EXPORT QIfSimulationProxyBase : public QObject, public QQmlParserStatus
     {
         Q_INTERFACES(QQmlParserStatus)
 
     public:
-        QIviSimulationProxyBase(QMetaObject *staticMetaObject, QObject *instance, const QHash<int, int> &methodMap, QObject *parent=nullptr);
+        QIfSimulationProxyBase(QMetaObject *staticMetaObject, QObject *instance, const QHash<int, int> &methodMap, QObject *parent=nullptr);
 
         virtual const QMetaObject *metaObject() const override;
         virtual void *qt_metacast(const char *classname) override;
@@ -92,7 +92,7 @@ namespace qtivi_private {
         void componentComplete() override;
 
         typedef void (*StaticMetacallFunction)(QObject *, QMetaObject::Call, int, void **);
-        static QMetaObject buildObject(const QMetaObject *metaObject, QHash<int, int> &methodMap, QIviSimulationProxyBase::StaticMetacallFunction metaCallFunction);
+        static QMetaObject buildObject(const QMetaObject *metaObject, QHash<int, int> &methodMap, QIfSimulationProxyBase::StaticMetacallFunction metaCallFunction);
 
         bool callQmlMethod(const char* function,
                           QGenericReturnArgument ret,
@@ -110,11 +110,11 @@ namespace qtivi_private {
         template<typename... Ts>
         bool callQmlMethod(const char* function, QVariant &returnValue, Ts... args)
         {
-            return QIviSimulationProxyBase::callQmlMethod(function, Q_RETURN_ARG(QVariant, returnValue), Q_ARG(QVariant, QVariant::fromValue(args))...);
+            return QIfSimulationProxyBase::callQmlMethod(function, Q_RETURN_ARG(QVariant, returnValue), Q_ARG(QVariant, QVariant::fromValue(args))...);
         }
 
     protected:
-        void setup(QIviSimulationEngine *engine);
+        void setup(QIfSimulationEngine *engine);
 
     private:
         bool m_noSimulationEngine;
@@ -123,23 +123,23 @@ namespace qtivi_private {
         QHash<int, int> m_methodMap;
     };
 
-    template <typename T> class QIviSimulationProxy: public QIviSimulationProxyBase
+    template <typename T> class QIfSimulationProxy: public QIfSimulationProxyBase
     {
     public:
-        QIviSimulationProxy(QObject *p=nullptr)
-            : QIviSimulationProxyBase(&staticMetaObject, m_instance, methodMap(), p)
+        QIfSimulationProxy(QObject *p=nullptr)
+            : QIfSimulationProxyBase(&staticMetaObject, m_instance, methodMap(), p)
         {
-            Q_ASSERT_X(m_instance, "QIviSimulationProxy()", "QIviSimulationProxy::registerInstance needs to be called first");
+            Q_ASSERT_X(m_instance, "QIfSimulationProxy()", "QIfSimulationProxy::registerInstance needs to be called first");
         }
 
-        ~QIviSimulationProxy()
+        ~QIfSimulationProxy()
         {
             proxies.removeAll(this);
         }
 
         void classBegin() override
         {
-            QIviSimulationProxyBase::setup(m_engine);
+            QIfSimulationProxyBase::setup(m_engine);
             proxies.append(this);
         }
 
@@ -149,7 +149,7 @@ namespace qtivi_private {
         {
             if (!obj)
                 return;
-            Q_ASSERT_X(m_instance, "qt_static_metacall()", "QIviSimulationProxy::registerInstance needs to be called first");
+            Q_ASSERT_X(m_instance, "qt_static_metacall()", "QIfSimulationProxy::registerInstance needs to be called first");
             // As the class acts as a proxy, forward all calls here to the registered instance
             // The methodIds start at 0 for the first property of this class. We need to add the
             // offset to get the absolute property index for the normal qt_metacall
@@ -161,9 +161,9 @@ namespace qtivi_private {
             obj->qt_metacall(call, methodId, a);
         }
 
-        static void registerInstance(QIviSimulationEngine *engine, T *instance)
+        static void registerInstance(QIfSimulationEngine *engine, T *instance)
         {
-            Q_ASSERT_X(staticMetaObject.d.data, "registerInstance", "QIviSimulationProxy::buildMetaObject needs to be called first");
+            Q_ASSERT_X(staticMetaObject.d.data, "registerInstance", "QIfSimulationProxy::buildMetaObject needs to be called first");
 
             m_engine = engine;
             m_instance = instance;
@@ -178,35 +178,35 @@ namespace qtivi_private {
         static void buildMetaObject()
         {
             if (!staticMetaObject.d.data)
-                staticMetaObject = QIviSimulationProxy<T>::buildObject(&T::staticMetaObject, QIviSimulationProxy<T>::methodMap(), &QIviSimulationProxy<T>::qt_static_metacall);
+                staticMetaObject = QIfSimulationProxy<T>::buildObject(&T::staticMetaObject, QIfSimulationProxy<T>::methodMap(), &QIfSimulationProxy<T>::qt_static_metacall);
         }
 
         static QMetaObject staticMetaObject;
-        static QList<QIviSimulationProxy<T> *> proxies;
+        static QList<QIfSimulationProxy<T> *> proxies;
 
     private:
-        static QIviSimulationEngine *m_engine;
+        static QIfSimulationEngine *m_engine;
         static T *m_instance;
     };
 
-    template <typename T> QMetaObject QIviSimulationProxy<T>::staticMetaObject = QMetaObject();
-    template <typename T> T *QIviSimulationProxy<T>::m_instance = nullptr;
-    template <typename T> QIviSimulationEngine *QIviSimulationProxy<T>::m_engine = nullptr;
-    template <typename T> QList<QIviSimulationProxy<T> *> QIviSimulationProxy<T>::proxies =  QList<QIviSimulationProxy<T> *>();
+    template <typename T> QMetaObject QIfSimulationProxy<T>::staticMetaObject = QMetaObject();
+    template <typename T> T *QIfSimulationProxy<T>::m_instance = nullptr;
+    template <typename T> QIfSimulationEngine *QIfSimulationProxy<T>::m_engine = nullptr;
+    template <typename T> QList<QIfSimulationProxy<T> *> QIfSimulationProxy<T>::proxies =  QList<QIfSimulationProxy<T> *>();
 }
 
-#define QIVI_SIMULATION_TRY_CALL_FUNC(instance_type, function, ret_func, ...) \
-for (auto _qivi_instance : qtivi_private::QIviSimulationProxy<instance_type>::proxies) { \
+#define QIF_SIMULATION_TRY_CALL_FUNC(instance_type, function, ret_func, ...) \
+for (auto _qif_instance : qtif_private::QIfSimulationProxy<instance_type>::proxies) { \
     QVariant return_value; \
-    if (_qivi_instance->callQmlMethod(function, return_value, ##__VA_ARGS__)) { \
+    if (_qif_instance->callQmlMethod(function, return_value, ##__VA_ARGS__)) { \
         ret_func; \
     } \
 } \
 
 
-#define QIVI_SIMULATION_TRY_CALL(instance_type, function, ret_type, ...) \
-QIVI_SIMULATION_TRY_CALL_FUNC(instance_type, function, return qtivi_private::QIviReturnValueHelper<ret_type>::value(return_value);, ##__VA_ARGS__) \
+#define QIF_SIMULATION_TRY_CALL(instance_type, function, ret_type, ...) \
+QIF_SIMULATION_TRY_CALL_FUNC(instance_type, function, return qtif_private::QIfReturnValueHelper<ret_type>::value(return_value);, ##__VA_ARGS__) \
 
 QT_END_NAMESPACE
 
-#endif // QIVISIMULATIONPROXY_H
+#endif // QIFSIMULATIONPROXY_H

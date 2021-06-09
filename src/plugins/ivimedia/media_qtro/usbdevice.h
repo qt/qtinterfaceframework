@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,11 +41,11 @@
 #ifndef USBDEVICE_H
 #define USBDEVICE_H
 
-#include <QtIviMedia/QIviMediaDevice>
+#include <QtIfMedia/QIfMediaDevice>
 
-class SearchAndBrowseModel;
+class FilterAndBrowseModel;
 
-class USBDevice : public QIviMediaUsbDevice
+class USBDevice : public QIfMediaUsbDevice
 {
     Q_OBJECT
 public:
@@ -55,10 +55,10 @@ public:
     void eject() override;
 
     QStringList interfaces() const override;
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override;
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
 private:
-    SearchAndBrowseModel *m_browseModel;
+    FilterAndBrowseModel *m_browseModel;
     QString m_name;
 };
 

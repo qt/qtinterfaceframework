@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPROXYSERVICEOBJECT_P_H
-#define QIVIPROXYSERVICEOBJECT_P_H
+#ifndef QIFPROXYSERVICEOBJECT_P_H
+#define QIFPROXYSERVICEOBJECT_P_H
 
 //
 //  W A R N I N G
@@ -54,26 +54,26 @@
 //
 
 #include <QtCore/QHash>
-#include <QtIviCore/QIviServiceObject>
-#include <private/qtiviglobal_p.h>
+#include <QtInterfaceFramework/QIfServiceObject>
+#include <private/qtifglobal_p.h>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviProxyServiceObjectPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfProxyServiceObjectPrivate
 {
 
 public:
-    explicit QIviProxyServiceObjectPrivate(QIviServiceInterface *interface);
-    explicit QIviProxyServiceObjectPrivate(const QHash<QString, QIviFeatureInterface *> &interfaceMap);
+    explicit QIfProxyServiceObjectPrivate(QIfServiceInterface *interface);
+    explicit QIfProxyServiceObjectPrivate(const QHash<QString, QIfFeatureInterface *> &interfaceMap);
 
-    virtual ~QIviProxyServiceObjectPrivate() = default;
+    virtual ~QIfProxyServiceObjectPrivate() = default;
 
-    Q_DISABLE_COPY(QIviProxyServiceObjectPrivate)
+    Q_DISABLE_COPY(QIfProxyServiceObjectPrivate)
 
-    QIviServiceInterface *m_serviceInterface;
-    QHash<QString, QIviFeatureInterface*> m_interfaceMap;
+    QIfServiceInterface *m_serviceInterface;
+    QHash<QString, QIfFeatureInterface*> m_interfaceMap;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIPROXYSERVICEOBJECT_P_H
+#endif // QIFPROXYSERVICEOBJECT_P_H

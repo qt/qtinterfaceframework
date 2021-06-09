@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,31 +39,31 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAINDEXERCONTROLBACKENDINTERFACE_H
-#define QIVIMEDIAINDEXERCONTROLBACKENDINTERFACE_H
+#ifndef QIFMEDIAINDEXERCONTROLBACKENDINTERFACE_H
+#define QIFMEDIAINDEXERCONTROLBACKENDINTERFACE_H
 
-#include <QtIviCore/QIviFeatureInterface>
-#include <QtIviMedia/qtivimediaglobal.h>
-#include <QtIviMedia/QIviMediaIndexerControl>
+#include <QtInterfaceFramework/QIfFeatureInterface>
+#include <QtIfMedia/qtifmediaglobal.h>
+#include <QtIfMedia/QIfMediaIndexerControl>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVIMEDIA_EXPORT QIviMediaIndexerControlBackendInterface : public QIviFeatureInterface
+class Q_QTIFMEDIA_EXPORT QIfMediaIndexerControlBackendInterface : public QIfFeatureInterface
 {
     Q_OBJECT
 public:
-    explicit QIviMediaIndexerControlBackendInterface(QObject *parent = nullptr);
+    explicit QIfMediaIndexerControlBackendInterface(QObject *parent = nullptr);
 
     virtual void pause() = 0;
     virtual void resume() = 0;
 
 Q_SIGNALS:
     void progressChanged(qreal progress);
-    void stateChanged(QIviMediaIndexerControl::State state);
+    void stateChanged(QIfMediaIndexerControl::State state);
 };
 
-#define QIviMediaIndexer_iid "org.qt-project.qtivi.MediaIndexer/1.0"
+#define QIfMediaIndexer_iid "org.qt-project.interfaceframework.MediaIndexer/1.0"
 
 QT_END_NAMESPACE
 
-#endif // QIVIMEDIAINDEXERCONTROLBACKENDINTERFACE_H
+#endif // QIFMEDIAINDEXERCONTROLBACKENDINTERFACE_H

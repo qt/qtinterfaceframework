@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,10 +39,10 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIQMLCONVERSION_HELPER_H
-#define QIVIQMLCONVERSION_HELPER_H
+#ifndef QIFQMLCONVERSION_HELPER_H
+#define QIFQMLCONVERSION_HELPER_H
 
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 #include <QtCore/QMetaEnum>
 #include <QtCore/QVariant>
@@ -51,12 +51,12 @@
 
 QT_BEGIN_NAMESPACE
 
-Q_QTIVICORE_EXPORT void qtivi_qmlOrCppWarning(const QObject *obj, const char *errorString);
-Q_QTIVICORE_EXPORT void qtivi_qmlOrCppWarning(const QObject *obj, const QString& errorString);
+Q_QTINTERFACEFRAMEWORK_EXPORT void qtif_qmlOrCppWarning(const QObject *obj, const char *errorString);
+Q_QTINTERFACEFRAMEWORK_EXPORT void qtif_qmlOrCppWarning(const QObject *obj, const QString& errorString);
 
-Q_QTIVICORE_EXPORT QVariant qtivi_convertFromJSON(const QVariant &val);
+Q_QTINTERFACEFRAMEWORK_EXPORT QVariant qtif_convertFromJSON(const QVariant &val);
 
-template <typename T>  QVariant qtivi_convertValue(const T &val)
+template <typename T>  QVariant qtif_convertValue(const T &val)
 {
     QVariant var;
     int userType = qMetaTypeId<T>();
@@ -75,21 +75,21 @@ template <typename T>  QVariant qtivi_convertValue(const T &val)
     return var;
 }
 
-template <typename T> QVariantList qtivi_convertAvailableValues(const QVector<T> &aValues)
+template <typename T> QVariantList qtif_convertAvailableValues(const QVector<T> &aValues)
 {
     QVariantList list;
     list.reserve(aValues.size());
     for (const T &val : aValues) {
         //As QML doesn't support Enums in Lists we need to convert it to int
-        list.append(qtivi_convertValue<T>(val));
+        list.append(qtif_convertValue<T>(val));
     }
     return list;
 }
 
-template <class T> const T *qtivi_gadgetFromVariant(const QObject *obj, const QVariant &var)
+template <class T> const T *qtif_gadgetFromVariant(const QObject *obj, const QVariant &var)
 {
     if (Q_UNLIKELY(!var.isValid())) {
-        qtivi_qmlOrCppWarning(obj, "The passed QVariant is undefined");
+        qtif_qmlOrCppWarning(obj, "The passed QVariant is undefined");
         return nullptr;
     }
 
@@ -97,7 +97,7 @@ template <class T> const T *qtivi_gadgetFromVariant(const QObject *obj, const QV
 
     QMetaType type(var.userType());
     if (Q_UNLIKELY(!type.flags().testFlag(QMetaType::IsGadget))) {
-        qtivi_qmlOrCppWarning(obj, "The passed QVariant needs to use the Q_GADGET macro");
+        qtif_qmlOrCppWarning(obj, "The passed QVariant needs to use the Q_GADGET macro");
         return nullptr;
     }
 
@@ -108,7 +108,7 @@ template <class T> const T *qtivi_gadgetFromVariant(const QObject *obj, const QV
         mo = mo->superClass();
     }
 
-    qtivi_qmlOrCppWarning(obj, QLatin1String("The passed QVariant is not derived from ") + QLatin1String(T::staticMetaObject.className()));
+    qtif_qmlOrCppWarning(obj, QLatin1String("The passed QVariant is not derived from ") + QLatin1String(T::staticMetaObject.className()));
 
     return nullptr;
 }
@@ -116,4 +116,4 @@ template <class T> const T *qtivi_gadgetFromVariant(const QObject *obj, const QV
 
 QT_END_NAMESPACE
 
-#endif // QIVIQMLCONVERSION_HELPER_H
+#endif // QIFQMLCONVERSION_HELPER_H

@@ -6,7 +6,7 @@
 ## Copyright (C) 2018 Pelagicore AG
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned  %}
 {% set testModels = false %}
@@ -40,8 +40,8 @@
 {% endfor %}
 #include "tst_{{interface|lower}}.h"
 
-#include <QtIviCore/QIviServiceManager>
-#include <QtIviCore/QIviServiceObject>
+#include <QtInterfaceFramework/QIfServiceManager>
+#include <QtInterfaceFramework/QIfServiceObject>
 
 #include <{{interface|lower}}.h>
 #include <{{interface|lower}}backendinterface.h>
@@ -142,7 +142,7 @@ public:
 {% endif %}
 
 {% for signal in interface.signals %}
-    virtual void trigger{{signal|upperfirst}}({{ivi.join_params(signal, interface_zoned)}})
+    virtual void trigger{{signal|upperfirst}}({{if.join_params(signal, interface_zoned)}})
     {
         Q_EMIT {{signal}}({% if signal.parameters|length %}{{signal.parameters|join(', ')}}{% endif %}{%
         if interface_zoned %}{%if signal.parameters|length %}, {%endif%} zone{% endif %});
@@ -150,22 +150,22 @@ public:
 {% endfor %}
 
 {% for operation in interface.operations %}
-    {{ivi.operation(operation, zoned = interface_zoned)}} override
+    {{if.operation(operation, zoned = interface_zoned)}} override
     {
         Q_EMIT {{operation}}Called({% if operation.parameters|length %}{{operation.parameters|join(', ')}}{% endif %}{%
         if interface_zoned %}{%if operation.parameters|length %}, {%endif%} zone{% endif %});
 
-        return QIviPendingReply<{{operation|return_type}}>::createFailedReply();
+        return QIfPendingReply<{{operation|return_type}}>::createFailedReply();
     }
 
-    Q_SIGNAL void {{operation}}Called({{ivi.join_params(operation, interface_zoned)}});
+    Q_SIGNAL void {{operation}}Called({{if.join_params(operation, interface_zoned)}});
 
 {% endfor %}
 
 private:
 {% for property in interface.properties %}
 {%       if property.type.is_model %}
-    QIviPagingModelInterface *m_{{ property }};
+    QIfPagingModelInterface *m_{{ property }};
 {%       else %}
     {{ property|return_type }} m_{{ property }};
 {%       endif %}
@@ -174,7 +174,7 @@ private:
 {% if interface.tags.config.zoned %}
 {%   for property in interface.properties %}
 {%       if property.type.is_model %}
-    QMap<QString, QIviPagingModelInterface *> m_zone{{property|upperfirst}};
+    QMap<QString, QIfPagingModelInterface *> m_zone{{property|upperfirst}};
 {%       else %}
     QMap<QString, {{property|return_type}}> m_zone{{property|upperfirst}};
 {%       endif %}
@@ -184,11 +184,11 @@ private:
     QStringList m_zones;
 };
 
-class {{interface}}TestServiceObject : public QIviServiceObject {
+class {{interface}}TestServiceObject : public QIfServiceObject {
 
 public:
     explicit {{interface}}TestServiceObject(QObject *parent=nullptr) :
-        QIviServiceObject(parent), m_name(QLatin1String(""))
+        QIfServiceObject(parent), m_name(QLatin1String(""))
     {
         m_backend = new {{interface}}TestBackend;
         m_interfaces << {{module.module_name|upperfirst}}_{{interface}}_iid;
@@ -196,7 +196,7 @@ public:
 
     QString name() const { return m_name; }
     QStringList interfaces() const override { return m_interfaces; }
-    QIviFeatureInterface *interfaceInstance(const QString& interface) const override
+    QIfFeatureInterface *interfaceInstance(const QString& interface) const override
     {
         if (interface == {{module.module_name|upperfirst}}_{{interface}}_iid)
             return testBackend();
@@ -215,12 +215,12 @@ private:
     {{interface}}TestBackend *m_backend;
 };
 
-class {{interface}}InvalidInterface : public QIviFeatureInterface
+class {{interface}}InvalidInterface : public QIfFeatureInterface
 {
     Q_OBJECT
 public:
     {{interface}}InvalidInterface(QObject *parent)
-        : QIviFeatureInterface(parent)
+        : QIfFeatureInterface(parent)
     {}
 
     void initialize() override
@@ -229,23 +229,23 @@ public:
     }
 };
 
-class {{interface}}InvalidServiceObject : public QIviServiceObject {
+class {{interface}}InvalidServiceObject : public QIfServiceObject {
 
 public:
     explicit {{interface}}InvalidServiceObject(QObject *parent=nullptr) :
-        QIviServiceObject(parent), m_name(QLatin1String("")), m_dummyBackend(new {{interface}}InvalidInterface(this))
+        QIfServiceObject(parent), m_name(QLatin1String("")), m_dummyBackend(new {{interface}}InvalidInterface(this))
     {
         m_interfaces << {{module.module_name|upperfirst}}_{{interface}}_iid;
     }
 
     QString name() const { return m_name; }
     QStringList interfaces() const override { return m_interfaces; }
-    QIviFeatureInterface *interfaceInstance(const QString& ) const override { return m_dummyBackend; }
+    QIfFeatureInterface *interfaceInstance(const QString& ) const override { return m_dummyBackend; }
 
 private:
     QString m_name;
     QStringList m_interfaces;
-    QIviFeatureInterface *m_dummyBackend;
+    QIfFeatureInterface *m_dummyBackend;
 };
 
 {{interface}}Test::{{interface}}Test()
@@ -253,7 +253,7 @@ private:
 {
     QCoreApplication::setLibraryPaths(QStringList());
     {{module.module_name|upperfirst}}::registerTypes();
-    manager = QIviServiceManager::instance();
+    manager = QIfServiceManager::instance();
 }
 
 void {{interface}}Test::init()
@@ -309,9 +309,9 @@ void {{interface}}Test::testInvalidBackend()
     {{interface}}InvalidServiceObject *service = new {{interface}}InvalidServiceObject();
     manager->registerService(service, service->interfaces());
     {{interface}} cc;
-    QTest::ignoreMessage(QtCriticalMsg, QRegularExpression(".*accepted the given QIviServiceObject, "
+    QTest::ignoreMessage(QtCriticalMsg, QRegularExpression(".*accepted the given QIfServiceObject, "
                                                            "but didn't connect to it completely, as "
-                                                           "QIviAbstractFeature::connectToServiceObject "
+                                                           "QIfAbstractFeature::connectToServiceObject "
                                                            "wasn't called."));
     cc.startAutoDiscovery();
 
@@ -497,7 +497,7 @@ void {{interface}}Test::testModels()
 {%      if property.type.is_model %}
     QCOMPARE({{property}}Spy.count(), 1);
     //Test {{property}}Model
-    QIviPagingModel *{{property}} = cc.{{property|getter_name}}();
+    QIfPagingModel *{{property}} = cc.{{property|getter_name}}();
     QVERIFY({{property}});
     QVERIFY({{property}}->isValid());
     QVERIFY({{property}}->serviceObject());

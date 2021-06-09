@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -43,12 +43,12 @@
 #include <QTimer>
 #include <QSettings>
 
-Q_LOGGING_CATEGORY(qLcROQIviMediaIndexer, "qtivi.media.qivimediaindexerbackend.remoteobjects", QtInfoMsg)
+Q_LOGGING_CATEGORY(qLcROQIfMediaIndexer, "interfaceframework.media.qifmediaindexerbackend.remoteobjects", QtInfoMsg)
 
 MediaIndexerBackend::MediaIndexerBackend(QObject *parent)
-    : QIviMediaIndexerControlBackendInterface(parent)
+    : QIfMediaIndexerControlBackendInterface(parent)
     , m_node(nullptr)
-    , m_helper(new QIviRemoteObjectReplicaHelper(qLcROQIviMediaIndexer(), this))
+    , m_helper(new QIfRemoteObjectReplicaHelper(qLcROQIfMediaIndexer(), this))
 {
 }
 
@@ -65,7 +65,7 @@ void MediaIndexerBackend::initialize()
 
     QTimer::singleShot(3000, this, [this](){
         if (!m_replica->isInitialized())
-            qCCritical(qLcROQIviMediaIndexer) << "QtIviMedia.QIviMediaIndexer wasn't initialized within the timeout period. Please make sure the server is running.";
+            qCCritical(qLcROQIfMediaIndexer) << "QtIfMedia.QIfMediaIndexer wasn't initialized within the timeout period. Please make sure the server is running.";
     });
 }
 
@@ -87,25 +87,25 @@ bool MediaIndexerBackend::connectToNode()
             configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
         } else {
             configPath = QStringLiteral("./server.conf");
-            qCInfo(qLcROQIviMediaIndexer) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
+            qCInfo(qLcROQIfMediaIndexer) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
         }
     }
 
     QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("qtivimedia"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtivimedia")).toString());
+    settings.beginGroup(QStringLiteral("qtifmedia"));
+    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtifmedia")).toString());
     if (m_url != registryUrl) {
         m_url = registryUrl;
         // QtRO doesn't allow to change the URL without destroying the Node
         delete m_node;
         m_node = new QRemoteObjectNode(this);
         if (!m_node->connectToNode(m_url)) {
-            qCCritical(qLcROQIviMediaIndexer) << "Connection to" << m_url << "failed!";
+            qCCritical(qLcROQIfMediaIndexer) << "Connection to" << m_url << "failed!";
             m_replica.reset();
             return false;
         }
-        qCInfo(qLcROQIviMediaIndexer) << "Connecting to" << m_url;
-        m_replica.reset(m_node->acquire<QIviMediaIndexerReplica>(QStringLiteral("QtIviMedia.QIviMediaIndexer")));
+        qCInfo(qLcROQIfMediaIndexer) << "Connecting to" << m_url;
+        m_replica.reset(m_node->acquire<QIfMediaIndexerReplica>(QStringLiteral("QtIfMedia.QIfMediaIndexer")));
         setupConnections();
     }
     return true;
@@ -113,10 +113,10 @@ bool MediaIndexerBackend::connectToNode()
 
 void MediaIndexerBackend::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIviRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIviRemoteObjectReplicaHelper::errorChanged, this, &QIviFeatureInterface::errorChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIviRemoteObjectReplicaHelper::onReplicaStateChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIviFeatureInterface::initializationDone);
-    connect(m_replica.data(), &QIviMediaIndexerReplica::stateChanged, this, &MediaIndexerBackend::stateChanged);
-    connect(m_replica.data(), &QIviMediaIndexerReplica::progressChanged, this, &MediaIndexerBackend::progressChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
+    connect(m_replica.data(), &QIfMediaIndexerReplica::stateChanged, this, &MediaIndexerBackend::stateChanged);
+    connect(m_replica.data(), &QIfMediaIndexerReplica::progressChanged, this, &MediaIndexerBackend::progressChanged);
 }

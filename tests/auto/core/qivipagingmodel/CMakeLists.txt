@@ -1,23 +1,23 @@
-# Generated from qivipagingmodel.pro.
+# Generated from qifpagingmodel.pro.
 
 #####################################################################
-## tst_qivipagingmodel Test:
+## tst_qifpagingmodel Test:
 #####################################################################
 
-qt_internal_add_test(tst_qivipagingmodel
+qt_internal_add_test(tst_qifpagingmodel
     SOURCES
-        tst_qivipagingmodel.cpp
+        tst_qifpagingmodel.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     PUBLIC_LIBRARIES
         Qt::CorePrivate
         Qt::Gui
-        Qt::IviCore
-        Qt::IviCorePrivate
+        Qt::InterfaceFramework
+        Qt::InterfaceFrameworkPrivate
         Qt::Quick
 )
 
-#### Keys ignored in scope 1:.:.:qivipagingmodel.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:qifpagingmodel.pro:<TRUE>:
 # DISTFILES = "testdata/*"
 # QMAKE_PROJECT_NAME = "$$TARGET"
 # TEMPLATE = "app"

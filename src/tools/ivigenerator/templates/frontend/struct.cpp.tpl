@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -30,13 +30,13 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set class = '{0}'.format(struct) %}
 {% include 'common/generated_comment.cpp.tpl' %}
 
 #include "{{class|lower}}.h"
 
-#include <qiviqmlconversion_helper.h>
+#include <qifqmlconversion_helper.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -72,31 +72,31 @@ public:
 /*!
     \class {{struct}}
     \inmodule {{module}}
-{{ ivi.format_comments(struct.comment) }}
+{{ if.format_comments(struct.comment) }}
 */
 
 {{class}}::{{class}}()
-    : QIviStandardItem()
+    : QIfStandardItem()
     , d(new {{class}}Private)
 {
 }
 
 {{class}}::{{class}}(const {{class}} &rhs)
-    : QIviStandardItem(rhs)
+    : QIfStandardItem(rhs)
     , d(rhs.d)
 {
 }
 
 {{class}} &{{class}}::operator=(const {{class}} &rhs)
 {
-    QIviStandardItem::operator=(rhs);
+    QIfStandardItem::operator=(rhs);
     if (this != &rhs)
         d.operator=(rhs.d);
     return *this;
 }
 
 {{class}}::{{class}}({{struct.fields|map('parameter_type')|join(', ')}})
-    : QIviStandardItem()
+    : QIfStandardItem()
     , d(new {{class}}Private({{struct.fields|join(', ')}}))
 {
 }
@@ -115,18 +115,18 @@ QString {{class}}::type() const
 
 /*!
     \property {{class}}::{{field}}
-{{ ivi.format_comments(field.comment) }}
+{{ if.format_comments(field.comment) }}
 {% if field.const %}
     \note This property is constant and the value will not change once an instance has been created.
 {% endif %}
 */
-{{ivi.prop_getter(field, class)}}
+{{if.prop_getter(field, class)}}
 {
     return d->m_{{field}};
 }
 {%   if not field.readonly and not field.const %}
 
-{{ivi.prop_setter(field, class)}}
+{{if.prop_setter(field, class)}}
 {
     d->m_{{field}} = {{field}};
 }
@@ -136,7 +136,7 @@ QString {{class}}::type() const
 
 void {{class}}::fromJSON(const QVariant &variant)
 {
-    QVariant value = qtivi_convertFromJSON(variant);
+    QVariant value = qtif_convertFromJSON(variant);
     // First try to convert the values to a Map or a List
     // This is needed as it could also store a QStringList or a Hash
     if (value.canConvert(QMetaType::fromType<QVariantMap>()))

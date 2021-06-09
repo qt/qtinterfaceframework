@@ -4,7 +4,7 @@
 ** Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIDEFAULTPROPERTYOVERRIDER_P_H
-#define QIVIDEFAULTPROPERTYOVERRIDER_P_H
+#ifndef QIFDEFAULTPROPERTYOVERRIDER_P_H
+#define QIFDEFAULTPROPERTYOVERRIDER_P_H
 
 //
 //  W A R N I N G
@@ -53,24 +53,24 @@
 //
 
 #include <QMetaProperty>
-#include <private/qtiviglobal_p.h>
+#include <private/qtifglobal_p.h>
 #include <vector>
 
-#include "qiviabstractfeature_p.h"
+#include "qifabstractfeature_p.h"
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviDefaultPropertyOverrider: public QObject, public QIviPropertyOverrider
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfDefaultPropertyOverrider: public QObject, public QIfPropertyOverrider
 {
     Q_OBJECT
 
 public:
-    explicit QIviDefaultPropertyOverrider(QIviAbstractFeature *carrier, QObject *parent = nullptr);
-    ~QIviDefaultPropertyOverrider() override;
+    explicit QIfDefaultPropertyOverrider(QIfAbstractFeature *carrier, QObject *parent = nullptr);
+    ~QIfDefaultPropertyOverrider() override;
 
-    void addCarrier(QIviAbstractFeature *carrier);
-    void removeCarrier(QIviAbstractFeature *carrier);
-    void setCarrierOverride(bool override, QIviAbstractFeature *carrier);
+    void addCarrier(QIfAbstractFeature *carrier);
+    void removeCarrier(QIfAbstractFeature *carrier);
+    void setCarrierOverride(bool override, QIfAbstractFeature *carrier);
     int numCarriers() const;
 
     bool handles(const QObject *carrier) const;
@@ -89,7 +89,7 @@ public:
     virtual QString nameAt(int index) const;
     virtual QString typeNameAt(int index) const;
     virtual QString displayTextAt(int index) const;
-    virtual QVariant iviConstraintsAt(int index) const;
+    virtual QVariant ifConstraintsAt(int index) const;
     virtual QVariant editValueAt(int index) const;
 
     virtual QString label() const;
@@ -107,9 +107,9 @@ signals:
 
 protected:
 
-    class Q_QTIVICORE_EXPORT PropertyOverride
+    class Q_QTINTERFACEFRAMEWORK_EXPORT PropertyOverride
     {
-        friend class QIviDefaultPropertyOverrider;
+        friend class QIfDefaultPropertyOverrider;
 
     public:
         PropertyOverride();
@@ -128,11 +128,11 @@ protected:
         QString displayText() const;
         QVariant editValue() const;
         QVariant cppValue() const;
-        QVariant iviConstraints(QIviAbstractFeature *carrier) const;
+        QVariant ifConstraints(QIfAbstractFeature *carrier) const;
 
         void setOverriden(bool override);
-        bool setOverridenValue(const QVariant &value, QIviAbstractFeature *carrier);
-        bool notifyOverridenValue(const QVariant &value, QIviAbstractFeature *carrier);
+        bool setOverridenValue(const QVariant &value, QIfAbstractFeature *carrier);
+        bool notifyOverridenValue(const QVariant &value, QIfAbstractFeature *carrier);
         void setOriginalValue(const QVariant &editValue);
 
         PropertyOverride &operator=(PropertyOverride &&other);
@@ -148,13 +148,13 @@ protected:
 
     const PropertyOverride &propertyForIndex(int index) const;
     PropertyOverride &propertyForIndex(int index);
-    void init(QIviAbstractFeature *carrier);
+    void init(QIfAbstractFeature *carrier);
 
-    QIviServiceObject *m_serviceObject;
-    std::vector<QIviAbstractFeature *> m_carriers;
+    QIfServiceObject *m_serviceObject;
+    std::vector<QIfAbstractFeature *> m_carriers;
     std::vector<PropertyOverride> m_properties;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIDEFAULTPROPERTYOVERRIDER_P_H
+#endif // QIFDEFAULTPROPERTYOVERRIDER_P_H

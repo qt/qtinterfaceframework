@@ -1,11 +1,11 @@
 
-#include <QtIviMedia/QIviMediaPlayer>
+#include <QtIfMedia/QIfMediaPlayer>
 #include <QtCore/QUuid>
 
-class QIviMediaPlayer
+class QIfMediaPlayer
 {
-    PROP(QIviMediaPlayer::PlayMode playMode);
-    PROP(QIviMediaPlayer::PlayState playState READONLY);
+    PROP(QIfMediaPlayer::PlayMode playMode);
+    PROP(QIfMediaPlayer::PlayState playState READONLY);
     PROP(qint64 position);
     PROP(qint64 duration READONLY);
     PROP(QVariant currentTrack READONLY);

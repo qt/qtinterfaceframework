@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,22 +39,22 @@
 **
 ****************************************************************************/
 
-#include "qiviamfmtunerbackendinterface.h"
+#include "qifamfmtunerbackendinterface.h"
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class QIviAmFmTunerBackendInterface
-    \inmodule QtIviMedia
+    \class QIfAmFmTunerBackendInterface
+    \inmodule QtIfMedia
     \ingroup backends
     \inherits QObject
-    \keyword org.qt-project.qtivi.AmFmTuner/1.0
-    \brief The QIviAmFmTunerBackendInterface defines the interface for backends to the
-    QIviAmFmTuner feature class.
+    \keyword org.qt-project.interfaceframework.AmFmTuner/1.0
+    \brief The QIfAmFmTunerBackendInterface defines the interface for backends to the
+    QIfAmFmTuner feature class.
 
-    The QIviAmFmTunerBackendInterface is the interface used by \l QIviAmFmTuner
+    The QIfAmFmTunerBackendInterface is the interface used by \l QIfAmFmTuner
 
-    The interface is discovered by a \l QIviAmFmTuner object, which connects to it and sets it up.
+    The interface is discovered by a \l QIfAmFmTuner object, which connects to it and sets it up.
 
     <example of a fully featured backend>
 */
@@ -64,13 +64,13 @@ QT_BEGIN_NAMESPACE
 
     The \a parent is sent to the QObject constructor.
 */
-QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
-    : QIviFeatureInterface(parent)
+QIfAmFmTunerBackendInterface::QIfAmFmTunerBackendInterface(QObject *parent)
+    : QIfFeatureInterface(parent)
 {
 }
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::setFrequency(int frequency)
+    \fn QIfAmFmTunerBackendInterface::setFrequency(int frequency)
 
     Changes the frequency to the new value passed as \a frequency.
 
@@ -78,7 +78,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::setBand(QIviAmFmTuner::Band band)
+    \fn QIfAmFmTunerBackendInterface::setBand(QIfAmFmTuner::Band band)
 
     Changes the band to the new value passed as \a band.
 
@@ -86,7 +86,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::stepUp()
+    \fn QIfAmFmTunerBackendInterface::stepUp()
 
     Increases the frequency by the current bands step size.
 
@@ -94,7 +94,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::stepDown()
+    \fn QIfAmFmTunerBackendInterface::stepDown()
 
     Decreases the frequency by the current bands step size.
 
@@ -102,7 +102,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::seekUp()
+    \fn QIfAmFmTunerBackendInterface::seekUp()
 
     Seeks the next available Station in upwards direction and tunes it.
 
@@ -112,7 +112,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::seekDown()
+    \fn QIfAmFmTunerBackendInterface::seekDown()
 
     Seeks the next available Station in downwards direction and tunes it.
 
@@ -122,7 +122,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::startScan()
+    \fn QIfAmFmTunerBackendInterface::startScan()
 
     Starts a scan through all available stations.
     The scan will seek to the next available station and will stay there for some seconds until it seeks to the next station.
@@ -132,7 +132,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::stopScan()
+    \fn QIfAmFmTunerBackendInterface::stopScan()
 
     Stops the currently active scan. If no scan is active, this method does nothing.
     It is expected that this function will inform about the current state of the backend by emitting the scanStatusChanged() signal.
@@ -141,13 +141,13 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::frequencyChanged(int frequency)
+    \fn QIfAmFmTunerBackendInterface::frequencyChanged(int frequency)
 
     Emitted when the current frequency changed. The new value is passed as \a frequency.
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::minimumFrequencyChanged(int minimumFrequency)
+    \fn QIfAmFmTunerBackendInterface::minimumFrequencyChanged(int minimumFrequency)
 
     Emitted when the minimum frequency of the current band changed. The new value is passed as \a minimumFrequency.
     This is usually caused by a switching the band.
@@ -156,7 +156,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::maximumFrequencyChanged(int maximumFrequency)
+    \fn QIfAmFmTunerBackendInterface::maximumFrequencyChanged(int maximumFrequency)
 
     Emitted when the maximum frequency of the current band changed. The new value is passed as \a maximumFrequency.
     This is usually caused by a switching the band.
@@ -165,7 +165,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::stepSizeChanged(int stepSize)
+    \fn QIfAmFmTunerBackendInterface::stepSizeChanged(int stepSize)
 
     Emitted when the frequency step size of the current band changed. The new value is passed as \a stepSize.
     This is usually caused by a switching the band.
@@ -174,7 +174,7 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::bandChanged(QIviAmFmTuner::Band band)
+    \fn QIfAmFmTunerBackendInterface::bandChanged(QIfAmFmTuner::Band band)
 
     Emitted when the current band changed. The new value is passed as \a band.
 
@@ -182,13 +182,13 @@ QIviAmFmTunerBackendInterface::QIviAmFmTunerBackendInterface(QObject *parent)
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::stationChanged(const QIviAmFmTunerStation &station)
+    \fn QIfAmFmTunerBackendInterface::stationChanged(const QIfAmFmTunerStation &station)
 
     Emitted when the current station changed. The new station is passed as \a station.
 */
 
 /*!
-    \fn QIviAmFmTunerBackendInterface::scanStatusChanged(bool scanRunning)
+    \fn QIfAmFmTunerBackendInterface::scanStatusChanged(bool scanRunning)
 
     Emitted when the status of the station scan has changed. This signal should be emitted
     as a result of a call to startScan() or stopScan() and informs about the current status using the \a scanRunning argument.

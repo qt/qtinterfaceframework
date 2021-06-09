@@ -1,16 +1,16 @@
-# Generated from qivisimulationengine.pro.
+# Generated from qifsimulationengine.pro.
 
 #####################################################################
-## tst_qivisimulationengine Test:
+## tst_qifsimulationengine Test:
 #####################################################################
 
-qt_internal_add_test(tst_qivisimulationengine
+qt_internal_add_test(tst_qifsimulationengine
     SOURCES
-        tst_qivisimulationengine.cpp
+        tst_qifsimulationengine.cpp
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::IviCore
-        Qt::IviCorePrivate
+        Qt::InterfaceFramework
+        Qt::InterfaceFrameworkPrivate
         Qt::Qml
 )
 
@@ -21,7 +21,7 @@ set(resource_resource_files
     "simple.qml"
 )
 
-qt_internal_add_resource(tst_qivisimulationengine "resource"
+qt_internal_add_resource(tst_qifsimulationengine "resource"
     PREFIX
         "/"
     FILES
@@ -29,6 +29,6 @@ qt_internal_add_resource(tst_qivisimulationengine "resource"
 )
 
 
-#### Keys ignored in scope 1:.:.:qivisimulationengine.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:qifsimulationengine.pro:<TRUE>:
 # QMAKE_PROJECT_NAME = "$$TARGET"
 # TEMPLATE = "app"

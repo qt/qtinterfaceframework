@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,71 +39,71 @@
 **
 ****************************************************************************/
 
-#include "qivimediaindexercontrol.h"
-#include "qivimediaindexercontrol_p.h"
+#include "qifmediaindexercontrol.h"
+#include "qifmediaindexercontrol_p.h"
 
-#include <QIviServiceObject>
+#include <QIfServiceObject>
 #include <QtDebug>
 #include <QDataStream>
 #include <QMetaEnum>
 
 QT_BEGIN_NAMESPACE
 
-QIviMediaIndexerControlPrivate::QIviMediaIndexerControlPrivate(const QString &interface, QIviMediaIndexerControl *parent)
-    : QIviAbstractFeaturePrivate(interface, parent)
+QIfMediaIndexerControlPrivate::QIfMediaIndexerControlPrivate(const QString &interface, QIfMediaIndexerControl *parent)
+    : QIfAbstractFeaturePrivate(interface, parent)
     , q_ptr(parent)
     , m_progress(0)
-    , m_state(QIviMediaIndexerControl::Idle)
+    , m_state(QIfMediaIndexerControl::Idle)
 {
 }
 
-void QIviMediaIndexerControlPrivate::clearToDefaults()
+void QIfMediaIndexerControlPrivate::clearToDefaults()
 {
     onProgressChanged(0);
-    onStateChanged(QIviMediaIndexerControl::Idle);
+    onStateChanged(QIfMediaIndexerControl::Idle);
 }
 
-void QIviMediaIndexerControlPrivate::onProgressChanged(qreal progress)
+void QIfMediaIndexerControlPrivate::onProgressChanged(qreal progress)
 {
     if (qFuzzyCompare(m_progress, progress))
         return;
 
-    Q_Q(QIviMediaIndexerControl);
+    Q_Q(QIfMediaIndexerControl);
     m_progress = progress;
     emit q->progressChanged(progress);
 }
 
-void QIviMediaIndexerControlPrivate::onStateChanged(QIviMediaIndexerControl::State state)
+void QIfMediaIndexerControlPrivate::onStateChanged(QIfMediaIndexerControl::State state)
 {
     if (m_state == state)
         return;
 
-    Q_Q(QIviMediaIndexerControl);
+    Q_Q(QIfMediaIndexerControl);
     m_state = state;
     emit q->stateChanged(state);
 }
 
-QIviMediaIndexerControlBackendInterface *QIviMediaIndexerControlPrivate::indexerBackend() const
+QIfMediaIndexerControlBackendInterface *QIfMediaIndexerControlPrivate::indexerBackend() const
 {
-    return backend<QIviMediaIndexerControlBackendInterface*>();
+    return backend<QIfMediaIndexerControlBackendInterface*>();
 }
 
 /*!
-    \class QIviMediaIndexerControl
-    \inmodule QtIviMedia
+    \class QIfMediaIndexerControl
+    \inmodule QtIfMedia
     \brief Provides an interface to control the media indexer.
 
-    The QIviMediaIndexerControl controls the media indexer. It provides a way to temporarily pause the indexing
+    The QIfMediaIndexerControl controls the media indexer. It provides a way to temporarily pause the indexing
     and resume it, as well as to inquire about the current state and progress of the indexing operation.
 
-    The QIviMediaIndexerControl expects a single backend to be available. It is recommended to use it
-    with \l {QIviAbstractFeature::}{discoveryMode} set to \l QIviAbstractFeature::AutoDiscovery.
+    The QIfMediaIndexerControl expects a single backend to be available. It is recommended to use it
+    with \l {QIfAbstractFeature::}{discoveryMode} set to \l QIfAbstractFeature::AutoDiscovery.
 */
 
 /*!
     \qmltype MediaIndexerControl
-    \instantiates QIviMediaIndexerControl
-    \inqmlmodule QtIvi.Media
+    \instantiates QIfMediaIndexerControl
+    \inqmlmodule QtInterfaceFramework.Media
     \inherits AbstractFeature
     \brief Provides an interface to control the media indexer.
 
@@ -115,7 +115,7 @@ QIviMediaIndexerControlBackendInterface *QIviMediaIndexerControlPrivate::indexer
 */
 
 /*!
-    \enum QIviMediaIndexerControl::State
+    \enum QIfMediaIndexerControl::State
     \value Idle
            The indexer is currently idle and is waiting for new files to be indexed.
     \value Active
@@ -127,14 +127,14 @@ QIviMediaIndexerControlBackendInterface *QIviMediaIndexerControlPrivate::indexer
 */
 
 /*!
-    Constructs a QIviMediaIndexerControl.
+    Constructs a QIfMediaIndexerControl.
 
-    The \a parent argument is passed on to the \l QIviAbstractFeature base class.
+    The \a parent argument is passed on to the \l QIfAbstractFeature base class.
 */
-QIviMediaIndexerControl::QIviMediaIndexerControl(QObject *parent)
-    : QIviAbstractFeature(*new QIviMediaIndexerControlPrivate(QLatin1String(QIviMediaIndexer_iid), this), parent)
+QIfMediaIndexerControl::QIfMediaIndexerControl(QObject *parent)
+    : QIfAbstractFeature(*new QIfMediaIndexerControlPrivate(QLatin1String(QIfMediaIndexer_iid), this), parent)
 {
-    qRegisterMetaType<QIviMediaIndexerControl::State>();
+    qRegisterMetaType<QIfMediaIndexerControl::State>();
 }
 
 /*!
@@ -144,14 +144,14 @@ QIviMediaIndexerControl::QIviMediaIndexerControl(QObject *parent)
     The value is between \e 0 and \e 1.
 */
 /*!
-    \property QIviMediaIndexerControl::progress
+    \property QIfMediaIndexerControl::progress
     \brief Holds the progress of the indexing operation.
 
     The value is between \e 0 and \e 1.
 */
-qreal QIviMediaIndexerControl::progress() const
+qreal QIfMediaIndexerControl::progress() const
 {
-    Q_D(const QIviMediaIndexerControl);
+    Q_D(const QIfMediaIndexerControl);
     return d->m_progress;
 }
 
@@ -170,12 +170,12 @@ qreal QIviMediaIndexerControl::progress() const
            An error has occurred during the indexing operation.
 */
 /*!
-    \property QIviMediaIndexerControl::state
+    \property QIfMediaIndexerControl::state
     \brief Holds the current state of the indexer.
 */
-QIviMediaIndexerControl::State QIviMediaIndexerControl::state() const
+QIfMediaIndexerControl::State QIfMediaIndexerControl::state() const
 {
-    Q_D(const QIviMediaIndexerControl);
+    Q_D(const QIfMediaIndexerControl);
     return d->m_state;
 }
 
@@ -188,15 +188,15 @@ QIviMediaIndexerControl::State QIviMediaIndexerControl::state() const
 */
 
 /*!
-    \fn void QIviMediaIndexerControl::pause()
+    \fn void QIfMediaIndexerControl::pause()
 
     Pauses the currently ongoing indexing operation.
 
     \sa resume() state
 */
-void QIviMediaIndexerControl::pause()
+void QIfMediaIndexerControl::pause()
 {
-    Q_IVI_BACKEND(QIviMediaIndexerControl, d->indexerBackend(), "Can't pause without a connected backend");
+    Q_IF_BACKEND(QIfMediaIndexerControl, d->indexerBackend(), "Can't pause without a connected backend");
 
     backend->pause();
 }
@@ -210,15 +210,15 @@ void QIviMediaIndexerControl::pause()
 */
 
 /*!
-    \fn void QIviMediaIndexerControl::resume()
+    \fn void QIfMediaIndexerControl::resume()
 
     Resumes from the Paused state and resumes the indexing operation.
 
     \sa pause() state
 */
-void QIviMediaIndexerControl::resume()
+void QIfMediaIndexerControl::resume()
 {
-    Q_IVI_BACKEND(QIviMediaIndexerControl, d->indexerBackend(), "Can't resume without a connected backend");
+    Q_IF_BACKEND(QIfMediaIndexerControl, d->indexerBackend(), "Can't resume without a connected backend");
 
     backend->resume();
 }
@@ -226,30 +226,30 @@ void QIviMediaIndexerControl::resume()
 /*!
     \internal
 */
-QIviMediaIndexerControl::QIviMediaIndexerControl(QIviMediaIndexerControlPrivate &dd, QObject *parent)
-    : QIviAbstractFeature(dd, parent)
+QIfMediaIndexerControl::QIfMediaIndexerControl(QIfMediaIndexerControlPrivate &dd, QObject *parent)
+    : QIfAbstractFeature(dd, parent)
 {
 }
 
 /*!
     \reimp
 */
-void QIviMediaIndexerControl::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfMediaIndexerControl::connectToServiceObject(QIfServiceObject *serviceObject)
 {
     Q_UNUSED(serviceObject);
 
-    Q_D(QIviMediaIndexerControl);
+    Q_D(QIfMediaIndexerControl);
 
-    QIviMediaIndexerControlBackendInterface *backend = d->indexerBackend();
+    QIfMediaIndexerControlBackendInterface *backend = d->indexerBackend();
     if (!backend)
         return;
 
-    QObjectPrivate::connect(backend, &QIviMediaIndexerControlBackendInterface::progressChanged,
-                            d, &QIviMediaIndexerControlPrivate::onProgressChanged);
-    QObjectPrivate::connect(backend, &QIviMediaIndexerControlBackendInterface::stateChanged,
-                            d, &QIviMediaIndexerControlPrivate::onStateChanged);
+    QObjectPrivate::connect(backend, &QIfMediaIndexerControlBackendInterface::progressChanged,
+                            d, &QIfMediaIndexerControlPrivate::onProgressChanged);
+    QObjectPrivate::connect(backend, &QIfMediaIndexerControlBackendInterface::stateChanged,
+                            d, &QIfMediaIndexerControlPrivate::onStateChanged);
 
-    QIviAbstractFeature::connectToServiceObject(serviceObject);
+    QIfAbstractFeature::connectToServiceObject(serviceObject);
 
     backend->initialize();
 }
@@ -257,29 +257,29 @@ void QIviMediaIndexerControl::connectToServiceObject(QIviServiceObject *serviceO
 /*!
     \reimp
 */
-void QIviMediaIndexerControl::clearServiceObject()
+void QIfMediaIndexerControl::clearServiceObject()
 {
-    Q_D(QIviMediaIndexerControl);
+    Q_D(QIfMediaIndexerControl);
     d->clearToDefaults();
 }
 
-QDataStream &operator <<(QDataStream &out, QIviMediaIndexerControl::State var)
+QDataStream &operator <<(QDataStream &out, QIfMediaIndexerControl::State var)
 {
     out << int(var);
     return out;
 }
 
-QDataStream &operator>>(QDataStream &in, QIviMediaIndexerControl::State &var)
+QDataStream &operator>>(QDataStream &in, QIfMediaIndexerControl::State &var)
 {
     int val;
     in >> val;
-    QMetaEnum metaEnum = QMetaEnum::fromType<QIviMediaIndexerControl::State>();
+    QMetaEnum metaEnum = QMetaEnum::fromType<QIfMediaIndexerControl::State>();
     if (metaEnum.valueToKey(val) == nullptr)
-        qWarning() << "Received an invalid enum value for type QIviMediaIndexerControl::State, value =" << val;
-    var = QIviMediaIndexerControl::State(val);
+        qWarning() << "Received an invalid enum value for type QIfMediaIndexerControl::State, value =" << val;
+    var = QIfMediaIndexerControl::State(val);
     return in;
 }
 
 QT_END_NAMESPACE
 
-#include "moc_qivimediaindexercontrol.cpp"
+#include "moc_qifmediaindexercontrol.cpp"

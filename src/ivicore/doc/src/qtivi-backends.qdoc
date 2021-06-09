@@ -28,12 +28,12 @@
 ****************************************************************************/
 
 /*!
-\page qtivi-backends.html
-\title QtIvi Backends
-\brief A list of QtIvi backends available.
+\page interfaceframework-backends.html
+\title QtInterfaceFramework Backends
+\brief A list of QtInterfaceFramework backends available.
 
 The following backends are avaialble:
 
-\annotatedlist qtivi_backend
+\annotatedlist qtif_backend
 
 */

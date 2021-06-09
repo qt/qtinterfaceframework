@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,33 +39,33 @@
 **
 ****************************************************************************/
 
-#include "qivimediadevice.h"
+#include "qifmediadevice.h"
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class QIviMediaDevice
-    \inmodule QtIviMedia
-    \brief QIviMediaDevice is the base class for all media devices.
+    \class QIfMediaDevice
+    \inmodule QtIfMedia
+    \brief QIfMediaDevice is the base class for all media devices.
 
     A Media Device is an externally or internally connected device on which media is stored.
     It can be a physical medium like a USB thumbdrive or a CD/DVD, but it could also be a DLNA Media Server running
     on a different machine e.g. on the rear seat entertainment system.
 
-    Media Devices can be retrieved by using the QIviMediaDeviceDiscoveryModel, which asks the backend
-    which devices it knows of that are currently connected to the IVI system.
+    Media Devices can be retrieved by using the QIfMediaDeviceDiscoveryModel, which asks the backend
+    which devices it knows of that are currently connected to the Interface Framework system.
 
     \section1 Supported Media Devices
     \target SupportedMediaDevices
 
-    The following media devices are supported by the QIviMedia module:
-    \annotatedlist qtivi_mediadevices
+    The following media devices are supported by the QIfMedia module:
+    \annotatedlist qtif_mediadevices
 */
 
 /*!
     \qmltype MediaDevice
-    \instantiates QIviMediaDevice
-    \inqmlmodule QtIvi.Media
+    \instantiates QIfMediaDevice
+    \inqmlmodule QtInterfaceFramework.Media
     \inherits ServiceObject
     \brief MediaDevice is the base item for all Media Devices.
 
@@ -74,13 +74,13 @@ QT_BEGIN_NAMESPACE
     on a different machine e.g. on the rear seat entertainment system.
 
     Media Devices can be retrieved by using the MediaDeviceDiscoveryModel, which asks the backend
-    which devices it knows of that are currently connected to the IVI system.
+    which devices it knows of that are currently connected to the Interface Framework system.
 
     \section1 Supported Media Devices
     \target QmlSupportedMediaDevices
 
-    The following media devices are supported by the QIviMedia module:
-    \annotatedlist qtivi_qmlmediadevices
+    The following media devices are supported by the QIfMedia module:
+    \annotatedlist qtif_qmlmediadevices
 */
 
 /*!
@@ -89,7 +89,7 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \property QIviMediaDevice::name
+    \property QIfMediaDevice::name
     The name of the media device. E.g. the CD-name or the name of the thumbdrive.
 */
 
@@ -99,24 +99,24 @@ QT_BEGIN_NAMESPACE
 */
 
 /*!
-    \property QIviMediaDevice::type
+    \property QIfMediaDevice::type
     The type of the media device. E.g. "usb", "CD". See \l SupportedMediaDevices for the supported Devices.
 */
 
-QIviMediaDevice::QIviMediaDevice(QObject *parent)
-    : QIviServiceObject(parent)
+QIfMediaDevice::QIfMediaDevice(QObject *parent)
+    : QIfServiceObject(parent)
 {
 
 }
 
 /*!
-    \class QIviMediaUsbDevice
-    \inmodule QtIviMedia
-    \ingroup qtivi_mediadevices
-    \brief QIviMediaUsbDevice represents a USB device connected to the system.
+    \class QIfMediaUsbDevice
+    \inmodule QtIfMedia
+    \ingroup qtif_mediadevices
+    \brief QIfMediaUsbDevice represents a USB device connected to the system.
 
     This device instance can be used as a serviceObject for other Features e.g. the
-    QIviSearchAndBrowseModel to browse through the content. Whether a feature is supported
+    QIfFilterAndBrowseModel to browse through the content. Whether a feature is supported
     by this device is decided by the backend implementing it.
 
     \note The type of this device is \e "usb"
@@ -124,21 +124,21 @@ QIviMediaDevice::QIviMediaDevice(QObject *parent)
 
 /*!
     \qmltype MediaUsbDevice
-    \instantiates QIviMediaUsbDevice
-    \inqmlmodule QtIvi.Media
-    \ingroup qtivi_qmlmediadevices
+    \instantiates QIfMediaUsbDevice
+    \inqmlmodule QtInterfaceFramework.Media
+    \ingroup qtif_qmlmediadevices
     \inherits MediaDevice
     \brief MediaUsbDevice represents a USB device connected to the system.
 
     This device instance can be used as a serviceObject for other Features e.g. the
-    SearchAndBrowseModel to browse through the content. Whether a feature is supported
+    FilterAndBrowseModel to browse through the content. Whether a feature is supported
     by this device is decided by the backend implementing it.
 
     \note The type of this device is \e "usb"
 */
 
-QIviMediaUsbDevice::QIviMediaUsbDevice(QObject *parent)
-    : QIviMediaDevice(parent)
+QIfMediaUsbDevice::QIfMediaUsbDevice(QObject *parent)
+    : QIfMediaDevice(parent)
 {
 
 }
@@ -148,7 +148,7 @@ QIviMediaUsbDevice::QIviMediaUsbDevice(QObject *parent)
 
     Returns \e "usb".
 */
-QString QIviMediaUsbDevice::type() const
+QString QIfMediaUsbDevice::type() const
 {
     return QLatin1String("usb");
 }
@@ -160,7 +160,7 @@ QString QIviMediaUsbDevice::type() const
 */
 
 /*!
-    \fn void QIviMediaUsbDevice::eject()
+    \fn void QIfMediaUsbDevice::eject()
 
     Ejects the USB media device and makes sure all data is written to the thumb-drive so it can safely be removed.
 */

@@ -9,5 +9,5 @@ CONFIG += ordered
 OTHER_FILES +=
 
 DISTFILES += \
-    example-ivi-addressbook.qface \
-    example-ivi-addressbook.yaml
+    example-if-addressbook.qface \
+    example-if-addressbook.yaml

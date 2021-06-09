@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QTIVIMEDIAGLOBAL_P_H
-#define QTIVIMEDIAGLOBAL_P_H
+#ifndef QTIFMEDIAGLOBAL_P_H
+#define QTIFMEDIAGLOBAL_P_H
 
 //
 //  W A R N I N G
@@ -53,7 +53,7 @@
 // We mean it.
 //
 
-#include <QtIviMedia/private/qtivimedia-config_p.h>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtIfMedia/private/qtifmedia-config_p.h>
+#include <QtIfMedia/qtifmediaglobal.h>
 
-#endif // QTIVIMEDIAGLOBAL_P_H
+#endif // QTIFMEDIAGLOBAL_P_H

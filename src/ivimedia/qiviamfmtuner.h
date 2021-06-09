@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,19 +39,19 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIAMFMTUNER_H
-#define QIVIAMFMTUNER_H
+#ifndef QIFAMFMTUNER_H
+#define QIFAMFMTUNER_H
 
-#include <QtIviCore/QIviAbstractFeature>
-#include <QtIviMedia/qtivimediaglobal.h>
+#include <QtInterfaceFramework/QIfAbstractFeature>
+#include <QtIfMedia/qtifmediaglobal.h>
 #include <QVariant>
 
 QT_BEGIN_NAMESPACE
 
-class QIviAmFmTunerStation;
-class QIviAmFmTunerPrivate;
+class QIfAmFmTunerStation;
+class QIfAmFmTunerPrivate;
 
-class Q_QTIVIMEDIA_EXPORT QIviAmFmTuner : public QIviAbstractFeature
+class Q_QTIFMEDIA_EXPORT QIfAmFmTuner : public QIfAbstractFeature
 {
     Q_OBJECT
 
@@ -59,12 +59,12 @@ class Q_QTIVIMEDIA_EXPORT QIviAmFmTuner : public QIviAbstractFeature
     Q_PROPERTY(int minimumFrequency READ minimumFrequency NOTIFY minimumFrequencyChanged)
     Q_PROPERTY(int maximumFrequency READ maximumFrequency NOTIFY maximumFrequencyChanged)
     Q_PROPERTY(int stepSize READ stepSize NOTIFY stepSizeChanged)
-    Q_PROPERTY(QIviAmFmTuner::Band band READ band WRITE setBand NOTIFY bandChanged)
-    Q_PROPERTY(QIviAmFmTunerStation station READ station NOTIFY stationChanged)
+    Q_PROPERTY(QIfAmFmTuner::Band band READ band WRITE setBand NOTIFY bandChanged)
+    Q_PROPERTY(QIfAmFmTunerStation station READ station NOTIFY stationChanged)
     Q_PROPERTY(bool scanRunning READ isScanRunning NOTIFY scanRunningChanged)
 
 public:
-    explicit QIviAmFmTuner(QObject *parent = nullptr);
+    explicit QIfAmFmTuner(QObject *parent = nullptr);
 
     enum Band {
         AMBand,
@@ -78,14 +78,14 @@ public:
     int maximumFrequency() const;
     int stepSize() const;
     Band band() const;
-    QIviAmFmTunerStation station() const;
+    QIfAmFmTunerStation station() const;
     bool isScanRunning() const;
 
-    Q_INVOKABLE void tune(const QIviAmFmTunerStation &station);
+    Q_INVOKABLE void tune(const QIfAmFmTunerStation &station);
 
 public Q_SLOTS:
     void setFrequency(int frequency);
-    void setBand(QIviAmFmTuner::Band band);
+    void setBand(QIfAmFmTuner::Band band);
     void stepUp();
     void stepDown();
     void seekUp();
@@ -98,23 +98,23 @@ Q_SIGNALS:
     void minimumFrequencyChanged(int minimumFrequency);
     void maximumFrequencyChanged(int maximumFrequency);
     void stepSizeChanged(int stepSize);
-    void bandChanged(QIviAmFmTuner::Band band);
-    void stationChanged(const QIviAmFmTunerStation &station);
+    void bandChanged(QIfAmFmTuner::Band band);
+    void stationChanged(const QIfAmFmTunerStation &station);
     void scanRunningChanged(bool scanRunning);
     void scanStarted();
     void scanStopped();
 
 protected:
-    QIviAmFmTuner(QIviAmFmTunerPrivate &dd, QObject *parent = nullptr);
+    QIfAmFmTuner(QIfAmFmTunerPrivate &dd, QObject *parent = nullptr);
 
-    virtual void connectToServiceObject(QIviServiceObject *serviceObject) override;
+    virtual void connectToServiceObject(QIfServiceObject *serviceObject) override;
     virtual void clearServiceObject() override;
 
 private:
-    Q_DECLARE_PRIVATE(QIviAmFmTuner)
+    Q_DECLARE_PRIVATE(QIfAmFmTuner)
     Q_PRIVATE_SLOT(d_func(), void onFrequencyChanged(int frequency))
-    Q_PRIVATE_SLOT(d_func(), void onBandChanged(QIviAmFmTuner::Band band))
-    Q_PRIVATE_SLOT(d_func(), void onStationChanged(const QIviAmFmTunerStation &station))
+    Q_PRIVATE_SLOT(d_func(), void onBandChanged(QIfAmFmTuner::Band band))
+    Q_PRIVATE_SLOT(d_func(), void onStationChanged(const QIfAmFmTunerStation &station))
     Q_PRIVATE_SLOT(d_func(), void onMinimumFrequencyChanged(int frequency))
     Q_PRIVATE_SLOT(d_func(), void onMaximumFrequencyChanged(int frequency))
     Q_PRIVATE_SLOT(d_func(), void onStepSizeChanged(int stepSize))
@@ -123,4 +123,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif // QIVIAMFMTUNER_H
+#endif // QIFAMFMTUNER_H

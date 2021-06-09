@@ -1,7 +1,7 @@
 # Generated from server_qtro.pro.
 
 cmake_minimum_required(VERSION 3.14)
-project(qface-ivi-remote-server LANGUAGES CXX)
+project(qface-if-remote-server LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -13,38 +13,38 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-ivi-remote-server")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-if-remote-server")
 
 find_package(Qt6 COMPONENTS Core)
 
-qt_add_executable(qface-ivi-remote-server
+qt_add_executable(qface-if-remote-server
     main.cpp
     processingservice.cpp processingservice.h
 )
 
-# IVI Generator:
-qt6_ivigenerator(qface-ivi-remote-server
-    QFACE_SOURCES ../example-ivi-remote.qface
+# Interface Framework Generator:
+qt6_ifcodegen(qface-if-remote-server
+    QFACE_SOURCES ../example-if-remote.qface
     QFACE_FORMAT server_qtro
 )
 
-set_target_properties(qface-ivi-remote-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
+set_target_properties(qface-if-remote-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
-set_target_properties(qface-ivi-remote-server PROPERTIES
+set_target_properties(qface-if-remote-server PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
 )
 
-target_compile_definitions(qface-ivi-remote-server PUBLIC
+target_compile_definitions(qface-if-remote-server PUBLIC
     QT_DEPRECATED_WARNINGS
 )
 
-target_link_libraries(qface-ivi-remote-server PUBLIC
-    QtIviRemoteExample
+target_link_libraries(qface-if-remote-server PUBLIC
+    QtIfRemoteExample
     Qt::Core
 )
 
-install(TARGETS qface-ivi-remote-server
+install(TARGETS qface-if-remote-server
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

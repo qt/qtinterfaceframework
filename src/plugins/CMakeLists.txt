@@ -1,8 +1,8 @@
 # Generated from plugins.pro.
 
-if(TARGET Qt::IviMedia)
-    add_subdirectory(ivimedia)
+if(TARGET Qt::IfMedia)
+    add_subdirectory(ifmedia)
 endif()
-if(TARGET Qt::IviVehicleFunctions)
-    add_subdirectory(ivivehiclefunctions)
+if(TARGET Qt::IfVehicleFunctions)
+    add_subdirectory(ifvehiclefunctions)
 endif()

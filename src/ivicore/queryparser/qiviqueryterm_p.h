@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIQUERYTERM_P_H
-#define QIVIQUERYTERM_P_H
+#ifndef QIFQUERYTERM_P_H
+#define QIFQUERYTERM_P_H
 
 //
 //  W A R N I N G
@@ -53,46 +53,46 @@
 // We mean it.
 //
 
-#include "qiviqueryterm.h"
+#include "qifqueryterm.h"
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviConjunctionTermPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConjunctionTermPrivate
 {
 public:
-    QIviConjunctionTermPrivate();
+    QIfConjunctionTermPrivate();
 
-    QList<QIviAbstractQueryTerm*> m_terms;
-    QIviConjunctionTerm::Conjunction m_conjunction;
+    QList<QIfAbstractQueryTerm*> m_terms;
+    QIfConjunctionTerm::Conjunction m_conjunction;
 };
 
-class Q_QTIVICORE_EXPORT QIviScopeTermPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfScopeTermPrivate
 {
 public:
-    QIviScopeTermPrivate();
+    QIfScopeTermPrivate();
 
-    QIviAbstractQueryTerm *m_term;
+    QIfAbstractQueryTerm *m_term;
     bool m_negated;
 };
 
-class Q_QTIVICORE_EXPORT QIviFilterTermPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFilterTermPrivate
 {
 public:
-    QIviFilterTermPrivate();
+    QIfFilterTermPrivate();
 
     QString operatorToString() const;
 
     QString m_property;
-    QIviFilterTerm::Operator m_operator;
+    QIfFilterTerm::Operator m_operator;
     QVariant m_value;
     bool m_negated;
 };
 
-class Q_QTIVICORE_EXPORT QIviOrderTermPrivate : public QSharedData
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfOrderTermPrivate : public QSharedData
 {
 public:
-    QIviOrderTermPrivate();
-    QIviOrderTermPrivate(const QIviOrderTermPrivate &other);
+    QIfOrderTermPrivate();
+    QIfOrderTermPrivate(const QIfOrderTermPrivate &other);
 
     bool m_ascending;
     QString m_propertyName;
@@ -100,4 +100,4 @@ public:
 
 QT_END_NAMESPACE
 
-#endif // QIVIQUERYTERM_P_H
+#endif // QIFQUERYTERM_P_H

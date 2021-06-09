@@ -9,26 +9,26 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-tutorial/chapter6-own-backend")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter6-own-backend")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_plugin(instrumentcluster_chapter6_simulation)
-set_target_properties(instrumentcluster_chapter6_simulation PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../qtivi)
+set_target_properties(instrumentcluster_chapter6_simulation PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
-# IVI Generator:
-qt6_ivigenerator(instrumentcluster_chapter6_simulation
+# Interface Framework Generator:
+qt6_ifcodegen(instrumentcluster_chapter6_simulation
     QFACE_SOURCES ../instrument-cluster.qface
     QFACE_FORMAT backend_simulator
 )
 
 target_link_libraries(instrumentcluster_chapter6_simulation PUBLIC
-    QtIviInstrumentCluster_Chapter6
+    QtIfInstrumentCluster_Chapter6
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 

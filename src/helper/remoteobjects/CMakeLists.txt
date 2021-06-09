@@ -1,7 +1,7 @@
 # Generated from remoteobjects.pro.
 
 #####################################################################
-## IviRemoteObjectsHelper Module:
+## IfRemoteObjectsHelper Module:
 #####################################################################
 
 # FIXME Find a way to enable this again
@@ -10,28 +10,28 @@
 # building the module and at that time the rep headers are not created yet
 set(QT_FEATURE_headersclean FALSE)
 
-qt_internal_add_module(IviRemoteObjectsHelper
-    CONFIG_MODULE_NAME iviremoteobjects_helper
+qt_internal_add_module(IfRemoteObjectsHelper
+    CONFIG_MODULE_NAME ifremoteobjects_helper
     STATIC
     INTERNAL_MODULE
     SOURCES
-        qivipagingmodelqtroadapter.cpp qivipagingmodelqtroadapter.h
-        qiviremoteobjectpendingresult.cpp qiviremoteobjectpendingresult.h
-        qiviremoteobjectreplicahelper.cpp qiviremoteobjectreplicahelper.h
-        qiviremoteobjectsourcehelper.h
+        qifpagingmodelqtroadapter.cpp qifpagingmodelqtroadapter.h
+        qifremoteobjectpendingresult.cpp qifremoteobjectpendingresult.h
+        qifremoteobjectreplicahelper.cpp qifremoteobjectreplicahelper.h
+        qifremoteobjectsourcehelper.h
     PUBLIC_LIBRARIES
-        Qt::IviCore
+        Qt::InterfaceFramework
         Qt::Qml
         Qt::RemoteObjects
 )
-qt6_add_repc_sources(IviRemoteObjectsHelper
-    qivipagingmodel.rep
+qt6_add_repc_sources(IfRemoteObjectsHelper
+    qifpagingmodel.rep
 )
-qt6_add_repc_replicas(IviRemoteObjectsHelper
-    qivipagingmodel.rep
+qt6_add_repc_replicas(IfRemoteObjectsHelper
+    qifpagingmodel.rep
 )
 
 #### Keys ignored in scope 1:.:.:remoteobjects.pro:<TRUE>:
 # CMAKE_MODULE_TESTS = "'-'"
-# MODULE = "iviremoteobjects_helper"
+# MODULE = "ifremoteobjects_helper"
 # targ_headers.CONFIG = "no_check_exist"

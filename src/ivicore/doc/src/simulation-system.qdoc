@@ -28,8 +28,8 @@
 ****************************************************************************/
 /*!
 \page simulation-system.html
-\title Qt IVI Simulation System
-\previouspage Qt IVI Query Language
+\title Qt Interface Framework Simulation System
+\previouspage Qt Interface Framework Query Language
 
 When you develop new APIs, a service that the API requires may not exist yet. This is because, the
 API is already designed but the service itself is still being developed. For example, with new
@@ -39,7 +39,7 @@ developemnt from the service. The \l{Dynamic Backend System} provides the archit
 this separation.
 
 Once we have this separation in place, the next step for devleoping the API is a way to simulate
-its behavior to mirror the original service. The Qt IVI Simulation System enables the following
+its behavior to mirror the original service. The Qt Interface Framework Simulation System enables the following
 use cases:
 
 \list
@@ -47,7 +47,7 @@ use cases:
     \li A flexible system to provide simulation for any C++ API
     \li A clear split between simulation data and simulation logic
     \li An override mechanism to change the simulation at runtime; useful for autotests
-    \li An integration with the IVIGenerator tools
+    \li An integration with the Qt Interface Framework Generator tools
 \endlist
 
 \section1 Architecture
@@ -58,22 +58,22 @@ follows the same schema:
 \image feature-backend.png "Relationship between the Feature and the Backend"
 
 Each backend plugin needs to implement the backend interface to provide the necessary functionality
-to the frontend. For example, the QIviClimateControlBackendInterface class for the
-QIviClimateControl frontend API.
+to the frontend. For example, the QIfClimateControlBackendInterface class for the
+QIfClimateControl frontend API.
 
 In the backend, every call from the frontend is forwarded to QML, where we can script a simulation
 behavior.
 
-\image simulation-system.png "QtIvi Simulation System"
+\image simulation-system.png "QtInterfaceFramework Simulation System"
 
 \section1 QML API
 
-The core of the Qt IVI Simulation System is the QIviSimulationEngine. This engine extends
+The core of the Qt Interface Framework Simulation System is the QIfSimulationEngine. This engine extends
 QQmlApplicationEngine and provides the extra functionality to connect C++ and QML logic together.
 
 Each backend uses its own simulation engine to separate the frontend code from the backend QML
 code. To provide a binding between QML and C++ objects, the C++ instance must be registered
-with the QIviSimulationEngine under a certain name. For each registered C++ instance, the engine
+with the QIfSimulationEngine under a certain name. For each registered C++ instance, the engine
 creates a proxy object and exposes it as a QML type. These QML types can be used to provide the
 behavior for functions or to update properties.
 
@@ -90,49 +90,49 @@ When we autogenerate classes, the actual bevhavior of \c increment() cannot be a
 because there's no way to tell the autogenerator the kind of behavior this function should have.
 To define this behavior, you need to implement a complete backend in C++.
 
-The QIviSimulationEngine makes this task more flexible, as it forwards all of the C++ calls to
+The QIfSimulationEngine makes this task more flexible, as it forwards all of the C++ calls to
 QML, allowing you to use QML to define the behavior, via scripting. Consequently, you can override
 the behavior and also script a default behavior without touching any of the C++ code.
 
-For more information on working with the simulation engine, see \l{QIviSimulationEngine}.
+For more information on working with the simulation engine, see \l{QIfSimulationEngine}.
 
 \section1 Separate Data from Logic
 
 The simulation system makes it possible to separate the simulation business logic from the
 simulation data. The simulation data is stored in JSON files, for the
-QIviSimulationEngine::loadSimulationData() function to load. Once the simulation data is loaded,
-the IviSimulator global object provides the content to all QML simulation files.
+QIfSimulationEngine::loadSimulationData() function to load. Once the simulation data is loaded,
+the IfSimulator global object provides the content to all QML simulation files.
 
-For example, you can use the IviSimulator::findData function to read the data for a specific
+For example, you can use the IfSimulator::findData function to read the data for a specific
 interface only:
 
 \qml
-property var settings : IviSimulator.findData(IviSimulator.simulationData, "QIviClimateControl")
+property var settings : IfSimulator.findData(IfSimulator.simulationData, "QIfClimateControl")
 \endqml
 
 \section2 Boundary Checks
 
-The IviSimulator global object also provides functions to make boundary checks easier. The property
+The IfSimulator global object also provides functions to make boundary checks easier. The property
 boundaries are defined in the JSON files, while the QML code stays generic, to work with multiple
 different boundary checks:
 
 \qml
 function setAirConditioningEnabled(airConditioningEnabled) {
-    if (IviSimulator.checkSettings(airConditioningEnabled, settings["airConditioningEnabled"])) {
+    if (IfSimulator.checkSettings(airConditioningEnabled, settings["airConditioningEnabled"])) {
         console.log("SIMULATION airConditioningEnabled changed to: " + airConditioningEnabled);
         backend.airConditioningEnabled = airConditioningEnabled
     } else {
-        setError("SIMULATION changing airConditioningEnabled is not possible: provided: " + airConditioningEnabled + " constraint: " + IviSimulator.constraint_string(settings["airConditioningEnabled"]));
+        setError("SIMULATION changing airConditioningEnabled is not possible: provided: " + airConditioningEnabled + " constraint: " + IfSimulator.constraint_string(settings["airConditioningEnabled"]));
     }
 }
 \endqml
 
-Use the IviSimulator::checkSettings() function to check the specified \e airConditioningEnabled
+Use the IfSimulator::checkSettings() function to check the specified \e airConditioningEnabled
 value against the boundaries defined in the JSON file. If the value is within the boundaries,
 then it is updated; otherwise an error is returned together with the constraint in a human-readable
 form.
 
-For more information about simulation and the data format, see \l{IviSimulator}.
+For more information about simulation and the data format, see \l{IfSimulator}.
 
 \section1 Override Mechanism
 
@@ -141,23 +141,23 @@ backend. For example, when implementing message boxes for error recovery, the ap
 need a way to easily trigger this exact error condition. Suppose that the simulation behavior
 provided by the backend developer, for this use case, is not be sufficient.
 
-In this case, the Qt IVI Simulation System provides an override system to load your own simulation
+In this case, the Qt Interface Framework Simulation System provides an override system to load your own simulation
 behavior file or data file, via an environment variable.
 
-Each QIviSimulationEngine can have an additional identifier to override the default behavior file
+Each QIfSimulationEngine can have an additional identifier to override the default behavior file
 or data file, using the following environment variables:
 
 \badcode
-QTIVI_SIMULATION_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
-QTIVI_SIMULATION_DATA_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
+QTIF_SIMULATION_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
+QTIF_SIMULATION_DATA_OVERRIDE=<identifier>=<file>[;<identifier>=<file>]
 \endcode
 
-\section1 Integrate with IVIGenerator
+\section1 Integrate with Qt Interface Framework Generator
 
-The simulation system is already integrated into the IVIGenerator tools and it is used
+The simulation system is already integrated into the Qt Interface Framework Generator tools and it is used
 automatically when generating code with the \l{Backend Simulator}{backend_simulator} format.
 
-The autogenerated plugin uses the QFace module name as the QIviSimulationEngine identifier, to
+The autogenerated plugin uses the QFace module name as the QIfSimulationEngine identifier, to
 allow overriding at runtime.
 
 All boundary annotations defined in \l{config_simulator_default}{config_simulator} are then

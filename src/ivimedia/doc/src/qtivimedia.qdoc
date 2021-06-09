@@ -28,56 +28,56 @@
 ****************************************************************************/
 
 /*!
-    \module QtIviMedia
-    \title Qt IVI Media C++ Classes
+    \module QtIfMedia
+    \title Qt Interface Framework Media C++ Classes
     \ingroup modules
-    \ingroup qtivi_modules
-    \qtvariable ivimedia
+    \ingroup qtif_modules
+    \qtvariable ifmedia
 
-    \brief C++ classes for the Qt IVI Media API.
+    \brief C++ classes for the Qt Interface Framework Media API.
 
-    The Qt IVI Media QML API provides media searching, browsing and playback management functions for in-vehicle infotainment systems.
+    The Qt Interface Framework Media QML API provides media searching, browsing and playback management functions for in-vehicle infotainment systems.
 
     To include the definitions of the module's classes, use the following directive:
 
     \code
-    #include <QtIviMedia>
+    #include <QtIfMedia>
     \endcode
 
     To link against the module, add this line to your qmake .pro file:
 
     \code
-    QT += ivimedia
+    QT += ifmedia
     \endcode
 */
 
 /*!
-    \qmlmodule QtIvi.Media 1.0
-    \title Qt IVI Media QML Types
+    \qmlmodule QtInterfaceFramework.Media 1.0
+    \title Qt Interface Framework Media QML Types
     \ingroup qmlmodules
-    \ingroup qtivi_qmlmodules
+    \ingroup qtif_qmlmodules
 
-    \brief QML types for the Qt IVI Media API.
+    \brief QML types for the Qt Interface Framework Media API.
 
-    The Qt IVI Media QML API provides media searching, browsing and playback management functions for in-vehicle infotainment systems.
+    The Qt Interface Framework Media QML API provides media searching, browsing and playback management functions for in-vehicle infotainment systems.
 
     To import the QML types into your application, use the following import statement
     in your .qml file:
 
     \code
-    import QtIvi.Media 1.0
+    import QtInterfaceFramework.Media 1.0
     \endcode
 
     \section1 QML Types
 */
 
 /*!
-    \group qtivimedia-examples
+    \group qtifmedia-examples
     \ingroup all-examples
-    \ingroup qtivi-examples
-    \title Qt IVI Media Examples
+    \ingroup interfaceframework-examples
+    \title Qt Interface Framework Media Examples
 
-    \brief Examples for the Qt IVI Media module
+    \brief Examples for the Qt Interface Framework Media module
 
-    These are the Qt IVI Media examples.
+    These are the Qt Interface Framework Media examples.
 */

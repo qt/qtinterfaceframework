@@ -4,7 +4,7 @@
 -- Copyright (C) 2018 Pelagicore AG
 -- Contact: https://www.qt.io/licensing/
 --
--- This file is part of the QtIvi module of the Qt Toolkit.
+-- This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 --
 -- $QT_BEGIN_LICENSE:LGPL$
 -- Commercial License Usage
@@ -49,8 +49,8 @@
 -- We mean it.
 --
 
-%parser QIviQueryParserTable
-%merged_output qiviqueryparser_p.h
+%parser QIfQueryParserTable
+%merged_output qifqueryparser_p.h
 
 %token AND_OP2 "&"
 %token AND_OP "&&"
@@ -84,8 +84,8 @@
 /:
 
 #include <QtCore>
-#include <QtIviCore/QIviAbstractQueryTerm>
-#include <QtIviCore/private/qiviqueryterm_p.h>
+#include <QtInterfaceFramework/QIfAbstractQueryTerm>
+#include <QtInterfaceFramework/private/qifqueryterm_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -114,7 +114,7 @@ void readQueryBuffer(char *buffer, unsigned int &numBytesRead,int maxBytesToRead
     *currentOffset += numBytesToRead;
 }
 
-class QIviQueryParser: protected $table
+class QIfQueryParser: protected $table
 {
 public:
     union Value {
@@ -124,10 +124,10 @@ public:
     };
 
 public:
-    QIviQueryParser();
-    ~QIviQueryParser();
+    QIfQueryParser();
+    ~QIfQueryParser();
 
-    QIviAbstractQueryTerm *parse();
+    QIfAbstractQueryTerm *parse();
 
     void setQuery(const QString& query)
     {
@@ -143,7 +143,7 @@ public:
         m_identifierList = list;
     }
 
-    QList<QIviOrderTerm> orderTerms() const
+    QList<QIfOrderTerm> orderTerms() const
     {
         return m_orderList;
     }
@@ -171,7 +171,7 @@ protected:
     void handleConjunction(bool bangOperator);
     void handleScope(bool bang);
 
-    void negateLeftMostTerm(QIviAbstractQueryTerm *term);
+    void negateLeftMostTerm(QIfAbstractQueryTerm *term);
 
     bool checkIdentifier(const QString &identifer);
 
@@ -187,13 +187,13 @@ protected:
     QVector<int> state_stack;
     QVariant yylval;
 
-    QStack<QIviAbstractQueryTerm*> m_termStack;
-    QStack<QIviFilterTerm::Operator> m_operatorStack;
-    QStack<QIviConjunctionTerm::Conjunction> m_conjunctionStack;
-    QList<QIviOrderTerm> m_orderList;
+    QStack<QIfAbstractQueryTerm*> m_termStack;
+    QStack<QIfFilterTerm::Operator> m_operatorStack;
+    QStack<QIfConjunctionTerm::Conjunction> m_conjunctionStack;
+    QList<QIfOrderTerm> m_orderList;
 };
 
-inline void QIviQueryParser::reallocateStack()
+inline void QIfQueryParser::reallocateStack()
 {
     int size = state_stack.size();
     if (size == 0)
@@ -210,7 +210,7 @@ inline void QIviQueryParser::reallocateStack()
 
 /.
 
-QIviQueryParser::QIviQueryParser():
+QIfQueryParser::QIfQueryParser():
     m_offset(0),
     column(0),
     tos(0)
@@ -222,9 +222,9 @@ QIviQueryParser::QIviQueryParser():
 #define YY_TYPEDEF_YY_SIZE_T
 typedef int yy_size_t;
 
-#include "qiviqueryparser_flex_p.h"
+#include "qifqueryparser_flex_p.h"
 
-QIviQueryParser::~QIviQueryParser()
+QIfQueryParser::~QIfQueryParser()
 {
     currentOffset = nullptr;
     currentQuery = nullptr;
@@ -236,21 +236,21 @@ QIviQueryParser::~QIviQueryParser()
     if (0)
         yyunput(0, 0);}
 
-void QIviQueryParser::calcCurrentColumn()
+void QIfQueryParser::calcCurrentColumn()
 {
     column += yyleng;
 }
 
-void QIviQueryParser::negateLeftMostTerm(QIviAbstractQueryTerm *term)
+void QIfQueryParser::negateLeftMostTerm(QIfAbstractQueryTerm *term)
 {
-    if (term->type() == QIviAbstractQueryTerm::ConjunctionTerm) {
-        QIviConjunctionTerm* conjunction = static_cast<QIviConjunctionTerm*>(term);
+    if (term->type() == QIfAbstractQueryTerm::ConjunctionTerm) {
+        QIfConjunctionTerm* conjunction = static_cast<QIfConjunctionTerm*>(term);
         negateLeftMostTerm(conjunction->terms().at(0));
-    } else if (term->type() == QIviAbstractQueryTerm::ScopeTerm) {
-        QIviScopeTerm* scopeTerm = static_cast<QIviScopeTerm*>(term);
+    } else if (term->type() == QIfAbstractQueryTerm::ScopeTerm) {
+        QIfScopeTerm* scopeTerm = static_cast<QIfScopeTerm*>(term);
         scopeTerm->d_func()->m_negated = true;
-    } else if (term->type() == QIviAbstractQueryTerm::FilterTerm) {
-        QIviFilterTerm* filterTerm = static_cast<QIviFilterTerm*>(term);
+    } else if (term->type() == QIfAbstractQueryTerm::FilterTerm) {
+        QIfFilterTerm* filterTerm = static_cast<QIfFilterTerm*>(term);
         filterTerm->d_func()->m_negated = true;
     } else {
         qCritical() << "New Term type added but not handled in" << Q_FUNC_INFO;
@@ -259,18 +259,18 @@ void QIviQueryParser::negateLeftMostTerm(QIviAbstractQueryTerm *term)
     return;
 }
 
-void QIviQueryParser::handleConjunction(bool bangOperator)
+void QIfQueryParser::handleConjunction(bool bangOperator)
 {
-    QList<QIviAbstractQueryTerm*> list;
+    QList<QIfAbstractQueryTerm*> list;
     list.prepend(m_termStack.pop());
     list.prepend(m_termStack.pop());
 
-    QIviConjunctionTerm *conjunction1 = nullptr;
-    QIviConjunctionTerm *conjunction2 = nullptr;
+    QIfConjunctionTerm *conjunction1 = nullptr;
+    QIfConjunctionTerm *conjunction2 = nullptr;
     int i = 0;
-    for (QIviAbstractQueryTerm *term : list) {
-        if (term->type() == QIviAbstractQueryTerm::ConjunctionTerm) {
-            QIviConjunctionTerm *conj = static_cast<QIviConjunctionTerm*>(term);
+    for (QIfAbstractQueryTerm *term : list) {
+        if (term->type() == QIfAbstractQueryTerm::ConjunctionTerm) {
+            QIfConjunctionTerm *conj = static_cast<QIfConjunctionTerm*>(term);
             if (conj->conjunction() == m_conjunctionStack.top()) {
                 if (i == 0)
                     conjunction1 = conj;
@@ -285,7 +285,7 @@ void QIviQueryParser::handleConjunction(bool bangOperator)
     if (bangOperator)
         negateLeftMostTerm(list.at(1));
 
-    QIviConjunctionTerm::Conjunction conjunction = m_conjunctionStack.pop();
+    QIfConjunctionTerm::Conjunction conjunction = m_conjunctionStack.pop();
     //Both are conjunctions, we can sum it together into one.
     if (conjunction1 && conjunction2) {
         conjunction1->d_func()->m_terms += conjunction2->d_func()->m_terms;
@@ -299,26 +299,26 @@ void QIviQueryParser::handleConjunction(bool bangOperator)
         conjunction2->d_func()->m_terms.prepend(list.at(0));
         m_termStack.push(conjunction2);
     } else {
-        QIviConjunctionTerm *term = new QIviConjunctionTerm();
+        QIfConjunctionTerm *term = new QIfConjunctionTerm();
         term->d_func()->m_conjunction = conjunction;
         term->d_func()->m_terms = list;
         m_termStack.push(term);
     }
 }
 
-void QIviQueryParser::handleScope(bool bangOperator)
+void QIfQueryParser::handleScope(bool bangOperator)
 {
-    QIviAbstractQueryTerm *term = m_termStack.pop();
+    QIfAbstractQueryTerm *term = m_termStack.pop();
 
     if (bangOperator)
         negateLeftMostTerm(term);
 
-    QIviScopeTerm *scopeTerm = new QIviScopeTerm();
+    QIfScopeTerm *scopeTerm = new QIfScopeTerm();
     scopeTerm->d_func()->m_term = term;
     m_termStack.push(scopeTerm);
 }
 
-bool QIviQueryParser::checkIdentifier(const QString &identifer)
+bool QIfQueryParser::checkIdentifier(const QString &identifer)
 {
     if (!m_identifierList.isEmpty() && !m_identifierList.contains(identifer)) {
         QString errorMessage = QString(QLatin1String("Got %1 but expected on of the following identifiers:\n")).arg(identifer);
@@ -335,7 +335,7 @@ bool QIviQueryParser::checkIdentifier(const QString &identifer)
     return true;
 }
 
-QIviAbstractQueryTerm *QIviQueryParser::parse()
+QIfAbstractQueryTerm *QIfQueryParser::parse()
 {
     const int INITIAL_STATE = 0;
 
@@ -414,7 +414,7 @@ order_clauses ::= order_clause order_clauses;
 order_clause ::= ASCENDING IDENTIFIER;
 /.
               case $rule_number: {
-                    QIviOrderTerm order;
+                    QIfOrderTerm order;
                     order.d->m_ascending = true;
                     order.d->m_propertyName = sym(2).toString();
                     m_orderList.append(order);
@@ -423,7 +423,7 @@ order_clause ::= ASCENDING IDENTIFIER;
 order_clause ::= DESCENDING IDENTIFIER;
 /.
               case $rule_number: {
-                    QIviOrderTerm order;
+                    QIfOrderTerm order;
                     order.d->m_ascending = false;
                     order.d->m_propertyName = sym(2).toString();
                     m_orderList.append(order);
@@ -433,7 +433,7 @@ order_clause ::= DESCENDING IDENTIFIER;
 bang_clause ::= BANG complex_clause ;
 /.
               case $rule_number: {
-                QIviAbstractQueryTerm *term = m_termStack.top();
+                QIfAbstractQueryTerm *term = m_termStack.top();
 
                 negateLeftMostTerm(term);
               } break;
@@ -471,25 +471,25 @@ parenthesed_clause ::= clause ;
 complex_operator ::= OR_OP ;
 /.
               case $rule_number: {
-                  m_conjunctionStack.push(QIviConjunctionTerm::Or);
+                  m_conjunctionStack.push(QIfConjunctionTerm::Or);
               } break;
 ./
 complex_operator ::= OR_OP2 ;
 /.
               case $rule_number: {
-                  m_conjunctionStack.push(QIviConjunctionTerm::Or);
+                  m_conjunctionStack.push(QIfConjunctionTerm::Or);
               } break;
 ./
 complex_operator ::= AND_OP ;
 /.
               case $rule_number: {
-                  m_conjunctionStack.push(QIviConjunctionTerm::And);
+                  m_conjunctionStack.push(QIfConjunctionTerm::And);
               } break;
 ./
 complex_operator ::= AND_OP2 ;
 /.
               case $rule_number: {
-                  m_conjunctionStack.push(QIviConjunctionTerm::And);
+                  m_conjunctionStack.push(QIfConjunctionTerm::And);
               } break;
 ./
 
@@ -498,7 +498,7 @@ clause ::= IDENTIFIER number_operator literal ;
               case $rule_number: {
                     if (!checkIdentifier(sym(1).toString()))
                         return 0;
-                    QIviFilterTerm *term = new QIviFilterTerm();
+                    QIfFilterTerm *term = new QIfFilterTerm();
                     term->d_func()->m_property = sym(1).toString();
                     term->d_func()->m_operator = m_operatorStack.pop();
                     term->d_func()->m_value = sym(3);
@@ -510,7 +510,7 @@ clause ::= IDENTIFIER string_operator STRING ;
               case $rule_number: {
                     if (!checkIdentifier(sym(1).toString()))
                         return 0;
-                    QIviFilterTerm *term = new QIviFilterTerm();
+                    QIfFilterTerm *term = new QIfFilterTerm();
                     term->d_func()->m_property = sym(1).toString();
                     term->d_func()->m_operator = m_operatorStack.pop();
                     term->d_func()->m_value = sym(3);
@@ -522,7 +522,7 @@ clause ::= STRING string_operator IDENTIFIER ;
               case $rule_number: {
                     if (!checkIdentifier(sym(3).toString()))
                         return 0;
-                    QIviFilterTerm *term = new QIviFilterTerm();
+                    QIfFilterTerm *term = new QIfFilterTerm();
                     term->d_func()->m_property = sym(3).toString();
                     term->d_func()->m_operator = m_operatorStack.pop();
                     term->d_func()->m_value = sym(1);
@@ -535,17 +535,17 @@ clause ::= literal number_operator IDENTIFIER ;
                     if (!checkIdentifier(sym(3).toString()))
                         return 0;
 
-                    QIviFilterTerm::Operator op = m_operatorStack.pop();
+                    QIfFilterTerm::Operator op = m_operatorStack.pop();
 
                     switch (op) {
-                        case QIviFilterTerm::GreaterEquals: op = QIviFilterTerm::LowerEquals; break;
-                        case QIviFilterTerm::GreaterThan: op = QIviFilterTerm::LowerThan; break;
-                        case QIviFilterTerm::LowerEquals: op = QIviFilterTerm::GreaterEquals; break;
-                        case QIviFilterTerm::LowerThan: op = QIviFilterTerm::GreaterThan; break;
+                        case QIfFilterTerm::GreaterEquals: op = QIfFilterTerm::LowerEquals; break;
+                        case QIfFilterTerm::GreaterThan: op = QIfFilterTerm::LowerThan; break;
+                        case QIfFilterTerm::LowerEquals: op = QIfFilterTerm::GreaterEquals; break;
+                        case QIfFilterTerm::LowerThan: op = QIfFilterTerm::GreaterThan; break;
                         default: qFatal("The Grammer was changed but not all logic was ported properly");
                     }
 
-                    QIviFilterTerm *term = new QIviFilterTerm();
+                    QIfFilterTerm *term = new QIfFilterTerm();
                     term->d_func()->m_property = sym(3).toString();
                     term->d_func()->m_operator = op;
                     term->d_func()->m_value = sym(1);
@@ -559,25 +559,25 @@ literal ::= FLOATCONSTANT ;
 number_operator ::= GE_OP ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::GreaterEquals);
+                  m_operatorStack.push(QIfFilterTerm::GreaterEquals);
               } break;
 ./
 number_operator ::= GT_OP ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::GreaterThan);
+                  m_operatorStack.push(QIfFilterTerm::GreaterThan);
               } break;
 ./
 number_operator ::= LE_OP ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::LowerEquals);
+                  m_operatorStack.push(QIfFilterTerm::LowerEquals);
               } break;
 ./
 number_operator ::= LT_OP ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::LowerThan);
+                  m_operatorStack.push(QIfFilterTerm::LowerThan);
               } break;
 ./
 number_operator ::= multi_operator ;
@@ -586,26 +586,26 @@ string_operator ::= multi_operator ;
 string_operator ::= IC_EQ_OP ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::EqualsCaseInsensitive);
+                  m_operatorStack.push(QIfFilterTerm::EqualsCaseInsensitive);
               } break;
 ./
 
 multi_operator ::= EQ_OP ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::Equals);
+                  m_operatorStack.push(QIfFilterTerm::Equals);
               } break;
 ./
 multi_operator ::= EQ_OP2 ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::Equals);
+                  m_operatorStack.push(QIfFilterTerm::Equals);
               } break;
 ./
 multi_operator ::= NE_OP ;
 /.
               case $rule_number: {
-                  m_operatorStack.push(QIviFilterTerm::Unequals);
+                  m_operatorStack.push(QIfFilterTerm::Unequals);
               } break;
 ./
 
@@ -649,7 +649,7 @@ multi_operator ::= NE_OP ;
     return 0;
 }
 
-void QIviQueryParser::setErrorString(const QString &error)
+void QIfQueryParser::setErrorString(const QString &error)
 {
     int err_col = column - yyleng;
 

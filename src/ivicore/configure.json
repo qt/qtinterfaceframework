@@ -1,13 +1,13 @@
 {
-    "module": "ivicore",
+    "module": "interfaceframework",
     "testDir": "../../config.tests",
 
     "commandline": {
         "options": {
-            "ivigenerator": { "type": "enum", "values": [ "no", "qt", "system" ] },
+            "ifcodegen": { "type": "enum", "values": [ "no", "qt", "system" ] },
             "qface": { "type": "enum", "values": [ "no", "qt", "system" ] },
             "host-tools-only": "boolean",
-            "force-ivigenerator-qtremoteobjects": "boolean"
+            "force-ifcodegen-qtremoteobjects": "boolean"
         }
     },
 
@@ -56,17 +56,17 @@
             "condition": "tests.qface",
             "output": [ "publicFeature" ]
         },
-        "system-ivigenerator": {
-            "label": "System IVI Generator",
-            "enable": "input.ivigenerator == 'system'",
-            "disable": "input.ivigenerator != 'system'",
+        "system-ifcodegen": {
+            "label": "System Interface Framework Generator",
+            "enable": "input.ifcodegen == 'system'",
+            "disable": "input.ifcodegen != 'system'",
             "output": [ "privateFeature" ]
         },
-        "ivigenerator": {
-            "label": "IVI Generator",
-            "enable": "input.ivigenerator == 'qt' || input.ivigenerator == 'system'",
-            "disable": "input.ivigenerator == 'no'",
-            "condition": "features.ivicore && features.python3 && ((features.python3-virtualenv && tests.qface-submodule) || (features.system-qface)) || features.system-ivigenerator",
+        "ifcodegen": {
+            "label": "Interface Framework Generator",
+            "enable": "input.ifcodegen == 'qt' || input.ifcodegen == 'system'",
+            "disable": "input.ifcodegen == 'no'",
+            "condition": "features.interfaceframework && features.python3 && ((features.python3-virtualenv && tests.qface-submodule) || (features.system-qface)) || features.system-ifcodegen",
             "output": [ "publicFeature" ]
         },
         "host-tools-only": {
@@ -76,11 +76,11 @@
         },
         "remoteobjects": {
             "label": "QtRemoteObjects Support",
-            "condition": "module.remoteobjects || input.force-ivigenerator-qtremoteobjects == 'yes'",
+            "condition": "module.remoteobjects || input.force-ifcodegen-qtremoteobjects == 'yes'",
             "output": [ "publicFeature" ]
         },
-        "ivicore": {
-            "label": "Qt IVI Core",
+        "interfaceframework": {
+            "label": "Qt Interface Framework Core",
             "output": [ "publicFeature" ]
         }
      },
@@ -88,9 +88,9 @@
     "report": [
         {
             "type": "error",
-            "condition": "features.ivicore && !features.ivigenerator && input.ivigenerator != 'no'",
-            "message": "Cannot build the IVI Generator because its dependencies are not satisfied.
-The IVI Generator provides tooling to generate source code out of IDL files.
+            "condition": "features.interfaceframework && !features.ifcodegen && input.ifcodegen != 'no'",
+            "message": "Cannot build the Interface Framework Generator because its dependencies are not satisfied.
+The Interface Framework Generator provides tooling to generate source code out of IDL files.
 Make sure python3 and its 'virtualenv' packages are installed.
 E.g. by running
     apt-get install python3 python3-virtualenv
@@ -108,8 +108,8 @@ E.g. by running the following command:
 
     "summary": [
         {
-            "section": "Qt IVI Core",
-            "condition": "features.ivicore",
+            "section": "Qt Interface Framework Core",
+            "condition": "features.interfaceframework",
             "entries": [
                 {
                     "section": "Python3",
@@ -121,14 +121,14 @@ E.g. by running the following command:
                         "system-qface"
                     ]
                },
-               "ivigenerator",
+               "ifcodegen",
                "remoteobjects"
             ]
         },
         {
             "type": "feature",
-            "args": "ivicore",
-            "condition": "!features.ivicore"
+            "args": "interfaceframework",
+            "condition": "!features.interfaceframework"
         }
     ]
 }

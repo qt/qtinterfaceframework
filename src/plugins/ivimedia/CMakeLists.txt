@@ -1,4 +1,4 @@
-# Generated from ivimedia.pro.
+# Generated from ifmedia.pro.
 
 if(QT_FEATURE_tuner_simulation_backend)
     add_subdirectory(tuner_simulator)

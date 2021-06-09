@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,42 +39,42 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISEARCHMODELINTERFACE_H
-#define QIVISEARCHMODELINTERFACE_H
+#ifndef QIFSEARCHMODELINTERFACE_H
+#define QIFSEARCHMODELINTERFACE_H
 
 #include <QMetaObject>
 #include <QMetaProperty>
 #include <QObject>
 #include <QSet>
 #include <QUuid>
-#include <QtIviCore/QIviAbstractQueryTerm>
-#include <QtIviCore/QtIviCoreModule>
-#include <QtIviCore/QIviPagingModelInterface>
-#include <QtIviCore/QIviSearchAndBrowseModel>
-#include <QtIviCore/QIviStandardItem>
-#include <QtIviCore/qiviqmlconversion_helper.h>
+#include <QtInterfaceFramework/QIfAbstractQueryTerm>
+#include <QtInterfaceFramework/QtInterfaceFrameworkModule>
+#include <QtInterfaceFramework/QIfPagingModelInterface>
+#include <QtInterfaceFramework/QIfFilterAndBrowseModel>
+#include <QtInterfaceFramework/QIfStandardItem>
+#include <QtInterfaceFramework/qifqmlconversion_helper.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviSearchAndBrowseModelInterfacePrivate;
+class QIfFilterAndBrowseModelInterfacePrivate;
 
-class Q_QTIVICORE_EXPORT QIviSearchAndBrowseModelInterface : public QIviPagingModelInterface
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFilterAndBrowseModelInterface : public QIfPagingModelInterface
 {
     Q_OBJECT
 
 public:
-    explicit QIviSearchAndBrowseModelInterface(QObject *parent = nullptr);
+    explicit QIfFilterAndBrowseModelInterface(QObject *parent = nullptr);
 
     virtual void setContentType(const QUuid &identifier, const QString &contentType) = 0;
-    virtual void setupFilter(const QUuid &identifier, QIviAbstractQueryTerm *term, const QList<QIviOrderTerm> &orderTerms) = 0;
+    virtual void setupFilter(const QUuid &identifier, QIfAbstractQueryTerm *term, const QList<QIfOrderTerm> &orderTerms) = 0;
 
-    virtual QIviPendingReply<QString> goBack(const QUuid &identifier) = 0;
-    virtual QIviPendingReply<QString> goForward(const QUuid &identifier, int index) = 0;
+    virtual QIfPendingReply<QString> goBack(const QUuid &identifier) = 0;
+    virtual QIfPendingReply<QString> goForward(const QUuid &identifier, int index) = 0;
 
-    virtual QIviPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &item) = 0;
-    virtual QIviPendingReply<void> remove(const QUuid &identifier, int index) = 0;
-    virtual QIviPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) = 0;
-    virtual QIviPendingReply<int> indexOf(const QUuid &identifier, const QVariant &item) = 0;
+    virtual QIfPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &item) = 0;
+    virtual QIfPendingReply<void> remove(const QUuid &identifier, int index) = 0;
+    virtual QIfPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) = 0;
+    virtual QIfPendingReply<int> indexOf(const QUuid &identifier, const QVariant &item) = 0;
 
 Q_SIGNALS:
     void canGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start);
@@ -92,11 +92,11 @@ protected:
     QSet<QString> identifiersFromItem(const QMetaObject &object);
 
 private:
-    Q_DECLARE_PRIVATE(QIviSearchAndBrowseModelInterface)
+    Q_DECLARE_PRIVATE(QIfFilterAndBrowseModelInterface)
 };
 
-#define QIviSearchAndBrowseModel_iid "org.qt-project.qtivi.SearchAndBrowseModel/1.0"
+#define QIfFilterAndBrowseModel_iid "org.qt-project.interfaceframework.FilterAndBrowseModel/1.0"
 
 QT_END_NAMESPACE
 
-#endif // QIVISEARCHMODELINTERFACE_H
+#endif // QIFSEARCHMODELINTERFACE_H

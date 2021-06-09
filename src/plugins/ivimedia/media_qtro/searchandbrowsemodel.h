@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -41,13 +41,13 @@
 #ifndef SEARCHANDBROWSEMODEL_H
 #define SEARCHANDBROWSEMODEL_H
 
-#include <QtIviCore/QIviSearchAndBrowseModelInterface>
-#include <QtIviMedia/QIviPlayableItem>
-#include <QIviRemoteObjectReplicaHelper>
+#include <QtInterfaceFramework/QIfFilterAndBrowseModelInterface>
+#include <QtIfMedia/QIfPlayableItem>
+#include <QIfRemoteObjectReplicaHelper>
 #include <QRemoteObjectNode>
-#include "rep_qivisearchandbrowsemodel_replica.h"
+#include "rep_qiffilterandbrowsemodel_replica.h"
 
-class SearchAndBrowseItem : public QIviPlayableItem
+class SearchAndBrowseItem : public QIfPlayableItem
 {
     Q_GADGET
 
@@ -67,11 +67,11 @@ Q_DECLARE_METATYPE(SearchAndBrowseItem)
 QDataStream &operator<<(QDataStream &stream, const SearchAndBrowseItem &obj);
 QDataStream &operator>>(QDataStream &stream, SearchAndBrowseItem &obj);
 
-class SearchAndBrowseModel : public QIviSearchAndBrowseModelInterface
+class FilterAndBrowseModel : public QIfFilterAndBrowseModelInterface
 {
     Q_OBJECT
 public:
-    explicit SearchAndBrowseModel(QObject *parent = nullptr, const QString& remoteObjectsLookupName = QStringLiteral("QIviSearchAndBrowseModel"));
+    explicit FilterAndBrowseModel(QObject *parent = nullptr, const QString& remoteObjectsLookupName = QStringLiteral("QIfFilterAndBrowseModel"));
 
     void initialize() override;
     void registerInstance(const QUuid &identifier) override;
@@ -79,13 +79,13 @@ public:
     void fetchData(const QUuid &identifier, int start, int count) override;
 
     void setContentType(const QUuid &identifier, const QString &contentType) override;
-    void setupFilter(const QUuid &identifier, QIviAbstractQueryTerm *term, const QList<QIviOrderTerm> &orderTerms) override;
-    QIviPendingReply<QString> goBack(const QUuid &identifier) override;
-    QIviPendingReply<QString> goForward(const QUuid &identifier, int index) override;
-    QIviPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &item) override;
-    QIviPendingReply<void> remove(const QUuid &identifier, int index) override;
-    QIviPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) override;
-    QIviPendingReply<int> indexOf(const QUuid &identifier, const QVariant &item) override;
+    void setupFilter(const QUuid &identifier, QIfAbstractQueryTerm *term, const QList<QIfOrderTerm> &orderTerms) override;
+    QIfPendingReply<QString> goBack(const QUuid &identifier) override;
+    QIfPendingReply<QString> goForward(const QUuid &identifier, int index) override;
+    QIfPendingReply<void> insert(const QUuid &identifier, int index, const QVariant &item) override;
+    QIfPendingReply<void> remove(const QUuid &identifier, int index) override;
+    QIfPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) override;
+    QIfPendingReply<int> indexOf(const QUuid &identifier, const QVariant &item) override;
 
 protected:
     void setupConnections();
@@ -93,10 +93,10 @@ protected:
 
 private:
     QString m_remoteObjectsLookupName;
-    QSharedPointer<QIviSearchAndBrowseModelReplica> m_replica;
+    QSharedPointer<QIfFilterAndBrowseModelReplica> m_replica;
     QRemoteObjectNode *m_node;
     QUrl m_url;
-    QIviRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectReplicaHelper *m_helper;
 };
 
 #endif // SEARCHANDBROWSEMODEL_H

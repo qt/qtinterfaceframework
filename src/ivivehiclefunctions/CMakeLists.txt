@@ -1,40 +1,40 @@
-# Generated from ivivehiclefunctions.pro.
+# Generated from ifvehiclefunctions.pro.
 
 # special case begin
 #####################################################################
-## IviVehicleFunctions Module:
+## IfVehicleFunctions Module:
 #####################################################################
 
-qt_ivigenerator_generate(
-    QFACE_SOURCES ivivehiclefunctions.qface
+qt_ifcodegen_generate(
+    QFACE_SOURCES ifvehiclefunctions.qface
     QFACE_FORMAT frontend
-    QFACE_MODULE_NAME QtIviVehicleFunctions
-    QFACE_HEADERS_OUTPUT_DIR ${QT_BUILD_DIR}/src/ivivehiclefunctions
+    QFACE_MODULE_NAME QtIfVehicleFunctions
+    QFACE_HEADERS_OUTPUT_DIR ${QT_BUILD_DIR}/src/ifvehiclefunctions
 )
-make_directory(${QT_BUILD_DIR}/src/ivivehiclefunctions)
+make_directory(${QT_BUILD_DIR}/src/ifvehiclefunctions)
 
-qt_internal_add_module(IviVehicleFunctions
+qt_internal_add_module(IfVehicleFunctions
     LIBRARIES
         Qt::CorePrivate
-        Qt::IviCorePrivate
+        Qt::InterfaceFrameworkPrivate
     PUBLIC_LIBRARIES
         Qt::Core
-        Qt::IviCore
+        Qt::InterfaceFramework
     PRIVATE_MODULE_INTERFACE
         Qt::CorePrivate
-        Qt::IviCorePrivate
+        Qt::InterfaceFrameworkPrivate
 )
 
-qt_ivigenerator_include(IviVehicleFunctions
-    QFACE_SOURCES ivivehiclefunctions.qface
+qt_ifcodegen_include(IfVehicleFunctions
+    QFACE_SOURCES ifvehiclefunctions.qface
 )
 
 # special case end
 
-#### Keys ignored in scope 1:.:.:ivivehiclefunctions.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:ifvehiclefunctions.pro:<TRUE>:
 # CMAKE_MODULE_TESTS = "'-'"
 # OTHER_FILES = "$$PWD/doc/*.qdocconf" "$$PWD/doc/src/*.qdoc" "$$PWD/doc/snippets/*" "$$PWD/doc/images/*"
-# QT_FOR_CONFIG = "ivicore"
+# QT_FOR_CONFIG = "interfaceframework"
 
 ## Scopes:
 #####################################################################

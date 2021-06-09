@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIABSTRACTFEATURE_P_H
-#define QIVIABSTRACTFEATURE_P_H
+#ifndef QIFABSTRACTFEATURE_P_H
+#define QIFABSTRACTFEATURE_P_H
 
 //
 //  W A R N I N G
@@ -54,66 +54,66 @@
 //
 
 #include <private/qobject_p.h>
-#include <private/qtiviglobal_p.h>
+#include <private/qtifglobal_p.h>
 
-#include "qiviabstractfeature.h"
-#include "qivifeatureinterface.h"
-#include "qiviserviceobject.h"
+#include "qifabstractfeature.h"
+#include "qiffeatureinterface.h"
+#include "qifserviceobject.h"
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviPropertyOverrider {
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPropertyOverrider {
 public:
-    QIviPropertyOverrider() = default;
-    virtual ~QIviPropertyOverrider() = default;
+    QIfPropertyOverrider() = default;
+    virtual ~QIfPropertyOverrider() = default;
 
     virtual QVariant property(int propertyIndex) const = 0;
     virtual void setProperty(int propertyIndex, const QVariant &value) = 0;
     virtual bool isOverridden(int propertyIndex) const = 0;
 private:
-    Q_DISABLE_COPY(QIviPropertyOverrider)
+    Q_DISABLE_COPY(QIfPropertyOverrider)
 };
 
-class Q_QTIVICORE_EXPORT QIviAbstractFeaturePrivate : public QObjectPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeaturePrivate : public QObjectPrivate
 {
 public:
-    QIviAbstractFeaturePrivate(const QString &interface, QIviAbstractFeature *parent);
+    QIfAbstractFeaturePrivate(const QString &interface, QIfAbstractFeature *parent);
 
-    static QIviAbstractFeaturePrivate *get(QIviAbstractFeature *q);
+    static QIfAbstractFeaturePrivate *get(QIfAbstractFeature *q);
 
     virtual void initialize();
     virtual bool notify(const QByteArray &propertyName, const QVariant &value);
 
-    QIviFeatureInterface *backend() const;
+    QIfFeatureInterface *backend() const;
     template <class T> T backend() const
     {
-        Q_Q(const QIviAbstractFeature);
+        Q_Q(const QIfAbstractFeature);
         if (m_serviceObject)
             return m_serviceObject->interfaceInstance<T>(q->interfaceName());
         return nullptr;
     }
 
-    void setDiscoveryResult(QIviAbstractFeature::DiscoveryResult discoveryResult);
+    void setDiscoveryResult(QIfAbstractFeature::DiscoveryResult discoveryResult);
     void onInitializationDone();
 
-    QIviAbstractFeature * const q_ptr;
-    Q_DECLARE_PUBLIC(QIviAbstractFeature)
-    Q_DISABLE_COPY(QIviAbstractFeaturePrivate)
+    QIfAbstractFeature * const q_ptr;
+    Q_DECLARE_PUBLIC(QIfAbstractFeature)
+    Q_DISABLE_COPY(QIfAbstractFeaturePrivate)
 
     QString m_interface;
-    QIviServiceObject *m_serviceObject;
-    QIviAbstractFeature::DiscoveryMode m_discoveryMode;
-    QIviAbstractFeature::DiscoveryResult m_discoveryResult;
+    QIfServiceObject *m_serviceObject;
+    QIfAbstractFeature::DiscoveryMode m_discoveryMode;
+    QIfAbstractFeature::DiscoveryResult m_discoveryResult;
     QString m_errorMessage;
-    QIviAbstractFeature::Error m_error;
+    QIfAbstractFeature::Error m_error;
     bool m_qmlCreation;
     bool m_isInitialized;
     bool m_isConnected;
 
     bool m_supportsPropertyOverriding;
-    QIviPropertyOverrider *m_propertyOverride;
+    QIfPropertyOverrider *m_propertyOverride;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIABSTRACTFEATURE_P_H
+#endif // QIFABSTRACTFEATURE_P_H

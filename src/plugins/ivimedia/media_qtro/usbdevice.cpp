@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -38,14 +38,14 @@
 **
 ****************************************************************************/
 
-#include "searchandbrowsemodel.h"
+#include "filterandbrowsemodel.h"
 #include "usbdevice.h"
 
 USBDevice::USBDevice(const QString &name, QObject *parent)
-    : QIviMediaUsbDevice(parent)
+    : QIfMediaUsbDevice(parent)
     , m_name(name)
 {
-    m_browseModel = new SearchAndBrowseModel(this, QStringLiteral("QIviSearchAndBrowseModel_") + name);
+    m_browseModel = new FilterAndBrowseModel(this, QStringLiteral("QIfFilterAndBrowseModel_") + name);
 }
 
 QString USBDevice::name() const
@@ -61,13 +61,13 @@ void USBDevice::eject()
 QStringList USBDevice::interfaces() const
 {
     QStringList list;
-    list << QStringLiteral(QIviSearchAndBrowseModel_iid);
+    list << QStringLiteral(QIfFilterAndBrowseModel_iid);
     return list;
 }
 
-QIviFeatureInterface *USBDevice::interfaceInstance(const QString &interface) const
+QIfFeatureInterface *USBDevice::interfaceInstance(const QString &interface) const
 {
-    if (interface == QStringLiteral(QIviSearchAndBrowseModel_iid))
+    if (interface == QStringLiteral(QIfFilterAndBrowseModel_iid))
         return m_browseModel;
 
     return nullptr;

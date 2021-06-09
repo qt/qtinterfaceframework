@@ -5,7 +5,7 @@
 ## Copyright (C) 2019 Luxoft Sweden AB
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -39,7 +39,7 @@
 {% endfor %}
 
 #include "core.h"
-#include <QtIviCore/QIviSimulationEngine>
+#include <QtInterfaceFramework/QIfSimulationEngine>
 
 int main(int argc, char *argv[])
 {
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    auto simulationEngine = new QIviSimulationEngine(QStringLiteral("{{module.name|lower}}"));
+    auto simulationEngine = new QIfSimulationEngine(QStringLiteral("{{module.name|lower}}"));
 
 {% for interface in module.interfaces %}
     auto {{interface|lowerfirst}}Instance = new {{interface}}Backend(simulationEngine);

@@ -5,7 +5,7 @@
 ## Copyright (C) 2019 Luxoft Sweden AB
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set module_qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 
 import QtQuick.tooling 1.2
@@ -36,16 +36,16 @@ import QtQuick.tooling 1.2
 // This file describes the plugin-supplied types contained in the library.
 // It is used for QML tooling purposes only.
 //
-// This file was auto-generated with the QtIvi ivigenerator
+// This file was auto-generated with the QtInterfaceFramework ifcodegen
 
 Module {
-    dependencies: ["QtIvi 1.0"]
+    dependencies: ["QtInterfaceFramework 1.0"]
 {% for interface in module.interfaces %}
 {% set class = '{0}'.format(interface) %}
 {% if interface.tags.config.zoned %}
-{%   set base_class = 'QIviAbstractZonedFeature' %}
+{%   set base_class = 'QIfAbstractZonedFeature' %}
 {% else %}
-{%   set base_class = 'QIviAbstractFeature' %}
+{%   set base_class = 'QIfAbstractFeature' %}
 {% endif %}
     Component {
         name: "{{class}}"
@@ -78,7 +78,7 @@ Module {
         Method {
             name: "{{operation}}"
 {# TODO: Once QtCreator can also provide the completion for return types we need to reevaluate this #}
-            type: "QIviPendingReply<{{operation|return_type}}>"
+            type: "QIfPendingReply<{{operation|return_type}}>"
 {%     for parameter in operation.parameters %}
             Parameter { name: "{{parameter}}"; type: "{{parameter|qml_info_type}}" }
 {%     endfor %}

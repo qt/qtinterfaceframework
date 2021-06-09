@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -45,16 +45,16 @@
 #include "database_helper.h"
 
 #include "mediaplayerbackend.h"
-#include "qivimediaplayerqtroadapter.h"
+#include "qifmediaplayerqtroadapter.h"
 
 #include "mediaindexerbackend.h"
-#include "qivimediaindexerqtroadapter.h"
+#include "qifmediaindexerqtroadapter.h"
 
 #include "mediadiscoverybackend.h"
-#include "qivimediadiscoveryqtroadapter.h"
+#include "qifmediadiscoveryqtroadapter.h"
 
 #include "searchandbrowsebackend.h"
-#include "qivisearchandbrowsemodelqtroadapter.h"
+#include "qiffilterandbrowsemodelqtroadapter.h"
 #include "usbdevice.h"
 
 #include "core.h"
@@ -107,10 +107,10 @@ int main(int argc, char *argv[])
     searchAndBrowseBackend->initialize();
 
     //Start Remoting the backends
-    Core::instance()->host()->enableRemoting<QIviMediaIndexerAddressWrapper>(new QIviMediaIndexerQtRoAdapter(indexerBackend));
-    Core::instance()->host()->enableRemoting<QIviMediaPlayerAddressWrapper>(new QIviMediaPlayerQtRoAdapter(playerBackend));
-    Core::instance()->host()->enableRemoting<QIviMediaDiscoveryModelAddressWrapper>(new QIviMediaDiscoveryModelQtRoAdapter(discoveryBackend));
-    Core::instance()->host()->enableRemoting<QIviSearchAndBrowseModelAddressWrapper>(new QIviSearchAndBrowseModelQtRoAdapter(searchAndBrowseBackend));
+    Core::instance()->host()->enableRemoting<QIfMediaIndexerAddressWrapper>(new QIfMediaIndexerQtRoAdapter(indexerBackend));
+    Core::instance()->host()->enableRemoting<QIfMediaPlayerAddressWrapper>(new QIfMediaPlayerQtRoAdapter(playerBackend));
+    Core::instance()->host()->enableRemoting<QIfMediaDiscoveryModelAddressWrapper>(new QIfMediaDiscoveryModelQtRoAdapter(discoveryBackend));
+    Core::instance()->host()->enableRemoting<QIfFilterAndBrowseModelAddressWrapper>(new QIfFilterAndBrowseModelQtRoAdapter(searchAndBrowseBackend));
 
     return app.exec();
 }

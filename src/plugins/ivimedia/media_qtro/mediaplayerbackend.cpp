@@ -4,7 +4,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,20 +39,20 @@
 ****************************************************************************/
 
 #include "mediaplayerbackend.h"
-#include "qiviqmlconversion_helper.h"
+#include "qifqmlconversion_helper.h"
 
 #include <QTimer>
 #include <QSettings>
 
-Q_LOGGING_CATEGORY(qLcROQIviMediaPlayer, "qtivi.media.qivimediaplayerbackend.remoteobjects", QtDebugMsg)
+Q_LOGGING_CATEGORY(qLcROQIfMediaPlayer, "interfaceframework.media.qifmediaplayerbackend.remoteobjects", QtDebugMsg)
 
 MediaPlayerBackend::MediaPlayerBackend(QObject *parent)
-    : QIviMediaPlayerBackendInterface(parent)
+    : QIfMediaPlayerBackendInterface(parent)
     , m_node(nullptr)
-    , m_helper(new QIviRemoteObjectReplicaHelper(qLcROQIviMediaPlayer(), this))
+    , m_helper(new QIfRemoteObjectReplicaHelper(qLcROQIfMediaPlayer(), this))
 {
-    qRegisterMetaType<QIviPlayableItem>();
-    qRegisterMetaType<QIviAudioTrackItem>();
+    qRegisterMetaType<QIfPlayableItem>();
+    qRegisterMetaType<QIfAudioTrackItem>();
 }
 
 void MediaPlayerBackend::initialize()
@@ -75,7 +75,7 @@ void MediaPlayerBackend::initialize()
 
     QTimer::singleShot(3000, this, [this](){
         if (!m_replica->isInitialized())
-            qCCritical(qLcROQIviMediaPlayer) << "QtIviMedia.QIviMediaPlayer wasn't initialized within the timeout period. Please make sure the server is running.";
+            qCCritical(qLcROQIfMediaPlayer) << "QtIfMedia.QIfMediaPlayer wasn't initialized within the timeout period. Please make sure the server is running.";
     });
 }
 
@@ -109,7 +109,7 @@ void MediaPlayerBackend::previous()
     m_replica->previous();
 }
 
-void MediaPlayerBackend::setPlayMode(QIviMediaPlayer::PlayMode playMode)
+void MediaPlayerBackend::setPlayMode(QIfMediaPlayer::PlayMode playMode)
 {
     m_replica->pushPlayMode(playMode);
 }
@@ -162,25 +162,25 @@ bool MediaPlayerBackend::connectToNode()
             configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
         } else {
             configPath = QStringLiteral("./server.conf");
-            qCInfo(qLcROQIviMediaPlayer) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
+            qCInfo(qLcROQIfMediaPlayer) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
         }
     }
 
     QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("qtivimedia"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtivimedia")).toString());
+    settings.beginGroup(QStringLiteral("qtifmedia"));
+    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtifmedia")).toString());
     if (m_url != registryUrl) {
         m_url = registryUrl;
         // QtRO doesn't allow to change the URL without destroying the Node
         delete m_node;
         m_node = new QRemoteObjectNode(this);
         if (!m_node->connectToNode(m_url)) {
-            qCCritical(qLcROQIviMediaPlayer) << "Connection to" << m_url << "failed!";
+            qCCritical(qLcROQIfMediaPlayer) << "Connection to" << m_url << "failed!";
             m_replica.reset();
             return false;
         }
-        qCInfo(qLcROQIviMediaPlayer) << "Connecting to" << m_url;
-        m_replica.reset(m_node->acquire<QIviMediaPlayerReplica>(QStringLiteral("QtIviMedia.QIviMediaPlayer")));
+        qCInfo(qLcROQIfMediaPlayer) << "Connecting to" << m_url;
+        m_replica.reset(m_node->acquire<QIfMediaPlayerReplica>(QStringLiteral("QtIfMedia.QIfMediaPlayer")));
         setupConnections();
     }
     return true;
@@ -188,23 +188,23 @@ bool MediaPlayerBackend::connectToNode()
 
 void MediaPlayerBackend::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIviRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIviRemoteObjectReplicaHelper::errorChanged, this, &QIviFeatureInterface::errorChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
 
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIviRemoteObjectReplicaHelper::onReplicaStateChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIviFeatureInterface::initializationDone);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::playModeChanged, this, &MediaPlayerBackend::playModeChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::playStateChanged, this, &MediaPlayerBackend::playStateChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::positionChanged, this, &MediaPlayerBackend::positionChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::durationChanged, this, &MediaPlayerBackend::durationChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::currentTrackChanged, this, [this] (const QVariant &currentTrack) {
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::playModeChanged, this, &MediaPlayerBackend::playModeChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::playStateChanged, this, &MediaPlayerBackend::playStateChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::positionChanged, this, &MediaPlayerBackend::positionChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::durationChanged, this, &MediaPlayerBackend::durationChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::currentTrackChanged, this, [this] (const QVariant &currentTrack) {
         emit currentTrackChanged(m_helper->fromRemoteObjectVariant(currentTrack));
     });
-    connect(m_replica.data(), &QIviMediaPlayerReplica::currentIndexChanged, this, &MediaPlayerBackend::currentIndexChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::volumeChanged, this, &MediaPlayerBackend::volumeChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::mutedChanged, this, &MediaPlayerBackend::mutedChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::countChanged, this, &MediaPlayerBackend::countChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::canReportCountChanged, this, &MediaPlayerBackend::canReportCountChanged);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::dataFetched, this, &MediaPlayerBackend::dataFetched);
-    connect(m_replica.data(), &QIviMediaPlayerReplica::dataChanged, this, &MediaPlayerBackend::dataChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::currentIndexChanged, this, &MediaPlayerBackend::currentIndexChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::volumeChanged, this, &MediaPlayerBackend::volumeChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::mutedChanged, this, &MediaPlayerBackend::mutedChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::countChanged, this, &MediaPlayerBackend::countChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::canReportCountChanged, this, &MediaPlayerBackend::canReportCountChanged);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::dataFetched, this, &MediaPlayerBackend::dataFetched);
+    connect(m_replica.data(), &QIfMediaPlayerReplica::dataChanged, this, &MediaPlayerBackend::dataChanged);
 }

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -43,7 +43,7 @@
 #ifndef MEDIAPLUGIN_H
 #define MEDIAPLUGIN_H
 
-#include <QtIviCore/QIviServiceInterface>
+#include <QtInterfaceFramework/QIfServiceInterface>
 
 #include <QSqlDatabase>
 
@@ -53,17 +53,17 @@ class MediaDiscoveryBackend;
 class MediaIndexerBackend;
 class AmFmTunerBackend;
 
-class MediaSimulatorPlugin : public QObject, QIviServiceInterface
+class MediaSimulatorPlugin : public QObject, QIfServiceInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID QIviServiceInterface_iid FILE "media_simulator.json")
-    Q_INTERFACES(QIviServiceInterface)
+    Q_PLUGIN_METADATA(IID QIfServiceInterface_iid FILE "media_simulator.json")
+    Q_INTERFACES(QIfServiceInterface)
 
 public:
     explicit MediaSimulatorPlugin(QObject *parent = nullptr);
 
     QStringList interfaces() const override;
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override;
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
 private:
 

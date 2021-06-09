@@ -9,26 +9,26 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
   set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/ivicore/qface-ivi-addressbook/qtivi/")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-if-addressbook/interfaceframework/")
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS IviCore)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_plugin(addressbook_backend_simulator)
-set_target_properties(addressbook_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../qtivi)
+set_target_properties(addressbook_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
-# IVI Generator:
-qt6_ivigenerator(addressbook_backend_simulator
-    QFACE_SOURCES ../example-ivi-addressbook.qface
+# Interface Framework Generator:
+qt6_ifcodegen(addressbook_backend_simulator
+    QFACE_SOURCES ../example-if-addressbook.qface
     QFACE_FORMAT backend_simulator
 )
 
 target_link_libraries(addressbook_backend_simulator PUBLIC
-    QtIviAdressBookExample
+    QtIfAdressBookExample
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
 )
 
 

@@ -3,7 +3,7 @@
 ** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -37,27 +37,27 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPAGINGMODELQTROADAPTER_H
-#define QIVIPAGINGMODELQTROADAPTER_H
+#ifndef QIFPAGINGMODELQTROADAPTER_H
+#define QIFPAGINGMODELQTROADAPTER_H
 
-#include <QtIviCore/QIviPagingModelInterface>
-#include "rep_qivipagingmodel_source.h"
+#include <QtInterfaceFramework/QIfPagingModelInterface>
+#include "rep_qifpagingmodel_source.h"
 
 QT_BEGIN_NAMESPACE
 
 template <class ObjectType>
-struct QIviPagingModelAddressWrapper: public QIviPagingModelSourceAPI<ObjectType> {
-    QIviPagingModelAddressWrapper(ObjectType *object)
-        : QIviPagingModelSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
+struct QIfPagingModelAddressWrapper: public QIfPagingModelSourceAPI<ObjectType> {
+    QIfPagingModelAddressWrapper(ObjectType *object)
+        : QIfPagingModelSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
     {}
 };
 
-class QIviPagingModelQtRoAdapter : public QIviPagingModelSource
+class QIfPagingModelQtRoAdapter : public QIfPagingModelSource
 {
     Q_OBJECT
 
 public:
-    explicit QIviPagingModelQtRoAdapter(const QString &remoteObjectsLookupName, QIviPagingModelInterface *parent = nullptr);
+    explicit QIfPagingModelQtRoAdapter(const QString &remoteObjectsLookupName, QIfPagingModelInterface *parent = nullptr);
 
     QString remoteObjectsLookupName() const;
 
@@ -68,9 +68,9 @@ public Q_SLOTS:
 
 private:
     QString m_remoteObjectsLookupName;
-    QIviPagingModelInterface *m_backend;
+    QIfPagingModelInterface *m_backend;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIPAGINGMODELQTROADAPTER_H
+#endif // QIFPAGINGMODELQTROADAPTER_H

@@ -3,7 +3,7 @@
 ** Copyright (C) 2021 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -37,35 +37,35 @@
 **
 ****************************************************************************/
 
-#include "qivipagingmodelqtroadapter.h"
+#include "qifpagingmodelqtroadapter.h"
 
-QIviPagingModelQtRoAdapter::QIviPagingModelQtRoAdapter(const QString &remoteObjectsLookupName, QIviPagingModelInterface *parent)
-    : QIviPagingModelSource(parent)
+QIfPagingModelQtRoAdapter::QIfPagingModelQtRoAdapter(const QString &remoteObjectsLookupName, QIfPagingModelInterface *parent)
+    : QIfPagingModelSource(parent)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
     , m_backend(parent)
 {
-    connect(m_backend, &QIviPagingModelInterface::supportedCapabilitiesChanged, this, &QIviPagingModelQtRoAdapter::supportedCapabilitiesChanged);
-    connect(m_backend, &QIviPagingModelInterface::countChanged, this, &QIviPagingModelQtRoAdapter::countChanged);
-    connect(m_backend, &QIviPagingModelInterface::dataFetched, this, &QIviPagingModelQtRoAdapter::dataFetched);
-    connect(m_backend, &QIviPagingModelInterface::dataChanged, this, &QIviPagingModelQtRoAdapter::dataChanged);
+    connect(m_backend, &QIfPagingModelInterface::supportedCapabilitiesChanged, this, &QIfPagingModelQtRoAdapter::supportedCapabilitiesChanged);
+    connect(m_backend, &QIfPagingModelInterface::countChanged, this, &QIfPagingModelQtRoAdapter::countChanged);
+    connect(m_backend, &QIfPagingModelInterface::dataFetched, this, &QIfPagingModelQtRoAdapter::dataFetched);
+    connect(m_backend, &QIfPagingModelInterface::dataChanged, this, &QIfPagingModelQtRoAdapter::dataChanged);
 }
 
-QString QIviPagingModelQtRoAdapter::remoteObjectsLookupName() const
+QString QIfPagingModelQtRoAdapter::remoteObjectsLookupName() const
 {
     return m_remoteObjectsLookupName;
 }
 
-void QIviPagingModelQtRoAdapter::registerInstance(const QUuid &identifier)
+void QIfPagingModelQtRoAdapter::registerInstance(const QUuid &identifier)
 {
     m_backend->registerInstance(identifier);
 }
 
-void QIviPagingModelQtRoAdapter::unregisterInstance(const QUuid &identifier)
+void QIfPagingModelQtRoAdapter::unregisterInstance(const QUuid &identifier)
 {
     m_backend->unregisterInstance(identifier);
 }
 
-void QIviPagingModelQtRoAdapter::fetchData(const QUuid &identifier, int start, int count)
+void QIfPagingModelQtRoAdapter::fetchData(const QUuid &identifier, int start, int count)
 {
     m_backend->fetchData(identifier, start, count);
 }

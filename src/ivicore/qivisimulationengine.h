@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,42 +39,42 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISIMULATIONENGINE_H
-#define QIVISIMULATIONENGINE_H
+#ifndef QIFSIMULATIONENGINE_H
+#define QIFSIMULATIONENGINE_H
 
-#include <QtIviCore/QtIviCoreModule>
+#include <QtInterfaceFramework/QtInterfaceFrameworkModule>
 
 #include <QtQml/QQmlApplicationEngine>
-#include <QtIviCore/qivisimulationproxy.h>
-#include <QtIviCore/qiviqmlconversion_helper.h>
+#include <QtInterfaceFramework/qifsimulationproxy.h>
+#include <QtInterfaceFramework/qifqmlconversion_helper.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviSimulationGlobalObject;
+class QIfSimulationGlobalObject;
 
-class Q_QTIVICORE_EXPORT QIviSimulationEngine : public QQmlApplicationEngine
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfSimulationEngine : public QQmlApplicationEngine
 {
     Q_OBJECT
 public:
-    explicit QIviSimulationEngine(QObject *parent = nullptr);
-    explicit QIviSimulationEngine(const QString &identifier, QObject *parent = nullptr);
+    explicit QIfSimulationEngine(QObject *parent = nullptr);
+    explicit QIfSimulationEngine(const QString &identifier, QObject *parent = nullptr);
 
     template <typename T> void registerSimulationInstance(T* instance, const char *uri, int versionMajor, int versionMinor, const char *qmlName)
     {
-        qtivi_private::QIviSimulationProxy<T>::buildMetaObject();
+        qtif_private::QIfSimulationProxy<T>::buildMetaObject();
         //pass engine here to check that it's only used in this engine
-        qtivi_private::QIviSimulationProxy<T>::registerInstance(this, instance);
-        qmlRegisterType< qtivi_private::QIviSimulationProxy<T> >(uri, versionMajor, versionMinor, qmlName);
+        qtif_private::QIfSimulationProxy<T>::registerInstance(this, instance);
+        qmlRegisterType< qtif_private::QIfSimulationProxy<T> >(uri, versionMajor, versionMinor, qmlName);
     }
 
     void loadSimulationData(const QString &dataFile);
     void loadSimulation(const QUrl &file);
 
 private:
-    QIviSimulationGlobalObject *m_globalObject;
+    QIfSimulationGlobalObject *m_globalObject;
     QString m_identifier;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVISIMULATIONENGINE_H
+#endif // QIFSIMULATIONENGINE_H

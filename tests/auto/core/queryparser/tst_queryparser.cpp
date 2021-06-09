@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ** Commercial License Usage
@@ -31,7 +31,7 @@
 #include <QtTest/QtTest>
 #include <QtCore/QString>
 
-#include "QtIviCore/private/qiviqueryparser_p.h"
+#include "QtInterfaceFramework/private/qifqueryparser_p.h"
 
 // sadly this has to be a define for QVERIFY2() to work
 #define CHECK_ERRORSTRING(_actual_errstr, _expected_errstr) do { \
@@ -142,10 +142,10 @@ void TestQueryParser::validQueries()
     if (representationQuery.isEmpty())
         representationQuery = query;
 
-    QIviQueryParser parser;
+    QIfQueryParser parser;
     parser.setQuery(query);
 
-    QIviAbstractQueryTerm *term = parser.parse();
+    QIfAbstractQueryTerm *term = parser.parse();
     QVERIFY2(term, qPrintable(parser.lastError()));
 
 //    if ()
@@ -162,7 +162,7 @@ void TestQueryParser::validQueries()
     in << term;
 
     QDataStream out(buffer);
-    QIviAbstractQueryTerm *newTerm = nullptr;
+    QIfAbstractQueryTerm *newTerm = nullptr;
     out >> &newTerm;
 
     QCOMPARE(term->toString(), newTerm->toString());
@@ -191,7 +191,7 @@ void TestQueryParser::invalidQueries()
 {
     QFETCH(QString, query);
 
-    QIviQueryParser parser;
+    QIfQueryParser parser;
     parser.setQuery(query);
 
     QVERIFY(!parser.parse());
@@ -214,13 +214,13 @@ void TestQueryParser::identifierList()
     QFETCH(QString, query);
     QFETCH(QString, identifier);
 
-    QIviQueryParser parser;
+    QIfQueryParser parser;
     parser.setQuery(query);
 
     QSet<QString> set;
     set.insert(identifier);
     parser.setAllowedIdentifiers(set);
-    QIviAbstractQueryTerm *term = parser.parse();
+    QIfAbstractQueryTerm *term = parser.parse();
     QVERIFY2(term, qPrintable(parser.lastError()));
     delete term;
 }
@@ -241,7 +241,7 @@ void TestQueryParser::invalidIdentifierList()
     QFETCH(QString, query);
     QFETCH(QString, identifier);
 
-    QIviQueryParser parser;
+    QIfQueryParser parser;
     parser.setQuery(query);
 
     QSet<QString> set;

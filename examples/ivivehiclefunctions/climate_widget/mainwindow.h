@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -54,7 +54,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtIviVehicleFunctions/QIviClimateControl>
+#include <QtIfVehicleFunctions/QIfClimateControl>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -75,14 +75,14 @@ public:
 
 private slots:
     void setAirRecirculationEnabled(bool enabled);
-    void onAirRecirculationModeChanged(QtIviVehicleFunctions::RecirculationMode mode);
-    void setupFlowDirectionRadioButtons(QtIviVehicleFunctions::AirflowDirections direction);
+    void onAirRecirculationModeChanged(QtIfVehicleFunctions::RecirculationMode mode);
+    void setupFlowDirectionRadioButtons(QtIfVehicleFunctions::AirflowDirections direction);
     void onFlowDirectionButtonToggled(QAbstractButton *button, bool checked);
 private:
 
     Ui::MainWindow *ui;
     QButtonGroup *m_buttonGroup;
-    QIviClimateControl *m_climateControl;
+    QIfClimateControl *m_climateControl;
 };
 
 #endif // MAINWINDOW_H

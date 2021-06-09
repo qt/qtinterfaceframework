@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:BSD$
 ** Commercial License Usage
@@ -54,13 +54,13 @@ import QtQuick 2.7
 import QtQuick.Controls 2.3
 import QtQuick.Window 2.2
 //! [0]
-import Example.IVI.RemoteModule 1.0
+import Example.If.RemoteModule 1.0
 
 Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("QtIVI Remote example")
+    title: qsTr("QtIF Remote example")
 
     UiProcessingService {
         id: processingService

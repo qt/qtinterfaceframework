@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,24 +39,24 @@
 **
 ****************************************************************************/
 
-#include "qiviserviceobject.h"
+#include "qifserviceobject.h"
 
 #include <QUuid>
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \class QIviServiceObject
-    \inmodule QtIviCore
+    \class QIfServiceObject
+    \inmodule QtInterfaceFramework
     \brief Provides the connection point to a Backend Service.
 
-    QIviServiceObject provides you with a list of interfaces that the Backend implements.
+    QIfServiceObject provides you with a list of interfaces that the Backend implements.
 
     Use interfaceInstance() to obtain a QObject that implements this interface. The
     interface returned may contain signals that a Feature implementing this interface
     needs to be connected to.
 
-    \sa QIviAbstractFeature
+    \sa QIfAbstractFeature
 */
 
 
@@ -65,14 +65,14 @@ QT_BEGIN_NAMESPACE
 
     \a parent is passed on to \l QObject.
 */
-QIviServiceObject::QIviServiceObject(QObject *parent)
+QIfServiceObject::QIfServiceObject(QObject *parent)
     : QObject(parent)
     , m_id(QUuid::createUuid().toString())
 {
 }
 
 /*!
-    \property QIviServiceObject::id
+    \property QIfServiceObject::id
     \brief A unique ID for the service object instance.
 
     Each service object has a unique ID. When subclassing, the id()
@@ -85,7 +85,7 @@ QIviServiceObject::QIviServiceObject(QObject *parent)
 
     By default, QUuid::createUuid() is used.
 */
-QString QIviServiceObject::id() const
+QString QIfServiceObject::id() const
 {
     return m_id;
 }

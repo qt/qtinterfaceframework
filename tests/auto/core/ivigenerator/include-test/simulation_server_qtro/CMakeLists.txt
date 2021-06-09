@@ -7,8 +7,8 @@ set(CMAKE_AUTOUIC ON)
 
 qt_add_executable(include-test-simulation-server)
 
-# IVI Generator:
-qt6_ivigenerator(include-test-simulation-server
+# Interface Framework Generator:
+qt6_ifcodegen(include-test-simulation-server
     QFACE_SOURCES ../../include-test.qface
     QFACE_FORMAT server_qtro_simulator
     QFACE_IMPORT_PATH ../../qface\ imports
@@ -19,7 +19,7 @@ target_link_libraries(include-test-simulation-server PUBLIC
     include_test_frontend
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
     Qt::Qml
     Qt::Quick
 )

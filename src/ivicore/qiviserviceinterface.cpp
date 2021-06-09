@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,50 +39,50 @@
 **
 ****************************************************************************/
 
-#include "qiviserviceinterface.h"
+#include "qifserviceinterface.h"
 
 QT_BEGIN_NAMESPACE
 
 /*!
-    \fn template <class T> T qivi_interface_cast(QObject *backend)
-    \relates QIviServiceInterface
+    \fn template <class T> T qif_interface_cast(QObject *backend)
+    \relates QIfServiceInterface
 
     Casts the given \a backend to the interface type T.
 
-    When implementing a QtIvi Feature, use this function as it shows a meaningful error message
+    When implementing a QtInterfaceFramework Feature, use this function as it shows a meaningful error message
     when the cast fails.
 
     \sa qobject_cast
 */
 
 /*!
-    \class QIviServiceInterface
-    \inmodule QtIviCore
+    \class QIfServiceInterface
+    \inmodule QtInterfaceFramework
     \brief Defines the interface for services.
 
-    The QIviServiceInterface class defines the interface for services registered with QIviServiceManager.
+    The QIfServiceInterface class defines the interface for services registered with QIfServiceManager.
 
-    Typically, service objects inherit the concrete class, QIviServiceObject, instead of using
-    QIviServiceInterface directly.
+    Typically, service objects inherit the concrete class, QIfServiceObject, instead of using
+    QIfServiceInterface directly.
 
-    \sa QIviServiceObject
+    \sa QIfServiceObject
 */
 
 /*!
-    Destructs the QIviServiceInterface instance.
+    Destructs the QIfServiceInterface instance.
 */
-QIviServiceInterface::~QIviServiceInterface()
+QIfServiceInterface::~QIfServiceInterface()
 {
 }
 
 /*!
-    \fn QStringList QIviServiceInterface::interfaces() const
+    \fn QStringList QIfServiceInterface::interfaces() const
 
     Returns a list of service interface names supported by the service object instance.
 */
 
 /*!
-    \fn QObject* QIviServiceInterface::interfaceInstance(const QString& interfaceName) const
+    \fn QObject* QIfServiceInterface::interfaceInstance(const QString& interfaceName) const
 
     Returns an object implementing the service interface requested through \a interfaceName.
 */

@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -42,8 +42,8 @@
 #ifndef MEDIAINDEXERBACKEND_H
 #define MEDIAINDEXERBACKEND_H
 
-#include <QtIviMedia/QIviMediaIndexerControl>
-#include <QtIviMedia/QIviMediaIndexerControlBackendInterface>
+#include <QtIfMedia/QIfMediaIndexerControl>
+#include <QtIfMedia/QIfMediaIndexerControlBackendInterface>
 
 #include <QFutureWatcher>
 #include <QQueue>
@@ -51,7 +51,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QThreadPool);
 
-class MediaIndexerBackend : public QIviMediaIndexerControlBackendInterface
+class MediaIndexerBackend : public QIfMediaIndexerControlBackendInterface
 {
     Q_OBJECT
 
@@ -64,7 +64,7 @@ public:
     void resume() override;
 
     qreal progress() const;
-    QIviMediaIndexerControl::State state() const;
+    QIfMediaIndexerControl::State state() const;
 
 signals:
     void indexingDone();
@@ -81,7 +81,7 @@ private slots:
 private:
     void scanNext();
     void setProgress(qreal progress);
-    void setState(QIviMediaIndexerControl::State state);
+    void setState(QIfMediaIndexerControl::State state);
 
     QSqlDatabase m_db;
     struct ScanData {
@@ -95,7 +95,7 @@ private:
     };
 
     qreal m_progress;
-    QIviMediaIndexerControl::State m_state;
+    QIfMediaIndexerControl::State m_state;
     QQueue<ScanData> m_folderQueue;
     QFutureWatcher<bool> m_watcher;
     QThreadPool *m_threadPool;

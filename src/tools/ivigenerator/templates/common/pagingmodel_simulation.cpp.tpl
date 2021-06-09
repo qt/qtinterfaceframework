@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -38,9 +38,9 @@
 {% endif %}
 
 {{class}}::{{class}}(QObject* parent)
-    : QIviPagingModelInterface(parent)
+    : QIfPagingModelInterface(parent)
 {
-    qRegisterMetaType<QIviPagingModelInterface*>();
+    qRegisterMetaType<QIfPagingModelInterface*>();
 }
 
 /*! \internal */
@@ -55,26 +55,26 @@ int {{class}}::count() const
 
 void {{class}}::initialize()
 {
-    QIVI_SIMULATION_TRY_CALL({{class}}, "initialize", void);
+    QIF_SIMULATION_TRY_CALL({{class}}, "initialize", void);
 
     Q_EMIT initializationDone();
 }
 
 void {{class}}::registerInstance(const QUuid &identifier)
 {
-    QIVI_SIMULATION_TRY_CALL({{class}}, "registerInstance", void, identifier);
+    QIF_SIMULATION_TRY_CALL({{class}}, "registerInstance", void, identifier);
 
     Q_EMIT countChanged(identifier, m_list.count());
 }
 
 void {{class}}::unregisterInstance(const QUuid &identifier)
 {
-    QIVI_SIMULATION_TRY_CALL({{class}}, "unregisterInstance", void, identifier);
+    QIF_SIMULATION_TRY_CALL({{class}}, "unregisterInstance", void, identifier);
 }
 
 void {{class}}::fetchData(const QUuid &identifier, int start, int count)
 {
-    QIVI_SIMULATION_TRY_CALL({{class}}, "fetchData", void, identifier, start, count);
+    QIF_SIMULATION_TRY_CALL({{class}}, "fetchData", void, identifier, start, count);
 
     QVariantList list;
     int max = qMin(start + count, m_list.count());

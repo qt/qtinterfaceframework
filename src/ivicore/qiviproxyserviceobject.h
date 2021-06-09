@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,35 +39,35 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIPROXYSERVICEOBJECT_H
-#define QIVIPROXYSERVICEOBJECT_H
+#ifndef QIFPROXYSERVICEOBJECT_H
+#define QIFPROXYSERVICEOBJECT_H
 
-#include <QtIviCore/QIviServiceObject>
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/QIfServiceObject>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 class ServiceManagerTest;
 
 QT_BEGIN_NAMESPACE
 
-class QIviProxyServiceObjectPrivate;
+class QIfProxyServiceObjectPrivate;
 
-class Q_QTIVICORE_EXPORT QIviProxyServiceObject : public QIviServiceObject
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfProxyServiceObject : public QIfServiceObject
 {
     Q_OBJECT
 
 public:
-    explicit QIviProxyServiceObject(QIviServiceInterface *interface);
-    explicit QIviProxyServiceObject(const QHash<QString, QIviFeatureInterface*> &interfaceMap);
+    explicit QIfProxyServiceObject(QIfServiceInterface *interface);
+    explicit QIfProxyServiceObject(const QHash<QString, QIfFeatureInterface*> &interfaceMap);
 
     QStringList interfaces() const override;
-    QIviFeatureInterface *interfaceInstance(const QString &interface) const override;
+    QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
 private:
-    Q_DECLARE_PRIVATE(QIviProxyServiceObject)
-    QIviProxyServiceObjectPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(QIfProxyServiceObject)
+    QIfProxyServiceObjectPrivate *d_ptr;
     friend class ::ServiceManagerTest;
 };
 
 QT_END_NAMESPACE
 
-#endif // QIVIPROXYSERVICEOBJECT_H
+#endif // QIFPROXYSERVICEOBJECT_H

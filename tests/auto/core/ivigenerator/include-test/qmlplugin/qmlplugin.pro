@@ -1,5 +1,5 @@
 TEMPLATE = lib
-QT = ivicore
+QT = interfaceframework
 CONFIG += c++11 plugin
 
 INCLUDEPATH += $$OUT_PWD/../frontend $$OUT_PWD/../common
@@ -9,4 +9,4 @@ QFACE_FORMAT = qmlplugin
 QFACE_SOURCES = ../../include-test.qface
 QFACE_IMPORT_PATH += "../../qface imports"
 
-load(ivigenerator)
+load(ifcodegen)

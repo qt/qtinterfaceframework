@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -40,10 +40,10 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtIvi.VehicleFunctions.simulation 1.0
+import QtInterfaceFramework.VehicleFunctions.simulation 1.0
 
 QtObject {
-    property var settings : IviSimulator.findData(IviSimulator.simulationData, "QIviWindowControl")
+    property var settings : IfSimulator.findData(IfSimulator.simulationData, "QIfWindowControl")
     property bool defaultInitialized: false
     property var windowTimers : []
     property var blindTimers : []
@@ -108,12 +108,12 @@ QtObject {
         }
     }
 
-    property var backend : QIviWindowControlBackend {
+    property var backend : QIfWindowControlBackend {
 
         function initialize() {
-            print("QIviConcreteWindowControlSimulation INITIALIZE")
+            print("QIfConcreteWindowControlSimulation INITIALIZE")
             if (!defaultInitialized) {
-                IviSimulator.initializeDefault(settings, backend)
+                IfSimulator.initializeDefault(settings, backend)
                 defaultInitialized = true
             }
             Base.initialize()
@@ -139,8 +139,8 @@ QtObject {
 
 
         function setHeaterMode(heaterMode, zone) {
-            if ("heaterMode" in settings && !IviSimulator.checkSettings(settings["heaterMode"], heaterMode, zone)) {
-                console.error("SIMULATION changing heaterMode is not possible: provided: " + heaterMode + "constraint: " + IviSimulator.constraint(settings["heaterMode"]));
+            if ("heaterMode" in settings && !IfSimulator.checkSettings(settings["heaterMode"], heaterMode, zone)) {
+                console.error("SIMULATION changing heaterMode is not possible: provided: " + heaterMode + "constraint: " + IfSimulator.constraint(settings["heaterMode"]));
                 return;
             }
 
@@ -154,8 +154,8 @@ QtObject {
         }
 
         function setHeater(heater, zone) {
-            if ("heater" in settings && !IviSimulator.checkSettings(settings["heater"], heater, zone)) {
-                console.error("SIMULATION changing heater is not possible: provided: " + heater + "constraint: " + IviSimulator.constraint(settings["heater"]));
+            if ("heater" in settings && !IfSimulator.checkSettings(settings["heater"], heater, zone)) {
+                console.error("SIMULATION changing heater is not possible: provided: " + heater + "constraint: " + IfSimulator.constraint(settings["heater"]));
                 return;
             }
 
@@ -169,8 +169,8 @@ QtObject {
         }
 
         function setState(state, zone) {
-            if ("state" in settings && !IviSimulator.checkSettings(settings["state"], state, zone)) {
-                console.error("SIMULATION changing state is not possible: provided: " + state + "constraint: " + IviSimulator.constraint(settings["state"]));
+            if ("state" in settings && !IfSimulator.checkSettings(settings["state"], state, zone)) {
+                console.error("SIMULATION changing state is not possible: provided: " + state + "constraint: " + IfSimulator.constraint(settings["state"]));
                 return;
             }
 
@@ -191,8 +191,8 @@ QtObject {
         }
 
         function setBlindState(blindState, zone) {
-            if ("blindState" in settings && !IviSimulator.checkSettings(settings["blindState"], blindState, zone)) {
-                console.error("SIMULATION changing blindState is not possible: provided: " + blindState + "constraint: " + IviSimulator.constraint(settings["blindState"]));
+            if ("blindState" in settings && !IfSimulator.checkSettings(settings["blindState"], blindState, zone)) {
+                console.error("SIMULATION changing blindState is not possible: provided: " + blindState + "constraint: " + IfSimulator.constraint(settings["blindState"]));
                 return;
             }
 

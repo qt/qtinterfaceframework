@@ -7,8 +7,8 @@ set(CMAKE_AUTOUIC ON)
 
 qt_add_executable(org-example-echo-noanno-simu-server)
 
-# IVI Generator:
-qt6_ivigenerator(org-example-echo-noanno-simu-server
+# Interface Framework Generator:
+qt6_ifcodegen(org-example-echo-noanno-simu-server
     QFACE_SOURCES ../../org.example.echo.noannotation.qface
     QFACE_FORMAT server_qtro_simulator
 )
@@ -17,7 +17,7 @@ target_link_libraries(org-example-echo-noanno-simu-server PUBLIC
     echo_noanno_frontend
     Qt::Core
     Qt::Gui
-    Qt::IviCore
+    Qt::InterfaceFramework
     Qt::Qml
     Qt::Quick
 )

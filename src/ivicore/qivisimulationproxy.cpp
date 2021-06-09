@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#include "qivisimulationproxy.h"
-#include "qivisimulationengine.h"
+#include "qifsimulationproxy.h"
+#include "qifsimulationengine.h"
 
 #include <QDebug>
 #include <QQmlInfo>
@@ -48,11 +48,11 @@
 #include <private/qmetaobjectbuilder_p.h>
 
 QT_BEGIN_NAMESPACE
-Q_LOGGING_CATEGORY(qLcIviSimulationEngine, "qt.ivi.simulationengine");
+Q_LOGGING_CATEGORY(qLcIfSimulationEngine, "qt.if.simulationengine");
 
-namespace qtivi_private {
+namespace qtif_private {
 
-QIviSimulationProxyBase::QIviSimulationProxyBase(QMetaObject *staticMetaObject, QObject *instance, const QHash<int, int> &methodMap, QObject *parent)
+QIfSimulationProxyBase::QIfSimulationProxyBase(QMetaObject *staticMetaObject, QObject *instance, const QHash<int, int> &methodMap, QObject *parent)
     : QObject(parent)
     , m_noSimulationEngine(false)
     , m_instance(instance)
@@ -61,7 +61,7 @@ QIviSimulationProxyBase::QIviSimulationProxyBase(QMetaObject *staticMetaObject, 
 {
 }
 
-const QMetaObject *QIviSimulationProxyBase::metaObject() const
+const QMetaObject *QIfSimulationProxyBase::metaObject() const
 {
     // Copied from moc_ class code
     // A dynamicMetaObject is created when the type is used from QML and new functions/properties
@@ -69,14 +69,14 @@ const QMetaObject *QIviSimulationProxyBase::metaObject() const
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : m_staticMetaObject;
 }
 
-void *QIviSimulationProxyBase::qt_metacast(const char *classname)
+void *QIfSimulationProxyBase::qt_metacast(const char *classname)
 {
     if (!classname)
         return nullptr;
     return m_instance->qt_metacast(classname);
 }
 
-int QIviSimulationProxyBase::qt_metacall(QMetaObject::Call call, int methodId, void **a)
+int QIfSimulationProxyBase::qt_metacall(QMetaObject::Call call, int methodId, void **a)
 {
     if (m_noSimulationEngine)
         return -1;
@@ -107,19 +107,19 @@ int QIviSimulationProxyBase::qt_metacall(QMetaObject::Call call, int methodId, v
     return m_instance->qt_metacall(call, methodId, a);
 }
 
-void QIviSimulationProxyBase::classBegin()
+void QIfSimulationProxyBase::classBegin()
 {
 }
 
-void QIviSimulationProxyBase::componentComplete()
+void QIfSimulationProxyBase::componentComplete()
 {
     setProperty("Base", QVariant::fromValue(m_instance));
 }
 
-QMetaObject QIviSimulationProxyBase::buildObject(const QMetaObject *metaObject, QHash<int, int> &methodMap, QIviSimulationProxyBase::StaticMetacallFunction metaCallFunction)
+QMetaObject QIfSimulationProxyBase::buildObject(const QMetaObject *metaObject, QHash<int, int> &methodMap, QIfSimulationProxyBase::StaticMetacallFunction metaCallFunction)
 {
     QMetaObjectBuilder builder;
-    const QString name = QString(QStringLiteral("QIviSimulationProxy_%1")).arg(QLatin1String(metaObject->className()));
+    const QString name = QString(QStringLiteral("QIfSimulationProxy_%1")).arg(QLatin1String(metaObject->className()));
     builder.setClassName(qPrintable(name));
     builder.setSuperClass(&QObject::staticMetaObject);
     builder.setStaticMetacallFunction(metaCallFunction);
@@ -143,23 +143,23 @@ QMetaObject QIviSimulationProxyBase::buildObject(const QMetaObject *metaObject, 
         methodMap.insert(i, i);
 
     //Add all signals
-    qCDebug(qLcIviSimulationEngine) << "Signal Mapping: Original -> Proxy";
+    qCDebug(qLcIfSimulationEngine) << "Signal Mapping: Original -> Proxy";
     for (int index = methodOffset; index < mo->methodCount(); ++index) {
         QMetaMethod mm = mo->method(index);
         if (mm.methodType() == QMetaMethod::Signal) {
             auto mb = builder.addMethod(mm);
-            qCDebug(qLcIviSimulationEngine) << index << "->" << methodOffset + mb.index();
+            qCDebug(qLcIfSimulationEngine) << index << "->" << methodOffset + mb.index();
             methodMap.insert(index, methodOffset + mb.index());
         }
     }
 
     //Add all other methods
-    qCDebug(qLcIviSimulationEngine) << "Method Mapping: Original -> Proxy";
+    qCDebug(qLcIfSimulationEngine) << "Method Mapping: Original -> Proxy";
     for (int index = methodOffset; index < mo->methodCount(); ++index) {
         QMetaMethod mm = mo->method(index);
         if (mm.methodType() != QMetaMethod::Signal) {
             auto mb = builder.addMethod(mm);
-            qCDebug(qLcIviSimulationEngine) << index << "->" << methodOffset + mb.index();
+            qCDebug(qLcIfSimulationEngine) << index << "->" << methodOffset + mb.index();
             methodMap.insert(index, methodOffset + mb.index());
         }
     }
@@ -173,37 +173,37 @@ QMetaObject QIviSimulationProxyBase::buildObject(const QMetaObject *metaObject, 
     builder.addProperty("Base", "QObject *");
 
     //Debugging output
-    if (qLcIviSimulationEngine().isDebugEnabled()) {
-        qCDebug(qLcIviSimulationEngine) << "Original Object:";
+    if (qLcIfSimulationEngine().isDebugEnabled()) {
+        qCDebug(qLcIfSimulationEngine) << "Original Object:";
         for (int i=0; i < mo->methodCount(); i++) {
             QMetaMethod method = mo->method(i);
-            qCDebug(qLcIviSimulationEngine) << "method: " << method.methodIndex() << method.methodSignature();
+            qCDebug(qLcIfSimulationEngine) << "method: " << method.methodIndex() << method.methodSignature();
         }
         for (int i=0; i < mo->propertyCount(); i++) {
             QMetaProperty prop = mo->property(i);
-            qCDebug(qLcIviSimulationEngine) << "property:" << prop.propertyIndex() << prop.name();
+            qCDebug(qLcIfSimulationEngine) << "property:" << prop.propertyIndex() << prop.name();
             QMetaMethod method = prop.notifySignal();
-            qCDebug(qLcIviSimulationEngine) << "signal: " << method.methodIndex() << method.methodSignature();
+            qCDebug(qLcIfSimulationEngine) << "signal: " << method.methodIndex() << method.methodSignature();
         }
 
-        qCDebug(qLcIviSimulationEngine) << "Proxy Object:";
+        qCDebug(qLcIfSimulationEngine) << "Proxy Object:";
         mo = builder.toMetaObject();
         for (int i=0; i < mo->methodCount(); i++) {
             QMetaMethod method = mo->method(i);
-            qCDebug(qLcIviSimulationEngine) << "method: " << method.methodIndex() << method.methodSignature();
+            qCDebug(qLcIfSimulationEngine) << "method: " << method.methodIndex() << method.methodSignature();
         }
         for (int i=0; i < mo->propertyCount(); i++) {
             QMetaProperty prop = mo->property(i);
-            qCDebug(qLcIviSimulationEngine) << "property:" << prop.propertyIndex() << prop.name();
+            qCDebug(qLcIfSimulationEngine) << "property:" << prop.propertyIndex() << prop.name();
             QMetaMethod method = prop.notifySignal();
-            qCDebug(qLcIviSimulationEngine) << "signal: " << method.methodIndex() << method.methodSignature();
+            qCDebug(qLcIfSimulationEngine) << "signal: " << method.methodIndex() << method.methodSignature();
         }
     }
 
     return *builder.toMetaObject();
 }
 
-bool QIviSimulationProxyBase::callQmlMethod(const char *function, QGenericReturnArgument ret, QGenericArgument val0, QGenericArgument val1, QGenericArgument val2, QGenericArgument val3, QGenericArgument val4, QGenericArgument val5, QGenericArgument val6, QGenericArgument val7, QGenericArgument val8, QGenericArgument val9)
+bool QIfSimulationProxyBase::callQmlMethod(const char *function, QGenericReturnArgument ret, QGenericArgument val0, QGenericArgument val1, QGenericArgument val2, QGenericArgument val3, QGenericArgument val4, QGenericArgument val5, QGenericArgument val6, QGenericArgument val7, QGenericArgument val8, QGenericArgument val9)
 {
     if (m_noSimulationEngine)
         return false;
@@ -235,10 +235,10 @@ bool QIviSimulationProxyBase::callQmlMethod(const char *function, QGenericReturn
     return functionExecuted;
 }
 
-void QIviSimulationProxyBase::setup(QIviSimulationEngine *engine)
+void QIfSimulationProxyBase::setup(QIfSimulationEngine *engine)
 {
     if (engine != qmlEngine(this)) {
-        qmlWarning(this) << "QIviSimulationProxy can only be used in the same Engine it is registered in";
+        qmlWarning(this) << "QIfSimulationProxy can only be used in the same Engine it is registered in";
         m_noSimulationEngine = true;
         return;
     }

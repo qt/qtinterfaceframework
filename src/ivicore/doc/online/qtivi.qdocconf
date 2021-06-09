@@ -5,6 +5,6 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults-online.qdocconf)
 
 # override defaults for Qt module documentation
 HTML.nosubdirs = "false"
-HTML.outputsubdir = "qtivi"
+HTML.outputsubdir = "interfaceframework"
 
-include(../qtivi-project.qdocconf)
+include(../interfaceframework-project.qdocconf)

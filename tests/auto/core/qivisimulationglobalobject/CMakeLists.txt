@@ -1,19 +1,19 @@
-# Generated from qivisimulationglobalobject.pro.
+# Generated from qifsimulationglobalobject.pro.
 
 #####################################################################
-## tst_qivisimulationglobalobject Test:
+## tst_qifsimulationglobalobject Test:
 #####################################################################
 
-qt_internal_add_test(tst_qivisimulationglobalobject
+qt_internal_add_test(tst_qifsimulationglobalobject
     SOURCES
-        tst_qivisimulationglobalobject.cpp
+        tst_qifsimulationglobalobject.cpp
     PUBLIC_LIBRARIES
         Qt::Gui
-        Qt::IviCore
-        Qt::IviCorePrivate
+        Qt::InterfaceFramework
+        Qt::InterfaceFrameworkPrivate
         Qt::Qml
 )
 
-#### Keys ignored in scope 1:.:.:qivisimulationglobalobject.pro:<TRUE>:
+#### Keys ignored in scope 1:.:.:qifsimulationglobalobject.pro:<TRUE>:
 # QMAKE_PROJECT_NAME = "$$TARGET"
 # TEMPLATE = "app"

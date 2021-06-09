@@ -1,23 +1,23 @@
-@config: { qml_name: "QtIvi.VehicleFunctions" }
+@config: { qml_name: "QtInterfaceFramework.VehicleFunctions" }
 @config_simulator: { simulationFile: "qrc:/simulation/simulation.qml" }
-@designer: { categoryName: "QtIvi - Vehicle Functions" }
-module QtIviVehicleFunctions 1.0;
+@designer: { categoryName: "QtInterfaceFramework - Vehicle Functions" }
+module QtIfVehicleFunctions 1.0;
 
 /**
  * \brief Provides an interface to the climate control.
  *
- * The QIviClimateControl provides an interface to the climate control of the vehicle.
+ * The QIfClimateControl provides an interface to the climate control of the vehicle.
  *
  * The climate control properties are divided into two categories: central or zoned. The central
- * properties are exposed directly through the QIviClimateControl and the zoned properties are
- * exposed through zone objects. The zones are retrieved using the \l {QIviAbstractZonedFeature::}{zoneAt} method.
+ * properties are exposed directly through the QIfClimateControl and the zoned properties are
+ * exposed through zone objects. The zones are retrieved using the \l {QIfAbstractZonedFeature::}{zoneAt} method.
  *
- * The QIviClimateControl expects a single backend to be available. It is recommended to use it
- * with \l {QIviAbstractFeature::}{discoveryMode} set to \l {QIviAbstractFeature::}{AutoDiscovery}.
+ * The QIfClimateControl expects a single backend to be available. It is recommended to use it
+ * with \l {QIfAbstractFeature::}{discoveryMode} set to \l {QIfAbstractFeature::}{AutoDiscovery}.
  */
-@config: { zoned: true, id: "org.qt-project.qtivi.ClimateControl/1.0", qml_type: "ClimateControl" }
+@config: { zoned: true, id: "org.qt-project.interfaceframework.ClimateControl/1.0", qml_type: "ClimateControl" }
 @designer: { name: "Climate Control" }
-interface QIviClimateControl {
+interface QIfClimateControl {
     /**
      * Holds whether the air conditioning is enabled.
      */
@@ -163,16 +163,16 @@ enum ClimateMode {
 /**
  * \brief Provides an interface to the window control.
  *
- * The QIviWindowControl provides an interface to control the physical windows of the vehicle.
+ * The QIfWindowControl provides an interface to control the physical windows of the vehicle.
  *
- * All properties are exposed through zone objects. The zones are retrieved using the \l {QIviAbstractZonedFeature::}{zoneAt} method.
+ * All properties are exposed through zone objects. The zones are retrieved using the \l {QIfAbstractZonedFeature::}{zoneAt} method.
  *
- * The QIviWindowControl expects a single backend to be available. It is recommended to use it
- * with \l {QIviAbstractFeature::}{discoveryMode} set to \l {QIviAbstractZonedFeature::}{zoneAt}.
+ * The QIfWindowControl expects a single backend to be available. It is recommended to use it
+ * with \l {QIfAbstractFeature::}{discoveryMode} set to \l {QIfAbstractZonedFeature::}{zoneAt}.
  */
-@config: { zoned: true, id: "org.qt-project.qtivi.WindowControl/1.0", qml_type: "WindowControl" }
+@config: { zoned: true, id: "org.qt-project.interfaceframework.WindowControl/1.0", qml_type: "WindowControl" }
 @designer: { name: "Window Control" }
-interface QIviWindowControl {
+interface QIfWindowControl {
 
     /**
      * Holds the current mode of the window heater.
@@ -196,11 +196,11 @@ interface QIviWindowControl {
     readonly WindowState blindState;
 
     /**
-     * Opens the window, if not already in the QIviWindowControl::FullyOpen state.
+     * Opens the window, if not already in the QIfWindowControl::FullyOpen state.
      */
     void open();
     /**
-     * Closes the window, if not already in the QIviWindowControl::Closed state.
+     * Closes the window, if not already in the QIfWindowControl::Closed state.
      */
     void close();
 }

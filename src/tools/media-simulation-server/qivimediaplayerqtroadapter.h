@@ -5,7 +5,7 @@
 ** Copyright (C) 2019 Luxoft Sweden AB
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,32 +39,32 @@
 **
 ****************************************************************************/
 
-#ifndef QIVIMEDIAPLAYERQTROADAPTER_H
-#define QIVIMEDIAPLAYERQTROADAPTER_H
+#ifndef QIFMEDIAPLAYERQTROADAPTER_H
+#define QIFMEDIAPLAYERQTROADAPTER_H
 
-#include <QIviRemoteObjectSourceHelper>
+#include <QIfRemoteObjectSourceHelper>
 
 #include "mediaplayerbackend.h"
-#include "rep_qivimediaplayer_source.h"
+#include "rep_qifmediaplayer_source.h"
 
 template <class ObjectType>
-struct QIviMediaPlayerAddressWrapper: public QIviMediaPlayerSourceAPI<ObjectType> {
-    QIviMediaPlayerAddressWrapper(ObjectType *object)
-        : QIviMediaPlayerSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
+struct QIfMediaPlayerAddressWrapper: public QIfMediaPlayerSourceAPI<ObjectType> {
+    QIfMediaPlayerAddressWrapper(ObjectType *object)
+        : QIfMediaPlayerSourceAPI<ObjectType>(object, object->remoteObjectsLookupName())
     {}
 };
 
-class QIviMediaPlayerQtRoAdapter : public QIviMediaPlayerSource
+class QIfMediaPlayerQtRoAdapter : public QIfMediaPlayerSource
 {
 public:
-    QIviMediaPlayerQtRoAdapter(MediaPlayerBackend *parent);
-    QIviMediaPlayerQtRoAdapter(const QString& remoteObjectsLookupName, MediaPlayerBackend *parent);
+    QIfMediaPlayerQtRoAdapter(MediaPlayerBackend *parent);
+    QIfMediaPlayerQtRoAdapter(const QString& remoteObjectsLookupName, MediaPlayerBackend *parent);
 
     QString remoteObjectsLookupName() const;
 
 public:
-    QIviMediaPlayer::PlayMode playMode() const override;
-    QIviMediaPlayer::PlayState playState() const override;
+    QIfMediaPlayer::PlayMode playMode() const override;
+    QIfMediaPlayer::PlayState playState() const override;
     qint64 position() const override;
     qint64 duration() const override;
     QVariant currentTrack() const override;
@@ -72,7 +72,7 @@ public:
     int volume() const override;
     bool muted() const override;
     bool canReportCount() const override;
-    void setPlayMode(QIviMediaPlayer::PlayMode playMode) override;
+    void setPlayMode(QIfMediaPlayer::PlayMode playMode) override;
     void setPosition(qint64 position) override;
     void setCurrentIndex(int currentIndex) override;
     void setVolume(int volume) override;
@@ -93,7 +93,7 @@ public Q_SLOTS:
 private:
     QString m_remoteObjectsLookupName;
     MediaPlayerBackend *m_backend;
-    QIviRemoteObjectSourceHelper<QIviMediaPlayerQtRoAdapter> m_helper;
+    QIfRemoteObjectSourceHelper<QIfMediaPlayerQtRoAdapter> m_helper;
 };
 
-#endif // QIVIMEDIAPLAYERQTROADAPTER_H
+#endif // QIFMEDIAPLAYERQTROADAPTER_H

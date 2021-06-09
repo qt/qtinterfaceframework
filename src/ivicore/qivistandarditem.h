@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,20 +39,20 @@
 **
 ****************************************************************************/
 
-#ifndef QIviStandardItem_H
-#define QIviStandardItem_H
+#ifndef QIfStandardItem_H
+#define QIfStandardItem_H
 
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QVariantMap>
 #include <QtCore/qobjectdefs.h>
-#include <QtIviCore/qtiviglobal.h>
+#include <QtInterfaceFramework/qtifglobal.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIviStandardItemPrivate;
+class QIfStandardItemPrivate;
 
-class Q_QTIVICORE_EXPORT QIviStandardItem
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfStandardItem
 {
     Q_GADGET
 
@@ -62,10 +62,10 @@ class Q_QTIVICORE_EXPORT QIviStandardItem
     Q_PROPERTY(QVariantMap data READ data WRITE setData)
 
 public:
-    QIviStandardItem();
-    QIviStandardItem(const QIviStandardItem &);
-    QIviStandardItem &operator=(const QIviStandardItem &);
-    virtual ~QIviStandardItem();
+    QIfStandardItem();
+    QIfStandardItem(const QIfStandardItem &);
+    QIfStandardItem &operator=(const QIfStandardItem &);
+    virtual ~QIfStandardItem();
 
     virtual QString id() const;
     virtual void setId(const QString &id);
@@ -74,19 +74,19 @@ public:
     virtual QVariantMap data() const;
     virtual void setData(const QVariantMap &data);
 
-    bool operator==(const QIviStandardItem &other) const;
-    inline bool operator!=(const QIviStandardItem &other) const { return !(*this == other); }
+    bool operator==(const QIfStandardItem &other) const;
+    inline bool operator!=(const QIfStandardItem &other) const { return !(*this == other); }
 
 private:
-    QSharedDataPointer<QIviStandardItemPrivate> d;
+    QSharedDataPointer<QIfStandardItemPrivate> d;
 };
 
-Q_DECLARE_TYPEINFO(QIviStandardItem, Q_MOVABLE_TYPE);
+Q_DECLARE_TYPEINFO(QIfStandardItem, Q_MOVABLE_TYPE);
 
-using QIviSearchAndBrowseModelItem = QIviStandardItem;
+using QIfFilterAndBrowseModelItem = QIfStandardItem;
 
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE(QIviStandardItem)
+Q_DECLARE_METATYPE(QIfStandardItem)
 
-#endif // QIviStandardItem_H
+#endif // QIfStandardItem_H

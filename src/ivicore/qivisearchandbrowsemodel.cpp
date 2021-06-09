@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,40 +39,40 @@
 **
 ****************************************************************************/
 
-#include "qivisearchandbrowsemodel.h"
-#include "qivisearchandbrowsemodel_p.h"
+#include "qiffilterandbrowsemodel.h"
+#include "qiffilterandbrowsemodel_p.h"
 
-#include "qiviqmlconversion_helper.h"
-#include "qivisearchandbrowsemodelinterface.h"
-#include "queryparser/qiviqueryparser_p.h"
+#include "qifqmlconversion_helper.h"
+#include "qiffilterandbrowsemodelinterface.h"
+#include "queryparser/qifqueryparser_p.h"
 
 #include <QDebug>
 #include <QMetaObject>
 
 QT_BEGIN_NAMESPACE
 
-QIviSearchAndBrowseModelPrivate::QIviSearchAndBrowseModelPrivate(const QString &interface, QIviSearchAndBrowseModel *model)
-    : QIviPagingModelPrivate(interface, model)
+QIfFilterAndBrowseModelPrivate::QIfFilterAndBrowseModelPrivate(const QString &interface, QIfFilterAndBrowseModel *model)
+    : QIfPagingModelPrivate(interface, model)
     , q_ptr(model)
     , m_queryTerm(nullptr)
     , m_canGoBack(false)
 {
 }
 
-QIviSearchAndBrowseModelPrivate::~QIviSearchAndBrowseModelPrivate()
+QIfFilterAndBrowseModelPrivate::~QIfFilterAndBrowseModelPrivate()
 {
     delete m_queryTerm;
 }
 
-void QIviSearchAndBrowseModelPrivate::resetModel()
+void QIfFilterAndBrowseModelPrivate::resetModel()
 {
-    QIviSearchAndBrowseModelInterface* backend = searchBackend();
+    QIfFilterAndBrowseModelInterface* backend = searchBackend();
 
     if (backend)
         backend->setContentType(m_identifier, m_contentTypeRequested);
 }
 
-void QIviSearchAndBrowseModelPrivate::parseQuery()
+void QIfFilterAndBrowseModelPrivate::parseQuery()
 {
     if (!searchBackend())
         return;
@@ -83,30 +83,30 @@ void QIviSearchAndBrowseModelPrivate::parseQuery()
         return;
     }
 
-    if (!m_capabilities.testFlag(QtIviCoreModule::SupportsFiltering) && !m_capabilities.testFlag(QtIviCoreModule::SupportsSorting)) {
-        qtivi_qmlOrCppWarning(q_ptr, QStringLiteral("The backend doesn't support filtering or sorting. Changing the query will have no effect"));
+    if (!m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsFiltering) && !m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsSorting)) {
+        qtif_qmlOrCppWarning(q_ptr, QStringLiteral("The backend doesn't support filtering or sorting. Changing the query will have no effect"));
         return;
     }
 
-    QIviQueryParser parser;
+    QIfQueryParser parser;
     parser.setQuery(m_query);
     parser.setAllowedIdentifiers(m_queryIdentifiers);
 
-    QIviAbstractQueryTerm* queryTerm = parser.parse();
+    QIfAbstractQueryTerm* queryTerm = parser.parse();
 
     if (!queryTerm) {
-        qtivi_qmlOrCppWarning(q_ptr, parser.lastError());
+        qtif_qmlOrCppWarning(q_ptr, parser.lastError());
         return;
     }
-    QList<QIviOrderTerm> orderTerms = parser.orderTerms();
+    QList<QIfOrderTerm> orderTerms = parser.orderTerms();
 
     setupFilter(queryTerm, orderTerms);
 }
 
-void QIviSearchAndBrowseModelPrivate::setupFilter(QIviAbstractQueryTerm* queryTerm, const QList<QIviOrderTerm> &orderTerms)
+void QIfFilterAndBrowseModelPrivate::setupFilter(QIfAbstractQueryTerm* queryTerm, const QList<QIfOrderTerm> &orderTerms)
 {
     //1. Tell the backend about the new filter (or none)
-    QIviSearchAndBrowseModelInterface* backend = searchBackend();
+    QIfFilterAndBrowseModelInterface* backend = searchBackend();
     if (backend)
         backend->setupFilter(m_identifier, queryTerm, orderTerms);
 
@@ -119,11 +119,11 @@ void QIviSearchAndBrowseModelPrivate::setupFilter(QIviAbstractQueryTerm* queryTe
     m_orderTerms = orderTerms;
 }
 
-void QIviSearchAndBrowseModelPrivate::clearToDefaults()
+void QIfFilterAndBrowseModelPrivate::clearToDefaults()
 {
-    QIviPagingModelPrivate::clearToDefaults();
+    QIfPagingModelPrivate::clearToDefaults();
 
-    Q_Q(QIviSearchAndBrowseModel);
+    Q_Q(QIfFilterAndBrowseModel);
     delete m_queryTerm;
     m_queryTerm = nullptr;
     m_query.clear();
@@ -138,10 +138,10 @@ void QIviSearchAndBrowseModelPrivate::clearToDefaults()
     m_canGoForward.clear();
 
     //Explicitly call the PagingModel resetModel to also reset the fetched data
-    QIviPagingModelPrivate::resetModel();
+    QIfPagingModelPrivate::resetModel();
 }
 
-void QIviSearchAndBrowseModelPrivate::onCanGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start)
+void QIfFilterAndBrowseModelPrivate::onCanGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start)
 {
     if (m_identifier != identifier)
         return;
@@ -154,12 +154,12 @@ void QIviSearchAndBrowseModelPrivate::onCanGoForwardChanged(const QUuid &identif
         m_canGoForward[start + i] = indexes.at(i);
 }
 
-void QIviSearchAndBrowseModelPrivate::onCanGoBackChanged(const QUuid &identifier, bool canGoBack)
+void QIfFilterAndBrowseModelPrivate::onCanGoBackChanged(const QUuid &identifier, bool canGoBack)
 {
     if (m_identifier != identifier)
         return;
 
-    Q_Q(QIviSearchAndBrowseModel);
+    Q_Q(QIfFilterAndBrowseModel);
     if (m_canGoBack == canGoBack)
         return;
 
@@ -167,12 +167,12 @@ void QIviSearchAndBrowseModelPrivate::onCanGoBackChanged(const QUuid &identifier
     emit q->canGoBackChanged(m_canGoBack);
 }
 
-void QIviSearchAndBrowseModelPrivate::onContentTypeChanged(const QUuid &identifier, const QString &contentType)
+void QIfFilterAndBrowseModelPrivate::onContentTypeChanged(const QUuid &identifier, const QString &contentType)
 {
     if (m_identifier != identifier)
         return;
 
-    Q_Q(QIviSearchAndBrowseModel);
+    Q_Q(QIfFilterAndBrowseModel);
     // Don't return if the content type is already correct. We still need to continue to update the
     // query and start fetching again
     if (m_contentType != contentType) {
@@ -181,12 +181,12 @@ void QIviSearchAndBrowseModelPrivate::onContentTypeChanged(const QUuid &identifi
     }
     parseQuery();
 
-    QIviPagingModelPrivate::resetModel();
+    QIfPagingModelPrivate::resetModel();
 }
 
-void QIviSearchAndBrowseModelPrivate::onAvailableContentTypesChanged(const QStringList &contentTypes)
+void QIfFilterAndBrowseModelPrivate::onAvailableContentTypesChanged(const QStringList &contentTypes)
 {
-    Q_Q(QIviSearchAndBrowseModel);
+    Q_Q(QIfFilterAndBrowseModel);
     if (m_availableContentTypes == contentTypes)
         return;
 
@@ -194,7 +194,7 @@ void QIviSearchAndBrowseModelPrivate::onAvailableContentTypesChanged(const QStri
     emit q->availableContentTypesChanged(contentTypes);
 }
 
-void QIviSearchAndBrowseModelPrivate::onQueryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers)
+void QIfFilterAndBrowseModelPrivate::onQueryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers)
 {
     if (m_identifier != identifier)
         return;
@@ -202,14 +202,14 @@ void QIviSearchAndBrowseModelPrivate::onQueryIdentifiersChanged(const QUuid &ide
     m_queryIdentifiers = queryIdentifiers;
 }
 
-QIviSearchAndBrowseModelInterface *QIviSearchAndBrowseModelPrivate::searchBackend() const
+QIfFilterAndBrowseModelInterface *QIfFilterAndBrowseModelPrivate::searchBackend() const
 {
-    return QIviAbstractFeatureListModelPrivate::backend<QIviSearchAndBrowseModelInterface*>();
+    return QIfAbstractFeatureListModelPrivate::backend<QIfFilterAndBrowseModelInterface*>();
 }
 
-void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentType)
+void QIfFilterAndBrowseModelPrivate::updateContentType(const QString &contentType)
 {
-    Q_Q(QIviSearchAndBrowseModel);
+    Q_Q(QIfFilterAndBrowseModel);
     m_query = QString();
     m_queryIdentifiers.clear();
     emit q->queryChanged(m_query);
@@ -221,29 +221,29 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
 }
 
 /*!
-    \class QIviSearchAndBrowseModel
-    \inmodule QtIviCore
-    \brief The QIviSearchAndBrowseModel is a generic model which can be used to search, browse, filter and sort data.
+    \class QIfFilterAndBrowseModel
+    \inmodule QtInterfaceFramework
+    \brief The QIfFilterAndBrowseModel is a generic model which can be used to search, browse, filter and sort data.
 
-    The QIviSearchAndBrowseModel should be used directly or as a base class whenever a lot of data needs to be
+    The QIfFilterAndBrowseModel should be used directly or as a base class whenever a lot of data needs to be
     presented in a ListView.
 
     The model is built upon the basic principle of filtering and sorting the data already where
-    they are created instead of retrieving everything and sort or filter it locally. In addition the QIviSearchAndBrowseModel
+    they are created instead of retrieving everything and sort or filter it locally. In addition the QIfFilterAndBrowseModel
     only fetches the data it really needs and can it can be configured how this can be done.
 
-    The backend filling the model with data needs to implement the QIviSearchAndBrowseModelInterface class.
+    The backend filling the model with data needs to implement the QIfFilterAndBrowseModelInterface class.
 
     \section1 Setting it up
-    The QIviSearchAndBrowseModel is using QtIviCore's \l {Dynamic Backend System} and is derived from QIviAbstractFeatureListModel.
-    Other than most "QtIvi Feature classes", the QIviSearchAndBrowseModel doesn't automatically connect to available backends.
+    The QIfFilterAndBrowseModel is using QtInterfaceFramework's \l {Dynamic Backend System} and is derived from QIfAbstractFeatureListModel.
+    Other than most "QtInterfaceFramework Feature classes", the QIfFilterAndBrowseModel doesn't automatically connect to available backends.
 
     The easiest approach to set it up, is to connect to the same backend used by another feature. E.g. for connecting to the
     media backend, use the instance from the mediaplayer feature:
     \code
-        QIviMediaPlayer *player = new QIviMediaPlayer();
+        QIfMediaPlayer *player = new QIfMediaPlayer();
         player->startAutoDiscovery();
-        QIviSearchAndBrowseModel *model = new QIviSearchAndBrowseModel();
+        QIfFilterAndBrowseModel *model = new QIfFilterAndBrowseModel();
         model->setServiceObject(player->serviceObject());
     \endcode
 
@@ -256,23 +256,23 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
     \section1 Filtering and Sorting
     \target FilteringAndSorting
 
-    One of the main use case of the QIviSearchAndBrowseModel is to provide a powerful way of filtering and sorting the content
+    One of the main use case of the QIfFilterAndBrowseModel is to provide a powerful way of filtering and sorting the content
     of the underlying data model. As explained above, the filtering and sorting is supposed to happen where the data is produced.
-    To make this work across multiple backends the \l {Qt IVI Query Language} was invented.
+    To make this work across multiple backends the \l {Qt Interface Framework Query Language} was invented.
 
-    The \l {QIviSearchAndBrowseModel::}{query} property is used to sort the content of the model: e.g. by setting the string "[/name]", the content
+    The \l {QIfFilterAndBrowseModel::}{query} property is used to sort the content of the model: e.g. by setting the string "[/name]", the content
     will be sorted by name in ascending order.
 
     For filtering, the same property is used but without the brackets e.g. "name='Example Item'" for only showing items which
     have the 'name' property set to 'Example Item'.
 
     Filtering and sorting can also be combined in one string and the filter part can also be more complex. More on that
-    can be found in the detailed \l {Qt IVI Query Language} Documentation.
+    can be found in the detailed \l {Qt Interface Framework Query Language} Documentation.
 
     \section1 Browsing
     \target Browsing
 
-    In addition to filtering and sorting, the QIviSearchAndBrowseModel also supports browsing through a hierarchy of different
+    In addition to filtering and sorting, the QIfFilterAndBrowseModel also supports browsing through a hierarchy of different
     content types. The easiest way to explain this is to look at the existing media example.
 
     When implementing a library view of all available media files, you might want to provide a way for the user to browse
@@ -290,7 +290,7 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
     be changed. The downside of this is that the backend needs to support this way of filtering and sorting as well, which
     is not always be the case. A good example here is a DLNA backend, where the server already defines a fixed  browsing order.
 
-    The QIviSearchAndBrowseModel provides the following methods for browsing:
+    The QIfFilterAndBrowseModel provides the following methods for browsing:
     \list
         \li canGoForward()
         \li goForward()
@@ -300,7 +300,7 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
 
     \section2 Navigation Types
 
-    The QIviSearchAndBrowseModel supports two navigation types when browsing through the available data: for most use cases
+    The QIfFilterAndBrowseModel supports two navigation types when browsing through the available data: for most use cases
     the simple InModelNavigation type is sufficient. By using this, the content type of the current model instance changes
     when navigating and the model is reset to show the new data.
     The other navigation type is OutOfModelNavigation and leaves the current model instance as it is. Instead the goForward()
@@ -308,18 +308,18 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
     be open at the same time. E.g. when used inside a QML StackView.
 
     \code
-        QIviSearchAndBrowseModel *artistModel = new QIviSearchAndBrowseModel();
+        QIfFilterAndBrowseModel *artistModel = new QIfFilterAndBrowseModel();
         model->setContentType("artist");
-        //Returns a new instance of QIviSearchAndBrowseModel which contains all albums from the artist at index '0'
-        QIviSearchAndBrowseModel *albumModel = artistModel->goForward(0, QIviSearchAndBrowseModel::OutOfModelNavigation);
+        //Returns a new instance of QIfFilterAndBrowseModel which contains all albums from the artist at index '0'
+        QIfFilterAndBrowseModel *albumModel = artistModel->goForward(0, QIfFilterAndBrowseModel::OutOfModelNavigation);
     \endcode
 
-    \note Please also see the \l{QIviPagingModel}{QIviPagingModel documentation} for how the data loading works and
-          the \l{Models} section for more information about all models in QtIvi.
+    \note Please also see the \l{QIfPagingModel}{QIfPagingModel documentation} for how the data loading works and
+          the \l{Models} section for more information about all models in QtInterfaceFramework.
 */
 
 /*!
-    \enum QIviSearchAndBrowseModel::NavigationType
+    \enum QIfFilterAndBrowseModel::NavigationType
     \value InModelNavigation
            The new content will be loaded into this model and the existing model data will be reset
     \value OutOfModelNavigation
@@ -328,26 +328,26 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
 */
 
 /*!
-    \enum QIviSearchAndBrowseModel::Roles
+    \enum QIfFilterAndBrowseModel::Roles
     \value CanGoForwardRole
           True if this item can be used to go one level forward and display the next set of items. See also goForward()
     \omitvalue LastRole
 
-    \sa QIviPagingModel::Roles
+    \sa QIfPagingModel::Roles
 */
 
 /*!
-    \qmltype SearchAndBrowseModel
-    \instantiates QIviSearchAndBrowseModel
-    \inqmlmodule QtIvi
+    \qmltype FilterAndBrowseModel
+    \instantiates QIfFilterAndBrowseModel
+    \inqmlmodule QtInterfaceFramework
     \inherits PagingModel
-    \brief The SearchAndBrowseModel is a generic model which can be used to search, browse, filter and sort data.
+    \brief The FilterAndBrowseModel is a generic model which can be used to search, browse, filter and sort data.
 
-    The SearchAndBrowseModel should be used directly or as a base class whenever a lot of data needs to be
+    The FilterAndBrowseModel should be used directly or as a base class whenever a lot of data needs to be
     presented in a ListView.
 
     The model is built upon the basic principle of filtering and sorting the data already where
-    they are created instead of retrieving everything and sort or filter it locally. In addition the SearchAndBrowseModel
+    they are created instead of retrieving everything and sort or filter it locally. In addition the FilterAndBrowseModel
     only fetches the data it really needs and can it can be configured how this can be done.
 
     All rows in the model need to be subclassed from StandardItem.
@@ -378,8 +378,8 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
     \endtable
 
     \section1 Setting it up
-    The SearchAndBrowseModel is using QtIviCore's \l {Dynamic Backend System} and is derived from QIviAbstractFeatureListModel.
-    Other than most "QtIvi Feature classes", the SearchAndBrowseModel doesn't automatically connect to available backends.
+    The FilterAndBrowseModel is using QtInterfaceFramework's \l {Dynamic Backend System} and is derived from QIfAbstractFeatureListModel.
+    Other than most "QtInterfaceFramework Feature classes", the FilterAndBrowseModel doesn't automatically connect to available backends.
 
     The easiest approach to set it up, is to connect to the same backend used by another feature. E.g. for connecting to the
     media backend, use the instance from the mediaplayer feature:
@@ -389,7 +389,7 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
                 id: player
             }
 
-            SearchAndBrowseModel {
+            FilterAndBrowseModel {
                 serviceObject: player.serviceObject
             }
         }
@@ -404,23 +404,23 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
     \section1 Filtering and Sorting
     \target FilteringAndSorting
 
-    One of the main use case of the SearchAndBrowseModel is to provide a powerful way of filtering and sorting the content
+    One of the main use case of the FilterAndBrowseModel is to provide a powerful way of filtering and sorting the content
     of the underlying data model. As explained above, the filtering and sorting is supposed to happen where the data is produced.
-    To make this work across multiple backends the \l {Qt IVI Query Language} was invented.
+    To make this work across multiple backends the \l {Qt Interface Framework Query Language} was invented.
 
-    The \l {SearchAndBrowseModel::}{query} property is used to sort the content of the model: e.g. by setting the string "[/name]", the content
+    The \l {FilterAndBrowseModel::}{query} property is used to sort the content of the model: e.g. by setting the string "[/name]", the content
     will be sorted by name in ascending order.
 
     For filtering, the same property is used but without the brackets e.g. "name='Example Item'" for only showing items which
     have the 'name' property set to 'Example Item'.
 
     Filtering and sorting can also be combined in one string and the filter part can also be more complex. More on that
-    can be found in the detailed \l {Qt IVI Query Language} Documentation.
+    can be found in the detailed \l {Qt Interface Framework Query Language} Documentation.
 
     \section1 Browsing
     \target Browsing
 
-    In addition to filtering and sorting, the SearchAndBrowseModel also supports browsing through a hierarchy of different
+    In addition to filtering and sorting, the FilterAndBrowseModel also supports browsing through a hierarchy of different
     content types. The easiest way to explain this is to look at the existing media example.
 
     When implementing a library view of all available media files, you might want to provide a way for the user to browse
@@ -438,7 +438,7 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
     be changed. The downside of this is that the backend needs to support this way of filtering and sorting as well, which
     is not always be the case. A good example here is a DLNA backend, where the server already defines a fixed  browsing order.
 
-    The SearchAndBrowseModel provides the following methods/properties for browsing:
+    The FilterAndBrowseModel provides the following methods/properties for browsing:
     \list
         \li canGoForward()
         \li goForward()
@@ -448,7 +448,7 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
 
     \section2 Navigation Types
 
-    The SearchAndBrowseModel supports two navigation types when browsing through the available data: for most use cases
+    The FilterAndBrowseModel supports two navigation types when browsing through the available data: for most use cases
     the simple InModelNavigation type is sufficient. By using this, the content type of the current model instance changes
     when navigating and the model is reset to show the new data.
     The other navigation type is OutOfModelNavigation and leaves the current model instance as it is. Instead the goForward()
@@ -463,14 +463,14 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
             Component {
                 id: view
                 ListView {
-                    model: SearchAndBrowseModel {
+                    model: FilterAndBrowseModel {
                         contentType: "artist"
                     }
                     delegate: MouseArea {
                         onClicked: {
                             stack.push({ "item" : view,
                                         "properties:" {
-                                            "model" : model->goForward(index, SearchAndBrowseModel.OutOfModelNavigation)
+                                            "model" : model->goForward(index, FilterAndBrowseModel.OutOfModelNavigation)
                                         }});
                         }
                     }
@@ -480,47 +480,47 @@ void QIviSearchAndBrowseModelPrivate::updateContentType(const QString &contentTy
     \endqml
 
     \note Please also see the \l{PagingModel}{PagingModel documentation} for how the data loading works and
-          the \l{Models} section for more information about all models in QtIvi.
+          the \l{Models} section for more information about all models in QtInterfaceFramework.
 */
 
 /*!
-    Constructs a QIviSearchAndBrowseModel.
+    Constructs a QIfFilterAndBrowseModel.
 
-    The \a parent argument is passed on to the \l QIviAbstractFeatureListModel base class.
+    The \a parent argument is passed on to the \l QIfAbstractFeatureListModel base class.
 */
-QIviSearchAndBrowseModel::QIviSearchAndBrowseModel(QObject *parent)
-    : QIviPagingModel(*new QIviSearchAndBrowseModelPrivate(QStringLiteral(QIviSearchAndBrowseModel_iid), this), parent)
+QIfFilterAndBrowseModel::QIfFilterAndBrowseModel(QObject *parent)
+    : QIfPagingModel(*new QIfFilterAndBrowseModelPrivate(QStringLiteral(QIfFilterAndBrowseModel_iid), this), parent)
 {
 }
 
 /*!
-    \qmlproperty string SearchAndBrowseModel::query
+    \qmlproperty string FilterAndBrowseModel::query
     \brief Holds the current query used for filtering and sorting the current content of the model.
 
     \note When changing this property the content will be reset.
 
-    See \l {Qt IVI Query Language} for more information.
+    See \l {Qt Interface Framework Query Language} for more information.
     \sa FilteringAndSorting
 */
 
 /*!
-    \property QIviSearchAndBrowseModel::query
+    \property QIfFilterAndBrowseModel::query
     \brief Holds the current query used for filtering and sorting the current content of the model.
 
     \note When changing this property the content will be reset.
 
-    See \l {Qt IVI Query Language} for more information.
+    See \l {Qt Interface Framework Query Language} for more information.
     \sa FilteringAndSorting
 */
-QString QIviSearchAndBrowseModel::query() const
+QString QIfFilterAndBrowseModel::query() const
 {
-    Q_D(const QIviSearchAndBrowseModel);
+    Q_D(const QIfFilterAndBrowseModel);
     return d->m_query;
 }
 
-void QIviSearchAndBrowseModel::setQuery(const QString &query)
+void QIfFilterAndBrowseModel::setQuery(const QString &query)
 {
-    Q_D(QIviSearchAndBrowseModel);
+    Q_D(QIfFilterAndBrowseModel);
     if (d->m_query == query)
         return;
 
@@ -534,31 +534,31 @@ void QIviSearchAndBrowseModel::setQuery(const QString &query)
 }
 
 /*!
-    \qmlproperty string SearchAndBrowseModel::contentType
+    \qmlproperty string FilterAndBrowseModel::contentType
     \brief Holds the current type of content displayed in this model.
 
     \note When changing this property the content will be reset.
 
-    \sa SearchAndBrowseModel::availableContentTypes
+    \sa FilterAndBrowseModel::availableContentTypes
 */
 
 /*!
-    \property QIviSearchAndBrowseModel::contentType
+    \property QIfFilterAndBrowseModel::contentType
     \brief Holds the current type of content displayed in this model.
 
     \note When changing this property the content will be reset.
 
     \sa availableContentTypes
 */
-QString QIviSearchAndBrowseModel::contentType() const
+QString QIfFilterAndBrowseModel::contentType() const
 {
-    Q_D(const QIviSearchAndBrowseModel);
+    Q_D(const QIfFilterAndBrowseModel);
     return d->m_contentType;
 }
 
-void QIviSearchAndBrowseModel::setContentType(const QString &contentType)
+void QIfFilterAndBrowseModel::setContentType(const QString &contentType)
 {
-    Q_D(QIviSearchAndBrowseModel);
+    Q_D(QIfFilterAndBrowseModel);
     if (d->m_contentTypeRequested == contentType)
         return;
 
@@ -566,49 +566,49 @@ void QIviSearchAndBrowseModel::setContentType(const QString &contentType)
 }
 
 /*!
-    \qmlproperty list<string> SearchAndBrowseModel::availableContentTypes
+    \qmlproperty list<string> FilterAndBrowseModel::availableContentTypes
     \brief Holds all the available content types
 
     \sa contentType
 */
 
 /*!
-    \property QIviSearchAndBrowseModel::availableContentTypes
+    \property QIfFilterAndBrowseModel::availableContentTypes
     \brief Holds all the available content types
 
     \sa contentType
 */
-QStringList QIviSearchAndBrowseModel::availableContentTypes() const
+QStringList QIfFilterAndBrowseModel::availableContentTypes() const
 {
-    Q_D(const QIviSearchAndBrowseModel);
+    Q_D(const QIfFilterAndBrowseModel);
     return d->m_availableContentTypes;
 }
 
 /*!
-    \qmlproperty bool SearchAndBrowseModel::canGoBack
+    \qmlproperty bool FilterAndBrowseModel::canGoBack
     \brief Holds whether the goBack() function can be used to return to the previous content.
 
     See \l Browsing for more information.
 */
 
 /*!
-    \property QIviSearchAndBrowseModel::canGoBack
+    \property QIfFilterAndBrowseModel::canGoBack
     \brief Holds whether the goBack() function can be used to return to the previous content.
 
     See \l Browsing for more information.
 */
-bool QIviSearchAndBrowseModel::canGoBack() const
+bool QIfFilterAndBrowseModel::canGoBack() const
 {
-    Q_D(const QIviSearchAndBrowseModel);
+    Q_D(const QIfFilterAndBrowseModel);
     return d->m_canGoBack;
 }
 
 /*!
     \reimp
 */
-QVariant QIviSearchAndBrowseModel::data(const QModelIndex &index, int role) const
+QVariant QIfFilterAndBrowseModel::data(const QModelIndex &index, int role) const
 {
-    Q_D(const QIviSearchAndBrowseModel);
+    Q_D(const QIfFilterAndBrowseModel);
     Q_UNUSED(role)
     if (!index.isValid())
         return QVariant();
@@ -621,11 +621,11 @@ QVariant QIviSearchAndBrowseModel::data(const QModelIndex &index, int role) cons
     if (role == CanGoForwardRole)
         return canGoForward(row);
     else
-        return QIviPagingModel::data(index, role);
+        return QIfPagingModel::data(index, role);
 }
 
 /*!
-    \qmlmethod void SearchAndBrowseModel::goBack()
+    \qmlmethod void FilterAndBrowseModel::goBack()
     Goes one level back in the navigation history.
 
     See also \l Browsing for more information.
@@ -635,33 +635,33 @@ QVariant QIviSearchAndBrowseModel::data(const QModelIndex &index, int role) cons
 
     See also \l Browsing for more information.
 */
-void QIviSearchAndBrowseModel::goBack()
+void QIfFilterAndBrowseModel::goBack()
 {
-    Q_D(QIviSearchAndBrowseModel);
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    Q_D(QIfFilterAndBrowseModel);
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
 
     if (!backend) {
-        qtivi_qmlOrCppWarning(this, "No backend connected");
+        qtif_qmlOrCppWarning(this, "No backend connected");
         return;
     }
 
     if (!d->m_canGoBack) {
-        qtivi_qmlOrCppWarning(this, "Can't go backward anymore");
+        qtif_qmlOrCppWarning(this, "Can't go backward anymore");
         return;
     }
 
-    QIviPendingReply<QString> reply = backend->goBack(d->m_identifier);
+    QIfPendingReply<QString> reply = backend->goBack(d->m_identifier);
     reply.then([this, reply](const QString &value) {
-        Q_D(QIviSearchAndBrowseModel);
+        Q_D(QIfFilterAndBrowseModel);
         d->updateContentType(value);
     },
     [this]() {
-        qtivi_qmlOrCppWarning(this, "Going backward failed");
+        qtif_qmlOrCppWarning(this, "Going backward failed");
     });
 }
 
 /*!
-    \qmlmethod bool SearchAndBrowseModel::canGoForward(i)
+    \qmlmethod bool FilterAndBrowseModel::canGoForward(i)
     Returns true when the item at index \a i can be used to show the next set of elements.
 
     See also \l Browsing for more information.
@@ -671,16 +671,16 @@ void QIviSearchAndBrowseModel::goBack()
 
     See also \l Browsing for more information.
 */
-bool QIviSearchAndBrowseModel::canGoForward(int i) const
+bool QIfFilterAndBrowseModel::canGoForward(int i) const
 {
-    Q_D(const QIviSearchAndBrowseModel);
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    Q_D(const QIfFilterAndBrowseModel);
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
 
     if (i >= d->m_canGoForward.count() || i < 0)
         return false;
 
     if (!backend) {
-        qtivi_qmlOrCppWarning(this, "No backend connected");
+        qtif_qmlOrCppWarning(this, "No backend connected");
         return false;
     }
 
@@ -688,7 +688,7 @@ bool QIviSearchAndBrowseModel::canGoForward(int i) const
 }
 
 /*!
-    \qmlmethod SearchAndBrowseModel SearchAndBrowseModel::goForward(i, navigationType)
+    \qmlmethod FilterAndBrowseModel FilterAndBrowseModel::goForward(i, navigationType)
     Uses the item at index \a i and shows the next set of items.
 
     \a navigationType can be one of the following values:
@@ -716,48 +716,48 @@ bool QIviSearchAndBrowseModel::canGoForward(int i) const
 
     See also \l Browsing for more information.
 */
-QIviSearchAndBrowseModel *QIviSearchAndBrowseModel::goForward(int i, NavigationType navigationType)
+QIfFilterAndBrowseModel *QIfFilterAndBrowseModel::goForward(int i, NavigationType navigationType)
 {
-    Q_D(QIviSearchAndBrowseModel);
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    Q_D(QIfFilterAndBrowseModel);
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
 
     if (i >= d->m_itemList.count() || i < 0)
         return nullptr;
 
     if (!backend) {
-        qtivi_qmlOrCppWarning(this, "No backend connected");
+        qtif_qmlOrCppWarning(this, "No backend connected");
         return nullptr;
     }
 
     if (!d->m_canGoForward.value(i, false)) {
-        qtivi_qmlOrCppWarning(this, "Can't go forward anymore");
+        qtif_qmlOrCppWarning(this, "Can't go forward anymore");
         return nullptr;
     }
 
     if (navigationType == OutOfModelNavigation) {
-        if (d->m_capabilities.testFlag(QtIviCoreModule::SupportsStatelessNavigation)) {
-            QIviPendingReply<QString> reply = backend->goForward(d->m_identifier, i);
-            auto newModel = new QIviSearchAndBrowseModel(serviceObject());
+        if (d->m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsStatelessNavigation)) {
+            QIfPendingReply<QString> reply = backend->goForward(d->m_identifier, i);
+            auto newModel = new QIfFilterAndBrowseModel(serviceObject());
             reply.then([reply, newModel](const QString &value) {
                 newModel->setContentType(value);
             },
             [this]() {
-                qtivi_qmlOrCppWarning(this, "Going forward failed");
+                qtif_qmlOrCppWarning(this, "Going forward failed");
             });
             return newModel;
 
         } else {
-            qtivi_qmlOrCppWarning(this, "The backend doesn't support the OutOfModelNavigation");
+            qtif_qmlOrCppWarning(this, "The backend doesn't support the OutOfModelNavigation");
             return nullptr;
         }
     } else {
-        QIviPendingReply<QString> reply = backend->goForward(d->m_identifier, i);
+        QIfPendingReply<QString> reply = backend->goForward(d->m_identifier, i);
         reply.then([this, reply](const QString &value) {
-            Q_D(QIviSearchAndBrowseModel);
+            Q_D(QIfFilterAndBrowseModel);
             d->updateContentType(value);
         },
         [this]() {
-            qtivi_qmlOrCppWarning(this, "Going forward failed");
+            qtif_qmlOrCppWarning(this, "Going forward failed");
         });
     }
 
@@ -765,7 +765,7 @@ QIviSearchAndBrowseModel *QIviSearchAndBrowseModel::goForward(int i, NavigationT
 }
 
 /*!
-    \qmlmethod SearchAndBrowseModel::insert(int index, StandardItem item)
+    \qmlmethod FilterAndBrowseModel::insert(int index, StandardItem item)
 
     Insert the \a item at the position \a index.
 
@@ -775,37 +775,37 @@ QIviSearchAndBrowseModel *QIviSearchAndBrowseModel::goForward(int i, NavigationT
 */
 
 /*!
-    \fn void QIviSearchAndBrowseModel::insert(int index, const QVariant &variant)
+    \fn void QIfFilterAndBrowseModel::insert(int index, const QVariant &variant)
 
     Insert the \a variant at the position \a index.
 
     If the backend doesn't accept the provided item, this operation will end in a no op.
 
-    The returned QIviPendingReply notifies about when the action has been done or whether it failed.
+    The returned QIfPendingReply notifies about when the action has been done or whether it failed.
 */
-QIviPendingReply<void> QIviSearchAndBrowseModel::insert(int index, const QVariant &variant)
+QIfPendingReply<void> QIfFilterAndBrowseModel::insert(int index, const QVariant &variant)
 {
-    Q_D(QIviSearchAndBrowseModel);
-    const auto item = qtivi_gadgetFromVariant<QIviStandardItem>(this, variant);
+    Q_D(QIfFilterAndBrowseModel);
+    const auto item = qtif_gadgetFromVariant<QIfStandardItem>(this, variant);
     if (!item)
-        return QIviPendingReply<void>::createFailedReply();
+        return QIfPendingReply<void>::createFailedReply();
 
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
     if (!backend) {
-        qtivi_qmlOrCppWarning(this, "Can't insert items without a connected backend");
-        return QIviPendingReply<void>::createFailedReply();
+        qtif_qmlOrCppWarning(this, "Can't insert items without a connected backend");
+        return QIfPendingReply<void>::createFailedReply();
     }
 
-    if (!d->m_capabilities.testFlag(QtIviCoreModule::SupportsInsert)) {
-        qtivi_qmlOrCppWarning(this, "The backend doesn't support inserting items");
-        return QIviPendingReply<void>::createFailedReply();
+    if (!d->m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsInsert)) {
+        qtif_qmlOrCppWarning(this, "The backend doesn't support inserting items");
+        return QIfPendingReply<void>::createFailedReply();
     }
 
     return backend->insert(d->m_identifier, index, variant);
 }
 
 /*!
-    \qmlmethod SearchAndBrowseModel::remove(int index)
+    \qmlmethod FilterAndBrowseModel::remove(int index)
 
     Removes the item at position \a index.
 
@@ -813,31 +813,31 @@ QIviPendingReply<void> QIviSearchAndBrowseModel::insert(int index, const QVarian
 */
 
 /*!
-    \fn void QIviSearchAndBrowseModel::remove(int index)
+    \fn void QIfFilterAndBrowseModel::remove(int index)
 
     Removes the item at position \a index.
 
-    The returned QIviPendingReply notifies about when the action has been done or whether it failed.
+    The returned QIfPendingReply notifies about when the action has been done or whether it failed.
 */
-QIviPendingReply<void> QIviSearchAndBrowseModel::remove(int index)
+QIfPendingReply<void> QIfFilterAndBrowseModel::remove(int index)
 {
-    Q_D(QIviSearchAndBrowseModel);
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    Q_D(QIfFilterAndBrowseModel);
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
     if (!backend) {
-        qtivi_qmlOrCppWarning(this, "Can't remove items without a connected backend");
-        return QIviPendingReply<void>::createFailedReply();
+        qtif_qmlOrCppWarning(this, "Can't remove items without a connected backend");
+        return QIfPendingReply<void>::createFailedReply();
     }
 
-    if (!d->m_capabilities.testFlag(QtIviCoreModule::SupportsRemove)) {
-        qtivi_qmlOrCppWarning(this, "The backend doesn't support removing of items");
-        return QIviPendingReply<void>::createFailedReply();
+    if (!d->m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsRemove)) {
+        qtif_qmlOrCppWarning(this, "The backend doesn't support removing of items");
+        return QIfPendingReply<void>::createFailedReply();
     }
 
     return backend->remove(d->m_identifier, index);
 }
 
 /*!
-    \qmlmethod SearchAndBrowseModel::move(int cur_index, int new_index)
+    \qmlmethod FilterAndBrowseModel::move(int cur_index, int new_index)
 
     Moves the item at position \a cur_index to the new position \a new_index.
 
@@ -845,31 +845,31 @@ QIviPendingReply<void> QIviSearchAndBrowseModel::remove(int index)
 */
 
 /*!
-    \fn void QIviSearchAndBrowseModel::move(int cur_index, int new_index)
+    \fn void QIfFilterAndBrowseModel::move(int cur_index, int new_index)
 
     Moves the item at position \a cur_index to the new position \a new_index.
 
-    The returned QIviPendingReply notifies about when the action has been done or whether it failed.
+    The returned QIfPendingReply notifies about when the action has been done or whether it failed.
 */
-QIviPendingReply<void> QIviSearchAndBrowseModel::move(int cur_index, int new_index)
+QIfPendingReply<void> QIfFilterAndBrowseModel::move(int cur_index, int new_index)
 {
-    Q_D(QIviSearchAndBrowseModel);
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    Q_D(QIfFilterAndBrowseModel);
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
     if (!backend) {
-        qtivi_qmlOrCppWarning(this, "Can't move items without a connected backend");
-        return QIviPendingReply<void>::createFailedReply();
+        qtif_qmlOrCppWarning(this, "Can't move items without a connected backend");
+        return QIfPendingReply<void>::createFailedReply();
     }
 
-    if (!d->m_capabilities.testFlag(QtIviCoreModule::SupportsMove)) {
-        qtivi_qmlOrCppWarning(this, "The backend doesn't support moving of items");
-        return QIviPendingReply<void>::createFailedReply();
+    if (!d->m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsMove)) {
+        qtif_qmlOrCppWarning(this, "The backend doesn't support moving of items");
+        return QIfPendingReply<void>::createFailedReply();
     }
 
     return backend->move(d->m_identifier, cur_index, new_index);
 }
 
 /*!
-    \qmlmethod SearchAndBrowseModel::indexOf(StandardItem item)
+    \qmlmethod FilterAndBrowseModel::indexOf(StandardItem item)
 
     Determines the index of \a item in this model.
 
@@ -877,23 +877,23 @@ QIviPendingReply<void> QIviSearchAndBrowseModel::move(int cur_index, int new_ind
 */
 
 /*!
-    \fn void QIviSearchAndBrowseModel::indexOf(const QVariant &variant)
+    \fn void QIfFilterAndBrowseModel::indexOf(const QVariant &variant)
 
     Determines the index of \a variant in this model.
 
-    The result is returned as a QIviPendingReply.
+    The result is returned as a QIfPendingReply.
 */
-QIviPendingReply<int> QIviSearchAndBrowseModel::indexOf(const QVariant &variant)
+QIfPendingReply<int> QIfFilterAndBrowseModel::indexOf(const QVariant &variant)
 {
-    Q_D(QIviSearchAndBrowseModel);
-    const auto *item = qtivi_gadgetFromVariant<QIviStandardItem>(this, variant);
+    Q_D(QIfFilterAndBrowseModel);
+    const auto *item = qtif_gadgetFromVariant<QIfStandardItem>(this, variant);
     if (!item)
-        return QIviPendingReply<int>::createFailedReply();
+        return QIfPendingReply<int>::createFailedReply();
 
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
     if (!backend) {
-        qtivi_qmlOrCppWarning(this, "Can't get the index without a connected backend");
-        return QIviPendingReply<int>::createFailedReply();
+        qtif_qmlOrCppWarning(this, "Can't get the index without a connected backend");
+        return QIfPendingReply<int>::createFailedReply();
     }
 
     return backend->indexOf(d->m_identifier, variant);
@@ -902,11 +902,11 @@ QIviPendingReply<int> QIviSearchAndBrowseModel::indexOf(const QVariant &variant)
 /*!
     \reimp
 */
-QHash<int, QByteArray> QIviSearchAndBrowseModel::roleNames() const
+QHash<int, QByteArray> QIfFilterAndBrowseModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
-        roles =  QIviPagingModel::roleNames();
+        roles =  QIfPagingModel::roleNames();
         roles[CanGoForwardRole] = "canGoForward";
     }
     return roles;
@@ -915,8 +915,8 @@ QHash<int, QByteArray> QIviSearchAndBrowseModel::roleNames() const
 /*!
     \internal
 */
-QIviSearchAndBrowseModel::QIviSearchAndBrowseModel(QIviServiceObject *serviceObject, QObject *parent)
-    : QIviSearchAndBrowseModel(parent)
+QIfFilterAndBrowseModel::QIfFilterAndBrowseModel(QIfServiceObject *serviceObject, QObject *parent)
+    : QIfFilterAndBrowseModel(parent)
 {
     setServiceObject(serviceObject);
 }
@@ -924,47 +924,47 @@ QIviSearchAndBrowseModel::QIviSearchAndBrowseModel(QIviServiceObject *serviceObj
 /*!
     \internal
 */
-QIviSearchAndBrowseModel::QIviSearchAndBrowseModel(QIviSearchAndBrowseModelPrivate &dd, QObject *parent)
-    : QIviPagingModel(dd, parent)
+QIfFilterAndBrowseModel::QIfFilterAndBrowseModel(QIfFilterAndBrowseModelPrivate &dd, QObject *parent)
+    : QIfPagingModel(dd, parent)
 {
 }
 
 /*!
     \reimp
 */
-void QIviSearchAndBrowseModel::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfFilterAndBrowseModel::connectToServiceObject(QIfServiceObject *serviceObject)
 {
-    Q_D(QIviSearchAndBrowseModel);
+    Q_D(QIfFilterAndBrowseModel);
 
-    QIviSearchAndBrowseModelInterface *backend = d->searchBackend();
+    QIfFilterAndBrowseModelInterface *backend = d->searchBackend();
     if (!backend)
         return;
 
-    QObjectPrivate::connect(backend, &QIviSearchAndBrowseModelInterface::availableContentTypesChanged,
-                            d, &QIviSearchAndBrowseModelPrivate::onAvailableContentTypesChanged);
-    QObjectPrivate::connect(backend, &QIviSearchAndBrowseModelInterface::contentTypeChanged,
-                            d, &QIviSearchAndBrowseModelPrivate::onContentTypeChanged);
-    QObjectPrivate::connect(backend, &QIviSearchAndBrowseModelInterface::queryIdentifiersChanged,
-                            d, &QIviSearchAndBrowseModelPrivate::onQueryIdentifiersChanged);
-    QObjectPrivate::connect(backend, &QIviSearchAndBrowseModelInterface::canGoBackChanged,
-                            d, &QIviSearchAndBrowseModelPrivate::onCanGoBackChanged);
-    QObjectPrivate::connect(backend, &QIviSearchAndBrowseModelInterface::canGoForwardChanged,
-                            d, &QIviSearchAndBrowseModelPrivate::onCanGoForwardChanged);
+    QObjectPrivate::connect(backend, &QIfFilterAndBrowseModelInterface::availableContentTypesChanged,
+                            d, &QIfFilterAndBrowseModelPrivate::onAvailableContentTypesChanged);
+    QObjectPrivate::connect(backend, &QIfFilterAndBrowseModelInterface::contentTypeChanged,
+                            d, &QIfFilterAndBrowseModelPrivate::onContentTypeChanged);
+    QObjectPrivate::connect(backend, &QIfFilterAndBrowseModelInterface::queryIdentifiersChanged,
+                            d, &QIfFilterAndBrowseModelPrivate::onQueryIdentifiersChanged);
+    QObjectPrivate::connect(backend, &QIfFilterAndBrowseModelInterface::canGoBackChanged,
+                            d, &QIfFilterAndBrowseModelPrivate::onCanGoBackChanged);
+    QObjectPrivate::connect(backend, &QIfFilterAndBrowseModelInterface::canGoForwardChanged,
+                            d, &QIfFilterAndBrowseModelPrivate::onCanGoForwardChanged);
 
-    QIviPagingModel::connectToServiceObject(serviceObject);
+    QIfPagingModel::connectToServiceObject(serviceObject);
 
-    //once the initialization is done QIviPagingModel will reset the model
+    //once the initialization is done QIfPagingModel will reset the model
 }
 
 /*!
     \reimp
 */
-void QIviSearchAndBrowseModel::clearServiceObject()
+void QIfFilterAndBrowseModel::clearServiceObject()
 {
-    Q_D(QIviSearchAndBrowseModel);
+    Q_D(QIfFilterAndBrowseModel);
     d->clearToDefaults();
 }
 
 QT_END_NAMESPACE
 
-#include "moc_qivisearchandbrowsemodel.cpp"
+#include "moc_qiffilterandbrowsemodel.cpp"

@@ -7,7 +7,7 @@
 ## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
-## This file is part of the QtIvi module of the Qt Toolkit.
+## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 ##
 ## $QT_BEGIN_LICENSE:GPL-EXCEPT$
 ## Commercial License Usage
@@ -30,7 +30,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtivi_macros.j2' as ivi %}
+{% import 'common/qtif_macros.j2' as if %}
 {% set class = '{0}'.format(struct) %}
 {% set oncedefine = '{0}_{1}_H_'.format(module.module_name|upper, class|upper) %}
 {% set exportsymbol = 'Q_{0}_EXPORT'.format(module|upper|replace('.', '_')) %}
@@ -50,17 +50,17 @@
 #include <QObject>
 #include <QDataStream>
 #include <QDebug>
-#include <QIviStandardItem>
+#include <QIfStandardItem>
 
 QT_BEGIN_NAMESPACE
 
 class {{class}}Private;
 
-class {{exportsymbol}} {{class}} : public QIviStandardItem
+class {{exportsymbol}} {{class}} : public QIfStandardItem
 {
     Q_GADGET
 {% for field in struct.fields %}
-    {{ivi.property(field, notify=false)}}
+    {{if.property(field, notify=false)}}
 {% endfor %}
 
 public:
@@ -74,15 +74,15 @@ public:
 
 {% for field in struct.fields %}
 {%   if field.name == "id" or field.name == "name" or field.name == "type" or field.name == "data" %}
-    {{ivi.prop_getter(field)}} override;
+    {{if.prop_getter(field)}} override;
 {%   else %}
-    {{ivi.prop_getter(field)}};
+    {{if.prop_getter(field)}};
 {%   endif %}
 {%   if not field.readonly and not field.const %}
 {%     if field.name == "id" or field.name == "data" %}
-    {{ivi.prop_setter(field)}} override;
+    {{if.prop_setter(field)}} override;
 {%     else %}
-    {{ivi.prop_setter(field)}};
+    {{if.prop_setter(field)}};
 {%   endif %}
 {%   endif %}
 {% endfor %}

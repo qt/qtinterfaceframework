@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIVISEARCHMODEL_P_H
-#define QIVISEARCHMODEL_P_H
+#ifndef QIFSEARCHMODEL_P_H
+#define QIFSEARCHMODEL_P_H
 
 //
 //  W A R N I N G
@@ -53,28 +53,28 @@
 // We mean it.
 //
 
-#include <QtIviCore/private/qivipagingmodel_p.h>
-#include <private/qtiviglobal_p.h>
+#include <QtInterfaceFramework/private/qifpagingmodel_p.h>
+#include <private/qtifglobal_p.h>
 
-#include "qiviqueryterm.h"
-#include "qivisearchandbrowsemodel.h"
-#include "qivisearchandbrowsemodelinterface.h"
-#include "qivistandarditem.h"
+#include "qifqueryterm.h"
+#include "qiffilterandbrowsemodel.h"
+#include "qiffilterandbrowsemodelinterface.h"
+#include "qifstandarditem.h"
 
 #include <QBitArray>
 #include <QUuid>
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTIVICORE_EXPORT QIviSearchAndBrowseModelPrivate : public QIviPagingModelPrivate
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFilterAndBrowseModelPrivate : public QIfPagingModelPrivate
 {
 public:
-    QIviSearchAndBrowseModelPrivate(const QString &interface, QIviSearchAndBrowseModel *model);
-    ~QIviSearchAndBrowseModelPrivate() override;
+    QIfFilterAndBrowseModelPrivate(const QString &interface, QIfFilterAndBrowseModel *model);
+    ~QIfFilterAndBrowseModelPrivate() override;
 
     void resetModel() override;
     void parseQuery();
-    void setupFilter(QIviAbstractQueryTerm* queryTerm, const QList<QIviOrderTerm> &orderTerms);
+    void setupFilter(QIfAbstractQueryTerm* queryTerm, const QList<QIfOrderTerm> &orderTerms);
     void clearToDefaults() override;
     void onCanGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start);
     void onCanGoBackChanged(const QUuid &identifier, bool canGoBack);
@@ -82,16 +82,16 @@ public:
     void onAvailableContentTypesChanged(const QStringList &contentTypes);
     void onQueryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers);
 
-    QIviSearchAndBrowseModelInterface *searchBackend() const;
+    QIfFilterAndBrowseModelInterface *searchBackend() const;
     void updateContentType(const QString &contentType);
 
-    QIviSearchAndBrowseModel * const q_ptr;
-    Q_DECLARE_PUBLIC(QIviSearchAndBrowseModel)
+    QIfFilterAndBrowseModel * const q_ptr;
+    Q_DECLARE_PUBLIC(QIfFilterAndBrowseModel)
 
     QString m_query;
 
-    QIviAbstractQueryTerm *m_queryTerm;
-    QList<QIviOrderTerm> m_orderTerms;
+    QIfAbstractQueryTerm *m_queryTerm;
+    QList<QIfOrderTerm> m_orderTerms;
 
     QString m_contentTypeRequested;
     QString m_contentType;
@@ -103,4 +103,4 @@ public:
 
 QT_END_NAMESPACE
 
-#endif // QIVISEARCHMODEL_P_H
+#endif // QIFSEARCHMODEL_P_H

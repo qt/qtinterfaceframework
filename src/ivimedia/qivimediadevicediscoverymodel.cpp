@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -39,43 +39,43 @@
 **
 ****************************************************************************/
 
-#include "qivimediadevicediscoverymodel.h"
-#include "qivimediadevicediscoverymodel_p.h"
+#include "qifmediadevicediscoverymodel.h"
+#include "qifmediadevicediscoverymodel_p.h"
 
-#include <QtIviCore/QIviServiceObject>
-#include <QtIviMedia/QIviMediaDevice>
+#include <QtInterfaceFramework/QIfServiceObject>
+#include <QtIfMedia/QIfMediaDevice>
 #include <QtDebug>
 
 QT_BEGIN_NAMESPACE
 
-QIviMediaDeviceDiscoveryModelPrivate::QIviMediaDeviceDiscoveryModelPrivate(const QString &interface, QIviMediaDeviceDiscoveryModel *parent)
-    : QIviAbstractFeatureListModelPrivate(interface, parent)
+QIfMediaDeviceDiscoveryModelPrivate::QIfMediaDeviceDiscoveryModelPrivate(const QString &interface, QIfMediaDeviceDiscoveryModel *parent)
+    : QIfAbstractFeatureListModelPrivate(interface, parent)
     , q_ptr(parent)
 {
 }
 
-void QIviMediaDeviceDiscoveryModelPrivate::initialize()
+void QIfMediaDeviceDiscoveryModelPrivate::initialize()
 {
-    QIviAbstractFeatureListModelPrivate::initialize();
-    Q_Q(QIviMediaDeviceDiscoveryModel);
+    QIfAbstractFeatureListModelPrivate::initialize();
+    Q_Q(QIfMediaDeviceDiscoveryModel);
 
     QObject::connect(q, &QAbstractListModel::rowsInserted,
-                     q, &QIviMediaDeviceDiscoveryModel::countChanged);
+                     q, &QIfMediaDeviceDiscoveryModel::countChanged);
     QObject::connect(q, &QAbstractListModel::rowsRemoved,
-                     q, &QIviMediaDeviceDiscoveryModel::countChanged);
+                     q, &QIfMediaDeviceDiscoveryModel::countChanged);
     QObject::connect(q, &QAbstractListModel::modelReset,
-                     q, &QIviMediaDeviceDiscoveryModel::countChanged);
+                     q, &QIfMediaDeviceDiscoveryModel::countChanged);
 }
 
-void QIviMediaDeviceDiscoveryModelPrivate::clearToDefaults()
+void QIfMediaDeviceDiscoveryModelPrivate::clearToDefaults()
 {
     qDeleteAll(m_deviceList);
     m_deviceList.clear();
 }
 
-void QIviMediaDeviceDiscoveryModelPrivate::resetModel(const QList<QIviServiceObject*> &deviceList)
+void QIfMediaDeviceDiscoveryModelPrivate::resetModel(const QList<QIfServiceObject*> &deviceList)
 {
-    Q_Q(QIviMediaDeviceDiscoveryModel);
+    Q_Q(QIfMediaDeviceDiscoveryModel);
     q->beginResetModel();
     qDeleteAll(m_deviceList);
     m_deviceList.clear();
@@ -83,15 +83,15 @@ void QIviMediaDeviceDiscoveryModelPrivate::resetModel(const QList<QIviServiceObj
     q->endResetModel();
 }
 
-void QIviMediaDeviceDiscoveryModelPrivate::onDeviceAdded(QIviServiceObject *device)
+void QIfMediaDeviceDiscoveryModelPrivate::onDeviceAdded(QIfServiceObject *device)
 {
-    QIviMediaDevice *mdevice = qobject_cast<QIviMediaDevice*>(device);
+    QIfMediaDevice *mdevice = qobject_cast<QIfMediaDevice*>(device);
     if (!mdevice) {
-        qWarning() << "Couldn't cast added Device to QIviMediaDevice. Aborting here.";
+        qWarning() << "Couldn't cast added Device to QIfMediaDevice. Aborting here.";
         return;
     }
 
-    Q_Q(QIviMediaDeviceDiscoveryModel);
+    Q_Q(QIfMediaDeviceDiscoveryModel);
     q->beginInsertRows(QModelIndex(), m_deviceList.count(), m_deviceList.count());
     m_deviceList += device;
     q->endInsertRows();
@@ -99,15 +99,15 @@ void QIviMediaDeviceDiscoveryModelPrivate::onDeviceAdded(QIviServiceObject *devi
     emit q->deviceAdded(mdevice);
 }
 
-void QIviMediaDeviceDiscoveryModelPrivate::onDeviceRemoved(QIviServiceObject *device)
+void QIfMediaDeviceDiscoveryModelPrivate::onDeviceRemoved(QIfServiceObject *device)
 {
-    QIviMediaDevice *mdevice = qobject_cast<QIviMediaDevice*>(device);
+    QIfMediaDevice *mdevice = qobject_cast<QIfMediaDevice*>(device);
     if (!mdevice) {
-        qWarning() << "Couldn't cast removed Device to QIviMediaDevice. Aborting here.";
+        qWarning() << "Couldn't cast removed Device to QIfMediaDevice. Aborting here.";
         return;
     }
 
-    Q_Q(QIviMediaDeviceDiscoveryModel);
+    Q_Q(QIfMediaDeviceDiscoveryModel);
     int index = m_deviceList.indexOf(device);
     if (index == -1) {
         qWarning() << "Failed to remove the Device. Couldn't find" << device << "in the list of available devices";
@@ -122,29 +122,29 @@ void QIviMediaDeviceDiscoveryModelPrivate::onDeviceRemoved(QIviServiceObject *de
     delete device;
 }
 
-QIviMediaDeviceDiscoveryModelBackendInterface *QIviMediaDeviceDiscoveryModelPrivate::discoveryBackend() const
+QIfMediaDeviceDiscoveryModelBackendInterface *QIfMediaDeviceDiscoveryModelPrivate::discoveryBackend() const
 {
-    return backend<QIviMediaDeviceDiscoveryModelBackendInterface*>();
+    return backend<QIfMediaDeviceDiscoveryModelBackendInterface*>();
 }
 
 /*!
-    \class QIviMediaDeviceDiscoveryModel
-    \inmodule QtIviMedia
+    \class QIfMediaDeviceDiscoveryModel
+    \inmodule QtIfMedia
     \brief Provides a model for discovering media devices.
 
-    The QIviMediaDeviceDiscoveryModel provides a way to query for available media devices and
+    The QIfMediaDeviceDiscoveryModel provides a way to query for available media devices and
     to get notified when new media devices get added or are removed.
 
-    All devices listed here need to be a subclass of QIviMediaDevice.
+    All devices listed here need to be a subclass of QIfMediaDevice.
 
-    The QIviMediaDeviceDiscoveryModel expects a single backend to be available. It is recommended to use it
-    with \l {QIviAbstractFeatureListModel::}{discoveryMode} set to \l QIviAbstractFeature::AutoDiscovery.
+    The QIfMediaDeviceDiscoveryModel expects a single backend to be available. It is recommended to use it
+    with \l {QIfAbstractFeatureListModel::}{discoveryMode} set to \l QIfAbstractFeature::AutoDiscovery.
 */
 
 /*!
     \qmltype MediaDeviceDiscoveryModel
-    \instantiates QIviMediaDeviceDiscoveryModel
-    \inqmlmodule QtIvi.Media
+    \instantiates QIfMediaDeviceDiscoveryModel
+    \inqmlmodule QtInterfaceFramework.Media
     \inherits AbstractFeatureListModel
     \brief Provides a model for discovering media devices.
 
@@ -170,8 +170,8 @@ QIviMediaDeviceDiscoveryModelBackendInterface *QIviMediaDeviceDiscoveryModelPriv
         \li The type of the media device. See \l SupportedMediaDevices for a detailed listing.
     \row
         \li \c serviceObject
-        \li QIviMediaDevice
-        \li The Media Device. This object be used as ServiceObject for other Features. E.g. The SearchAndBrowseModel.
+        \li QIfMediaDevice
+        \li The Media Device. This object be used as ServiceObject for other Features. E.g. The FilterAndBrowseModel.
     \endtable
 
 
@@ -180,22 +180,22 @@ QIviMediaDeviceDiscoveryModelBackendInterface *QIviMediaDeviceDiscoveryModelPriv
 */
 
 /*!
-    \enum QIviMediaDeviceDiscoveryModel::Roles
+    \enum QIfMediaDeviceDiscoveryModel::Roles
     \value NameRole
           The name of the media device. E.g. The name of the connected USB-Thumbdrive/SDCard or a connected Ipod.
     \value TypeRole
           The type of the media device. See \l SupportedMediaDevices for a detailed listing.
     \value ServiceObjectRole
-          A pointer to the media device itself. This pointer can be used as the ServiceObject for other Features. E.g. The QIviSearchAndBrowseModel.
+          A pointer to the media device itself. This pointer can be used as the ServiceObject for other Features. E.g. The QIfFilterAndBrowseModel.
 */
 
 /*!
-    Constructs a QIviMediaDeviceDiscoveryModel.
+    Constructs a QIfMediaDeviceDiscoveryModel.
 
-    The \a parent argument is passed on to the \l QIviAbstractFeatureListModel base class.
+    The \a parent argument is passed on to the \l QIfAbstractFeatureListModel base class.
 */
-QIviMediaDeviceDiscoveryModel::QIviMediaDeviceDiscoveryModel(QObject *parent)
-    : QIviAbstractFeatureListModel(*new QIviMediaDeviceDiscoveryModelPrivate(QLatin1String(QIviMediaDeviceDiscovery_iid), this), parent)
+QIfMediaDeviceDiscoveryModel::QIfMediaDeviceDiscoveryModel(QObject *parent)
+    : QIfAbstractFeatureListModel(*new QIfMediaDeviceDiscoveryModelPrivate(QLatin1String(QIfMediaDeviceDiscovery_iid), this), parent)
 {
 }
 
@@ -204,12 +204,12 @@ QIviMediaDeviceDiscoveryModel::QIviMediaDeviceDiscoveryModel(QObject *parent)
     \brief Holds the current number of rows in this model.
 */
 /*!
-    \property QIviMediaDeviceDiscoveryModel::count
+    \property QIfMediaDeviceDiscoveryModel::count
     \brief Holds the current number of rows in this model.
 */
-int QIviMediaDeviceDiscoveryModel::rowCount(const QModelIndex &parent) const
+int QIfMediaDeviceDiscoveryModel::rowCount(const QModelIndex &parent) const
 {
-    Q_D(const QIviMediaDeviceDiscoveryModel);
+    Q_D(const QIfMediaDeviceDiscoveryModel);
     if (parent.isValid())
         return 0;
 
@@ -219,9 +219,9 @@ int QIviMediaDeviceDiscoveryModel::rowCount(const QModelIndex &parent) const
 /*!
     \reimp
 */
-QVariant QIviMediaDeviceDiscoveryModel::data(const QModelIndex &index, int role) const
+QVariant QIfMediaDeviceDiscoveryModel::data(const QModelIndex &index, int role) const
 {
-    Q_D(const QIviMediaDeviceDiscoveryModel);
+    Q_D(const QIfMediaDeviceDiscoveryModel);
     if (!index.isValid())
         return QVariant();
 
@@ -230,7 +230,7 @@ QVariant QIviMediaDeviceDiscoveryModel::data(const QModelIndex &index, int role)
     if (row >= d->m_deviceList.count() || row < 0)
         return QVariant();
 
-    QIviMediaDevice *item = qobject_cast<QIviMediaDevice*>(d->m_deviceList.at(row));
+    QIfMediaDevice *item = qobject_cast<QIfMediaDevice*>(d->m_deviceList.at(row));
     if (!item)
         return QVariant();
 
@@ -256,13 +256,13 @@ QVariant QIviMediaDeviceDiscoveryModel::data(const QModelIndex &index, int role)
 
     \note The returned device is owned by the model and can be deleted at any time.
 */
-QIviMediaDevice *QIviMediaDeviceDiscoveryModel::get(int i) const
+QIfMediaDevice *QIfMediaDeviceDiscoveryModel::get(int i) const
 {
-    Q_D(const QIviMediaDeviceDiscoveryModel);
+    Q_D(const QIfMediaDeviceDiscoveryModel);
     if (i >= d->m_deviceList.count() || i < 0)
         return nullptr;
 
-    QIviMediaDevice *item = qobject_cast<QIviMediaDevice*>(d->m_deviceList.at(i));
+    QIfMediaDevice *item = qobject_cast<QIfMediaDevice*>(d->m_deviceList.at(i));
     return item;
 }
 
@@ -271,7 +271,7 @@ QIviMediaDevice *QIviMediaDeviceDiscoveryModel::get(int i) const
 
     \note The returned device is owned by the model and can be deleted at any time.
 */
-QIviMediaDevice *QIviMediaDeviceDiscoveryModel::at(int i) const
+QIfMediaDevice *QIfMediaDeviceDiscoveryModel::at(int i) const
 {
     return get(i);
 }
@@ -279,7 +279,7 @@ QIviMediaDevice *QIviMediaDeviceDiscoveryModel::at(int i) const
 /*!
     \reimp
 */
-QHash<int, QByteArray> QIviMediaDeviceDiscoveryModel::roleNames() const
+QHash<int, QByteArray> QIfMediaDeviceDiscoveryModel::roleNames() const
 {
     static QHash<int, QByteArray> roles;
     if (roles.isEmpty()) {
@@ -293,31 +293,31 @@ QHash<int, QByteArray> QIviMediaDeviceDiscoveryModel::roleNames() const
 /*!
     \internal
 */
-QIviMediaDeviceDiscoveryModel::QIviMediaDeviceDiscoveryModel(QIviMediaDeviceDiscoveryModelPrivate &dd, QObject *parent)
-    : QIviAbstractFeatureListModel(dd, parent)
+QIfMediaDeviceDiscoveryModel::QIfMediaDeviceDiscoveryModel(QIfMediaDeviceDiscoveryModelPrivate &dd, QObject *parent)
+    : QIfAbstractFeatureListModel(dd, parent)
 {
 }
 
 /*!
     \reimp
 */
-void QIviMediaDeviceDiscoveryModel::connectToServiceObject(QIviServiceObject *serviceObject)
+void QIfMediaDeviceDiscoveryModel::connectToServiceObject(QIfServiceObject *serviceObject)
 {
     Q_UNUSED(serviceObject)
-    Q_D(QIviMediaDeviceDiscoveryModel);
+    Q_D(QIfMediaDeviceDiscoveryModel);
 
-    QIviMediaDeviceDiscoveryModelBackendInterface *backend = d->discoveryBackend();
+    QIfMediaDeviceDiscoveryModelBackendInterface *backend = d->discoveryBackend();
     if (!backend)
         return;
 
-    QObjectPrivate::connect(backend, &QIviMediaDeviceDiscoveryModelBackendInterface::availableDevices,
-                            d, &QIviMediaDeviceDiscoveryModelPrivate::resetModel);
-    QObjectPrivate::connect(backend, &QIviMediaDeviceDiscoveryModelBackendInterface::deviceAdded,
-                            d, &QIviMediaDeviceDiscoveryModelPrivate::onDeviceAdded);
-    QObjectPrivate::connect(backend, &QIviMediaDeviceDiscoveryModelBackendInterface::deviceRemoved,
-                            d, &QIviMediaDeviceDiscoveryModelPrivate::onDeviceRemoved);
+    QObjectPrivate::connect(backend, &QIfMediaDeviceDiscoveryModelBackendInterface::availableDevices,
+                            d, &QIfMediaDeviceDiscoveryModelPrivate::resetModel);
+    QObjectPrivate::connect(backend, &QIfMediaDeviceDiscoveryModelBackendInterface::deviceAdded,
+                            d, &QIfMediaDeviceDiscoveryModelPrivate::onDeviceAdded);
+    QObjectPrivate::connect(backend, &QIfMediaDeviceDiscoveryModelBackendInterface::deviceRemoved,
+                            d, &QIfMediaDeviceDiscoveryModelPrivate::onDeviceRemoved);
 
-    QIviAbstractFeatureListModel::connectToServiceObject(serviceObject);
+    QIfAbstractFeatureListModel::connectToServiceObject(serviceObject);
 
     backend->initialize();
 }
@@ -325,14 +325,14 @@ void QIviMediaDeviceDiscoveryModel::connectToServiceObject(QIviServiceObject *se
 /*!
     \reimp
 */
-void QIviMediaDeviceDiscoveryModel::clearServiceObject()
+void QIfMediaDeviceDiscoveryModel::clearServiceObject()
 {
-    Q_D(QIviMediaDeviceDiscoveryModel);
+    Q_D(QIfMediaDeviceDiscoveryModel);
     d->clearToDefaults();
 }
 
 /*!
-    \fn void QIviMediaDeviceDiscoveryModel::deviceAdded(QIviMediaDevice *device)
+    \fn void QIfMediaDeviceDiscoveryModel::deviceAdded(QIfMediaDevice *device)
 
     This signal is emitted whenever a new media device got added. The new media device is passed as \a device.
 */
@@ -344,7 +344,7 @@ void QIviMediaDeviceDiscoveryModel::clearServiceObject()
 */
 
 /*!
-    \fn void QIviMediaDeviceDiscoveryModel::deviceRemoved(QIviMediaDevice *device)
+    \fn void QIfMediaDeviceDiscoveryModel::deviceRemoved(QIfMediaDevice *device)
 
     This signal is emitted whenever a media device got removed. The device which got removed is passed as \a device.
     Afterwards the device will be deleted.
@@ -359,4 +359,4 @@ void QIviMediaDeviceDiscoveryModel::clearServiceObject()
 
 QT_END_NAMESPACE
 
-#include "moc_qivimediadevicediscoverymodel.cpp"
+#include "moc_qifmediadevicediscoverymodel.cpp"

@@ -1,29 +1,29 @@
 {
-    "module": "ivivehiclefunctions",
+    "module": "ifvehiclefunctions",
     "testDir": "../../config.tests",
     "depends": [
-        "ivicore"
+        "interfaceframework"
     ],
 
     "features": {
         "vehiclefunctions_simulation_backend" : {
             "label": "Simulation Backend",
-            "condition": "features.ivivehiclefunctions",
+            "condition": "features.ifvehiclefunctions",
             "output": [ "privateFeature" ]
         },
         "vehiclefunctions_qtro_backend" : {
             "label": "Qt Remote Objects Backend",
-            "condition": "features.ivivehiclefunctions && features.remoteobjects",
+            "condition": "features.ifvehiclefunctions && features.remoteobjects",
             "output": [ "privateFeature" ]
         },
         "vehiclefunctions_qtro_simulation_server" : {
             "label": "Qt Remote Objects Simulation Server",
-            "condition": "features.ivivehiclefunctions && features.remoteobjects",
+            "condition": "features.ifvehiclefunctions && features.remoteobjects",
             "output": [ "privateFeature" ]
         },
-         "ivivehiclefunctions" : {
-            "label": "Qt IVI VehicleFunctions",
-            "condition": "features.ivicore && features.ivigenerator",
+         "ifvehiclefunctions" : {
+            "label": "Qt Interface Framework VehicleFunctions",
+            "condition": "features.interfaceframework && features.ifcodegen",
             "output": [ "publicFeature" ]
         }
     },
@@ -31,16 +31,16 @@
     "report": [
         {
             "type": "warning",
-            "condition": "!features.ivivehiclefunctions",
-            "message": "Cannot build the IVI VehicleFunctions module because its dependencies are not satisfied or it was disabled.
-The IVI VehicleFunctions module needs the IVI Core module and the IVI Generator."
+            "condition": "!features.ifvehiclefunctions",
+            "message": "Cannot build the Interface Framework VehicleFunctions module because its dependencies are not satisfied or it was disabled.
+The Interface Framework VehicleFunctions module needs the Interface Framework Core module and the Interface Framework Generator."
         }
     ],
 
     "summary": [
         {
-            "section": "Qt IVI VehicleFunctions",
-            "condition": "features.ivivehiclefunctions",
+            "section": "Qt Interface Framework VehicleFunctions",
+            "condition": "features.ifvehiclefunctions",
             "entries": [
                 "vehiclefunctions_qtro_simulation_server",
                 {
@@ -54,8 +54,8 @@ The IVI VehicleFunctions module needs the IVI Core module and the IVI Generator.
         },
         {
             "type": "feature",
-            "args": "ivivehiclefunctions",
-            "condition": "!features.ivivehiclefunctions"
+            "args": "ifvehiclefunctions",
+            "condition": "!features.ifvehiclefunctions"
         }
     ]
 }

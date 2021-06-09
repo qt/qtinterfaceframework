@@ -5,7 +5,7 @@
 ** Copyright (C) 2018 Pelagicore AG
 ** Contact: https://www.qt.io/licensing/
 **
-** This file is part of the QtIvi module of the Qt Toolkit.
+** This file is part of the QtInterfaceFramework module of the Qt Toolkit.
 **
 ** $QT_BEGIN_LICENSE:LGPL$
 ** Commercial License Usage
@@ -40,13 +40,13 @@
 ****************************************************************************/
 
 import QtQuick 2.0
-import QtIvi.VehicleFunctions.simulation 1.0
+import QtInterfaceFramework.VehicleFunctions.simulation 1.0
 
 QtObject {
-    property var qiviclimatecontrol : QIviClimateControlSimulation {
-        id: qiviclimatecontrol
+    property var qifclimatecontrol : QIfClimateControlSimulation {
+        id: qifclimatecontrol
     }
-    property var qiviwindowcontrol : QIviConcreteWindowControlSimulation {
-        id: qiviwindowcontrol
+    property var qifwindowcontrol : QIfConcreteWindowControlSimulation {
+        id: qifwindowcontrol
     }
 }

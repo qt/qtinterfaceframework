@@ -1,14 +1,14 @@
 %modules = ( # path to module name map
-    "QtIviCore" => "$basedir/src/ivicore",
-    "QtIviVehicleFunctions" => "$basedir/src/ivivehiclefunctions;$out_basedir/src/ivivehiclefunctions",
-    "QtIviMedia" => "$basedir/src/ivimedia",
-    "QtIviRemoteObjectsHelper" => "$basedir/src/helper/remoteobjects",
+    "QtInterfaceFramework" => "$basedir/src/interfaceframework",
+    "QtIfVehicleFunctions" => "$basedir/src/ifvehiclefunctions;$out_basedir/src/ifvehiclefunctions",
+    "QtIfMedia" => "$basedir/src/ifmedia",
+    "QtIfRemoteObjectsHelper" => "$basedir/src/helper/remoteobjects",
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
 %classnames = (
-     "qiviqueryterm.h" => "QIviAbstractQueryTerm", "QIviConjunctionTerm", "QIviScopeTerm", "QIviFilterTerm", "QIviOrderTerm",
-     "qivistandarditem.h" => "QIviSearchAndBrowseModelItem"
+     "qifqueryterm.h" => "QIfAbstractQueryTerm", "QIfConjunctionTerm", "QIfScopeTerm", "QIfFilterTerm", "QIfOrderTerm",
+     "qifstandarditem.h" => "QIfFilterAndBrowseModelItem"
 );
 %deprecatedheaders = (
 );
@@ -25,6 +25,6 @@
 );
 
 %inject_headers = (
-    "$basedir/src/helper/remoteobjects" => [ "rep_qivipagingmodel_source.h", "rep_qivipagingmodel_replica.h" ]
+    "$basedir/src/helper/remoteobjects" => [ "rep_qifpagingmodel_source.h", "rep_qifpagingmodel_replica.h" ]
 )
 

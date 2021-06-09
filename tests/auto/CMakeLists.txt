@@ -1,8 +1,8 @@
 # Generated from auto.pro.
 
-if(TARGET Qt::IviCore)
+if(TARGET Qt::InterfaceFramework)
     add_subdirectory(core)
 endif()
-if(TARGET Qt::IviVehicleFunctions)
+if(TARGET Qt::IfVehicleFunctions)
     add_subdirectory(vehiclefunctions)
 endif()
