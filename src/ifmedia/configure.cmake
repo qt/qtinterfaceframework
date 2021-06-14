@@ -12,7 +12,6 @@ set_property(CACHE INPUT_taglib PROPERTY STRINGS undefined no qt system)
 
 qt_find_package(WrapSystemTagLib PROVIDED_TARGETS WrapSystemTagLib::WrapSystemTagLib MODULE_NAME ifmedia QMAKE_LIB taglib)
 
-
 #### Tests
 
 
@@ -21,6 +20,7 @@ qt_find_package(WrapSystemTagLib PROVIDED_TARGETS WrapSystemTagLib::WrapSystemTa
 
 qt_feature("taglib" PRIVATE
     LABEL "taglib"
+    CONDITION QT_FEATURE_shared
     DISABLE INPUT_taglib STREQUAL 'no'
 )
 qt_feature_definition("taglib" "QTIF_NO_TAGLIB" NEGATE)
