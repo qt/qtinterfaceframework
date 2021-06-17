@@ -16,15 +16,9 @@ qt_internal_add_tool(${target_name}
 )
 
 # Resources:
-set_source_files_properties("../../plugins/ifvehiclefunctions/vehiclefunctions_simulator/QIfConcreteWindowControlSimulation.qml"
-    PROPERTIES QT_RESOURCE_ALIAS "QIfConcreteWindowControlSimulation.qml"
-)
-set_source_files_properties("../../plugins/ifvehiclefunctions/vehiclefunctions_simulator/simulation.qml"
-    PROPERTIES QT_RESOURCE_ALIAS "simulation.qml"
-)
 set(qml_resource_files
-    "QIfConcreteWindowControlSimulation.qml"
-    "simulation.qml"
+    "../../plugins/ifvehiclefunctions/vehiclefunctions_simulator/QIfConcreteWindowControlSimulation.qml"
+    "../../plugins/ifvehiclefunctions/vehiclefunctions_simulator/simulation.qml"
 )
 
 qt_internal_add_resource(${target_name} "qml"

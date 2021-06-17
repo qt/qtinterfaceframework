@@ -35,11 +35,8 @@ target_link_libraries(chapter5-ipc-server PUBLIC
 
 
 # Resources:
-set_source_files_properties("../backend_simulator/simulation.qml"
-    PROPERTIES QT_RESOURCE_ALIAS "simulation.qml"
-)
 set(simulation_resource_files
-    "simulation.qml"
+    "../backend_simulator/simulation.qml"
 )
 
 qt6_add_resources(chapter5-ipc-server "simulation"
