@@ -44,6 +44,19 @@ qt_internal_add_module(InterfaceFramework
         Qt6InterfaceFrameworkMacros.cmake
 )
 
+# When the system-qface is used we need to save the location of the used Python3 interpreter in
+# the module pri file, in order to use from qmake
+if(QT_FEATURE_system_qface)
+    qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
+    set_target_properties(InterfaceFramework PROPERTIES
+        QT_MODULE_PRI_EXTRA_CONTENT
+"
+QMAKE_PYTHON3_LOCATION = ${Python3_EXECUTABLE}
+QMAKE_PYTHON3_VERSION = ${Python3_VERSION}
+"
+    )
+endif()
+
 #### Keys ignored in scope 1:.:.:interfaceframework.pro:<TRUE>:
 # CMAKE_MODULE_TESTS = "'-'"
 # DISTFILES = "$$PWD/doc/*.qdocconf" "$$PWD/doc/online/*.qdocconf" "$$PWD/doc/src/*.qdoc" "$$PWD/doc/src/ifcodegen/*.qdoc" "$$PWD/doc/images/*.jpg" "$$PWD/doc/images/*.png"
