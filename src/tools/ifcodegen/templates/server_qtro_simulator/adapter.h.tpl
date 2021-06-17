@@ -36,11 +36,11 @@
 #ifndef {{oncedefine}}
 #define {{oncedefine}}
 
-#include <QIfRemoteObjectSourceHelper>
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectSourceHelper>
+#include "QtIfRemoteObjectsHelper/rep_qifpagingmodel_source.h"
 
 #include "{{interface|lower}}backend.h"
 #include "rep_{{interface|lower}}_source.h"
-#include "rep_qifpagingmodel_source.h"
 
 QT_BEGIN_NAMESPACE
 

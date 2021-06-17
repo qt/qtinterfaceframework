@@ -38,7 +38,7 @@
 #include <QIfPagingModelInterface>
 #include "{{property.type.nested|lower}}.h"
 
-#include "rep_qifpagingmodel_replica.h"
+#include "QtIfRemoteObjectsHelper/rep_qifpagingmodel_replica.h"
 
 class {{class}} : public QIfPagingModelInterface
 {

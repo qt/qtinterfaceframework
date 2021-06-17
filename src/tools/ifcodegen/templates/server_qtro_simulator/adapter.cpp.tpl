@@ -34,7 +34,7 @@
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 #include "{{interface|lower}}adapter.h"
 
-#include <QIfPagingModelAddressWrapper>
+#include <QtIfRemoteObjectsHelper/QIfPagingModelAddressWrapper>
 
 Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lower}}backend.remoteobjects", QtInfoMsg)
 

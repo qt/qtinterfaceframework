@@ -41,7 +41,7 @@
 #define QIFPAGINGMODELQTROADAPTER_H
 
 #include <QtInterfaceFramework/QIfPagingModelInterface>
-#include "rep_qifpagingmodel_source.h"
+#include "QtIfRemoteObjectsHelper/rep_qifpagingmodel_source.h"
 
 QT_BEGIN_NAMESPACE
 

@@ -39,7 +39,7 @@
 #define {{oncedefine}}
 
 #include <QRemoteObjectNode>
-#include <QIfRemoteObjectReplicaHelper>
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectReplicaHelper>
 {% if module.tags.config.module %}
 #include <{{module.tags.config.module}}/{{interface}}BackendInterface>
 {% else %}
