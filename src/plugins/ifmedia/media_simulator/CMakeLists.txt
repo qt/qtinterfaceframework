@@ -28,6 +28,10 @@ qt_internal_add_plugin(MediaPlugin
         Qt::IfMedia
         Qt::Multimedia
         Qt::Sql
+)
+
+qt_internal_extend_target(MediaPlugin CONDITION QT_FEATURE_taglib
+    LIBRARIES
         WrapTagLib::WrapTagLib
 )
 

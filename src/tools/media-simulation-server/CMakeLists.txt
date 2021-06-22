@@ -30,7 +30,6 @@ qt_internal_add_tool(${target_name}
         Qt::Multimedia
         Qt::RemoteObjects
         Qt::Sql
-        WrapTagLib::WrapTagLib
         Qt::IfRemoteObjectsHelper
 )
 
@@ -44,6 +43,12 @@ if (TARGET ${target_name})
         qiffilterandbrowsemodel.rep
     )
 endif()
+
+qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_taglib
+    LIBRARIES
+        WrapTagLib::WrapTagLib
+)
+
 
 #### Keys ignored in scope 1:.:.:media-simulation-server.pro:<TRUE>:
 # TEMPLATE = "app"
