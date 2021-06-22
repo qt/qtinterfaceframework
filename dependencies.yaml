@@ -5,3 +5,6 @@ dependencies:
   ../qtremoteobjects:
     ref: e7282d572322dbe2eb9124a8924788fc218d5c5c
     required: true
+  ../qtmultimedia:
+    ref: cbfd3e4b508d12243c85db34b496023edbb00f8a
+    required: true
