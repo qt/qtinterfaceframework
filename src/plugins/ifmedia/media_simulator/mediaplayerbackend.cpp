@@ -45,6 +45,7 @@
 
 #include <QtConcurrent/QtConcurrent>
 
+#include <QtMultimedia/QAudioOutput>
 #include <QFuture>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -72,15 +73,16 @@ MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *pa
             this, &MediaPlayerBackend::onStateChanged);
     connect(m_player, &QMediaPlayer::mediaStatusChanged,
             this, &MediaPlayerBackend::onMediaStatusChanged);
-    connect(m_player, &QMediaPlayer::volumeChanged,
+    connect(m_player->audioOutput(), &QAudioOutput::volumeChanged,
             this, &MediaPlayerBackend::volumeChanged);
-    connect(m_player, &QMediaPlayer::mutedChanged,
+    connect(m_player->audioOutput(), &QAudioOutput::mutedChanged,
             this, &MediaPlayerBackend::mutedChanged);
     connect(this, &MediaPlayerBackend::playTrack,
             this, &MediaPlayerBackend::onPlayTrack,
             Qt::QueuedConnection);
 
     m_db = database;
+    m_player->setAudioOutput(new QAudioOutput(m_player));
 }
 
 void MediaPlayerBackend::initialize()
@@ -88,8 +90,8 @@ void MediaPlayerBackend::initialize()
     emit canReportCountChanged(true);
     emit durationChanged(0);
     emit positionChanged(0);
-    emit volumeChanged(m_player->volume());
-    emit mutedChanged(m_player->isMuted());
+    emit volumeChanged(m_player->audioOutput()->volume());
+    emit mutedChanged(m_player->audioOutput()->isMuted());
     emit initializationDone();
 }
 
@@ -294,12 +296,12 @@ int MediaPlayerBackend::currentIndex() const
 
 int MediaPlayerBackend::volume() const
 {
-    return m_player->volume();
+    return m_player->audioOutput()->volume();
 }
 
 bool MediaPlayerBackend::isMuted() const
 {
-    return m_player->isMuted();
+    return m_player->audioOutput()->isMuted();
 }
 
 bool MediaPlayerBackend::canReportCount() const
@@ -447,8 +449,8 @@ void MediaPlayerBackend::setCurrentIndex(int index)
 void MediaPlayerBackend::setVolume(int volume)
 {
     qCDebug(media) << Q_FUNC_INFO << volume;
-    if (volume != m_player->volume()) {
-        m_player->setVolume(volume);
+    if (volume != m_player->audioOutput()->volume()) {
+        m_player->audioOutput()->setVolume(volume);
         emit volumeChanged(volume);
     }
 }
@@ -456,8 +458,8 @@ void MediaPlayerBackend::setVolume(int volume)
 void MediaPlayerBackend::setMuted(bool muted)
 {
     qCDebug(media) << Q_FUNC_INFO << muted;
-    if (muted != m_player->isMuted()) {
-        m_player->setMuted(muted);
+    if (muted != m_player->audioOutput()->isMuted()) {
+        m_player->audioOutput()->setMuted(muted);
         emit mutedChanged(muted);
     }
 }
