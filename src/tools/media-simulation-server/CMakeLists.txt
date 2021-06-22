@@ -6,6 +6,7 @@
 
 qt_get_tool_target_name(target_name ifmedia-simulation-server)
 qt_internal_add_tool(${target_name}
+    TOOLS_TARGET IfMedia
     SOURCES
         ../../plugins/ifmedia/media_simulator/database_helper.h
         ../../plugins/ifmedia/media_simulator/logging.cpp ../../plugins/ifmedia/media_simulator/logging.h
@@ -32,12 +33,17 @@ qt_internal_add_tool(${target_name}
         WrapTagLib::WrapTagLib
         Qt::IfRemoteObjectsHelper
 )
-qt6_add_repc_sources(ifmedia-simulation-server
-    qifmediaindexer.rep
-    qifmediaplayer.rep
-    qifmediadiscoverymodel.rep
-    qiffilterandbrowsemodel.rep
-)
+
+# When cross-compiling the tool might not be compiled and the target
+# doesn't exist in this case
+if (TARGET ${target_name})
+    qt6_add_repc_sources(${target_name}
+        qifmediaindexer.rep
+        qifmediaplayer.rep
+        qifmediadiscoverymodel.rep
+        qiffilterandbrowsemodel.rep
+    )
+endif()
 
 #### Keys ignored in scope 1:.:.:media-simulation-server.pro:<TRUE>:
 # TEMPLATE = "app"
