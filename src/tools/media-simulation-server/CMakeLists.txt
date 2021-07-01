@@ -30,7 +30,7 @@ qt_internal_add_tool(${target_name}
         Qt::Multimedia
         Qt::RemoteObjects
         Qt::Sql
-        Qt::IfRemoteObjectsHelper
+        Qt::IfRemoteObjectsHelperPrivate
 )
 
 # When cross-compiling the tool might not be compiled and the target

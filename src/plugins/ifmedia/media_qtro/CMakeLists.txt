@@ -19,7 +19,7 @@ qt_internal_add_plugin(MediaQtROPlugin
         Qt::InterfaceFramework
         Qt::IfMedia
         Qt::RemoteObjects
-        Qt::IfRemoteObjectsHelper
+        Qt::IfRemoteObjectsHelperPrivate
 )
 qt6_add_repc_replicas(MediaQtROPlugin
     ../../../tools/media-simulation-server/qifmediaindexer.rep

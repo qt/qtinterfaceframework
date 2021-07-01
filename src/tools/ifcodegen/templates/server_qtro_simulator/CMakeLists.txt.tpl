@@ -28,8 +28,8 @@
 #############################################################################
 #}
 
-if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelper)
-    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelper)
+if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivate)
+    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelperPrivate)
 endif()
 
 set(${CURRENT_TARGET}_SOURCES
@@ -58,7 +58,7 @@ qt6_add_repc_sources(${CURRENT_TARGET}
 
 target_link_libraries(${CURRENT_TARGET} PRIVATE
     Qt6::RemoteObjects
-    Qt6::IfRemoteObjectsHelper
+    Qt6::IfRemoteObjectsHelperPrivate
 )
 
 ### MISSING

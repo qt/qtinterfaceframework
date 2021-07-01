@@ -10,7 +10,7 @@
 # building the module and at that time the rep headers are not created yet
 set(QT_FEATURE_headersclean FALSE)
 
-qt_internal_add_module(IfRemoteObjectsHelper
+qt_internal_add_module(IfRemoteObjectsHelperPrivate
     CONFIG_MODULE_NAME ifremoteobjects_helper
     STATIC
     INTERNAL_MODULE
@@ -24,10 +24,10 @@ qt_internal_add_module(IfRemoteObjectsHelper
         Qt::Qml
         Qt::RemoteObjects
 )
-qt6_add_repc_sources(IfRemoteObjectsHelper
+qt6_add_repc_sources(IfRemoteObjectsHelperPrivate
     qifpagingmodel.rep
 )
-qt6_add_repc_replicas(IfRemoteObjectsHelper
+qt6_add_repc_replicas(IfRemoteObjectsHelperPrivate
     qifpagingmodel.rep
 )
 

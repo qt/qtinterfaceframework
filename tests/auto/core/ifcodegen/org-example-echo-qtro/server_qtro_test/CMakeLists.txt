@@ -18,7 +18,7 @@ qt_internal_add_test(tst_org-example-echo-qtro
         Qt::Core
         Qt::InterfaceFramework
         Qt::Test
-        Qt::IfRemoteObjectsHelper
+        Qt::IfRemoteObjectsHelperPrivate
 )
 set_target_properties(tst_org-example-echo-qtro PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
