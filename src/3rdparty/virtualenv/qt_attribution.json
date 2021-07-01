@@ -1,7 +1,7 @@
 {
     "Id": "relocate-virtualenv",
     "Name": "relocate-virtualenv",
-    "QDocModule": "qtivi",
+    "QDocModule": "qtinterfaceframework",
     "QtUsage": "Used to make the python3 virtualen relocatable, needed for the ivigenerator",
     "Path": "relocate-virtualenv.py",
 

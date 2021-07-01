@@ -56,7 +56,13 @@ namespace qtif_helper {
 using namespace qtif_helper;
 
 /*!
+      \qmlmodule IfSimulator 1.0
+      \internal
+    */
+
+/*!
     \qmltype IfSimulator
+    \inqmlmodule IfSimulator
 
     \brief The global object for parsing simulation data inside a QIfSimulationEngine.
 

@@ -179,7 +179,7 @@ bool QIfStandardItem::operator==(const QIfStandardItem &other) const
 }
 
 /*!
-    \fn bool QIfStandardItem::operator!=(const QIfStandardItem &other)
+    \fn bool QIfStandardItem::operator!=(const QIfStandardItem &other) const
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 

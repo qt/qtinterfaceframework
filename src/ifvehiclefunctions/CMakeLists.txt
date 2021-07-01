@@ -29,12 +29,11 @@ qt_ifcodegen_include(IfVehicleFunctions
     QFACE_SOURCES ifvehiclefunctions.qface
 )
 
-# special case end
-
-#### Keys ignored in scope 1:.:.:ifvehiclefunctions.pro:<TRUE>:
-# CMAKE_MODULE_TESTS = "'-'"
-# OTHER_FILES = "$$PWD/doc/*.qdocconf" "$$PWD/doc/src/*.qdoc" "$$PWD/doc/snippets/*" "$$PWD/doc/images/*"
-# QT_FOR_CONFIG = "interfaceframework"
-
-## Scopes:
 #####################################################################
+## Documentation
+#####################################################################
+
+file(GLOB_RECURSE allDocFiles "doc/*.qdoc" "doc/*.png" "doc/*.qdocconf")
+add_custom_target(IfVehicleFunctions_Documentation SOURCES
+    ${allDocFiles}
+)

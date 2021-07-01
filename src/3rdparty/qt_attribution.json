@@ -1,15 +1,15 @@
 {
     "Id": "qface",
     "Name": "QFace",
-    "QDocModule": "qtivi",
+    "QDocModule": "qtinterfaceframework",
     "QtUsage": "Used for qtivi autogeneration of interfaces.",
-    "Files": "qface ../doc/qtivi/src/template-syntax.qdoc ../doc/qtivi/src/idl-syntax.qdoc",
+    "Files": "qface ../doc/interfaceframework/src/template-syntax.qdoc ../doc/interfaceframework/src/idl-syntax.qdoc",
 
     "Description": "QFace is a generator framework based on a modern IDL.",
     "Homepage": "https://pelagicore.github.io/qface",
     "Version": "2.0.3",
 
-    "License": "MIT",
+    "License": "MIT License",
     "LicenseId": "MIT",
     "LicenseFile": "qface/LICENSE",
     "Copyright": "Copyright (C) 2019 Luxoft Sweden AB"

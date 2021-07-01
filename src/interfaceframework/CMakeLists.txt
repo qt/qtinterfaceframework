@@ -57,14 +57,6 @@ QMAKE_PYTHON3_VERSION = ${Python3_VERSION}
     )
 endif()
 
-#### Keys ignored in scope 1:.:.:interfaceframework.pro:<TRUE>:
-# CMAKE_MODULE_TESTS = "'-'"
-# DISTFILES = "$$PWD/doc/*.qdocconf" "$$PWD/doc/online/*.qdocconf" "$$PWD/doc/src/*.qdoc" "$$PWD/doc/src/ifcodegen/*.qdoc" "$$PWD/doc/images/*.jpg" "$$PWD/doc/images/*.png"
-# QMAKE_DOCS_TARGETDIR = "interfaceframework"
-
-## Scopes:
-#####################################################################
-
 #### Keys ignored in scope 5:.:queryparser:queryparser/queryparser.pri:enable-qlalr:
 # QMAKE_EXTRA_COMPILERS = "flex" "qlalr"
 # flex.CONFIG = "no_link"
@@ -86,3 +78,16 @@ qt_internal_extend_target(InterfaceFramework CONDITION NOT enable-qlalr
 
 #### Keys ignored in scope 7:.:queryparser:queryparser/queryparser.pri:else:
 # OTHER_FILES = "$$FLEX" "$$QLALR"
+
+#####################################################################
+## Documentation
+#####################################################################
+
+qt_internal_add_docs(InterfaceFramework
+    doc/qtinterfaceframework.qdocconf
+)
+
+file(GLOB_RECURSE allDocFiles "doc/*.qdoc" "doc/*.png" "doc/*.qdocconf")
+add_custom_target(InterfaceFramework_Documentation SOURCES
+    ${allDocFiles}
+)

@@ -309,7 +309,7 @@ bool QIfTunerStation::operator==(const QIfTunerStation &other) const
 }
 
 /*!
-    \fn bool QIfTunerStation::operator!=(const QIfTunerStation &other)
+    \fn bool QIfTunerStation::operator!=(const QIfTunerStation &other) const
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 
@@ -406,7 +406,7 @@ bool QIfAmFmTunerStation::operator==(const QIfAmFmTunerStation &other) const
 }
 
 /*!
-    \fn bool QIfAmFmTunerStation::operator!=(const QIfAmFmTunerStation &other)
+    \fn bool QIfAmFmTunerStation::operator!=(const QIfAmFmTunerStation &other) const
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 

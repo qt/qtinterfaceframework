@@ -30,6 +30,11 @@ qt_internal_add_module(IfMedia
         Qt::InterfaceFrameworkPrivate
 )
 
-#### Keys ignored in scope 1:.:.:ifmedia.pro:<TRUE>:
-# CMAKE_MODULE_TESTS = "'-'"
-# OTHER_FILES = "$$PWD/doc/*.qdocconf" "$$PWD/doc/src/*.qdoc"
+#####################################################################
+## Documentation
+#####################################################################
+
+file(GLOB_RECURSE allDocFiles "doc/*.qdoc" "doc/*.png" "doc/*.qdocconf")
+add_custom_target(IfMedia_Documentation SOURCES
+    ${allDocFiles}
+)

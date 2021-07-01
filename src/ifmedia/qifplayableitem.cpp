@@ -179,7 +179,7 @@ bool QIfPlayableItem::operator==(const QIfPlayableItem &other) const
 }
 
 /*!
-    \fn bool QIfPlayableItem::operator!=(const QIfPlayableItem &other)
+    \fn bool QIfPlayableItem::operator!=(const QIfPlayableItem &other) const
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 
@@ -526,7 +526,7 @@ QDataStream &operator>>(QDataStream &stream, QIfAudioTrackItem &obj)
 }
 
 /*!
-    \fn bool QIfAudioTrackItem::operator!=(const QIfAudioTrackItem &other)
+    \fn bool QIfAudioTrackItem::operator!=(const QIfAudioTrackItem &other) const
 
     Returns \e true if this item is not equal to \a other; otherwise returns false.
 

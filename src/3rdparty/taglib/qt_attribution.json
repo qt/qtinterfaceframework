@@ -1,7 +1,7 @@
 {
     "Id": "taglib",
     "Name": "taglib",
-    "QDocModule": "qtivi",
+    "QDocModule": "qtinterfaceframework",
     "QtUsage": "Used by the QIfMedia reference simulation when indexing local media",
     "Path": "taglib",
 
@@ -11,7 +11,7 @@
 
     "License": "Lesser GNU General Public License and Mozilla Public License",
     "LicenseId": "LGPL AND MPL",
-    "LicenseFile": [ "taglib/COPYING.LGPL", "taglib/COPYING.MPL" ],
+    "LicenseFiles": [ "taglib/COPYING.LGPL", "taglib/COPYING.MPL" ],
     "CopyrightFile": "COPYRIGHT.txt"
 }
 

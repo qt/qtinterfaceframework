@@ -31,7 +31,7 @@
     \title Qt Interface Framework
     \brief Overview of the Qt Interface Framework Module
 
-    The Qt In-Vehicle Infotainment (Interface Framework) module provides both, the tools and the core APIs, for you
+    The Qt Interface Framework module provides both, the tools and the core APIs, for you
     to implement Middleware APIs, Middleware Backends, and Middlware Services. The
     \l{Qt Interface Framework Generator} provides a flexible way to define new APIs via an Interface Definition
     Language (IDL) and generate classes for use, from C++ and QML.
@@ -44,7 +44,7 @@
     The following diagram illustrates the generic architecture in Qt Interface Framework: Middleware API,
     Middleware Backend, and Middleware Service.
 
-    \image interfaceframework-overview.png "Qt Interface Framework Architecture"
+    \image qtinterfaceframework-overview.png "Qt Interface Framework Architecture"
 
     This pattern of separation is necessary to drive the following use cases:
 
@@ -105,12 +105,12 @@
     In addition, it is available under the \l{GNU Lesser General Public License, version 3}, or
     See \l{Qt Licensing} for further details.
 
-    Executables on Windows potentially link against \l{The qtmain Library}. This library is available
-    under commercial licenses, and in addition under the \l{BSD 3-clause "New" or "Revised" License}.
+    Executables on Windows potentially link against \l{The QtEntryPoint Library}. This library is
+    available under commercial licenses and also under the \l{BSD 3-clause "New" or "Revised" License}.
 
     Furthermore Qt Interface Framework potentially contains third party modules under following
     permissive licenses:
 
-    \generatelist{groupsbymodule attributions-interfaceframework}
+    \generatelist{groupsbymodule attributions-qtinterfaceframework}
 
 */

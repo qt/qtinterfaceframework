@@ -1,9 +1,9 @@
 project                       = QtInterfaceFramework
-description                   = QtInterfaceFramework Reference Documentation
+description                   = Qt Interface Framework Reference Documentation
 version                       = $QT_VERSION
-url                           = http://doc.qt.io/QtIF
+url                           = http://doc.qt.io/QtInterfaceFramework
 
-moduleheader                  = QtIfDoc
+moduleheader                  = QtInterfaceFrameworkDoc
 includepaths                  = -I . \
                                 -I ..
 
@@ -22,27 +22,27 @@ examples.fileextensions      += *.qface *.yaml
 
 include(../../ifvehiclefunctions/doc/qtifvehiclefunctions.qdocconf)
 include(../../ifmedia/doc/qtifmedia.qdocconf)
-include(exampleurl-interfaceframework.qdocconf)
+include(exampleurl-qtinterfaceframework.qdocconf)
 
 # include the backend plugins documentation
 include(../../plugins/ifmedia/doc/qtifmedia_plugins.qdocconf)
 include(../../plugins/ifvehiclefunctions/doc/qtifvehiclefunctions_plugins.qdocconf)
 
 # include extra image to qhp (referred to in the generated examples-manifest.xml)
-HTML.extraimages             += images/interfaceframework-codesample.png
-qhp.QtInterfaceFramework.extraFiles         += images/interfaceframework-codesample.png
+HTML.extraimages             += images/qtinterfaceframework-codesample.png
+qhp.QtInterfaceFramework.extraFiles         += images/qtinterfaceframework-codesample.png
 
 qhp.projects                  = QtInterfaceFramework
 
-qhp.QtInterfaceFramework.file                = interfaceframework.qhp
+qhp.QtInterfaceFramework.file                = qtinterfaceframework.qhp
 qhp.QtInterfaceFramework.namespace           = org.qt-project.interfaceframework.$QT_VERSION_TAG
 qhp.QtInterfaceFramework.virtualFolder       = interfaceframework
 qhp.QtInterfaceFramework.indexTitle          = Qt Interface Framework
 qhp.QtInterfaceFramework.indexRoot           =
 
-qhp.QtInterfaceFramework.filterAttributes    = interfaceframework $QT_VERSION qtrefdoc
+qhp.QtInterfaceFramework.filterAttributes    = qtinterfaceframework $QT_VERSION qtrefdoc
 qhp.QtInterfaceFramework.customFilters.Qt.name = QtInterfaceFramework $QT_VERSION
-qhp.QtInterfaceFramework.customFilters.Qt.filterAttributes = interfaceframework $QT_VERSION
+qhp.QtInterfaceFramework.customFilters.Qt.filterAttributes = qtinterfaceframework $QT_VERSION
 
 qhp.QtInterfaceFramework.subprojects         = classes qml examples
 

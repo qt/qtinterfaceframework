@@ -71,16 +71,6 @@ QIfMediaIndexerControlBackendInterface::QIfMediaIndexerControlBackendInterface(Q
 }
 
 /*!
-    \fn QIfMediaIndexerControlBackendInterface::initialize()
-
-    Initializes the backend. This function is called after a feature connected to the backend.
-    It is expected that this function will use the stateChanged and the progressChanged signals to inform the feature about the
-    current state of the indexing.
-
-    \sa stateChanged() progressChanged()
-*/
-
-/*!
     \fn QIfMediaIndexerControlBackendInterface::pause()
 
     Pauses the currently ongoing indexing. If currently no indexing is ongoing this call should not perform any actions.

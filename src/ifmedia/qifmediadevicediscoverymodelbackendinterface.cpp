@@ -70,19 +70,6 @@ QIfMediaDeviceDiscoveryModelBackendInterface::QIfMediaDeviceDiscoveryModelBacken
 
 }
 
-/*!
-    \fn QIfMediaDeviceDiscoveryModelBackendInterface::initialize()
-
-    Initializes the backend. This function is called after a feature connected to the backend.
-    It is expected that this function will use the availableDevices signal to inform the feature about the
-    currently available devices.
-
-    \note It may happen that a second feature instance is connecting to the same backend and because of this,
-    this function can be called multiple times. The implementation should inform about the current state after every call.
-
-    \sa availableDevices()
-*/
-
 //TODO add a unit test for testing multiple features instances connecting to the same instance.
 
 /*!
