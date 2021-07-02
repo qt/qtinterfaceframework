@@ -31,7 +31,7 @@ function(qt6_ifcodegen_generate)
     cmake_parse_arguments(
         PARSE_ARGV 0
         ARG
-        "" "QFACE_FORMAT;QFACE_OUTPUT_DIR;QFACE_SOURCES;QFACE_HEADERS_OUTPUT_DIR" "QFACE_ANNOTATIONS;QFACE_IMPORT_PATH"
+        "VERBOSE" "QFACE_FORMAT;QFACE_OUTPUT_DIR;QFACE_SOURCES;QFACE_HEADERS_OUTPUT_DIR" "QFACE_ANNOTATIONS;QFACE_IMPORT_PATH"
     )
 
     if (DEFINED ARG_KEYWORDS_MISSING_VALUES)
@@ -126,9 +126,6 @@ function(qt6_ifcodegen_generate)
     endforeach()
 
     if (RUN_GENERATOR)
-        # TODO How to best unset those again afterwards ?
-        # Use cmake -E slee + cmake -E env COMMAND instead ?
-        #equals(QMAKE_HOST.os, Windows): ENV = chcp 65001 &&
         if (QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
             if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
                 set(PYTHON_EXECUTABLE ${VIRTUALENV}/Scripts/python.exe)
@@ -148,25 +145,31 @@ function(qt6_ifcodegen_generate)
             set(ENV{IFGENERATOR_CONFIG} ${IFGENERATOR_CONFIG})
         endif()
 
-        message(STATUS "Running ifcodegen for ${QFACE_SOURCES}")
+        message(STATUS "Running ifcodegen for ${QFACE_SOURCES} with template ${QFACE_FORMAT}")
+        set(GENERATOR_CMD
+                ${PYTHON_EXECUTABLE}
+                ${GENERATOR_PATH}/generate.py
+                ${GENERATOR_ARGUMENTS}
+                ${QFACE_SOURCES}
+                ${QFACE_OUTPUT_DIR}
+            )
+        list(JOIN GENERATOR_CMD " " GENERATOR_CMD_STR)
         execute_process(
-                        COMMAND ${PYTHON_EXECUTABLE}
-                                ${GENERATOR_PATH}/generate.py
-                                ${GENERATOR_ARGUMENTS}
-                                ${QFACE_SOURCES}
-                                ${QFACE_OUTPUT_DIR}
+                        COMMAND ${GENERATOR_CMD}
                         RESULT_VARIABLE RET_CODE
                         OUTPUT_VARIABLE GENERATOR_LOG
                         ERROR_VARIABLE GENERATOR_LOG
-                        COMMAND_ECHO STDOUT
                        )
-        message("${GENERATOR_LOG}")
 
+        message(VERBOSE ${GENERATOR_CMD_STR}\n${GENERATOR_LOG})
         # Touch the stamp file if the generator run was successful
         if("${RET_CODE}" EQUAL "0")
+            if (ARG_VERBOSE OR IFCODEGEN_VERBOSE)
+                message(${GENERATOR_CMD_STR}\n${GENERATOR_LOG})
+            endif()
             execute_process(COMMAND ${CMAKE_COMMAND} -E touch ${QFACE_OUTPUT_DIR}/.stamp-ifcodegen)
         else()
-            message(FATAL_ERROR "Error while running the ifcodegen")
+            message(FATAL_ERROR "Error while running the ifcodegen:\n${GENERATOR_CMD_STR}\n${GENERATOR_LOG}")
         endif()
     endif()
 
