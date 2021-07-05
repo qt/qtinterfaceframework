@@ -36,9 +36,9 @@ qt_internal_add_resource(${target_name} "qml"
 # doesn't exist in this case
 if (TARGET ${target_name})
     qt_ifcodegen(${target_name}
-        QFACE_SOURCES ../../ifvehiclefunctions/ifvehiclefunctions.qface
-        QFACE_FORMAT server_qtro_simulator
-        QFACE_MODULE_NAME QtIfVehicleFunctions
+        IFCODEGEN_SOURCES ../../ifvehiclefunctions/ifvehiclefunctions.qface
+        IFCODEGEN_TEMPLATE server_qtro_simulator
+        IFCODEGEN_MODULE_NAME QtIfVehicleFunctions
     )
 endif()
 

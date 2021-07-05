@@ -10,5 +10,5 @@ DEFINES += QT_BUILD_COMMON_LIB
 
 macos: QMAKE_SONAME_PREFIX = @rpath
 
-QFACE_SOURCES = "../../qface imports/common.qface"
+IFCODEGEN_SOURCES = "../../qface imports/common.qface"
 

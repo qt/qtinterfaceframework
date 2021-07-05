@@ -3,29 +3,29 @@
 # If not building a module, use CONFIG += ifcodegen instead
 #
 # Example input:
-#   QFACE_SOURCES += my.foo.qface [required]
-#   QFACE_MODULE_NAME = my_module_name
-#   QFACE_FORMAT = frontend (or backend, simulator... -- defaults to "frontend")
-#   QFACE_OUTPUT_DIR = my_output_dir (defaults to current build dir)
+#   IFCODEGEN_SOURCES += my.foo.qface [required]
+#   IFCODEGEN_MODULE_NAME = my_module_name
+#   IFCODEGEN_TEMPLATE = frontend (or backend, simulator... -- defaults to "frontend")
+#   IFCODEGEN_OUTPUT_DIR = my_output_dir (defaults to current build dir)
 #
 
-!contains(QFACE_SOURCES, .+\\.qface$) {
+!contains(IFCODEGEN_SOURCES, .+\\.qface$) {
     error("Invalid qface file provided: The file needs to end with .qface")
 }
 
-isEmpty(QFACE_MODULE_NAME) {
-    error("QFACE_MODULE_NAME needs to be set when a qt module should be generated")
+isEmpty(IFCODEGEN_MODULE_NAME) {
+    error("IFCODEGEN_MODULE_NAME needs to be set when a qt module should be generated")
 }
 
-QFACE_PWD = $$dirname(QFACE_SOURCES)
-QFACE_ABS_PWD = $$absolute_path($$QFACE_PWD, $$_PRO_FILE_PWD_)
+IFCODEGEN_PWD = $$dirname(IFCODEGEN_SOURCES)
+IFCODEGEN_ABS_PWD = $$absolute_path($$IFCODEGEN_PWD, $$_PRO_FILE_PWD_)
 
 load(qt_build_paths)
 !force_independent {
-    QFACE_HEADERS_REL_DIR = $$relative_path($$QFACE_ABS_PWD, $$QTIF_ROOT)
-    QFACE_HEADERS_OUTPUT_DIR = $${MODULE_BASE_OUTDIR}/$${QFACE_HEADERS_REL_DIR}
-    !exists(QFACE_HEADERS_OUTPUT_DIR) {
-        mkpath($${QFACE_HEADERS_OUTPUT_DIR})
+    IFCODEGEN_HEADERS_REL_DIR = $$relative_path($$IFCODEGEN_ABS_PWD, $$QTIF_ROOT)
+    IFCODEGEN_HEADERS_OUTPUT_DIR = $${MODULE_BASE_OUTDIR}/$${IFCODEGEN_HEADERS_REL_DIR}
+    !exists(IFCODEGEN_HEADERS_OUTPUT_DIR) {
+        mkpath($${IFCODEGEN_HEADERS_OUTPUT_DIR})
     }
 }
 

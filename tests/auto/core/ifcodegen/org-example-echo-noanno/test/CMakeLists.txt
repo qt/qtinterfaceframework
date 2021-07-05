@@ -19,6 +19,6 @@ set_target_properties(tst_org-example-echo-noanno PROPERTIES RUNTIME_OUTPUT_DIRE
 
 # Interface Framework Generator:
 qt6_ifcodegen(tst_org-example-echo-noanno
-    QFACE_SOURCES ../../org.example.echo.noannotation.qface
-    QFACE_FORMAT test
+    IFCODEGEN_SOURCES ../../org.example.echo.noannotation.qface
+    IFCODEGEN_TEMPLATE test
 )

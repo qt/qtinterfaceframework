@@ -221,7 +221,7 @@ To call the autogenerator for our shared library, the qmake project file needs t
 \snippet ../../../../examples/interfaceframework/qface-if-climate/frontend/frontend.pro 1
 
 By adding \c ifcodegen to the \c CONFIG variable, the \c ifcodegen feature file is loaded
-and interprets the \c QFACE_SOURCES variable just like the \c SOURCES variable in normal qmake
+and interprets the \c IFCODEGEN_SOURCES variable just like the \c SOURCES variable in normal qmake
 projects.
 
 However, activating the qmake feature using the \c CONFIG variable has one disadvantage: it
@@ -239,7 +239,7 @@ Since the \c frontend library uses the \l {Dynamic Backend System}, we need a co
 \c backend plugin, for the library to provide some functionality. To generate a mock version of
 the backend plugin called "Simulator Backend", you can use the \c backend_simulator template from
 the same IDL file as the \c frontend library. The qmake integration works in the same way, but it
-uses the \c QFACE_FORMAT variable to tell the \c ifcodegen to use a different generation
+uses the \c IFCODEGEN_TEMPLATE variable to tell the \c ifcodegen to use a different generation
 template.
 
 \snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/backend_simulator.pro 2

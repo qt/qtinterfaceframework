@@ -31,62 +31,62 @@ function(qt6_ifcodegen_generate)
     cmake_parse_arguments(
         PARSE_ARGV 0
         ARG
-        "VERBOSE" "QFACE_FORMAT;QFACE_OUTPUT_DIR;QFACE_SOURCES;QFACE_HEADERS_OUTPUT_DIR" "QFACE_ANNOTATIONS;QFACE_IMPORT_PATH"
+        "VERBOSE" "IFCODEGEN_TEMPLATE;IFCODEGEN_OUTPUT_DIR;IFCODEGEN_SOURCES;IFCODEGEN_HEADERS_OUTPUT_DIR" "IFCODEGEN_ANNOTATIONS;IFCODEGEN_IMPORT_PATH"
     )
 
     if (DEFINED ARG_KEYWORDS_MISSING_VALUES)
         message(FATAL_ERROR "Keywords can't be empty: ${ARG_KEYWORDS_MISSING_VALUES}")
     endif()
 
-    if (NOT DEFINED ARG_QFACE_FORMAT)
-        set(ARG_QFACE_FORMAT frontend)
+    if (NOT DEFINED ARG_IFCODEGEN_TEMPLATE)
+        set(ARG_IFCODEGEN_TEMPLATE frontend)
     endif()
-    set(QFACE_OUTPUT_DIR ${ARG_QFACE_OUTPUT_DIR})
-    if (NOT DEFINED ARG_QFACE_OUTPUT_DIR)
-        set(QFACE_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
+    set(IFCODEGEN_OUTPUT_DIR ${ARG_IFCODEGEN_OUTPUT_DIR})
+    if (NOT DEFINED ARG_IFCODEGEN_OUTPUT_DIR)
+        set(IFCODEGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
     endif()
-    if (NOT DEFINED ARG_QFACE_SOURCES)
-        message(FATAL_ERROR "QFACE_SOURCES can't be empty")
+    if (NOT DEFINED ARG_IFCODEGEN_SOURCES)
+        message(FATAL_ERROR "IFCODEGEN_SOURCES can't be empty")
     endif()
-    get_filename_component(QFACE_SOURCES "${ARG_QFACE_SOURCES}" REALPATH BASE_DIR)
-    get_filename_component(QFACE_SOURCE_DIR "${QFACE_SOURCES}" DIRECTORY)
-    get_filename_component(QFACE_BASE_NAME "${QFACE_SOURCES}" NAME_WLE)
-    get_filename_component(QFACE_SOURCE_ANNOTATION ${QFACE_SOURCE_DIR}/${QFACE_BASE_NAME}.yaml REALPATH BASE_DIR)
+    get_filename_component(IFCODEGEN_SOURCES "${ARG_IFCODEGEN_SOURCES}" REALPATH BASE_DIR)
+    get_filename_component(IFCODEGEN_SOURCE_DIR "${IFCODEGEN_SOURCES}" DIRECTORY)
+    get_filename_component(IFCODEGEN_BASE_NAME "${IFCODEGEN_SOURCES}" NAME_WLE)
+    get_filename_component(IFCODEGEN_SOURCE_ANNOTATION ${IFCODEGEN_SOURCE_DIR}/${IFCODEGEN_BASE_NAME}.yaml REALPATH BASE_DIR)
 
-    set(QFACE_TEMPLATE_PWD "${GENERATOR_PATH}/templates/${ARG_QFACE_FORMAT}")
-    if(EXISTS ${QFACE_TEMPLATE_PWD})
-        set(FORMAT_PATH ${QFACE_TEMPLATE_PWD})
-        set(QFACE_FORMAT ${ARG_QFACE_FORMAT})
+    set(IFCODEGEN_TEMPLATE_PWD "${GENERATOR_PATH}/templates/${ARG_IFCODEGEN_TEMPLATE}")
+    if(EXISTS ${IFCODEGEN_TEMPLATE_PWD})
+        set(TEMPLATE_PATH ${IFCODEGEN_TEMPLATE_PWD})
+        set(IFCODEGEN_TEMPLATE ${ARG_IFCODEGEN_TEMPLATE})
     else()
-        get_filename_component(FORMAT_PATH "${ARG_QFACE_FORMAT}" REALPATH)
-        if(EXISTS ${FORMAT_PATH})
-            set(QFACE_FORMAT ${FORMAT_PATH})
+        get_filename_component(TEMPLATE_PATH "${ARG_IFCODEGEN_TEMPLATE}" REALPATH)
+        if(EXISTS ${TEMPLATE_PATH})
+            set(IFCODEGEN_TEMPLATE ${TEMPLATE_PATH})
         endif()
     endif()
-    if (NOT DEFINED QFACE_FORMAT)
-        message(FATAL_ERROR "Invalid QFACE_FORMAT: Couldn't find the template folder: ${FORMAT_PATH}")
+    if (NOT DEFINED IFCODEGEN_TEMPLATE)
+        message(FATAL_ERROR "Invalid IFCODEGEN_TEMPLATE: Couldn't find the template folder: ${TEMPLATE_PATH}")
     endif()
 
     set(IDE_FILES)
 
     # Register all source files to cause a cmake rerun
     set(GEN_DEPENDENCIES)
-    list(APPEND GEN_DEPENDENCIES ${QFACE_SOURCES})
-    list(APPEND IDE_FILES ${QFACE_SOURCES})
-    if (EXISTS ${QFACE_SOURCE_ANNOTATION})
-        list(APPEND GEN_DEPENDENCIES ${QFACE_SOURCE_ANNOTATION})
-        list(APPEND IDE_FILES ${QFACE_SOURCE_ANNOTATION})
+    list(APPEND GEN_DEPENDENCIES ${IFCODEGEN_SOURCES})
+    list(APPEND IDE_FILES ${IFCODEGEN_SOURCES})
+    if (EXISTS ${IFCODEGEN_SOURCE_ANNOTATION})
+        list(APPEND GEN_DEPENDENCIES ${IFCODEGEN_SOURCE_ANNOTATION})
+        list(APPEND IDE_FILES ${IFCODEGEN_SOURCE_ANNOTATION})
     endif()
     # Also register all files which are part of the current template
-    file(GLOB FORMAT_FILES ${FORMAT_PATH}/*)
-    list(APPEND GEN_DEPENDENCIES ${FORMAT_FILES})
-    list(APPEND GEN_DEPENDENCIES ${FORMAT_PATH}.yaml)
+    file(GLOB TEMPLATE_FILES ${TEMPLATE_PATH}/*)
+    list(APPEND GEN_DEPENDENCIES ${TEMPLATE_FILES})
+    list(APPEND GEN_DEPENDENCIES ${TEMPLATE_PATH}.yaml)
     # Most templates also have a dependency to a common folder
-    file(GLOB COMMON_FORMAT_FILES ${GENERATOR_PATH}/templates/*common*/*)
-    list(APPEND GEN_DEPENDENCIES ${COMMON_FORMAT_FILES})
+    file(GLOB COMMON_TEMPLATE_FILES ${GENERATOR_PATH}/templates/*common*/*)
+    list(APPEND GEN_DEPENDENCIES ${COMMON_TEMPLATE_FILES})
 
-    set(GENERATOR_ARGUMENTS --format=${QFACE_FORMAT} --force)
-    foreach(ANNOTATION ${ARG_QFACE_ANNOTATIONS})
+    set(GENERATOR_ARGUMENTS --template=${IFCODEGEN_TEMPLATE} --force)
+    foreach(ANNOTATION ${ARG_IFCODEGEN_ANNOTATIONS})
         get_filename_component(ANNOTATION_PATH "${ANNOTATION}" REALPATH BASE_DIR)
         list(APPEND GENERATOR_ARGUMENTS -A ${ANNOTATION_PATH})
         # Dependency for regeneration
@@ -94,12 +94,12 @@ function(qt6_ifcodegen_generate)
         list(APPEND IDE_FILES ${ANNOTATION_PATH})
     endforeach()
 
-    foreach(IMPORT ${ARG_QFACE_IMPORT_PATH})
+    foreach(IMPORT ${ARG_IFCODEGEN_IMPORT_PATH})
         get_filename_component(IMPORT_PATH "${IMPORT}" REALPATH BASE_DIR)
         list(APPEND GENERATOR_ARGUMENTS -I ${IMPORT_PATH})
         # Dependency for regeneration
-        file(GLOB QFACE_FILES ${IMPORT_PATH}/*.qface)
-        list(APPEND GEN_DEPENDENCIES ${QFACE_FILES})
+        file(GLOB IFCODEGEN_FILES ${IMPORT_PATH}/*.qface)
+        list(APPEND GEN_DEPENDENCIES ${IFCODEGEN_FILES})
     endforeach()
 
     # Show qface and annotations in IDE
@@ -107,7 +107,7 @@ function(qt6_ifcodegen_generate)
     # fallback to the IDL base name
     set(IDE_PREFIX ${generator_target})
     if (NOT IDE_PREFIX)
-        set(IDE_PREFIX ${QFACE_BASE_NAME})
+        set(IDE_PREFIX ${IFCODEGEN_BASE_NAME})
     endif()
     add_custom_target(${IDE_PREFIX}_qface_files SOURCES
         ${IDE_FILES}
@@ -119,7 +119,7 @@ function(qt6_ifcodegen_generate)
     # Check for the timestamps to determine when to run it again.
     set(RUN_GENERATOR FALSE)
     foreach(DEP ${GEN_DEPENDENCIES})
-        if (${DEP} IS_NEWER_THAN ${QFACE_OUTPUT_DIR}/.stamp-ifcodegen)
+        if (${DEP} IS_NEWER_THAN ${IFCODEGEN_OUTPUT_DIR}/.stamp-ifcodegen)
             set(RUN_GENERATOR TRUE)
             break()
         endif()
@@ -145,13 +145,13 @@ function(qt6_ifcodegen_generate)
             set(ENV{IFGENERATOR_CONFIG} ${IFGENERATOR_CONFIG})
         endif()
 
-        message(STATUS "Running ifcodegen for ${QFACE_SOURCES} with template ${QFACE_FORMAT}")
+        message(STATUS "Running ifcodegen for ${IFCODEGEN_SOURCES} with template ${IFCODEGEN_TEMPLATE}")
         set(GENERATOR_CMD
                 ${PYTHON_EXECUTABLE}
                 ${GENERATOR_PATH}/generate.py
                 ${GENERATOR_ARGUMENTS}
-                ${QFACE_SOURCES}
-                ${QFACE_OUTPUT_DIR}
+                ${IFCODEGEN_SOURCES}
+                ${IFCODEGEN_OUTPUT_DIR}
             )
         list(JOIN GENERATOR_CMD " " GENERATOR_CMD_STR)
         execute_process(
@@ -167,16 +167,16 @@ function(qt6_ifcodegen_generate)
             if (ARG_VERBOSE OR IFCODEGEN_VERBOSE)
                 message(${GENERATOR_CMD_STR}\n${GENERATOR_LOG})
             endif()
-            execute_process(COMMAND ${CMAKE_COMMAND} -E touch ${QFACE_OUTPUT_DIR}/.stamp-ifcodegen)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E touch ${IFCODEGEN_OUTPUT_DIR}/.stamp-ifcodegen)
         else()
             message(FATAL_ERROR "Error while running the ifcodegen:\n${GENERATOR_CMD_STR}\n${GENERATOR_LOG}")
         endif()
     endif()
 
     # hack for the developer-build to have all headers where the Qt build expects them
-    if (DEFINED ARG_QFACE_HEADERS_OUTPUT_DIR)
-        file(GLOB HEADER_FILES ${QFACE_OUTPUT_DIR}/*.h)
-        file(COPY ${HEADER_FILES} DESTINATION ${ARG_QFACE_HEADERS_OUTPUT_DIR})
+    if (DEFINED ARG_IFCODEGEN_HEADERS_OUTPUT_DIR)
+        file(GLOB HEADER_FILES ${IFCODEGEN_OUTPUT_DIR}/*.h)
+        file(COPY ${HEADER_FILES} DESTINATION ${ARG_IFCODEGEN_HEADERS_OUTPUT_DIR})
     endif()
 
 endfunction()
@@ -207,25 +207,25 @@ function(qt6_ifcodegen_include target)
     cmake_parse_arguments(
         PARSE_ARGV 1
         ARG
-        "" "QFACE_SOURCES;QFACE_OUTPUT_DIR" ""
+        "" "IFCODEGEN_SOURCES;IFCODEGEN_OUTPUT_DIR" ""
     )
 
     if (DEFINED ARG_KEYWORDS_MISSING_VALUES)
         message(FATAL_ERROR "Keywords can't be empty: ${ARG_KEYWORDS_MISSING_VALUES}")
     endif()
 
-    set(QFACE_OUTPUT_DIR ${ARG_QFACE_OUTPUT_DIR})
-    if (NOT DEFINED ARG_QFACE_OUTPUT_DIR)
-        set(QFACE_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
+    set(IFCODEGEN_OUTPUT_DIR ${ARG_IFCODEGEN_OUTPUT_DIR})
+    if (NOT DEFINED ARG_IFCODEGEN_OUTPUT_DIR)
+        set(IFCODEGEN_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
     endif()
-    if (NOT DEFINED ARG_QFACE_SOURCES)
-        message(FATAL_ERROR "QFACE_SOURCES can't be empty")
+    if (NOT DEFINED ARG_IFCODEGEN_SOURCES)
+        message(FATAL_ERROR "IFCODEGEN_SOURCES can't be empty")
     endif()
-    get_filename_component(QFACE_SOURCES "${ARG_QFACE_SOURCES}" REALPATH BASE_DIR)
-    get_filename_component(QFACE_BASE_NAME "${ARG_QFACE_SOURCES}" NAME_WLE)
+    get_filename_component(IFCODEGEN_SOURCES "${ARG_IFCODEGEN_SOURCES}" REALPATH BASE_DIR)
+    get_filename_component(IFCODEGEN_BASE_NAME "${ARG_IFCODEGEN_SOURCES}" NAME_WLE)
 
     set(CURRENT_TARGET "${target}")
-    include(${QFACE_OUTPUT_DIR}/${QFACE_BASE_NAME}.cmake)
+    include(${IFCODEGEN_OUTPUT_DIR}/${IFCODEGEN_BASE_NAME}.cmake)
 endfunction()
 
 if(NOT QT_NO_CREATE_VERSIONLESS_FUNCTIONS)

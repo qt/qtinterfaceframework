@@ -9,8 +9,8 @@ CONFIG += ifcodegen
 LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfInstrumentCluster)
 INCLUDEPATH += $$OUT_PWD/../frontend
 
-QFACE_FORMAT = server_qtro_simulator
-QFACE_SOURCES = ../instrument-cluster.qface
+IFCODEGEN_TEMPLATE = server_qtro_simulator
+IFCODEGEN_SOURCES = ../instrument-cluster.qface
 
 QML_IMPORT_PATH = $$OUT_PWD/qml
 

@@ -15,8 +15,8 @@ SOURCES += main.cpp \
 
 QMAKE_RPATHDIR += $ORIGIN
 #! [1]
-QFACE_FORMAT = server_qtro
-QFACE_SOURCES = ../example-if-remote.qface
+IFCODEGEN_TEMPLATE = server_qtro
+IFCODEGEN_SOURCES = ../example-if-remote.qface
 #! [1]
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =

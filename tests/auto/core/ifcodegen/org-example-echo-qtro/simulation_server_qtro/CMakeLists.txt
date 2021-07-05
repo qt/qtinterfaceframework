@@ -9,8 +9,8 @@ qt_add_executable(org-example-echo-qtro-simulation-server)
 
 # Interface Framework Generator:
 qt6_ifcodegen(org-example-echo-qtro-simulation-server
-    QFACE_SOURCES ../../org.example.echo.qface
-    QFACE_FORMAT server_qtro_simulator
+    IFCODEGEN_SOURCES ../../org.example.echo.qface
+    IFCODEGEN_TEMPLATE server_qtro_simulator
 )
 
 target_link_libraries(org-example-echo-qtro-simulation-server PUBLIC

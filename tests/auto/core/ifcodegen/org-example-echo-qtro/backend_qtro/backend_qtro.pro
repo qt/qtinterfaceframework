@@ -13,5 +13,5 @@ QT += core interfaceframework
 
 macos: QMAKE_SONAME_PREFIX = @rpath
 
-QFACE_FORMAT = backend_qtro
-QFACE_SOURCES = ../../org.example.echo.qface
+IFCODEGEN_TEMPLATE = backend_qtro
+IFCODEGEN_SOURCES = ../../org.example.echo.qface

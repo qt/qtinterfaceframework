@@ -58,8 +58,8 @@
             \li Specifies whether the generator should keep track of the changes in the IDL file
                 and update the output on the fly; the default is \c{--no-reload}
         \row
-            \target format
-            \li  \c -f, \c --format
+            \target template
+            \li  \c -t, \c --template
             \li Can be one of the following values:
                 \list
                 \li \c frontend
@@ -96,7 +96,7 @@
             \li Display options and exit.
     \endtable
 
-    Currently, based on the \l{format}{\c {--format}} value, the generator can generate multiple
+    Currently, based on the \l{template}{\c {--template}} value, the generator can generate multiple
     types of projects with a given IDL file:
 
     \table 100%

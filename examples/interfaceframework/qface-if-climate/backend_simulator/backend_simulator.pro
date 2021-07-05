@@ -15,8 +15,8 @@ INCLUDEPATH += $$OUT_PWD/../frontend
 QT += core interfaceframework
 #! [2]
 CONFIG += ifcodegen plugin
-QFACE_FORMAT = backend_simulator
-QFACE_SOURCES = ../example-if-climate.qface
+IFCODEGEN_TEMPLATE = backend_simulator
+IFCODEGEN_SOURCES = ../example-if-climate.qface
 PLUGIN_TYPE = interfaceframework
 PLUGIN_CLASS_NAME = ClimateSimulatorPlugin
 #! [2]

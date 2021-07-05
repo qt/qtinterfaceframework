@@ -19,8 +19,8 @@ SOURCES += main.cpp \
     echozonedservice.cpp \
     contactsmodelservice.cpp
 
-QFACE_FORMAT = server_qtro
-QFACE_SOURCES = ../../org.example.echo.qface
+IFCODEGEN_TEMPLATE = server_qtro
+IFCODEGEN_SOURCES = ../../org.example.echo.qface
 
 HEADERS += \
     server.h \

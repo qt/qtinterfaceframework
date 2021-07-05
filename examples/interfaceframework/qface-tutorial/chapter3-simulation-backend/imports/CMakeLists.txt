@@ -18,8 +18,8 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 
 # Interface Framework Generator:
 qt6_ifcodegen(instrument_cluster_chapter3_imports # special case
-    QFACE_SOURCES ../instrument-cluster.qface
-    QFACE_FORMAT qmlplugin
+    IFCODEGEN_SOURCES ../instrument-cluster.qface
+    IFCODEGEN_TEMPLATE qmlplugin
 )
 
 target_link_libraries(instrument_cluster_chapter3_imports PUBLIC # special case

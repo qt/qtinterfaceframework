@@ -10,8 +10,8 @@ set_target_properties(echo_qtro_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../
 
 # Interface Framework Generator:
 qt6_ifcodegen(echo_qtro_frontend
-    QFACE_SOURCES ../../org.example.echo.qface
-    QFACE_FORMAT frontend
+    IFCODEGEN_SOURCES ../../org.example.echo.qface
+    IFCODEGEN_TEMPLATE frontend
 )
 target_include_directories(echo_qtro_frontend PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}

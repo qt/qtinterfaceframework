@@ -10,6 +10,6 @@ LIBS += -L$$OUT_PWD/.. -l$$qtLibraryTarget(include_test_frontend) -l$$qtLibraryT
 
 QMAKE_RPATHDIR += $$OUT_PWD/..
 
-QFACE_FORMAT = test
-QFACE_SOURCES = ../../include-test.qface
-QFACE_IMPORT_PATH += "../../qface imports"
+IFCODEGEN_TEMPLATE = test
+IFCODEGEN_SOURCES = ../../include-test.qface
+IFCODEGEN_IMPORT_PATH += "../../qface imports"

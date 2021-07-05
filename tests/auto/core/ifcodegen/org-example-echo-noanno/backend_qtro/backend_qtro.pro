@@ -11,5 +11,5 @@ PLUGIN_CLASS_NAME = EchoQtROPlugin
 
 QT += core interfaceframework
 
-QFACE_FORMAT = backend_qtro
-QFACE_SOURCES = ../../org.example.echo.noannotation.qface
+IFCODEGEN_TEMPLATE = backend_qtro
+IFCODEGEN_SOURCES = ../../org.example.echo.noannotation.qface

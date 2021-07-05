@@ -3,19 +3,19 @@
 # If building a module, use load(ifcodegen_qt_module) instead
 #
 # Example input:
-#   QFACE_SOURCES += my.foo.qface [required]
-#   QFACE_MODULE_NAME = my_module_name
-#   QFACE_FORMAT = frontend (or backend, simulator... -- defaults to "frontend")
-#   QFACE_OUTPUT_DIR = my_output_dir (defaults to current build dir)
-#   QFACE_ANNOTATIONS += additional.yaml
+#   IFCODEGEN_SOURCES += my.foo.qface [required]
+#   IFCODEGEN_MODULE_NAME = my_module_name
+#   IFCODEGEN_TEMPLATE = frontend (or backend, simulator... -- defaults to "frontend")
+#   IFCODEGEN_OUTPUT_DIR = my_output_dir (defaults to current build dir)
+#   IFCODEGEN_ANNOTATIONS += additional.yaml
 #
 QT_FOR_CONFIG += interfaceframework interfaceframework-private
 
-isEmpty(QFACE_FORMAT): QFACE_FORMAT = frontend
-isEmpty(QFACE_OUTPUT_DIR): QFACE_OUTPUT_DIR = $$OUT_PWD
-isEmpty(QFACE_SOURCES): error("QFACE_SOURCES must be set!")
+isEmpty(IFCODEGEN_TEMPLATE): IFCODEGEN_TEMPLATE = frontend
+isEmpty(IFCODEGEN_OUTPUT_DIR): IFCODEGEN_OUTPUT_DIR = $$OUT_PWD
+isEmpty(IFCODEGEN_SOURCES): error("IFCODEGEN_SOURCES must be set!")
 
-!contains(QFACE_SOURCES, .+\\.qface$) {
+!contains(IFCODEGEN_SOURCES, .+\\.qface$) {
     error("Invalid qface file provided: The file needs to end with .qface")
 }
 
@@ -24,12 +24,12 @@ win32-msvc*:!contains(CONFIG, debug_and_release) {
     error("The ifcodegen works only in the debug_and_release configuration on windows")
 }
 
-QFACE_PWD = $$dirname(QFACE_SOURCES)
-QFACE_ABS_PWD = $$absolute_path($$QFACE_PWD, $$_PRO_FILE_PWD_)
-QFACE_FILE = $$basename(QFACE_SOURCES)
-QFACE_BASE_NAME = $$replace(QFACE_FILE, .qface, )
-QFACE_YAML = $$QFACE_ABS_PWD/$${QFACE_BASE_NAME}.yaml
-OTHER_FILES += $$QFACE_ABS_PWD/$$QFACE_FILE
+IFCODEGEN_PWD = $$dirname(IFCODEGEN_SOURCES)
+IFCODEGEN_ABS_PWD = $$absolute_path($$IFCODEGEN_PWD, $$_PRO_FILE_PWD_)
+IFCODEGEN_FILE = $$basename(IFCODEGEN_SOURCES)
+IFCODEGEN_BASE_NAME = $$replace(IFCODEGEN_FILE, .qface, )
+IFCODEGEN_YAML = $$IFCODEGEN_ABS_PWD/$${IFCODEGEN_BASE_NAME}.yaml
+OTHER_FILES += $$IFCODEGEN_ABS_PWD/$$IFCODEGEN_FILE
 
 # The 'click' library used by the generator needs to have a utf8 locale setup.
 equals(QMAKE_HOST.os, Windows): ENV = chcp 65001 &&
@@ -73,22 +73,22 @@ qtConfig(system-qface) {
 }
 IF_GENERATOR = $$system_quote($$PYTHON) $$IF_GENERATOR_PATH/generate.py
 
-# TODO make this work with multiple input files, or only support one QFACE_SOURCE
+# TODO make this work with multiple input files, or only support one IFCODEGEN_SOURCE
 # Although this could be extra_compiler it is a normal EXTRA_TARGET for a reason.
 # In the debug_and_release configuration, we want to have the generator executed
 # during the run of the meta Makefile to only generate the code once.
-PRI = $$QFACE_OUTPUT_DIR/$$lower($${QFACE_BASE_NAME}).pri
-IF_GENERATOR_OPTIONS = --format=$$QFACE_FORMAT --force
-!isEmpty(QFACE_MODULE_NAME): IF_GENERATOR_OPTIONS += --module=$${QFACE_MODULE_NAME}
-for (ANNOTATION, QFACE_ANNOTATIONS) {
+PRI = $$IFCODEGEN_OUTPUT_DIR/$$lower($${IFCODEGEN_BASE_NAME}).pri
+IF_GENERATOR_OPTIONS = --template=$$IFCODEGEN_TEMPLATE --force
+!isEmpty(IFCODEGEN_MODULE_NAME): IF_GENERATOR_OPTIONS += --module=$${IFCODEGEN_MODULE_NAME}
+for (ANNOTATION, IFCODEGEN_ANNOTATIONS) {
     file = $$absolute_path($$ANNOTATION, $$_PRO_FILE_PWD_)
 
     IF_GENERATOR_OPTIONS += -A $$system_quote($$system_path($$file))
-    qface_sources.depends += $$file
+    ifcodegen_sources.depends += $$file
     OTHER_FILES += $$file
 }
 
-for (IMPORT, QFACE_IMPORT_PATH) {
+for (IMPORT, IFCODEGEN_IMPORT_PATH) {
     dir = $$absolute_path($$IMPORT, $$_PRO_FILE_PWD_)
 
     IF_GENERATOR_OPTIONS += -I $$system_quote($$system_path($$dir))
@@ -103,37 +103,37 @@ equals(QMAKE_HOST.os, Windows): {
     TOUCH = touch
 }
 
-qface_sources.target = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
-qface_sources.commands += $(DEL_FILE) $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen)) &&
-qface_sources.commands += $$SLEEP && $$ENV $$system_path($$IF_GENERATOR) $$IF_GENERATOR_OPTIONS $$system_quote($$system_path($$QFACE_ABS_PWD/$${QFACE_FILE})) $$system_quote($$system_path($$QFACE_OUTPUT_DIR)) &&
-qface_sources.commands += $$TOUCH $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen))
-qface_sources.depends = $$IF_GENERATOR_PATH/generate.py
-qface_sources.depends += $$QFACE_ABS_PWD/$${QFACE_FILE}
-qface_sources.depends += $$files($$IF_GENERATOR_PATH/templates/common/*)
+ifcodegen_sources.target = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
+ifcodegen_sources.commands += $(DEL_FILE) $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen)) &&
+ifcodegen_sources.commands += $$SLEEP && $$ENV $$system_path($$IF_GENERATOR) $$IF_GENERATOR_OPTIONS $$system_quote($$system_path($$IFCODEGEN_ABS_PWD/$${IFCODEGEN_FILE})) $$system_quote($$system_path($$IFCODEGEN_OUTPUT_DIR)) &&
+ifcodegen_sources.commands += $$TOUCH $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen))
+ifcodegen_sources.depends = $$IF_GENERATOR_PATH/generate.py
+ifcodegen_sources.depends += $$IFCODEGEN_ABS_PWD/$${IFCODEGEN_FILE}
+ifcodegen_sources.depends += $$files($$IF_GENERATOR_PATH/templates/common/*)
 
 QMAKE_CLEAN += $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 
 # Add all templates of the generator format as dependency
-QFACE_TEMPLATE_PWD = $$IF_GENERATOR_PATH/templates/$${QFACE_FORMAT}
-exists($$QFACE_TEMPLATE_PWD) {
-    qface_sources.depends += $$files($${QFACE_TEMPLATE_PWD}/*)
-} else: exists($${QFACE_FORMAT}) {
-    qface_sources.depends += $$files($${QFACE_FORMAT}/*)
+IFCODEGEN_TEMPLATE_PWD = $$IF_GENERATOR_PATH/templates/$${IFCODEGEN_TEMPLATE}
+exists($$IFCODEGEN_TEMPLATE_PWD) {
+    ifcodegen_sources.depends += $$files($${IFCODEGEN_TEMPLATE_PWD}/*)
+} else: exists($${IFCODEGEN_TEMPLATE}) {
+    ifcodegen_sources.depends += $$files($${IFCODEGEN_TEMPLATE}/*)
 } else {
-    error("Invalid QFACE_FORMAT: Couldn't find the template folder: $$QFACE_TEMPLATE_PWD")
+    error("Invalid IFCODEGEN_TEMPLATE: Couldn't find the template folder: $$IFCODEGEN_TEMPLATE_PWD")
 }
 
 # Add the configuration yaml as dependency and to other files
-exists($$QFACE_YAML) {
-    qface_sources.depends += $$QFACE_YAML
-    OTHER_FILES += $$QFACE_YAML
+exists($$IFCODEGEN_YAML) {
+    ifcodegen_sources.depends += $$IFCODEGEN_YAML
+    OTHER_FILES += $$IFCODEGEN_YAML
 }
 
-!isEmpty(QFACE_HEADERS_OUTPUT_DIR) {
-    QFACE_HEADERS_OUTPUT_TARGET = $${QFACE_HEADERS_OUTPUT_DIR}/$$lower($${QFACE_MODULE_NAME})module.h
-    qface_headers.target = $$relative_path($$QFACE_HEADERS_OUTPUT_TARGET, $$OUT_PWD)
-    qface_headers.commands = $${QMAKE_COPY_FILE} $${QFACE_OUTPUT_DIR}/*.h $${QFACE_HEADERS_OUTPUT_DIR}
-    qface_headers.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD) $$IF_GENERATOR_PATH/generate.py
+!isEmpty(IFCODEGEN_HEADERS_OUTPUT_DIR) {
+    IFCODEGEN_HEADERS_OUTPUT_TARGET = $${IFCODEGEN_HEADERS_OUTPUT_DIR}/$$lower($${IFCODEGEN_MODULE_NAME})module.h
+    ifcodegen_headers.target = $$relative_path($$IFCODEGEN_HEADERS_OUTPUT_TARGET, $$OUT_PWD)
+    ifcodegen_headers.commands = $${QMAKE_COPY_FILE} $${IFCODEGEN_OUTPUT_DIR}/*.h $${IFCODEGEN_HEADERS_OUTPUT_DIR}
+    ifcodegen_headers.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD) $$IF_GENERATOR_PATH/generate.py
 }
 
 # Reevaluate the Makefile after the generation has finished
@@ -152,9 +152,9 @@ Makefile.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 !qtConfig(system-qface):!isEmpty(QTIF_BUILD_ROOT):!exists($$VIRTUALENV_PATH): {
     Makefile.depends = $$shadowed($$IF_GENERATOR_PATH)/forceRebuild
 } else {
-    !isEmpty(QFACE_HEADERS_OUTPUT_TARGET) {
-        Makefile.depends += $$relative_path($$QFACE_HEADERS_OUTPUT_TARGET, $$OUT_PWD)
-        QMAKE_EXTRA_TARGETS += qface_headers
+    !isEmpty(IFCODEGEN_HEADERS_OUTPUT_TARGET) {
+        Makefile.depends += $$relative_path($$IFCODEGEN_HEADERS_OUTPUT_TARGET, $$OUT_PWD)
+        QMAKE_EXTRA_TARGETS += ifcodegen_headers
     }
 }
 
@@ -179,7 +179,7 @@ exists($$PRI) {
     OTHER_FILES += $$OTHER_FILES_ORIG
 }
 
-QMAKE_EXTRA_TARGETS += Makefile qface_sources
+QMAKE_EXTRA_TARGETS += Makefile ifcodegen_sources
 
 # NMAKE doesn't support the Makefile target to call qmake and reevaluate itself
 # Because of that, the autogeneration is not started at all and if started

@@ -24,6 +24,6 @@ set_target_properties(tst_org-example-echo-qtro PROPERTIES RUNTIME_OUTPUT_DIRECT
 
 # Interface Framework Generator:
 qt6_ifcodegen(tst_org-example-echo-qtro
-    QFACE_SOURCES ../../org.example.echo.qface
-    QFACE_FORMAT server_qtro
+    IFCODEGEN_SOURCES ../../org.example.echo.qface
+    IFCODEGEN_TEMPLATE server_qtro
 )

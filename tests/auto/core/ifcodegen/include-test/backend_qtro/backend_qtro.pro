@@ -11,6 +11,6 @@ PLUGIN_CLASS_NAME = IncludeTestQtROPlugin
 
 QT += core interfaceframework
 
-QFACE_FORMAT = backend_qtro
-QFACE_SOURCES = ../../include-test.qface
-QFACE_IMPORT_PATH += "../../qface imports"
+IFCODEGEN_TEMPLATE = backend_qtro
+IFCODEGEN_SOURCES = ../../include-test.qface
+IFCODEGEN_IMPORT_PATH += "../../qface imports"

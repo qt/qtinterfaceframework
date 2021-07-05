@@ -87,7 +87,7 @@ To call the autogenerator for our shared library, the qmake project file needs t
 \snippet ../../../../examples/interfaceframework/qface-if-remote/frontend/frontend.pro 1
 
 By adding \c ifcodegen to the \c CONFIG variable, the \c ifcodegen feature file is loaded and
-interprets the \c QFACE_SOURCES variable, similar to the \c SOURCES variable in regular qmake
+interprets the \c IFCODEGEN_SOURCES variable, similar to the \c SOURCES variable in regular qmake
 projects. However, activating the qmake feature via the \c CONFIG variable has one disadvantage: if
 the feature is not available, no errors are reported. We recommend using the following additional
 code to report errors:
@@ -103,7 +103,7 @@ Windows.
 As mentioned above, the \e frontend library uses the \l{Dynamic Backend System}. This means
 that for the library to provide some functionality, we also need a \e backend plugin. The generated
 plugin here works as a client that connects to the server using Qt Remote Objects. The qmake
-integration works in the same way, but it uses the \e QFACE_FORMAT variable to tell the
+integration works in the same way, but it uses the \e IFCODEGEN_TEMPLATE variable to tell the
 \c ifcodegen to use a different generation template, \e backend_qtro:
 
 \snippet ../../../../examples/interfaceframework/qface-if-remote/backend_qtro/backend_qtro.pro 2

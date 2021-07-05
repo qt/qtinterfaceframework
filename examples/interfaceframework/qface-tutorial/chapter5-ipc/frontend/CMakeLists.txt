@@ -22,8 +22,8 @@ set_target_properties(QtIfInstrumentCluster_Chapter5 PROPERTIES RUNTIME_OUTPUT_D
 
 # Interface Framework Generator:
 qt6_ifcodegen(QtIfInstrumentCluster_Chapter5
-    QFACE_SOURCES ../instrument-cluster.qface
-    QFACE_FORMAT frontend
+    IFCODEGEN_SOURCES ../instrument-cluster.qface
+    IFCODEGEN_TEMPLATE frontend
 )
 
 target_include_directories(QtIfInstrumentCluster_Chapter5 PUBLIC

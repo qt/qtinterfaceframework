@@ -20,7 +20,7 @@ set_target_properties(tst_qface_include PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
 qt6_ifcodegen(tst_qface_include
-    QFACE_SOURCES ../../include-test.qface
-    QFACE_FORMAT test
-    QFACE_IMPORT_PATH ../../qface\ imports
+    IFCODEGEN_SOURCES ../../include-test.qface
+    IFCODEGEN_TEMPLATE test
+    IFCODEGEN_IMPORT_PATH ../../qface\ imports
 )

@@ -19,7 +19,7 @@ set_target_properties(tst_org-example-echo-noprivate PROPERTIES RUNTIME_OUTPUT_D
 
 # Interface Framework Generator:
 qt6_ifcodegen(tst_org-example-echo-noprivate
-    QFACE_SOURCES ../../org.example.echo.qface
-    QFACE_FORMAT test
-    QFACE_ANNOTATIONS ../../no-private.yaml
+    IFCODEGEN_SOURCES ../../org.example.echo.qface
+    IFCODEGEN_TEMPLATE test
+    IFCODEGEN_ANNOTATIONS ../../no-private.yaml
 )

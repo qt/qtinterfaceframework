@@ -11,8 +11,8 @@ INCLUDEPATH += $$OUT_PWD/../frontend
 QT += core interfaceframework
 CONFIG += ifcodegen plugin
 
-QFACE_FORMAT = backend_simulator
-QFACE_SOURCES = ../example-if-addressbook.qface
+IFCODEGEN_TEMPLATE = backend_simulator
+IFCODEGEN_SOURCES = ../example-if-addressbook.qface
 PLUGIN_TYPE = interfaceframework
 PLUGIN_CLASS_NAME = AddressBookSimulatorPlugin
 

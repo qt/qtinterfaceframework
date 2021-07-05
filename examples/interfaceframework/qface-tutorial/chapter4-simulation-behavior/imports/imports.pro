@@ -5,8 +5,8 @@ QT += interfaceframework
 LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfInstrumentCluster)
 INCLUDEPATH += $$OUT_PWD/../frontend
 
-QFACE_FORMAT = qmlplugin
-QFACE_SOURCES = ../instrument-cluster.qface
+IFCODEGEN_TEMPLATE = qmlplugin
+IFCODEGEN_SOURCES = ../instrument-cluster.qface
 
 load(ifcodegen)
 

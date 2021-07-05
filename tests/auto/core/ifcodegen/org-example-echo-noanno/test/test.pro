@@ -10,5 +10,5 @@ LIBS += -L$$OUT_PWD/.. -l$$qtLibraryTarget(echo_noannotation_frontend)
 
 QMAKE_RPATHDIR += $$OUT_PWD/..
 
-QFACE_FORMAT = test
-QFACE_SOURCES = ../../org.example.echo.noannotation.qface
+IFCODEGEN_TEMPLATE = test
+IFCODEGEN_SOURCES = ../../org.example.echo.noannotation.qface

@@ -12,5 +12,5 @@ INCLUDEPATH += $$OUT_PWD/../frontend
 
 QT += qml quick core interfaceframework
 
-QFACE_FORMAT = server_qtro_simulator
-QFACE_SOURCES = ../../org.example.echo.qface
+IFCODEGEN_TEMPLATE = server_qtro_simulator
+IFCODEGEN_SOURCES = ../../org.example.echo.qface

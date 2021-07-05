@@ -9,9 +9,9 @@ qt_add_executable(include-test-simulation-server)
 
 # Interface Framework Generator:
 qt6_ifcodegen(include-test-simulation-server
-    QFACE_SOURCES ../../include-test.qface
-    QFACE_FORMAT server_qtro_simulator
-    QFACE_IMPORT_PATH ../../qface\ imports
+    IFCODEGEN_SOURCES ../../include-test.qface
+    IFCODEGEN_TEMPLATE server_qtro_simulator
+    IFCODEGEN_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include-test-simulation-server PUBLIC

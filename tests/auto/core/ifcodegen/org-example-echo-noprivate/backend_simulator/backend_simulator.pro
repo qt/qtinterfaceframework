@@ -11,6 +11,6 @@ PLUGIN_CLASS_NAME = EchoSimulatorPlugin
 
 QT += core interfaceframework
 
-QFACE_FORMAT = backend_simulator
-QFACE_SOURCES = ../../org.example.echo.qface
-QFACE_ANNOTATIONS += ../../no-private.yaml
+IFCODEGEN_TEMPLATE = backend_simulator
+IFCODEGEN_SOURCES = ../../org.example.echo.qface
+IFCODEGEN_ANNOTATIONS += ../../no-private.yaml

@@ -10,9 +10,9 @@ set_target_properties(include_test_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY
 
 # Interface Framework Generator:
 qt6_ifcodegen(include_test_simulator
-    QFACE_SOURCES ../../include-test.qface
-    QFACE_FORMAT backend_simulator
-    QFACE_IMPORT_PATH ../../qface\ imports
+    IFCODEGEN_SOURCES ../../include-test.qface
+    IFCODEGEN_TEMPLATE backend_simulator
+    IFCODEGEN_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include_test_simulator PUBLIC

@@ -9,8 +9,8 @@ LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfInstrumentCluster)
 INCLUDEPATH += $$OUT_PWD/../frontend
 QMAKE_RPATHDIR += $$QMAKE_REL_RPATH_BASE/../
 
-QFACE_FORMAT = backend_simulator
-QFACE_SOURCES = ../instrument-cluster.qface
+IFCODEGEN_TEMPLATE = backend_simulator
+IFCODEGEN_SOURCES = ../instrument-cluster.qface
 PLUGIN_TYPE = interfaceframework
 
 RESOURCES += \

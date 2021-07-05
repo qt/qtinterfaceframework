@@ -16,9 +16,9 @@ qt_internal_add_plugin(QtIfVehicleFunctionsQtROPlugin
 
 # Interface Framework Generator:
 qt_ifcodegen(QtIfVehicleFunctionsQtROPlugin
-    QFACE_SOURCES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
-    QFACE_FORMAT backend_qtro
-    QFACE_MODULE_NAME QtIfVehicleFunctions
+    IFCODEGEN_SOURCES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
+    IFCODEGEN_TEMPLATE backend_qtro
+    IFCODEGEN_MODULE_NAME QtIfVehicleFunctions
 )
 
 #### Keys ignored in scope 1:.:.:vehiclefunctions_qtro.pro:<TRUE>:

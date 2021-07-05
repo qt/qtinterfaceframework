@@ -11,18 +11,18 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
 
     set(VIRTUALENV_NAME qtif_qface_virtualenv)
     set(VIRTUALENV_PATH ${CMAKE_CURRENT_BINARY_DIR}/${VIRTUALENV_NAME})
-    set(QFACE_SOURCE_DIR ${QtInterfaceFramework_SOURCE_DIR}/src/3rdparty/qface)
+    set(IFCODEGEN_SOURCE_DIR ${QtInterfaceFramework_SOURCE_DIR}/src/3rdparty/qface)
     set(RELOCATE_VIRTUALENV ${QtInterfaceFramework_SOURCE_DIR}/src/3rdparty/virtualenv/relocate_virtualenv.py)
 
     if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
         set(VIRTUALENV_ACTIVATE ${VIRTUALENV_PATH}/Scripts/activate.bat)
         set(VIRTUALENV_ACTIVATE_COMMAND ${VIRTUALENV_ACTIVATE})
-        set(QFACE_BIN ${VIRTUALENV_PATH}/Scripts/qface.exe)
+        set(IFCODEGEN_BIN ${VIRTUALENV_PATH}/Scripts/qface.exe)
         set(DEPLOY_VIRTUALENV ${CMAKE_CURRENT_SOURCE_DIR}/deploy-virtualenv.bat)
     else()
         set(VIRTUALENV_ACTIVATE ${VIRTUALENV_PATH}/bin/activate)
         set(VIRTUALENV_ACTIVATE_COMMAND . ${VIRTUALENV_ACTIVATE})
-        set(QFACE_BIN ${VIRTUALENV_PATH}/bin/qface)
+        set(IFCODEGEN_BIN ${VIRTUALENV_PATH}/bin/qface)
         set(DEPLOY_VIRTUALENV ${CMAKE_CURRENT_SOURCE_DIR}/deploy-virtualenv.sh)
     endif()
 
@@ -45,23 +45,23 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
 
     # This is not very nice, but it gives us at least a good way to handle virtualenv rebuilding when
     # someone is working on the qface sources
-    file(GLOB_RECURSE QFACE_SOURCE_FILES ${QFACE_SOURCE_DIR}/*.py)
+    file(GLOB_RECURSE IFCODEGEN_SOURCE_FILES ${IFCODEGEN_SOURCE_DIR}/*.py)
 
     # On the CI we use the special wheel folder when available to not download all packages again on each build
     set(PYTHON3_WHEEL_CACHE "$ENV{PYTHON3_WHEEL_CACHE}" CACHE PATH "Python3 wheel cache")
     if (EXISTS "${PYTHON3_WHEEL_CACHE}")
         message(STATUS "Using wheel cache for python package installation: ${PYTHON3_WHEEL_CACHE}")
-        set(PIP3_INSTALL_COMMAND pip3 install --no-index --find-links=${PYTHON3_WHEEL_CACHE} ${QFACE_SOURCE_DIR} --verbose)
+        set(PIP3_INSTALL_COMMAND pip3 install --no-index --find-links=${PYTHON3_WHEEL_CACHE} ${IFCODEGEN_SOURCE_DIR} --verbose)
     else()
-        set(PIP3_INSTALL_COMMAND pip3 install --upgrade ${QFACE_SOURCE_DIR})
+        set(PIP3_INSTALL_COMMAND pip3 install --upgrade ${IFCODEGEN_SOURCE_DIR})
     endif()
 
-    add_custom_command(OUTPUT ${QFACE_BIN}
+    add_custom_command(OUTPUT ${IFCODEGEN_BIN}
                        COMMAND ${VIRTUALENV_ACTIVATE_COMMAND}
                        COMMAND ${PIP3_INSTALL_COMMAND}
                        DEPENDS ${VIRTUALENV_ACTIVATE}
-                               ${QFACE_SOURCE_DIR}/requirements.txt
-                               ${QFACE_SOURCE_FILES}|
+                               ${IFCODEGEN_SOURCE_DIR}/requirements.txt
+                               ${IFCODEGEN_SOURCE_FILES}|
                        COMMENT "Installing qface development version into ${VIRTUALENV_NAME}"
                        )
 
@@ -70,7 +70,7 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
                        COMMAND ${DEPLOY_VIRTUALENV} qtif_qface_virtualenv
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-deploy_virtualenv
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
-                       DEPENDS ${QFACE_BIN}
+                       DEPENDS ${IFCODEGEN_BIN}
                       )
 
     # main target which just relies on the stamp file to be uptodate

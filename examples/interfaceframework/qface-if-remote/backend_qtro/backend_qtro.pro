@@ -15,8 +15,8 @@ INCLUDEPATH += $$OUT_PWD/../frontend
 QT += core interfaceframework
 #! [2]
 CONFIG += ifcodegen plugin
-QFACE_FORMAT = backend_qtro
-QFACE_SOURCES = ../example-if-remote.qface
+IFCODEGEN_TEMPLATE = backend_qtro
+IFCODEGEN_SOURCES = ../example-if-remote.qface
 PLUGIN_TYPE = interfaceframework
 PLUGIN_CLASS_NAME = RemoteClientQtROPlugin
 #! [2]

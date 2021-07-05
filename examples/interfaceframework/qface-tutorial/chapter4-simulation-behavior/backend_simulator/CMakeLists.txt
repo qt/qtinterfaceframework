@@ -20,8 +20,8 @@ set_target_properties(ic_chapter4_simulation PROPERTIES LIBRARY_OUTPUT_DIRECTORY
 
 # Interface Framework Generator:
 qt6_ifcodegen(ic_chapter4_simulation
-    QFACE_SOURCES ../instrument-cluster.qface
-    QFACE_FORMAT backend_simulator
+    IFCODEGEN_SOURCES ../instrument-cluster.qface
+    IFCODEGEN_TEMPLATE backend_simulator
 )
 
 target_link_libraries(ic_chapter4_simulation PUBLIC

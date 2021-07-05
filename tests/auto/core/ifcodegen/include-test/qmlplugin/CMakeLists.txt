@@ -7,9 +7,9 @@ set(CMAKE_AUTOUIC ON)
 
 # Interface Framework Generator:
 qt6_ifcodegen(qmlplugin
-    QFACE_SOURCES ../../include-test.qface
-    QFACE_FORMAT qmlplugin
-    QFACE_IMPORT_PATH ../../qface\ imports
+    IFCODEGEN_SOURCES ../../include-test.qface
+    IFCODEGEN_TEMPLATE qmlplugin
+    IFCODEGEN_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(qmlplugin PRIVATE

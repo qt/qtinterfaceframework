@@ -8,9 +8,9 @@ set(CMAKE_AUTOMOC ON)
 
 # Interface Framework Generator:
 qt_ifcodegen(qtifvehiclefunctionsplugin
-    QFACE_SOURCES ../../ifvehiclefunctions/ifvehiclefunctions.qface
-    QFACE_FORMAT qmlplugin
-    QFACE_MODULE_NAME QtIfVehicleFunctions
+    IFCODEGEN_SOURCES ../../ifvehiclefunctions/ifvehiclefunctions.qface
+    IFCODEGEN_TEMPLATE qmlplugin
+    IFCODEGEN_MODULE_NAME QtIfVehicleFunctions
 )
 
 # special case begin

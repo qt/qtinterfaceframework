@@ -7,9 +7,9 @@ set(CMAKE_AUTOUIC ON)
 
 # Interface Framework Generator:
 qt6_ifcodegen(echo_frontend_noprivate_qmlplugin # special case
-    QFACE_SOURCES ../../org.example.echo.qface
-    QFACE_FORMAT qmlplugin
-    QFACE_ANNOTATIONS ../../no-private.yaml
+    IFCODEGEN_SOURCES ../../org.example.echo.qface
+    IFCODEGEN_TEMPLATE qmlplugin
+    IFCODEGEN_ANNOTATIONS ../../no-private.yaml
 )
 
 target_link_libraries(echo_frontend_noprivate_qmlplugin PRIVATE # special case

@@ -20,8 +20,8 @@ set_target_properties(remote_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ..
 
 # Interface Framework Generator:
 qt6_ifcodegen(remote_backend_qtro
-    QFACE_SOURCES ../example-if-remote.qface
-    QFACE_FORMAT backend_qtro
+    IFCODEGEN_SOURCES ../example-if-remote.qface
+    IFCODEGEN_TEMPLATE backend_qtro
 )
 
 target_link_libraries(remote_backend_qtro PUBLIC

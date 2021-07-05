@@ -172,8 +172,8 @@ def run(format, moduleConfig, annotations, imports, src, dst):
 @click.option('--reload/--no-reload', default=False, help=
     'Specifies whether the generator should keep track of the changes in the IDL file and update '
     'output on the fly (--no-reload by default).')
-@click.option('--format', '-f', multiple=False, help='The format the autogenerator should use for '
-    'the generation. This can either be one of the builtin formats or a path to a template folder. '
+@click.option('--template', '-t', multiple=False, help='The template the autogenerator should use for '
+    'the generation. This can either be one of the builtin templates or a path to a template folder. '
     'Builtin formats are: \n' + '\n'.join(builtinTemplates))
 @click.option('--module', default=False, help='The name of the Qt module the autogenerator is '
     'generating. This is automatically used by the qmake integration and passed directly to the '
@@ -192,7 +192,7 @@ def run(format, moduleConfig, annotations, imports, src, dst):
 @click.argument('src', nargs=-1, type=click.Path(exists=True))
 @click.argument('dst', nargs=1, type=click.Path(exists=True))
 
-def app(src, dst, format, reload, module, force, annotations, imports):
+def app(src, dst, template, reload, module, force, annotations, imports):
     """
     The QtInterfaceFramework Autogenerator (ifcodegen)
 
@@ -211,7 +211,7 @@ def app(src, dst, format, reload, module, force, annotations, imports):
             "module": module,
             "force": force
         }
-        run(format, moduleConfig, annotations, imports, src, dst)
+        run(template, moduleConfig, annotations, imports, src, dst)
 
 
 if __name__ == '__main__':

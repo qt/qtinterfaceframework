@@ -11,6 +11,6 @@ INCLUDEPATH += $$OUT_PWD/../frontend $$OUT_PWD/../common
 
 QT += qml quick core interfaceframework
 
-QFACE_FORMAT = server_qtro_simulator
-QFACE_SOURCES = ../../include-test.qface
-QFACE_IMPORT_PATH += "../../qface imports"
+IFCODEGEN_TEMPLATE = server_qtro_simulator
+IFCODEGEN_SOURCES = ../../include-test.qface
+IFCODEGEN_IMPORT_PATH += "../../qface imports"

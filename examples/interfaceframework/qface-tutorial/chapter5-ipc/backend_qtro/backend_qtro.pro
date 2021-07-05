@@ -9,8 +9,8 @@ LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfInstrumentCluster)
 INCLUDEPATH += $$OUT_PWD/../frontend
 QMAKE_RPATHDIR += $$QMAKE_REL_RPATH_BASE/../
 
-QFACE_FORMAT = backend_qtro
-QFACE_SOURCES = ../instrument-cluster.qface
+IFCODEGEN_TEMPLATE = backend_qtro
+IFCODEGEN_SOURCES = ../instrument-cluster.qface
 PLUGIN_TYPE = interfaceframework
 
 CONFIG += install_ok  # Do not cargo-cult this!

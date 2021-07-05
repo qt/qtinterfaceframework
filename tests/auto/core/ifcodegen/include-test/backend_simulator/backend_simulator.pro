@@ -11,6 +11,6 @@ PLUGIN_CLASS_NAME = IncludeTestSimulatorPlugin
 
 QT += core interfaceframework
 
-QFACE_FORMAT = backend_simulator
-QFACE_SOURCES = ../../include-test.qface
-QFACE_IMPORT_PATH += "../../qface imports"
+IFCODEGEN_TEMPLATE = backend_simulator
+IFCODEGEN_SOURCES = ../../include-test.qface
+IFCODEGEN_IMPORT_PATH += "../../qface imports"

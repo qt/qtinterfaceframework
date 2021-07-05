@@ -9,9 +9,9 @@ qt_add_plugin(include_test_qtro)
 
 # Interface Framework Generator:
 qt6_ifcodegen(include_test_qtro
-    QFACE_SOURCES ../../include-test.qface
-    QFACE_FORMAT backend_qtro
-    QFACE_IMPORT_PATH ../../qface\ imports
+    IFCODEGEN_SOURCES ../../include-test.qface
+    IFCODEGEN_TEMPLATE backend_qtro
+    IFCODEGEN_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include_test_qtro PUBLIC

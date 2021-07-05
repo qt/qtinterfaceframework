@@ -10,6 +10,6 @@ DEFINES += QT_BUILD_ORG_EXAMPLE_ECHO_LIB
 
 macos: QMAKE_SONAME_PREFIX = @rpath
 
-QFACE_SOURCES = ../../org.example.echo.qface
-QFACE_ANNOTATIONS += ../../no-private.yaml
+IFCODEGEN_SOURCES = ../../org.example.echo.qface
+IFCODEGEN_ANNOTATIONS += ../../no-private.yaml
 

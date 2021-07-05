@@ -12,6 +12,6 @@ LIBS += -L$$OUT_PWD/.. -l$$qtLibraryTarget(include_test_common)
 
 macos: QMAKE_SONAME_PREFIX = @rpath
 
-QFACE_SOURCES = ../../include-test.qface
-QFACE_IMPORT_PATH += "../../qface imports"
+IFCODEGEN_SOURCES = ../../include-test.qface
+IFCODEGEN_IMPORT_PATH += "../../qface imports"
 

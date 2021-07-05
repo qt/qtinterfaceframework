@@ -9,8 +9,8 @@ qt_add_executable(org-example-echo-noanno-simu-server)
 
 # Interface Framework Generator:
 qt6_ifcodegen(org-example-echo-noanno-simu-server
-    QFACE_SOURCES ../../org.example.echo.noannotation.qface
-    QFACE_FORMAT server_qtro_simulator
+    IFCODEGEN_SOURCES ../../org.example.echo.noannotation.qface
+    IFCODEGEN_TEMPLATE server_qtro_simulator
 )
 
 target_link_libraries(org-example-echo-noanno-simu-server PUBLIC

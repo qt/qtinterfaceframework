@@ -23,8 +23,8 @@ qt_add_executable(tst_custom-template)
 
 # Interface Framework Generator:
 qt6_ifcodegen(tst_custom-template
-    QFACE_SOURCES ../org.example.echo.qface
-    QFACE_FORMAT custom-test
+    IFCODEGEN_SOURCES ../org.example.echo.qface
+    IFCODEGEN_TEMPLATE custom-test
 )
 set_target_properties(tst_custom-template PROPERTIES
     WIN32_EXECUTABLE TRUE

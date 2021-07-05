@@ -20,8 +20,8 @@ set_target_properties(ic_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfacefr
 
 # Interface Framework Generator:
 qt6_ifcodegen(ic_qtro
-    QFACE_SOURCES ../instrument-cluster.qface
-    QFACE_FORMAT backend_qtro
+    IFCODEGEN_SOURCES ../instrument-cluster.qface
+    IFCODEGEN_TEMPLATE backend_qtro
 )
 
 target_link_libraries(ic_qtro PUBLIC

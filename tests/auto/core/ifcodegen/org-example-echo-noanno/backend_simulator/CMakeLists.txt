@@ -10,8 +10,8 @@ set_target_properties(echo_noanno_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY 
 
 # Interface Framework Generator:
 qt6_ifcodegen(echo_noanno_simulator
-    QFACE_SOURCES ../../org.example.echo.noannotation.qface
-    QFACE_FORMAT backend_simulator
+    IFCODEGEN_SOURCES ../../org.example.echo.noannotation.qface
+    IFCODEGEN_TEMPLATE backend_simulator
 )
 
 target_link_libraries(echo_noanno_simulator PUBLIC

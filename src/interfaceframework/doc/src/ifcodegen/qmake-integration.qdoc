@@ -46,34 +46,34 @@ CONFIG += ifcodegen
 QT_FOR_CONFIG += interfaceframework
 !qtConfig(ifcodegen): error("No ifcodegen available")
 
-QFACE_FORMAT = frontend
-QFACE_SOURCES = example.qface
-QFACE_MODULE_NAME = myModule
-QFACE_OUTPUT_DIR = myOutputDir
-QFACE_ANNOTATIONS = annotation.yaml
+IFCODEGEN_TEMPLATE = frontend
+IFCODEGEN_SOURCES = example.qface
+IFCODEGEN_MODULE_NAME = myModule
+IFCODEGEN_OUTPUT_DIR = myOutputDir
+IFCODEGEN_ANNOTATIONS = annotation.yaml
 \endcode
 
 The following qmake variables are available:
 \table
     \row
-        \li QFACE_FORMAT
+        \li IFCODEGEN_TEMPLATE
         \li frontend (default), simulator_backend
     \row
-        \li QFACE_SOURCES
+        \li IFCODEGEN_SOURCES
         \li A single \c .qface input file.
     \row
-        \li QFACE_MODULE_NAME
+        \li IFCODEGEN_MODULE_NAME
         \li Optional. The name of the module that is using the generated code.
     \row
-        \li QFACE_OUTPUT_DIR
+        \li IFCODEGEN_OUTPUT_DIR
         \li The output folder where the generated code is placed. The default location is the
             current build folder.
     \row
-        \li QFACE_ANNOTATIONS
+        \li IFCODEGEN_ANNOTATIONS
         \li A list of additional annotation files in YAML format. For more information, see the
             \l{annotations-option}{Annotations Option}.
     \row
-        \li QFACE_IMPORT_PATH
+        \li IFCODEGEN_IMPORT_PATH
         \li A list of import paths, which are considered when an IDL file uses an import statement.
             For more information, see the \l{import-option}{Import Option}.
 \endtable
@@ -113,8 +113,8 @@ QT_FOR_CONFIG += interfaceframework
 
 ...
 
-QFACE_MODULE_NAME = QtIfVehicleFunctions
-QFACE_SOURCES += ifvehiclefunctions.qface
+IFCODEGEN_MODULE_NAME = QtIfVehicleFunctions
+IFCODEGEN_SOURCES += ifvehiclefunctions.qface
 
 load(ifcodegen_qt_module)
 \endcode

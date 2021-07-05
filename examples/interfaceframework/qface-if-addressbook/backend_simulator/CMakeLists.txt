@@ -20,8 +20,8 @@ set_target_properties(addressbook_backend_simulator PROPERTIES LIBRARY_OUTPUT_DI
 
 # Interface Framework Generator:
 qt6_ifcodegen(addressbook_backend_simulator
-    QFACE_SOURCES ../example-if-addressbook.qface
-    QFACE_FORMAT backend_simulator
+    IFCODEGEN_SOURCES ../example-if-addressbook.qface
+    IFCODEGEN_TEMPLATE backend_simulator
 )
 
 target_link_libraries(addressbook_backend_simulator PUBLIC

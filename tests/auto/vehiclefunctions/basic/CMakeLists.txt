@@ -16,8 +16,8 @@ qt_internal_add_test(tst_vehiclefunctions_basic
 
 # Interface Framework Generator:
 qt_ifcodegen(tst_vehiclefunctions_basic
-    QFACE_SOURCES ../../../../src/ifvehiclefunctions/ifvehiclefunctions.qface
-    QFACE_FORMAT test
+    IFCODEGEN_SOURCES ../../../../src/ifvehiclefunctions/ifvehiclefunctions.qface
+    IFCODEGEN_TEMPLATE test
 )
 
 #### Keys ignored in scope 1:.:.:basic.pro:<TRUE>:
