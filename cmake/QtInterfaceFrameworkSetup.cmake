@@ -3,8 +3,12 @@ function(qt_config_python3_package_test name)
         return()
     endif()
 
-    cmake_parse_arguments(arg "" "LABEL;PACKAGE;VERSION"
+    cmake_parse_arguments(arg "" "LABEL;PACKAGE;CONDITION;VERSION"
         "" ${ARGN})
+
+    if(NOT arg_CONDITION)
+        set(arg_CONDITION VERSION_EQUAL)
+    endif()
 
     message(STATUS "Performing Test ${arg_LABEL}")
 
@@ -19,10 +23,11 @@ function(qt_config_python3_package_test name)
 
     if(${${name}_RESULT} EQUAL 0)
         if(DEFINED arg_VERSION)
-            message(STATUS "Checking for exact version:")
+            message(STATUS "Checking for version:")
             message(STATUS "Expected: ${arg_VERSION}")
+            message(STATUS "Condition: ${arg_CONDITION}")
             message(STATUS "Got: ${${name}_VERSION}")
-            if("${arg_VERSION}" VERSION_EQUAL "${${name}_VERSION}")
+            if("${${name}_VERSION}" ${arg_CONDITION} "${arg_VERSION}")
                 set(HAVE_${name} TRUE)
                 set(status_label "Success")
             endif()

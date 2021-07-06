@@ -30,6 +30,7 @@ qt_config_python3_package_test(virtualenv
 qt_config_python3_package_test(qface
     LABEL "Python3 qface package"
     PACKAGE "qface"
+    CONDITION VERSION_GREATER_EQUAL
     VERSION "2.0.3"
 )
 
