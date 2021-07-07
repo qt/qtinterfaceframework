@@ -19,9 +19,9 @@ qt_add_plugin(remote_backend_qtro)
 set_target_properties(remote_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen(remote_backend_qtro
-    IFCODEGEN_SOURCES ../example-if-remote.qface
-    IFCODEGEN_TEMPLATE backend_qtro
+qt6_ifcodegen_extend_target(remote_backend_qtro
+    IDL_FILES ../example-if-remote.qface
+    TEMPLATE backend_qtro
 )
 
 target_link_libraries(remote_backend_qtro PUBLIC

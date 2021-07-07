@@ -35,10 +35,10 @@ qt_internal_add_resource(${target_name} "qml"
 # When cross-compiling the tool might not be compiled and the target
 # doesn't exist in this case
 if (TARGET ${target_name})
-    qt_ifcodegen(${target_name}
-        IFCODEGEN_SOURCES ../../ifvehiclefunctions/ifvehiclefunctions.qface
-        IFCODEGEN_TEMPLATE server_qtro_simulator
-        IFCODEGEN_MODULE_NAME QtIfVehicleFunctions
+    qt6_ifcodegen_extend_target(${target_name}
+        IDL_FILES ../../ifvehiclefunctions/ifvehiclefunctions.qface
+        TEMPLATE server_qtro_simulator
+        MODULE_NAME QtIfVehicleFunctions
     )
 endif()
 

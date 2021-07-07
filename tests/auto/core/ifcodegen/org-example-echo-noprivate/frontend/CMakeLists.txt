@@ -9,10 +9,10 @@ add_library(echo_noprivate_frontend)
 set_target_properties(echo_noprivate_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(echo_noprivate_frontend
-    IFCODEGEN_SOURCES ../../org.example.echo.qface
-    IFCODEGEN_TEMPLATE frontend
-    IFCODEGEN_ANNOTATIONS ../../no-private.yaml
+qt6_ifcodegen_extend_target(echo_noprivate_frontend
+    IDL_FILES ../../org.example.echo.qface
+    TEMPLATE frontend
+    ANNOTATION_FILES ../../no-private.yaml
 )
 target_include_directories(echo_noprivate_frontend PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}

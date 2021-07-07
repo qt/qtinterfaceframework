@@ -21,9 +21,9 @@ add_library(QtIfInstrumentCluster_Chapter2)
 set_target_properties(QtIfInstrumentCluster_Chapter2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(QtIfInstrumentCluster_Chapter2
-    IFCODEGEN_SOURCES ../instrument-cluster.qface
-    IFCODEGEN_TEMPLATE frontend
+qt6_ifcodegen_extend_target(QtIfInstrumentCluster_Chapter2
+    IDL_FILES ../instrument-cluster.qface
+    TEMPLATE frontend
 )
 
 target_include_directories(QtIfInstrumentCluster_Chapter2 PUBLIC

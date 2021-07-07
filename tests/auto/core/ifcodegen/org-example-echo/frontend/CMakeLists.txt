@@ -9,9 +9,9 @@ add_library(echo_frontend)
 set_target_properties(echo_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(echo_frontend
-    IFCODEGEN_SOURCES ../../org.example.echo.qface
-    IFCODEGEN_TEMPLATE frontend
+qt6_ifcodegen_extend_target(echo_frontend
+    IDL_FILES ../../org.example.echo.qface
+    TEMPLATE frontend
 )
 target_include_directories(echo_frontend PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}

@@ -18,7 +18,7 @@ qt_internal_add_test(tst_org-example-echo-noanno
 set_target_properties(tst_org-example-echo-noanno PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(tst_org-example-echo-noanno
-    IFCODEGEN_SOURCES ../../org.example.echo.noannotation.qface
-    IFCODEGEN_TEMPLATE test
+qt6_ifcodegen_extend_target(tst_org-example-echo-noanno
+    IDL_FILES ../../org.example.echo.noannotation.qface
+    TEMPLATE test
 )

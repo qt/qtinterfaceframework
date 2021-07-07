@@ -9,10 +9,10 @@ qt_add_plugin(echo_noprivate_simulator)
 set_target_properties(echo_noprivate_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen(echo_noprivate_simulator
-    IFCODEGEN_SOURCES ../../org.example.echo.qface
-    IFCODEGEN_TEMPLATE backend_simulator
-    IFCODEGEN_ANNOTATIONS ../../no-private.yaml
+qt6_ifcodegen_extend_target(echo_noprivate_simulator
+    IDL_FILES ../../org.example.echo.qface
+    TEMPLATE backend_simulator
+    ANNOTATION_FILES ../../no-private.yaml
 )
 
 target_link_libraries(echo_noprivate_simulator PUBLIC

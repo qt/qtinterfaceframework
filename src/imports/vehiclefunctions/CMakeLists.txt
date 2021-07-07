@@ -4,21 +4,31 @@
 ## vehiclefunctions Plugin:
 #####################################################################
 
-set(CMAKE_AUTOMOC ON)
-
 # Interface Framework Generator:
-qt_ifcodegen(qtifvehiclefunctionsplugin
-    IFCODEGEN_SOURCES ../../ifvehiclefunctions/ifvehiclefunctions.qface
-    IFCODEGEN_TEMPLATE qmlplugin
-    IFCODEGEN_MODULE_NAME QtIfVehicleFunctions
+qt6_ifcodegen_import_variables(VEHICLEFUNCTIONS
+    IDL_FILES ../../ifvehiclefunctions/ifvehiclefunctions.qface
+    TEMPLATE qmlplugin
+    MODULE_NAME QtIfVehicleFunctions
 )
 
-# special case begin
-target_link_libraries(qtifvehiclefunctionsplugin PUBLIC
-    Qt::InterfaceFramework
-    Qt::IfVehicleFunctions
+if (NOT VEHICLEFUNCTIONS_URI)
+    return()
+endif()
+
+qt_internal_add_qml_module(qtifvehiclefunctionsplugin
+    URI ${VEHICLEFUNCTIONS_URI}
+    VERSION ${VEHICLEFUNCTIONS_VERSION}
+    PLUGIN_TARGET qtifvehiclefunctionsplugin
+    NO_PLUGIN_OPTIONAL
+    NO_GENERATE_PLUGIN_SOURCE
+    NO_GENERATE_QMLTYPES
+    NO_GENERATE_QMLDIR
+    SOURCES
+        ${VEHICLEFUNCTIONS_SOURCES}
+    PUBLIC_LIBRARIES
+        Qt::InterfaceFramework
+        Qt::IfVehicleFunctions
 )
-# special case end
 
 #### Keys ignored in scope 1:.:.:vehiclefunctions.pro:<TRUE>:
 # CXX_MODULE = "qml"

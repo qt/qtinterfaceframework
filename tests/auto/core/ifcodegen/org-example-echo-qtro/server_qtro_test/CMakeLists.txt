@@ -23,7 +23,7 @@ qt_internal_add_test(tst_org-example-echo-qtro
 set_target_properties(tst_org-example-echo-qtro PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(tst_org-example-echo-qtro
-    IFCODEGEN_SOURCES ../../org.example.echo.qface
-    IFCODEGEN_TEMPLATE server_qtro
+qt6_ifcodegen_extend_target(tst_org-example-echo-qtro
+    IDL_FILES ../../org.example.echo.qface
+    TEMPLATE server_qtro
 )

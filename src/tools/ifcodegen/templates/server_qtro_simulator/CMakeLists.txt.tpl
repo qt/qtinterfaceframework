@@ -32,7 +32,7 @@ if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivat
     find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelperPrivate)
 endif()
 
-set(${CURRENT_TARGET}_SOURCES
+set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     {{interface|lower}}backend.cpp
     {{interface|lower}}adapter.cpp
@@ -41,27 +41,41 @@ set(${CURRENT_TARGET}_SOURCES
     main.cpp
 )
 
-qt_add_resources(${CURRENT_TARGET}_SOURCES
+set_ifcodegen_variable(${VAR_PREFIX}_RESOURCES
     ${CMAKE_CURRENT_BINARY_DIR}/{{module.module_name|lower}}_simulation.qrc
 )
 
-target_sources(${CURRENT_TARGET}
-    PRIVATE
-    ${${CURRENT_TARGET}_SOURCES}
-)
-
-qt6_add_repc_sources(${CURRENT_TARGET}
+set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 {% for interface in module.interfaces %}
     ${CMAKE_CURRENT_BINARY_DIR}/{{interface|lower}}.rep
 {% endfor %}
 )
 
-target_link_libraries(${CURRENT_TARGET} PRIVATE
+set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::RemoteObjects
     Qt6::IfRemoteObjectsHelperPrivate
 )
 
-### MISSING
-# OTHER_FILES += \
-#    $$PWD/{{module.module_name|lower}}.json \
-#    $$PWD/{{module.module_name|lower}}_simulation_data.json
+if (TARGET ${CURRENT_TARGET})
+    qt_add_resources(${VAR_PREFIX}_SOURCES
+        ${${VAR_PREFIX}_RESOURCES}
+    )
+
+    target_sources(${CURRENT_TARGET}
+        PRIVATE
+        ${${VAR_PREFIX}_SOURCES}
+    )
+
+    qt6_add_repc_sources(${CURRENT_TARGET}
+        ${${VAR_PREFIX}_REPLICAS}
+    )
+
+    target_link_libraries(${CURRENT_TARGET} PRIVATE
+        ${${VAR_PREFIX}_LIBRARIES}
+    )
+
+    ### MISSING
+    # OTHER_FILES += \
+    #    $$PWD/{{module.module_name|lower}}.json \
+    #    $$PWD/{{module.module_name|lower}}_simulation_data.json
+endif()

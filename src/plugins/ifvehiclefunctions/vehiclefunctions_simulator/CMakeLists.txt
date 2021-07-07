@@ -29,10 +29,10 @@ qt_internal_add_resource(QtIfVehicleFunctionsSimulatorPlugin "qml"
 
 
 # Interface Framework Generator:
-qt_ifcodegen(QtIfVehicleFunctionsSimulatorPlugin
-    IFCODEGEN_SOURCES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
-    IFCODEGEN_TEMPLATE backend_simulator
-    IFCODEGEN_MODULE_NAME QtIfVehicleFunctions
+qt_ifcodegen_extend_target(QtIfVehicleFunctionsSimulatorPlugin
+    IDL_FILES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
+    TEMPLATE backend_simulator
+    MODULE_NAME QtIfVehicleFunctions
 )
 
 #### Keys ignored in scope 1:.:.:vehiclefunctions_simulator.pro:<TRUE>:

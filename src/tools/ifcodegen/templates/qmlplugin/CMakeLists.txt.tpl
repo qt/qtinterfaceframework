@@ -28,42 +28,54 @@
 #############################################################################
 #}
 
-# TODO We probably dont' need this template at all in the cmake case
-# Keep it until the templates have been adapted and everything can be done without autogenerating
+set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
+    ${CMAKE_CURRENT_BINARY_DIR}/plugin.cpp
+)
 
-if (NOT TARGET ${CURRENT_TARGET})
-    string(REPLACE "." "/" TARGET_PATH "{{module|qml_type}}")
-    qt_add_qml_module(${CURRENT_TARGET}
-        URI "{{module|qml_type}}"
-        VERSION "{{module.majorVersion}}.{{module.minorVersion}}"
-        PLUGIN_TARGET ${CURRENT_TARGET}
-        NO_PLUGIN_OPTIONAL
-        NO_GENERATE_PLUGIN_SOURCE
-        NO_GENERATE_QMLTYPES
-        NO_GENERATE_QMLDIR
-        # TODO remove this again
-        # This is needed to make the test build work as it would create duplicate qmldir entries
-        # in the global qml folder
-        OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PATH}
-        SOURCES
-            ${CMAKE_CURRENT_BINARY_DIR}/plugin.cpp
-    )
-    target_link_libraries(${CURRENT_TARGET}
-        PUBLIC
-            Qt::InterfaceFramework
-    )
-else()
+set_ifcodegen_variable(${VAR_PREFIX}_URI
+    {{module|qml_type}}
+)
+
+set_ifcodegen_variable(${VAR_PREFIX}_VERSION
+    {{module.majorVersion}}.{{module.minorVersion}}
+)
+
+set_ifcodegen_variable(${VAR_PREFIX}_QMLTYPES
+    ${CMAKE_CURRENT_BINARY_DIR}/plugins.qmltypes
+)
+
+set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
+    Qt6::InterfaceFramework
+)
+
+#string(REPLACE "." "/" TARGET_PATH "{{module|qml_type}}")
+#qt_add_qml_module(${CURRENT_TARGET}
+#    URI "{{module|qml_type}}"
+#    VERSION "{{module.majorVersion}}.{{module.minorVersion}}"
+#    PLUGIN_TARGET ${CURRENT_TARGET}
+#    NO_PLUGIN_OPTIONAL
+#    NO_GENERATE_PLUGIN_SOURCE
+#    NO_GENERATE_QMLTYPES
+#    NO_GENERATE_QMLDIR
+#    # TODO remove this again
+#    # This is needed to make the test build work as it would create duplicate qmldir entries
+#    # in the global qml folder
+#    OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PATH}
+#    SOURCES
+#        ${CMAKE_CURRENT_BINARY_DIR}/plugin.cpp
+#)
+
+if (TARGET ${CURRENT_TARGET})
     target_sources(${CURRENT_TARGET}
                    PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/plugin.cpp
+        ${${VAR_PREFIX}_SOURCES}
+    )
+
+    target_link_libraries(${CURRENT_TARGET}
+        PUBLIC
+            ${${VAR_PREFIX}_LIBRARIES}
     )
 endif()
-
-#set_target_properties(${CURRENT_TARGET} PROPERTIES
-#    QT_QML_MODULE_VERSION {{module.majorVersion}}.{{module.minorVersion}}
-#    QT_QML_MODULE_URI {{module|qml_type}}
-#    QT_QMLTYPES_FILENAME plugins.qmltypes
-#)
 
 ### MISSING
 # AUX_QML_FILES += $$PWD/qmldir \

@@ -9,9 +9,9 @@ add_library(include_test_common)
 set_target_properties(include_test_common PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(include_test_common
-    IFCODEGEN_SOURCES ../../qface\ imports/common.qface
-    IFCODEGEN_TEMPLATE frontend
+qt6_ifcodegen_extend_target(include_test_common
+    IDL_FILES ../../qface\ imports/common.qface
+    TEMPLATE frontend
 )
 target_include_directories(include_test_common PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}

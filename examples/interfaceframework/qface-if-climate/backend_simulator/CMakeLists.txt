@@ -19,9 +19,9 @@ qt_add_plugin(climate_backend_simulator)
 set_target_properties(climate_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen(climate_backend_simulator
-    IFCODEGEN_SOURCES ../example-if-climate.qface
-    IFCODEGEN_TEMPLATE backend_simulator
+qt6_ifcodegen_extend_target(climate_backend_simulator
+    IDL_FILES ../example-if-climate.qface
+    TEMPLATE backend_simulator
 )
 
 target_link_libraries(climate_backend_simulator PUBLIC

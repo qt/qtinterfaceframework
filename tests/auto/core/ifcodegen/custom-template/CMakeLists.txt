@@ -22,9 +22,9 @@ find_package(Qt6 COMPONENTS Test)
 qt_add_executable(tst_custom-template)
 
 # Interface Framework Generator:
-qt6_ifcodegen(tst_custom-template
-    IFCODEGEN_SOURCES ../org.example.echo.qface
-    IFCODEGEN_TEMPLATE custom-test
+qt6_ifcodegen_extend_target(tst_custom-template
+    IDL_FILES ../org.example.echo.qface
+    TEMPLATE custom-test
 )
 set_target_properties(tst_custom-template PROPERTIES
     WIN32_EXECUTABLE TRUE

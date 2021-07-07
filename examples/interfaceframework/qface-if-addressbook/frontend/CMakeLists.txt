@@ -20,9 +20,9 @@ find_package(Qt6 COMPONENTS Quick)
 add_library(QtIfAdressBookExample)
 
 # Interface Framework Generator:
-qt6_ifcodegen(QtIfAdressBookExample
-    IFCODEGEN_SOURCES ../example-if-addressbook.qface
-    IFCODEGEN_TEMPLATE frontend
+qt6_ifcodegen_extend_target(QtIfAdressBookExample
+    IDL_FILES ../example-if-addressbook.qface
+    TEMPLATE frontend
 )
 
 set_target_properties(QtIfAdressBookExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)

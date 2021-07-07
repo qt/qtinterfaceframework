@@ -28,10 +28,7 @@
 #############################################################################
 #}
 
-target_compile_definitions(${CURRENT_TARGET} PRIVATE QT_BUILD_{{module|upper|replace('.', '_')|strip_QT}}_LIB)
-
-target_sources(${CURRENT_TARGET}
-               PRIVATE
+set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     {{interface|lower}}.cpp
     {{interface|lower}}backendinterface.cpp
@@ -42,3 +39,16 @@ target_sources(${CURRENT_TARGET}
     {{module.module_name|lower}}.cpp
     {{module.module_name|lower}}factory.cpp
 )
+
+set(${VAR_PREFIX}_DEFINES
+    QT_BUILD_{{module|upper|replace('.', '_')|strip_QT}}_LIB
+)
+
+if (TARGET ${CURRENT_TARGET})
+    target_compile_definitions(${CURRENT_TARGET} PRIVATE ${${VAR_PREFIX}_DEFINES})
+
+    target_sources(${CURRENT_TARGET}
+                   PRIVATE
+        ${${VAR_PREFIX}_SOURCES}
+    )
+endif()

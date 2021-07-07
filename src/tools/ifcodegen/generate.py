@@ -175,7 +175,7 @@ def run(format, moduleConfig, annotations, imports, src, dst):
 @click.option('--template', '-t', multiple=False, help='The template the autogenerator should use for '
     'the generation. This can either be one of the builtin templates or a path to a template folder. '
     'Builtin formats are: \n' + '\n'.join(builtinTemplates))
-@click.option('--module', default=False, help='The name of the Qt module the autogenerator is '
+@click.option('--module', help='The name of the Qt module the autogenerator is '
     'generating. This is automatically used by the qmake integration and passed directly to the '
     'qface templates.')
 @click.option('--force', is_flag=True, default=False, help='Always write all output files')

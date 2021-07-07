@@ -24,9 +24,9 @@ find_package(Qt6 COMPONENTS Quick)
 add_library(QtIfRemoteExample)
 
 # Interface Framework Generator:
-qt6_ifcodegen(QtIfRemoteExample
-    IFCODEGEN_SOURCES ../example-if-remote.qface
-    IFCODEGEN_TEMPLATE frontend
+qt6_ifcodegen_extend_target(QtIfRemoteExample
+    IDL_FILES ../example-if-remote.qface
+    TEMPLATE frontend
 )
 
 set_target_properties(QtIfRemoteExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)

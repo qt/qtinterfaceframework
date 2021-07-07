@@ -28,23 +28,25 @@
 #############################################################################
 #}
 
-set(${CURRENT_TARGET}_SOURCES
+set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     {{interface|lower}}backend.cpp
 {% endfor %}
     {{module.module_name|lower}}simulatorplugin.cpp
 )
 
-qt_add_resources(${CURRENT_TARGET}_SOURCES
-    ${CMAKE_CURRENT_BINARY_DIR}/{{module.module_name|lower}}_simulation.qrc
-)
+if (TARGET ${CURRENT_TARGET})
+    qt_add_resources(${VAR_PREFIX}_SOURCES
+        ${CMAKE_CURRENT_BINARY_DIR}/{{module.module_name|lower}}_simulation.qrc
+    )
 
-target_sources(${CURRENT_TARGET}
-    PRIVATE
-    ${${CURRENT_TARGET}_SOURCES}
-)
+    target_sources(${CURRENT_TARGET}
+        PRIVATE
+        ${${VAR_PREFIX}_SOURCES}
+    )
 
-### MISSING
-# OTHER_FILES += \
-#    $$PWD/{{module.module_name|lower}}.json \
-#    $$PWD/{{module.module_name|lower}}_simulation_data.json
+    ### MISSING
+    # OTHER_FILES += \
+    #    $$PWD/{{module.module_name|lower}}.json \
+    #    $$PWD/{{module.module_name|lower}}_simulation_data.json
+endif()

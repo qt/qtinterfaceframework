@@ -32,18 +32,32 @@ if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivat
     find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelperPrivate)
 endif()
 
-target_sources(${CURRENT_TARGET}
-               PRIVATE
+set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
     core.cpp
 )
 
-qt6_add_repc_sources(${CURRENT_TARGET}
+set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 {% for interface in module.interfaces %}
     ${CMAKE_CURRENT_BINARY_DIR}/{{interface|lower}}.rep
 {% endfor %}
 )
 
-target_link_libraries(${CURRENT_TARGET} PRIVATE
+set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::RemoteObjects
     Qt6::IfRemoteObjectsHelperPrivate
 )
+
+if (TARGET ${CURRENT_TARGET})
+    target_sources(${CURRENT_TARGET}
+                   PRIVATE
+        ${${VAR_PREFIX}_SOURCES}
+    )
+
+    qt6_add_repc_sources(${CURRENT_TARGET}
+        ${${VAR_PREFIX}_REPLICAS}
+    )
+
+    target_link_libraries(${CURRENT_TARGET} PRIVATE
+        ${${VAR_PREFIX}_LIBRARIES}
+    )
+endif()

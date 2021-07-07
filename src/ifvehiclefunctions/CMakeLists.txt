@@ -6,10 +6,10 @@
 #####################################################################
 
 qt_ifcodegen_generate(
-    IFCODEGEN_SOURCES ifvehiclefunctions.qface
-    IFCODEGEN_TEMPLATE frontend
-    IFCODEGEN_MODULE_NAME QtIfVehicleFunctions
-    IFCODEGEN_HEADERS_OUTPUT_DIR ${QT_BUILD_DIR}/src/ifvehiclefunctions
+    IDL_FILES ifvehiclefunctions.qface
+    TEMPLATE frontend
+    MODULE_NAME QtIfVehicleFunctions
+    EXTRA_HEADERS_OUTPUT_DIR ${QT_BUILD_DIR}/src/ifvehiclefunctions
 )
 make_directory(${QT_BUILD_DIR}/src/ifvehiclefunctions)
 
@@ -25,8 +25,9 @@ qt_internal_add_module(IfVehicleFunctions
         Qt::InterfaceFrameworkPrivate
 )
 
-qt_ifcodegen_include(IfVehicleFunctions
-    IFCODEGEN_SOURCES ifvehiclefunctions.qface
+qt_ifcodegen_extend_target(IfVehicleFunctions
+    NO_GENERATE
+    IDL_FILES ifvehiclefunctions.qface
 )
 
 #####################################################################

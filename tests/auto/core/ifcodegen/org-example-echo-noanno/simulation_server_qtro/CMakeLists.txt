@@ -8,9 +8,9 @@ set(CMAKE_AUTOUIC ON)
 qt_add_executable(org-example-echo-noanno-simu-server)
 
 # Interface Framework Generator:
-qt6_ifcodegen(org-example-echo-noanno-simu-server
-    IFCODEGEN_SOURCES ../../org.example.echo.noannotation.qface
-    IFCODEGEN_TEMPLATE server_qtro_simulator
+qt6_ifcodegen_extend_target(org-example-echo-noanno-simu-server
+    IDL_FILES ../../org.example.echo.noannotation.qface
+    TEMPLATE server_qtro_simulator
 )
 
 target_link_libraries(org-example-echo-noanno-simu-server PUBLIC

@@ -9,10 +9,10 @@ qt_add_plugin(include_test_simulator)
 set_target_properties(include_test_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen(include_test_simulator
-    IFCODEGEN_SOURCES ../../include-test.qface
-    IFCODEGEN_TEMPLATE backend_simulator
-    IFCODEGEN_IMPORT_PATH ../../qface\ imports
+qt6_ifcodegen_extend_target(include_test_simulator
+    IDL_FILES ../../include-test.qface
+    TEMPLATE backend_simulator
+    IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include_test_simulator PUBLIC

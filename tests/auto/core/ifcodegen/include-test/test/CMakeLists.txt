@@ -19,8 +19,8 @@ qt_internal_add_test(tst_qface_include
 set_target_properties(tst_qface_include PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(tst_qface_include
-    IFCODEGEN_SOURCES ../../include-test.qface
-    IFCODEGEN_TEMPLATE test
-    IFCODEGEN_IMPORT_PATH ../../qface\ imports
+qt6_ifcodegen_extend_target(tst_qface_include
+    IDL_FILES ../../include-test.qface
+    TEMPLATE test
+    IMPORT_PATH ../../qface\ imports
 )

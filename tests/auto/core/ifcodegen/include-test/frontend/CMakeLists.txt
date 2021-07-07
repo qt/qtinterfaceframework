@@ -9,10 +9,10 @@ add_library(include_test_frontend)
 set_target_properties(include_test_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(include_test_frontend
-    IFCODEGEN_SOURCES ../../include-test.qface
-    IFCODEGEN_TEMPLATE frontend
-    IFCODEGEN_IMPORT_PATH ../../qface\ imports
+qt6_ifcodegen_extend_target(include_test_frontend
+    IDL_FILES ../../include-test.qface
+    TEMPLATE frontend
+    IMPORT_PATH ../../qface\ imports
 )
 target_include_directories(include_test_frontend PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}

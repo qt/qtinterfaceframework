@@ -17,9 +17,21 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 
 
 # Interface Framework Generator:
-qt6_ifcodegen(instrument_cluster_chapter4_imports # special case
-    IFCODEGEN_SOURCES ../instrument-cluster.qface
-    IFCODEGEN_TEMPLATE qmlplugin
+qt6_ifcodegen_import_variables(CLUSTER
+    IDL_FILES ../instrument-cluster.qface
+    TEMPLATE qmlplugin
+)
+
+qt_add_qml_module(instrument_cluster_chapter4_imports
+    URI ${CLUSTER_URI}
+    VERSION ${CLUSTER_VERSION}
+    PLUGIN_TARGET instrument_cluster_chapter4_imports
+    NO_PLUGIN_OPTIONAL
+    NO_GENERATE_PLUGIN_SOURCE
+    NO_GENERATE_QMLTYPES
+    NO_GENERATE_QMLDIR
+    SOURCES
+        ${CLUSTER_SOURCES}
 )
 
 target_link_libraries(instrument_cluster_chapter4_imports PUBLIC # special case

@@ -28,10 +28,16 @@
 #############################################################################
 #}
 
-target_sources(${CURRENT_TARGET}
-               PRIVATE
+set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     tst_{{interface|lower}}.cpp
 {% endfor %}
     main.cpp
 )
+
+if (TARGET ${CURRENT_TARGET})
+    target_sources(${CURRENT_TARGET}
+                   PRIVATE
+        ${${VAR_PREFIX}_SOURCES}
+    )
+endif()

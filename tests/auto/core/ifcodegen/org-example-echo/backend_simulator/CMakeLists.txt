@@ -12,9 +12,9 @@ target_sources(echo_simulator PRIVATE
 )
 
 # Interface Framework Generator:
-qt6_ifcodegen(echo_simulator
-    IFCODEGEN_SOURCES ../../org.example.echo.qface
-    IFCODEGEN_TEMPLATE backend_simulator
+qt6_ifcodegen_extend_target(echo_simulator
+    IDL_FILES ../../org.example.echo.qface
+    TEMPLATE backend_simulator
 )
 
 target_link_libraries(echo_simulator PUBLIC

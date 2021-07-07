@@ -23,9 +23,9 @@ qt_add_executable(qface-if-remote-server
 )
 
 # Interface Framework Generator:
-qt6_ifcodegen(qface-if-remote-server
-    IFCODEGEN_SOURCES ../example-if-remote.qface
-    IFCODEGEN_TEMPLATE server_qtro
+qt6_ifcodegen_extend_target(qface-if-remote-server
+    IDL_FILES ../example-if-remote.qface
+    TEMPLATE server_qtro
 )
 
 set_target_properties(qface-if-remote-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)

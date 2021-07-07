@@ -9,9 +9,9 @@ qt_add_plugin(echo_backend_qtro)
 set_target_properties(echo_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen(echo_backend_qtro
-    IFCODEGEN_SOURCES ../../org.example.echo.qface
-    IFCODEGEN_TEMPLATE backend_qtro
+qt6_ifcodegen_extend_target(echo_backend_qtro
+    IDL_FILES ../../org.example.echo.qface
+    TEMPLATE backend_qtro
 )
 
 target_link_libraries(echo_backend_qtro PUBLIC

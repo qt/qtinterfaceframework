@@ -6,14 +6,25 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Interface Framework Generator:
-qt6_ifcodegen(echo_frontend_noprivate_qmlplugin # special case
-    IFCODEGEN_SOURCES ../../org.example.echo.qface
-    IFCODEGEN_TEMPLATE qmlplugin
-    IFCODEGEN_ANNOTATIONS ../../no-private.yaml
+qt6_ifcodegen_import_variables(ECHO_NOPRIVATE
+    IDL_FILES ../../org.example.echo.qface
+    TEMPLATE qmlplugin
+    ANNOTATION_FILES ../../no-private.yaml
 )
 
-target_link_libraries(echo_frontend_noprivate_qmlplugin PRIVATE # special case
+qt_add_qml_module(echo_noprivate_qmlplugin
+    URI ${ECHO_NOPRIVATE_URI}
+    VERSION ${ECHO_NOPRIVATE_VERSION}
+    PLUGIN_TARGET echo_noprivate_qmlplugin
+    NO_PLUGIN_OPTIONAL
+    NO_GENERATE_PLUGIN_SOURCE
+    NO_GENERATE_QMLTYPES
+    NO_GENERATE_QMLDIR
+    SOURCES
+        ${ECHO_NOPRIVATE_SOURCES}
+)
+
+target_link_libraries(echo_noprivate_qmlplugin PRIVATE
     echo_noprivate_frontend
     Qt::InterfaceFramework
-    Qt::IfVehicleFunctions
 )

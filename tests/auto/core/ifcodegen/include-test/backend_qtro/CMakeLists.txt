@@ -8,10 +8,10 @@ set(CMAKE_AUTOUIC ON)
 qt_add_plugin(include_test_qtro)
 
 # Interface Framework Generator:
-qt6_ifcodegen(include_test_qtro
-    IFCODEGEN_SOURCES ../../include-test.qface
-    IFCODEGEN_TEMPLATE backend_qtro
-    IFCODEGEN_IMPORT_PATH ../../qface\ imports
+qt6_ifcodegen_extend_target(include_test_qtro
+    IDL_FILES ../../include-test.qface
+    TEMPLATE backend_qtro
+    IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include_test_qtro PUBLIC

@@ -18,9 +18,9 @@ qt_add_executable(chapter5-ipc-server)
 set_target_properties(chapter5-ipc-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen(chapter5-ipc-server
-    IFCODEGEN_SOURCES ../instrument-cluster.qface
-    IFCODEGEN_TEMPLATE server_qtro_simulator
+qt6_ifcodegen_extend_target(chapter5-ipc-server
+    IDL_FILES ../instrument-cluster.qface
+    TEMPLATE server_qtro_simulator
 )
 set_target_properties(chapter5-ipc-server PROPERTIES
     WIN32_EXECUTABLE TRUE

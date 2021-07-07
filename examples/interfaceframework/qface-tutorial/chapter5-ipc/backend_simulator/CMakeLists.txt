@@ -19,9 +19,9 @@ qt_add_plugin(ic_chapter5_simulation)
 set_target_properties(ic_chapter5_simulation PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen(ic_chapter5_simulation
-    IFCODEGEN_SOURCES ../instrument-cluster.qface
-    IFCODEGEN_TEMPLATE backend_simulator
+qt6_ifcodegen_extend_target(ic_chapter5_simulation
+    IDL_FILES ../instrument-cluster.qface
+    TEMPLATE backend_simulator
 )
 
 target_link_libraries(ic_chapter5_simulation PUBLIC
