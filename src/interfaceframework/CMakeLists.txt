@@ -30,6 +30,8 @@ qt_internal_add_module(InterfaceFramework
         qtinterfaceframeworkmodule.cpp qtinterfaceframeworkmodule.h
         qtifglobal.h qtifglobal_p.h
         queryparser/qifqueryterm.cpp queryparser/qifqueryterm.h queryparser/qifqueryterm_p.h
+    DEFINES
+        _CRT_NONSTDC_NO_DEPRECATE
     LIBRARIES
         Qt::CorePrivate
         Qt::QmlPrivate
