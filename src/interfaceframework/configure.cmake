@@ -1,7 +1,7 @@
 # special case begin
 # Define a stub for qt-configure-module
 if (NOT COMMAND qt_config_python3_package_test)
- defstub(qt_config_python3_package_test)
+    defstub(qt_config_python3_package_test)
 endif()
 # special case end
 
@@ -38,15 +38,15 @@ qt_config_python3_package_test(qface
 
 qt_feature("python3" PRIVATE
     LABEL "python3"
-    CONDITION PYTHON3_FOUND
+    CONDITION PYTHON3_FOUND AND NOT QT_FEATURE_cross_compile
 )
 qt_feature("python3-virtualenv" PRIVATE
     LABEL "virtualenv"
-    CONDITION QT_FEATURE_python3 AND TEST_virtualenv
+    CONDITION QT_FEATURE_python3 AND TEST_virtualenv AND NOT QT_FEATURE_cross_compile
 )
 qt_feature("system-qface" PUBLIC
     LABEL "System QFace"
-    CONDITION TEST_qface
+    CONDITION TEST_qface AND NOT QT_FEATURE_cross_compile
     ENABLE INPUT_qface STREQUAL 'system'
     DISABLE INPUT_qface STREQUAL 'no' OR INPUT_qface STREQUAL 'qt'
 )
@@ -55,9 +55,13 @@ qt_feature("system-ifcodegen" PRIVATE
     ENABLE INPUT_ifcodegen STREQUAL 'system'
     DISABLE ( NOT INPUT_ifcodegen STREQUAL 'system' )
 )
+qt_feature("host-ifcodegen" PRIVATE
+    LABEL "Host Interface Framework Generator"
+    CONDITION QT_FEATURE_interfaceframework AND QT_FEATURE_cross_compile
+)
 qt_feature("ifcodegen" PUBLIC
     LABEL "Interface Framework Generator"
-    CONDITION QT_FEATURE_interfaceframework AND QT_FEATURE_python3 AND ( ( QT_FEATURE_python3_virtualenv AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/qface/setup.py" ) OR ( QT_FEATURE_system_qface ) ) OR QT_FEATURE_system_ifcodegen # special case
+    CONDITION QT_FEATURE_interfaceframework AND (QT_FEATURE_python3 AND ( ( QT_FEATURE_python3_virtualenv AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/qface/setup.py" ) OR ( QT_FEATURE_system_qface ) )) OR QT_FEATURE_system_ifcodegen OR QT_FEATURE_host_ifcodegen
     ENABLE INPUT_ifcodegen STREQUAL 'qt' OR INPUT_ifcodegen STREQUAL 'system'
     DISABLE INPUT_ifcodegen STREQUAL 'no'
 )
@@ -72,18 +76,32 @@ qt_feature("remoteobjects" PUBLIC
 qt_feature("interfaceframework" PUBLIC
     LABEL "Qt Interface Framework Core"
 )
+
 qt_configure_add_summary_section(NAME "Qt Interface Framework Core")
-qt_configure_add_summary_section(NAME "Python3")
-if(PYTHON3_FOUND)
-    qt_configure_add_summary_entry(TYPE "message" ARGS "Executable" MESSAGE "${Python3_EXECUTABLE}")
-    qt_configure_add_summary_entry(TYPE "message" ARGS "Version" MESSAGE "${Python3_VERSION}")
-else()
-    qt_configure_add_summary_entry(TYPE "message" ARGS "Executable" MESSAGE "no")
+qt_configure_add_summary_section(NAME "Interface Framework Generator")
+
+# Show which generator is used
+# Details can be found in the config log
+qt_configure_add_summary_entry(TYPE "message" ARGS "Generator" MESSAGE "yes" CONDITION QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen)
+qt_configure_add_summary_entry(TYPE "message" ARGS "Generator" MESSAGE "host" CONDITION QT_FEATURE_host_ifcodegen)
+qt_configure_add_summary_entry(TYPE "message" ARGS "Generator" MESSAGE "no" CONDITION NOT QT_FEATURE_ifcodegen)
+
+# We don't use the detected python3 and it's libraries when cross-compiling
+# Don't display them to not cause any confusion
+if (NOT QT_FEATURE_cross_compile)
+    qt_configure_add_summary_section(NAME "Python3")
+    if(PYTHON3_FOUND)
+        qt_configure_add_summary_entry(TYPE "message" ARGS "Executable" MESSAGE "${Python3_EXECUTABLE}")
+        qt_configure_add_summary_entry(TYPE "message" ARGS "Version" MESSAGE "${Python3_VERSION}")
+    else()
+        qt_configure_add_summary_entry(TYPE "message" ARGS "Executable" MESSAGE "no")
+    endif()
+    qt_configure_add_summary_entry(ARGS "python3-virtualenv")
+    qt_configure_add_summary_entry(ARGS "system-qface")
+    qt_configure_end_summary_section() # end of "Python3" section
 endif()
-qt_configure_add_summary_entry(ARGS "python3-virtualenv")
-qt_configure_add_summary_entry(ARGS "system-qface")
-qt_configure_end_summary_section() # end of "Python3" section
-qt_configure_add_summary_entry(ARGS "ifcodegen")
+
+qt_configure_end_summary_section() # end of "Interface Framework Generator" section
 qt_configure_add_summary_entry(ARGS "remoteobjects")
 qt_configure_end_summary_section() # end of "Qt Interface Framework Core" section
 qt_configure_add_summary_entry(

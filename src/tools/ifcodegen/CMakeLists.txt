@@ -3,8 +3,8 @@
 ## Virtual env creation
 #####################################################################
 
-set(ifcodegen_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_BINDIR}/ifcodegen")
-set(templates_install_dir "${ifcodegen_install_dir}/templates")
+set(ifcodegen_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBEXECDIR}/ifcodegen")
+set(templates_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_ARCHDATADIR}/ifcodegen-templates")
 
 if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
     qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
@@ -234,22 +234,25 @@ qt_copy_or_install(
     DESTINATION "${templates_install_dir}"
     )
 
-qt_copy_or_install(
-    FILES
-    templates/backend_qtro/backend.cpp.tpl
-    generator/global_functions.py
-    generator/builtin_config.py
-    generator/filters.py
-    generator/rule_generator.py
-    DESTINATION "${ifcodegen_install_dir}/generator"
-    )
+# Don't install if we are building for a target and currently using a host Qt
+if ("${QT_HOST_PATH}" STREQUAL "")
+    qt_copy_or_install(
+        FILES
+        templates/backend_qtro/backend.cpp.tpl
+        generator/global_functions.py
+        generator/builtin_config.py
+        generator/filters.py
+        generator/rule_generator.py
+        DESTINATION "${ifcodegen_install_dir}/generator"
+        )
 
-qt_copy_or_install(
-    FILES
-    generate.py
-    ${CMAKE_CURRENT_BINARY_DIR}/.config
-    DESTINATION "${ifcodegen_install_dir}"
-    )
+    qt_copy_or_install(
+        FILES
+        generate.py
+        ${CMAKE_CURRENT_BINARY_DIR}/.config
+        DESTINATION "${ifcodegen_install_dir}"
+        )
+endif()
 
 
 if (QT_FEATURE_remoteobjects)

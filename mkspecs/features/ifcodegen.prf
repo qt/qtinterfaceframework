@@ -36,9 +36,10 @@ equals(QMAKE_HOST.os, Windows): ENV = chcp 65001 &&
 else: ENV = LC_ALL="en_US.UTF-8"
 
 # Detect whether we are using the feature inside the interfaceframework repository
-VIRTUALENV_PATH = $$[QT_HOST_BINS]/ifcodegen/qtif_qface_virtualenv
+VIRTUALENV_PATH = $$[QT_HOST_LIBEXECS]/ifcodegen/qtif_qface_virtualenv
 INTERNAL_VIRTUALENV_PATH = $$QTIF_BUILD_ROOT/src/tools/ifcodegen/qtif_qface_virtualenv
-IF_GENERATOR_PATH = $$[QT_HOST_BINS]/ifcodegen
+IF_GENERATOR_PATH = $$[QT_HOST_LIBEXECS]/ifcodegen
+IF_TEMPLATE_PATH = $$[QT_INSTALL_ARCHDATA]/ifcodegen-templates
 
 # Try to use the internal virtualenv when building interfaceframework
 # Because of the two stage build of COIN, it might not exist, but the installed version should still be there
@@ -46,6 +47,7 @@ QT_FOR_CONFIG *= interfaceframework-private
 !isEmpty(QTIF_BUILD_ROOT):!qtConfig(system-ifcodegen):exists($$INTERNAL_VIRTUALENV_PATH) {
     VIRTUALENV_PATH = $$INTERNAL_VIRTUALENV_PATH
     IF_GENERATOR_PATH = $$QTIF_ROOT/src/tools/ifcodegen
+    IF_TEMPLATE_PATH = $$IF_GENERATOR_PATH/templates
     equals(QMAKE_HOST.os, Windows): ENV += set IFGENERATOR_CONFIG="$$system_path($$QTIF_BUILD_ROOT/src/tools/ifcodegen/.config)" &&
     else: ENV += IFGENERATOR_CONFIG="$$system_path($$QTIF_BUILD_ROOT/src/tools/ifcodegen/.config)"
 }
@@ -78,7 +80,7 @@ IF_GENERATOR = $$system_quote($$PYTHON) $$IF_GENERATOR_PATH/generate.py
 # In the debug_and_release configuration, we want to have the generator executed
 # during the run of the meta Makefile to only generate the code once.
 PRI = $$IFCODEGEN_OUTPUT_DIR/$$lower($${IFCODEGEN_BASE_NAME}).pri
-IF_GENERATOR_OPTIONS = --template=$$IFCODEGEN_TEMPLATE --force
+IF_GENERATOR_OPTIONS = -T $$IF_TEMPLATE_PATH --template=$$IFCODEGEN_TEMPLATE --force
 !isEmpty(IFCODEGEN_MODULE_NAME): IF_GENERATOR_OPTIONS += --module=$${IFCODEGEN_MODULE_NAME}
 for (ANNOTATION, IFCODEGEN_ANNOTATIONS) {
     file = $$absolute_path($$ANNOTATION, $$_PRO_FILE_PWD_)
@@ -109,12 +111,12 @@ ifcodegen_sources.commands += $$SLEEP && $$ENV $$system_path($$IF_GENERATOR) $$I
 ifcodegen_sources.commands += $$TOUCH $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen))
 ifcodegen_sources.depends = $$IF_GENERATOR_PATH/generate.py
 ifcodegen_sources.depends += $$IFCODEGEN_ABS_PWD/$${IFCODEGEN_FILE}
-ifcodegen_sources.depends += $$files($$IF_GENERATOR_PATH/templates/common/*)
+ifcodegen_sources.depends += $$files($$IF_TEMPLATE_PATH/common/*)
 
 QMAKE_CLEAN += $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 
 # Add all templates of the generator format as dependency
-IFCODEGEN_TEMPLATE_PWD = $$IF_GENERATOR_PATH/templates/$${IFCODEGEN_TEMPLATE}
+IFCODEGEN_TEMPLATE_PWD = $$IF_TEMPLATE_PATH/$${IFCODEGEN_TEMPLATE}
 exists($$IFCODEGEN_TEMPLATE_PWD) {
     ifcodegen_sources.depends += $$files($${IFCODEGEN_TEMPLATE_PWD}/*)
 } else: exists($${IFCODEGEN_TEMPLATE}) {

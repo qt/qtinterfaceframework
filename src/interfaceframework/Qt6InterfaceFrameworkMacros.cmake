@@ -2,16 +2,68 @@
 ## Internal API
 #####################################################################
 
-macro(internal_resolve_ifcodegen_path)
-    if (DEFINED QtInterfaceFramework_BINARY_DIR AND (NOT DEFINED QT_BUILD_STANDALONE_TESTS))
-        set (_VIRTUALENV ${QtInterfaceFramework_BINARY_DIR}/src/tools/ifcodegen/qtif_qface_virtualenv)
-        set (_GENERATOR_PATH ${QtInterfaceFramework_SOURCE_DIR}/src/tools/ifcodegen)
-        set (_IFGENERATOR_CONFIG ${QtInterfaceFramework_BINARY_DIR}/src/tools/ifcodegen/.config)
-    else()
-        set (_GENERATOR_PATH ${QTIF_INSTALL_PREFIX}/${QT6_INSTALL_BINS}/ifcodegen)
-        set (_VIRTUALENV ${_GENERATOR_PATH}/qtif_qface_virtualenv)
+# Determines the location of the correct ifcodegen installation
+# Inside the interface framework the features are used to determine whether a virtualenv needs to be used
+# In all other cases the existence of the virtualenv is checked and depending on that the
+# QT_IFCODEGEN_VIRTUALENV_PATH is set.
+# All following functions just use the existence of this variable instead of the enabled features
+function(qt_ensure_ifcodegen)
+    if(DEFINED QT_IFCODEGEN_GENERATOR_PATH)
+        return()
     endif()
-endmacro()
+
+    if (NOT "${QT_HOST_PATH}" STREQUAL "")
+        set (QT_IFCODEGEN_GENERATOR_PATH ${QT_HOST_PATH}/${QT6_HOST_INFO_LIBEXECDIR}/ifcodegen CACHE FILEPATH "ifcodegen generator")
+        set (QT_IFCODEGEN_VIRTUALENV_PATH ${QT_IFCODEGEN_GENERATOR_PATH}/qtif_qface_virtualenv CACHE FILEPATH "ifcodegen virtualenv")
+        set (QT_IFCODEGEN_TYPE "host")
+
+        # Expand the variable manually as we use a CACHE variable
+        if (NOT EXISTS "${QT_IFCODEGEN_VIRTUALENV_PATH}")
+            unset(QT_IFCODEGEN_VIRTUALENV_PATH CACHE)
+        endif()
+    elseif (DEFINED QtInterfaceFramework_BINARY_DIR AND (NOT DEFINED QT_BUILD_STANDALONE_TESTS))
+        set (QT_IFCODEGEN_GENERATOR_PATH ${QtInterfaceFramework_SOURCE_DIR}/src/tools/ifcodegen CACHE FILEPATH "ifcodegen generator")
+        set (QT_IFCODEGEN_IFGENERATOR_CONFIG ${QtInterfaceFramework_BINARY_DIR}/src/tools/ifcodegen/.config CACHE FILEPATH "ifcodegen config")
+        set (QT_IFCODEGEN_TYPE "source")
+
+        if (QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
+            set (QT_IFCODEGEN_VIRTUALENV_PATH ${QtInterfaceFramework_BINARY_DIR}/src/tools/ifcodegen/qtif_qface_virtualenv CACHE FILEPATH "ifcodegen virtualenv")
+        endif()
+    endif()
+
+    # Fallback to the installed codepath if the host path doesn't exist
+    if (NOT EXISTS ${QT_IFCODEGEN_GENERATOR_PATH})
+        set (QT_IFCODEGEN_GENERATOR_PATH ${QTIF_INSTALL_PREFIX}/${QT6_INSTALL_LIBEXECS}/ifcodegen CACHE FILEPATH "ifcodegen generator")
+        set (QT_IFCODEGEN_VIRTUALENV_PATH ${QT_IFCODEGEN_GENERATOR_PATH}/qtif_qface_virtualenv CACHE FILEPATH "ifcodegen virtualenv")
+        set (QT_IFCODEGEN_TYPE "installed")
+
+        # Expand the variable manually as we use a CACHE variable
+        if (NOT EXISTS "${QT_IFCODEGEN_VIRTUALENV_PATH}")
+            unset(QT_IFCODEGEN_VIRTUALENV_PATH CACHE)
+        endif()
+    endif()
+
+    # Templates are either from source or from the "installed" Qt, we never want to use the "host"
+    # templates when cross-compiling
+    if (DEFINED QtInterfaceFramework_BINARY_DIR AND (NOT DEFINED QT_BUILD_STANDALONE_TESTS))
+        set (QT_IFCODEGEN_TEMPLATES_PATH ${QtInterfaceFramework_SOURCE_DIR}/src/tools/ifcodegen/templates CACHE FILEPATH "ifcodegen templates")
+        set (QT_IFCODEGEN_TEMPLATE_TYPE "source")
+    else()
+        set (QT_IFCODEGEN_TEMPLATES_PATH ${QTIF_INSTALL_PREFIX}/${QT6_INSTALL_ARCHDATA}/ifcodegen-templates CACHE FILEPATH "ifcodegen templates")
+        set (QT_IFCODEGEN_TEMPLATE_TYPE "installed")
+    endif()
+
+    if (NOT EXISTS ${QT_IFCODEGEN_GENERATOR_PATH})
+        message(FATAL_ERROR "Couldn't find a usable ifcodegen location")
+    endif()
+
+    message(STATUS "Using ${QT_IFCODEGEN_TYPE} ifcodegen found at: ${QT_IFCODEGEN_GENERATOR_PATH}")
+    message(STATUS "Using ${QT_IFCODEGEN_TEMPLATE_TYPE} ifcodegen templates found at: ${QT_IFCODEGEN_TEMPLATES_PATH}")
+    if (QT_IFCODEGEN_VIRTUALENV_PATH)
+        message(STATUS "Using ${QT_IFCODEGEN_TYPE} ifcodegen virtualenv found at: ${QT_IFCODEGEN_VIRTUALENV_PATH}")
+    endif()
+
+endfunction()
 
 function(internal_ifcodegen_import)
     cmake_parse_arguments(
@@ -105,10 +157,10 @@ endmacro()
 #   purposes. (OPTIONAL)
 #
 function(qt6_ifcodegen_generate)
-    internal_resolve_ifcodegen_path()
+    qt_ensure_ifcodegen()
 
-    if (QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface
-        AND NOT EXISTS ${_VIRTUALENV}/bin/activate AND NOT EXISTS ${_VIRTUALENV}/Scripts/activate.bat)
+    if (QT_IFCODEGEN_VIRTUALENV_PATH
+        AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/activate AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/activate.bat)
         return()
     endif()
 
@@ -146,7 +198,7 @@ function(qt6_ifcodegen_generate)
     get_filename_component(IFCODEGEN_BASE_NAME "${IDL_FILES}" NAME_WLE)
     get_filename_component(IFCODEGEN_SOURCE_ANNOTATION ${IFCODEGEN_SOURCE_DIR}/${IFCODEGEN_BASE_NAME}.yaml REALPATH BASE_DIR)
 
-    set(TEMPLATE_PWD "${_GENERATOR_PATH}/templates/${ARG_TEMPLATE}")
+    set(TEMPLATE_PWD "${QT_IFCODEGEN_TEMPLATES_PATH}/${ARG_TEMPLATE}")
     if(EXISTS ${TEMPLATE_PWD})
         set(TEMPLATE_PATH ${TEMPLATE_PWD})
         set(TEMPLATE ${ARG_TEMPLATE})
@@ -175,10 +227,10 @@ function(qt6_ifcodegen_generate)
     list(APPEND GEN_DEPENDENCIES ${TEMPLATE_FILES})
     list(APPEND GEN_DEPENDENCIES ${TEMPLATE_PATH}.yaml)
     # Most templates also have a dependency to a common folder
-    file(GLOB COMMON_TEMPLATE_FILES ${_GENERATOR_PATH}/templates/*common*/*)
+    file(GLOB COMMON_TEMPLATE_FILES ${QT_IFCODEGEN_TEMPLATES_PATH}/*common*/*)
     list(APPEND GEN_DEPENDENCIES ${COMMON_TEMPLATE_FILES})
 
-    set(GENERATOR_ARGUMENTS --template=${TEMPLATE} --force)
+    set(GENERATOR_ARGUMENTS -T ${QT_IFCODEGEN_TEMPLATES_PATH} --template=${TEMPLATE} --force)
     foreach(ANNOTATION ${ARG_ANNOTATION_FILES})
         get_filename_component(ANNOTATION_PATH "${ANNOTATION}" REALPATH BASE_DIR)
         list(APPEND GENERATOR_ARGUMENTS -A ${ANNOTATION_PATH})
@@ -225,30 +277,33 @@ function(qt6_ifcodegen_generate)
     endforeach()
 
     if (RUN_GENERATOR)
-        if (QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
+        if (QT_IFCODEGEN_VIRTUALENV_PATH)
             if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-                set(PYTHON_EXECUTABLE ${_VIRTUALENV}/Scripts/python.exe)
-                file(TO_NATIVE_PATH "${_VIRTUALENV}" _VIRTUALENV)
+                set(PYTHON_EXECUTABLE ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/python.exe)
+                file(TO_NATIVE_PATH "${QT_IFCODEGEN_VIRTUALENV_PATH}" QT_IFCODEGEN_VIRTUALENV_PATH)
             else()
-                set(PYTHON_EXECUTABLE ${_VIRTUALENV}/bin/python)
+                set(PYTHON_EXECUTABLE ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/python)
                 set(ENV{LC_ALL} en_US.UTF-8)
-                set(ENV{LD_LIBRARY_PATH} ${_VIRTUALENV}/bin)
+                set(ENV{LD_LIBRARY_PATH} ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin)
             endif()
-            set(ENV{PYTHONHOME} ${_VIRTUALENV})
-            set(ENV{VIRTUAL_ENV} ${_VIRTUALENV})
+            set(ENV{PYTHONHOME} ${QT_IFCODEGEN_VIRTUALENV_PATH})
+            set(ENV{VIRTUAL_ENV} ${QT_IFCODEGEN_VIRTUALENV_PATH})
         else()
             include(QtFindPackageHelpers)
             qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
             set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
+            if (NOT Python3_EXECUTABLE)
+                message(FATAL_ERROR "Python3 needs to be available to use the ifcodegen.")
+            endif()
         endif()
-        if (DEFINED _IFGENERATOR_CONFIG)
-            set(ENV{IFGENERATOR_CONFIG} ${_IFGENERATOR_CONFIG})
+        if (DEFINED QT_IFCODEGEN_IFGENERATOR_CONFIG)
+            set(ENV{IFGENERATOR_CONFIG} ${QT_IFCODEGEN_IFGENERATOR_CONFIG})
         endif()
 
         message(STATUS "Running ifcodegen for ${IDL_FILES} with template ${TEMPLATE}")
         set(GENERATOR_CMD
                 ${PYTHON_EXECUTABLE}
-                ${_GENERATOR_PATH}/generate.py
+                ${QT_IFCODEGEN_GENERATOR_PATH}/generate.py
                 ${GENERATOR_ARGUMENTS}
                 ${IDL_FILES}
                 ${OUTPUT_DIR}
@@ -314,10 +369,10 @@ endif()
 #
 # Note: this is a macro in order to keep the current variable scope
 macro(qt6_ifcodegen_extend_target target)
-    internal_resolve_ifcodegen_path()
+    qt_ensure_ifcodegen()
 
-    if (QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface
-        AND NOT EXISTS ${_VIRTUALENV}/bin/activate AND NOT EXISTS ${_VIRTUALENV}/Scripts/activate.bat)
+    if (QT_IFCODEGEN_VIRTUALENV_PATH
+        AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/activate AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/activate.bat)
         # Create a dummy target instead
         if (NOT TARGET ${target} AND NOT TEST ${target})
             if (DEFINED QtInterfaceFramework_BINARY_DIR)
@@ -371,10 +426,10 @@ endif()
 #
 # Note: this is a macro in order to keep the current variable scope
 macro(qt6_ifcodegen_import_variables prefix)
-    internal_resolve_ifcodegen_path()
+    qt_ensure_ifcodegen()
 
-    if (QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface
-        AND NOT EXISTS ${_VIRTUALENV}/bin/activate AND NOT EXISTS ${_VIRTUALENV}/Scripts/activate.bat)
+    if (QT_IFCODEGEN_VIRTUALENV_PATH
+        AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/activate AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/activate.bat)
         if (DEFINED QtInterfaceFramework_BINARY_DIR)
             # IMPORTANT
             # As we are inside a macro, this return() will be executed inside the calling CMakeLists.txt

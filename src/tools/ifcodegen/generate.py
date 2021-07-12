@@ -50,9 +50,6 @@ here = Path(__file__).dirname()
 
 log = logging.getLogger(__file__)
 
-builtinTemplatesPath = Path(here / 'templates')
-builtinTemplates = [os.path.splitext(f)[0] for f in os.listdir(builtinTemplatesPath) if fnmatch.fnmatch(f, '*.yaml')]
-
 def validateType(srcFile, type, errorString):
     if type.is_interface:
         sys.exit("{0}: {1} of type 'interface' are not supported".format(srcFile, errorString))
@@ -82,7 +79,7 @@ def validateSystem(srcFile, system):
                 validateType(srcFile, field.type, "Fields")
 
 
-def generate(tplconfig, moduleConfig, annotations, imports, src, dst):
+def generate(template_search_paths, tplconfig, moduleConfig, annotations, imports, src, dst):
     log.debug('run {0} {1}'.format(src, dst))
     FileSystem.strict = True
     Generator.strict = True
@@ -109,7 +106,9 @@ def generate(tplconfig, moduleConfig, annotations, imports, src, dst):
     srcBase = os.path.splitext(srcFile)[0]
     global_functions.currentSrcFile = srcFile
     ctx = {'qtASVersion': builtin_config.config["VERSION"], 'srcFile': srcFile, 'srcBase': srcBase}
-    generator = CustomRuleGenerator(search_path=[tplconfig, builtinTemplatesPath], destination=dst,
+    search_path = [tplconfig]
+    search_path += template_search_paths
+    generator = CustomRuleGenerator(search_path=search_path, destination=dst,
                                     context=ctx, modules=module_names)
     generator.env.keep_trailing_newline = True
 
@@ -154,17 +153,25 @@ def generate(tplconfig, moduleConfig, annotations, imports, src, dst):
     generator.process_rules(os.path.dirname(tplconfig) + '/{0}.yaml'.format(os.path.basename(tplconfig)), system)
 
 
-def run(format, moduleConfig, annotations, imports, src, dst):
-    templatePath = format
-    if format in builtinTemplates:
-        templatePath = builtinTemplatesPath / format
+def run(template_search_paths, template, moduleConfig, annotations, imports, src, dst):
+    templatePath = template
+
+    foundTemplates = {}
+    for path in template_search_paths:
+        for f in os.listdir(path):
+            if fnmatch.fnmatch(f, '*.yaml'):
+                t = os.path.splitext(f)[0]
+                foundTemplates[t] = Path(path) / t
+
+    if template in foundTemplates:
+        templatePath = foundTemplates[template]
 
     if os.path.exists(templatePath):
-        generate(templatePath, moduleConfig, annotations, imports, src, dst)
+        generate(template_search_paths, templatePath, moduleConfig, annotations, imports, src, dst)
     else:
-        print('Invalid Format: {0}. It either needs to be one of the builtin formats or an '
-              'existing template folder. The following builtin formats are available: {1}'
-              .format(format, builtinTemplates))
+        print('Invalid Template: {0}. It either needs to be one of the templates found in the template'
+              'search path or an existing template folder. The following templates have been found: {1}'
+              .format(templatePath, list(foundTemplates.keys())))
         exit(1)
 
 
@@ -172,9 +179,13 @@ def run(format, moduleConfig, annotations, imports, src, dst):
 @click.option('--reload/--no-reload', default=False, help=
     'Specifies whether the generator should keep track of the changes in the IDL file and update '
     'output on the fly (--no-reload by default).')
+@click.option('--template-search-path', '-T', 'template_search_paths', multiple=True, required=True, help=
+    'Adds the given path to the list of template search paths. All directories in this list are '
+    'scanned for template YAML files and can be selected afterwards as a generation templates using'
+    '--template option.')
 @click.option('--template', '-t', multiple=False, help='The template the autogenerator should use for '
-    'the generation. This can either be one of the builtin templates or a path to a template folder. '
-    'Builtin formats are: \n' + '\n'.join(builtinTemplates))
+    'the generation. This can either be one of the templates found in the templates search path  '
+    'or a path to a template folder. ')
 @click.option('--module', help='The name of the Qt module the autogenerator is '
     'generating. This is automatically used by the qmake integration and passed directly to the '
     'qface templates.')
@@ -192,7 +203,7 @@ def run(format, moduleConfig, annotations, imports, src, dst):
 @click.argument('src', nargs=-1, type=click.Path(exists=True))
 @click.argument('dst', nargs=1, type=click.Path(exists=True))
 
-def app(src, dst, template, reload, module, force, annotations, imports):
+def app(src, dst, template_search_paths, template, reload, module, force, annotations, imports):
     """
     The QtInterfaceFramework Autogenerator (ifcodegen)
 
@@ -211,7 +222,7 @@ def app(src, dst, template, reload, module, force, annotations, imports):
             "module": module,
             "force": force
         }
-        run(template, moduleConfig, annotations, imports, src, dst)
+        run(template_search_paths, template, moduleConfig, annotations, imports, src, dst)
 
 
 if __name__ == '__main__':
