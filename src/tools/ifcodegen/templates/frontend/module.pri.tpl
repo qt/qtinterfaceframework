@@ -37,6 +37,10 @@
 # Export all symbols when building this library
 DEFINES *= QT_BUILD_{{module|upper|replace('.', '_')|strip_QT}}_LIB
 
+{% if not module.tags.config.disablePrivateIF %}
+QT *= interfaceframework-private
+{% endif %}
+
 HEADERS += \
 {% for interface in module.interfaces %}
     $$PWD/{{interface|lower}}.h \

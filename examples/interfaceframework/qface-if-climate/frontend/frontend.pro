@@ -6,9 +6,8 @@ DESTDIR = ..
 QT_FOR_CONFIG += interfaceframework
 !qtConfig(ifcodegen): error("No ifcodegen available")
 #! [0]
-QT += interfaceframework interfaceframework-private qml quick
+QT += interfaceframework qml quick
 
-DEFINES += QT_BUILD_EXAMPLE_IF_CLIMATE_LIB
 #! [1]
 CONFIG += ifcodegen
 IFCODEGEN_SOURCES = ../example-if-climate.qface

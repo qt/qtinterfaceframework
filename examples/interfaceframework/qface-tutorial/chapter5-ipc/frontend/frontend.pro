@@ -2,9 +2,8 @@ TARGET = $$qtLibraryTarget(QtIfInstrumentCluster)
 TEMPLATE = lib
 DESTDIR = ..
 
-QT += interfaceframework interfaceframework-private qml quick
+QT += interfaceframework qml quick
 
-DEFINES += QT_BUILD_EXAMPLE_IF_INSTRUMENTCLUSTER_LIB
 CONFIG += ifcodegen
 IFCODEGEN_SOURCES = ../instrument-cluster.qface
 

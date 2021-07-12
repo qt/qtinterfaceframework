@@ -4,9 +4,8 @@ DESTDIR = ..
 
 QT_FOR_CONFIG += interfaceframework
 !qtConfig(ifcodegen): error("No ifcodegen available")
-QT += interfaceframework interfaceframework-private qml quick
+QT += interfaceframework qml quick
 
-DEFINES += QT_BUILD_EXAMPLE_IF_ADDRESSBOOK_LIB
 CONFIG += ifcodegen
 IFCODEGEN_SOURCES = ../example-if-addressbook.qface
 CONFIG += install_ok  # Do not cargo-cult this!
