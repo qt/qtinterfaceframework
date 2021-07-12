@@ -26,10 +26,6 @@ qt6_ifcodegen_extend_target(libIc_chapter1
     TEMPLATE frontend
 )
 
-target_include_directories(libIc_chapter1 PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 target_link_libraries(libIc_chapter1 PUBLIC
     Qt::Core
     Qt::Gui

@@ -27,10 +27,6 @@ qt6_ifcodegen_extend_target(QtIfAdressBookExample
 
 set_target_properties(QtIfAdressBookExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-target_include_directories(QtIfAdressBookExample PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 target_link_libraries(QtIfAdressBookExample PUBLIC
     Qt::Core
     Qt::Gui

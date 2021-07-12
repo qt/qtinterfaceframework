@@ -27,10 +27,6 @@ qt6_ifcodegen_extend_target(QtIfClimateExample
 
 set_target_properties(QtIfClimateExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
-target_include_directories(QtIfClimateExample PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 target_link_libraries(QtIfClimateExample PUBLIC
     Qt::Core
     Qt::Gui

@@ -13,9 +13,6 @@ qt6_ifcodegen_extend_target(echo_noanno_frontend
     IDL_FILES ../../org.example.echo.noannotation.qface
     TEMPLATE frontend
 )
-target_include_directories(echo_noanno_frontend PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
 
 target_link_libraries(echo_noanno_frontend PUBLIC
     Qt::Core

@@ -31,10 +31,6 @@ qt6_ifcodegen_extend_target(QtIfRemoteExample
 
 set_target_properties(QtIfRemoteExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
-target_include_directories(QtIfRemoteExample PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 target_link_libraries(QtIfRemoteExample PUBLIC
     Qt::Core
     Qt::Gui

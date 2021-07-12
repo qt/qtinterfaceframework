@@ -13,9 +13,6 @@ qt6_ifcodegen_extend_target(include_test_common
     IDL_FILES ../../qface\ imports/common.qface
     TEMPLATE frontend
 )
-target_include_directories(include_test_common PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
 
 target_link_libraries(include_test_common PUBLIC
     Qt::Core

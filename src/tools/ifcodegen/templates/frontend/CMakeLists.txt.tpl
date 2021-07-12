@@ -51,4 +51,8 @@ if (TARGET ${CURRENT_TARGET})
                    PRIVATE
         ${${VAR_PREFIX}_SOURCES}
     )
+
+    target_include_directories(${CURRENT_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    )
 endif()

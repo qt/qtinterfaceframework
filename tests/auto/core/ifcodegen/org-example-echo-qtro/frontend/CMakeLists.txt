@@ -13,9 +13,6 @@ qt6_ifcodegen_extend_target(echo_qtro_frontend
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE frontend
 )
-target_include_directories(echo_qtro_frontend PUBLIC
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
 
 target_link_libraries(echo_qtro_frontend PUBLIC
     Qt::Core
