@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned  %}
 {% set testModels = false %}
@@ -142,7 +142,7 @@ public:
 {% endif %}
 
 {% for signal in interface.signals %}
-    virtual void trigger{{signal|upperfirst}}({{if.join_params(signal, interface_zoned)}})
+    virtual void trigger{{signal|upperfirst}}({{qtif.join_params(signal, interface_zoned)}})
     {
         Q_EMIT {{signal}}({% if signal.parameters|length %}{{signal.parameters|join(', ')}}{% endif %}{%
         if interface_zoned %}{%if signal.parameters|length %}, {%endif%} zone{% endif %});
@@ -150,7 +150,7 @@ public:
 {% endfor %}
 
 {% for operation in interface.operations %}
-    {{if.operation(operation, zoned = interface_zoned)}} override
+    {{qtif.operation(operation, zoned = interface_zoned)}} override
     {
         Q_EMIT {{operation}}Called({% if operation.parameters|length %}{{operation.parameters|join(', ')}}{% endif %}{%
         if interface_zoned %}{%if operation.parameters|length %}, {%endif%} zone{% endif %});
@@ -158,7 +158,7 @@ public:
         return QIfPendingReply<{{operation|return_type}}>::createFailedReply();
     }
 
-    Q_SIGNAL void {{operation}}Called({{if.join_params(operation, interface_zoned)}});
+    Q_SIGNAL void {{operation}}Called({{qtif.join_params(operation, interface_zoned)}});
 
 {% endfor %}
 

@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}RoBackend'.format(interface) %}
 {% set zone_class = '{0}RoZone'.format(interface) %}
@@ -70,7 +70,7 @@ public:
 
 public Q_SLOTS:
 {% for property in interface.properties %}
-    {{if.prop_setter(property, model_interface = true)}};
+    {{qtif.prop_setter(property, model_interface = true)}};
 {% endfor %}
     void emitCurrentState();
 
@@ -108,7 +108,7 @@ public Q_SLOTS:
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const %}
 {%     if not property.is_model %}
-    {{if.prop_setter(property, zoned=interface_zoned)}} override;
+    {{qtif.prop_setter(property, zoned=interface_zoned)}} override;
 {%     endif %}
 {%   endif %}
 {% endfor %}
@@ -118,7 +118,7 @@ public Q_SLOTS:
 {% endif %}
 
 {% for operation in interface.operations %}
-    {{if.operation(operation, zoned=interface_zoned)}} override;
+    {{qtif.operation(operation, zoned=interface_zoned)}} override;
 {% endfor %}
 
 protected Q_SLOTS:

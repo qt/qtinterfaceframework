@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set module_qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 import QtQuick.tooling 1.2
 

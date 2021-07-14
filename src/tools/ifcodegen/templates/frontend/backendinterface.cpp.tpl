@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}BackendInterface'.format(interface) %}
 {% include 'common/generated_comment.cpp.tpl' %}
 
@@ -72,7 +72,7 @@ QT_BEGIN_NAMESPACE
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const %}
 /*!
-    \fn {{if.prop_setter(property, class, interface.tags.config.zoned)}};
+    \fn {{qtif.prop_setter(property, class, interface.tags.config.zoned)}};
 
     Setter for {{interface}}::{{property}}.
     Sets the property \e {{property}} to the new value passed by \a {{property}}.
@@ -91,9 +91,9 @@ QT_BEGIN_NAMESPACE
 {% endfor %}
 {% for operation in interface.operations %}
 /*!
-    \fn {{if.operation(operation, class, interface.tags.config.zoned)}};
+    \fn {{qtif.operation(operation, class, interface.tags.config.zoned)}};
 
-{{ if.format_comments(operation.comment) }}
+{{ qtif.format_comments(operation.comment) }}
 
 {%   if interface.tags.config.zoned %}
     The value of \a zone indicates the zone this operation should be done in.
@@ -103,9 +103,9 @@ QT_BEGIN_NAMESPACE
 
 {% for signal in interface.signals %}
 /*!
-    \fn {{if.signal(signal, class, interface.tags.config.zoned)}};
+    \fn {{qtif.signal(signal, class, interface.tags.config.zoned)}};
 
-{{ if.format_comments(signal.comment) }}
+{{ qtif.format_comments(signal.comment) }}
 
 {%   if interface.tags.config.zoned %}
     The value of \a zone indicates the zone this operation should be done in.
@@ -114,7 +114,7 @@ QT_BEGIN_NAMESPACE
 {% endfor %}
 {% for property in interface.properties %}
 /*!
-    \fn {{if.prop_notify(property, class, interface.tags.config.zoned)}};
+    \fn {{qtif.prop_notify(property, class, interface.tags.config.zoned)}};
 
     The signal is emitted when the \e {{property}} property changed to \a {{property}}.
 

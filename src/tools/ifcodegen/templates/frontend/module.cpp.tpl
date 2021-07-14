@@ -32,7 +32,7 @@
 {% set class = '{0}'.format(module.module_name|upperfirst) %}
 {% set qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 {% include 'common/generated_comment.cpp.tpl' %}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 
 #include "{{class|lower}}.h"
 #include "{{class|lower}}factory.h"
@@ -61,11 +61,11 @@ QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
 {% for enum in module.enums %}
 /*!
     \enum {{class}}::{{enum}}
-    {{ if.format_comments(enum.comment) }}
+    {{ qtif.format_comments(enum.comment) }}
 
 {%  for member in enum.members %}
     \value {{member}}
-    {{ if.format_comments(member.comment) }}
+    {{ qtif.format_comments(member.comment) }}
 {%  endfor %}
 */
 {% endfor %}

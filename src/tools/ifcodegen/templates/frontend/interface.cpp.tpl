@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}'.format(interface) %}
 {% include 'common/generated_comment.cpp.tpl' %}
 
@@ -46,7 +46,7 @@ QT_BEGIN_NAMESPACE
 /*!
     \class {{interface}}
     \inmodule {{module}}
-{{ if.format_comments(interface.comment) }}
+{{ qtif.format_comments(interface.comment) }}
 */
 
 /*!
@@ -59,7 +59,7 @@ QT_BEGIN_NAMESPACE
     \inherits AbstractFeature
 {% endif %}
 
-{{ if.format_comments(interface.comment) }}
+{{ qtif.format_comments(interface.comment) }}
 */
 
 /*! \internal */
@@ -130,7 +130,7 @@ void {{class}}Private::clearToDefaults()
 {% for property in interface.properties %}
 /*! \internal */
 {%   if interface.tags.config.zoned %}
-{{if.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
+{{qtif.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
 {
     auto q = getParent();
     auto f = qobject_cast<{{class}}*>(q->zoneAt(zone));
@@ -171,7 +171,7 @@ void {{class}}Private::clearToDefaults()
 {% endif %}
 }
 {%   else %}
-{{if.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
+{{qtif.on_prop_changed(property, class+"Private", interface.tags.config.zoned, true)}}
 {
 {% if property.type.is_model %}
     {{property|return_type}} old = m_{{property}};
@@ -204,7 +204,7 @@ void {{class}}Private::clearToDefaults()
 {% for signal in interface.signals %}
 /*! \internal */
 {%   if interface.tags.config.zoned %}
-void {{class}}Private::on{{signal|upperfirst}}({{if.join_params(signal, true)}})
+void {{class}}Private::on{{signal|upperfirst}}({{qtif.join_params(signal, true)}})
 {
     auto q = getParent();
     auto f = qobject_cast<{{class}}*>(q->zoneAt(zone));
@@ -215,7 +215,7 @@ void {{class}}Private::on{{signal|upperfirst}}({{if.join_params(signal, true)}})
     Q_EMIT f->{{signal}}({{signal.parameters|join(', ')}});
 }
 {%   else %}
-void {{class}}Private::on{{signal|upperfirst}}({{if.join_params(signal)}})
+void {{class}}Private::on{{signal|upperfirst}}({{qtif.join_params(signal)}})
 {
     auto q = getParent();
     Q_EMIT q->{{signal}}({{signal.parameters|join(', ')}});
@@ -307,7 +307,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 
 /*!
     \property {{class}}::{{property}}
-{{ if.format_comments(property.comment) }}
+{{ qtif.format_comments(property.comment) }}
 {% if property.const %}
     \note This property is constant and the value will not change once the plugin is initialized.
 {% endif %}
@@ -315,7 +315,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 
 /*!
     \qmlproperty {{property|return_type}} {{interface|qml_type}}::{{property}}
-{{ if.format_comments(property.comment) }}
+{{ qtif.format_comments(property.comment) }}
 
 {% if property.type.is_enum or property.type.is_flag %}
     Available values are:
@@ -325,7 +325,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
     \note This property is constant and the value will not change once the plugin is initialized.
 {% endif %}
 */
-{{if.prop_getter(property, class)}}
+{{qtif.prop_getter(property, class)}}
 {
     const auto d = {{class}}Private::get(this);
 {% if not module.tags.config.disablePrivateIF %}
@@ -336,7 +336,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 }
 {%   if not property.readonly and not property.const and not property.type.is_model %}
 
-{{if.prop_setter(property, class)}}
+{{qtif.prop_setter(property, class)}}
 {
     auto d = {{class}}Private::get(this);
     bool forceUpdate = false;
@@ -367,8 +367,8 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 
 {%- for operation in interface.operations %}
 /*!
-    \qmlmethod {{interface|qml_type}}::{{operation}}({{if.join_params(operation)}})
-{{ if.format_comments(operation.comment) }}
+    \qmlmethod {{interface|qml_type}}::{{operation}}({{qtif.join_params(operation)}})
+{{ qtif.format_comments(operation.comment) }}
 
 {% for param in operation.parameters %}
 {%   if param.type.is_enum or param.type.is_flag %}
@@ -383,9 +383,9 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 {%   endif %}
 */
 /*!
-{{ if.format_comments(operation.comment) }}
+{{ qtif.format_comments(operation.comment) }}
 */
-{{if.operation(operation, class)}}
+{{qtif.operation(operation, class)}}
 {
     if ({{class}}BackendInterface *backend = {{interface|lower}}Backend())
 {% if interface.tags.config.zoned %}
@@ -469,8 +469,8 @@ void {{class}}::clearServiceObject()
 
 {% for signal in interface.signals %}
 /*!
-    \qmlsignal {{interface|qml_type}}::{{signal}}({{if.join_params(signal)}})
-{{ if.format_comments(signal.comment) }}
+    \qmlsignal {{interface|qml_type}}::{{signal}}({{qtif.join_params(signal)}})
+{{ qtif.format_comments(signal.comment) }}
 
 {% for param in signal.parameters %}
 {%   if param.type.is_enum or param.type.is_flag %}
@@ -481,8 +481,8 @@ void {{class}}::clearServiceObject()
 {% endfor %}
 */
 /*!
-    \fn {{if.signal(signal, class)}}
-{{ if.format_comments(signal.comment) }}
+    \fn {{qtif.signal(signal, class)}}
+{{ qtif.format_comments(signal.comment) }}
 */
 {% endfor %}
 QT_END_NAMESPACE

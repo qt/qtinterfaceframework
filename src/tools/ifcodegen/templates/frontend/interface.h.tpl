@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}'.format(interface) %}
 {% if interface.tags.config.zoned %}
 {%   set base_class = 'QIfAbstractZonedFeature' %}
@@ -66,7 +66,7 @@ class {{exportsymbol}} {{class}} : public {{base_class}}
 {
     Q_OBJECT
 {% for property in interface.properties %}
-    {{if.property(property)}}
+    {{qtif.property(property)}}
 {% endfor %}
 
 public:
@@ -80,25 +80,25 @@ public:
     static void registerQmlTypes(const QString& uri, int majorVersion={{interface.module.majorVersion}}, int minorVersion={{interface.module.minorVersion}});
 
 {% for property in interface.properties %}
-    {{if.prop_getter(property)}};
+    {{qtif.prop_getter(property)}};
 {% endfor %}
 
 public Q_SLOTS:
 {% for operation in interface.operations %}
-    {{ if.operation(operation) }};
+    {{ qtif.operation(operation) }};
 {% endfor %}
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
-    {{if.prop_setter(property)}};
+    {{qtif.prop_setter(property)}};
 {%   endif %}
 {% endfor %}
 
 Q_SIGNALS:
 {% for signal in interface.signals %}
-    {{if.signal(signal)}};
+    {{qtif.signal(signal)}};
 {% endfor %}
 {% for property in interface.properties %}
-    {{if.prop_notify(property)}};
+    {{qtif.prop_notify(property)}};
 {% endfor %}
 
 protected:
@@ -117,9 +117,9 @@ private:
 {% else %}
 {% for property in interface.properties %}
 {%   if interface.tags.config.zoned %}
-    Q_PRIVATE_SLOT(d_func(), {{if.on_prop_changed(property, "", true, true)}})
+    Q_PRIVATE_SLOT(d_func(), {{qtif.on_prop_changed(property, "", true, true)}})
 {%   else %}
-    Q_PRIVATE_SLOT(d_func(), {{if.on_prop_changed(property, "", false, true)}})
+    Q_PRIVATE_SLOT(d_func(), {{qtif.on_prop_changed(property, "", false, true)}})
 {%   endif %}
 {% endfor %}
     Q_DECLARE_PRIVATE({{class}})

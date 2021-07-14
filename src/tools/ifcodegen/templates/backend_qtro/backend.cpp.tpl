@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}RoBackend'.format(interface) %}
 {% set zone_class = '{0}RoZone'.format(interface) %}
@@ -112,7 +112,7 @@ void {{zone_class}}::emitCurrentState()
 }
 
 {% for property in interface.properties %}
-{{if.prop_setter(property, zone_class, model_interface = true)}}
+{{qtif.prop_setter(property, zone_class, model_interface = true)}}
 {
     m_{{property}} = {{property}};
     Q_EMIT m_parent->{{property}}Changed({{property}}, m_zone);
@@ -222,7 +222,7 @@ QStringList {{class}}::availableZones() const
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const %}
 {%     if not property.is_model %}
-{{if.prop_setter(property, class, zoned=interface_zoned)}}
+{{qtif.prop_setter(property, class, zoned=interface_zoned)}}
 {
     if (m_replica.isNull())
         return;
@@ -242,7 +242,7 @@ QStringList {{class}}::availableZones() const
 {% endfor %}
 
 {% for operation in interface.operations %}
-{{ if.operation(operation, class, zoned=interface_zoned) }}
+{{ qtif.operation(operation, class, zoned=interface_zoned) }}
 {
     if (m_replica.isNull())
         return QIfPendingReply<{{operation|return_type}}>::createFailedReply();

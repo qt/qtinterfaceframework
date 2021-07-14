@@ -30,7 +30,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}'.format(struct) %}
 {% set oncedefine = '{0}_{1}_H_'.format(module.module_name|upper, class|upper) %}
 {% set exportsymbol = 'Q_{0}_EXPORT'.format(module|upper|replace('.', '_')) %}
@@ -60,7 +60,7 @@ class {{exportsymbol}} {{class}} : public QIfStandardItem
 {
     Q_GADGET
 {% for field in struct.fields %}
-    {{if.property(field, notify=false)}}
+    {{qtif.property(field, notify=false)}}
 {% endfor %}
 
 public:
@@ -74,15 +74,15 @@ public:
 
 {% for field in struct.fields %}
 {%   if field.name == "id" or field.name == "name" or field.name == "type" or field.name == "data" %}
-    {{if.prop_getter(field)}} override;
+    {{qtif.prop_getter(field)}} override;
 {%   else %}
-    {{if.prop_getter(field)}};
+    {{qtif.prop_getter(field)}};
 {%   endif %}
 {%   if not field.readonly and not field.const %}
 {%     if field.name == "id" or field.name == "data" %}
-    {{if.prop_setter(field)}} override;
+    {{qtif.prop_setter(field)}} override;
 {%     else %}
-    {{if.prop_setter(field)}};
+    {{qtif.prop_setter(field)}};
 {%   endif %}
 {%   endif %}
 {% endfor %}

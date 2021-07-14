@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}QtRoAdapter'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
@@ -87,7 +87,7 @@ public Q_SLOTS:
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
 {%     if interface_zoned %}
-    {{if.prop_setter(property, zoned = true, default_zone = true)}} override;
+    {{qtif.prop_setter(property, zoned = true, default_zone = true)}} override;
 {%     else %}
 {%       set type = property|return_type %}
 {#  //repc doesn't generate proper const ref setters #}
@@ -97,7 +97,7 @@ public Q_SLOTS:
 {% endfor %}
 
 {% for operation in interface.operations %}
-    QVariant {{operation}}({{if.join_params(operation, zoned = interface_zoned)}}) override;
+    QVariant {{operation}}({{qtif.join_params(operation, zoned = interface_zoned)}}) override;
 {% endfor %}
 
 private:

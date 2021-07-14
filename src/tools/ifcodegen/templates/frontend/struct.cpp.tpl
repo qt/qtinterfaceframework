@@ -30,7 +30,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}'.format(struct) %}
 {% include 'common/generated_comment.cpp.tpl' %}
 
@@ -72,7 +72,7 @@ public:
 /*!
     \class {{struct}}
     \inmodule {{module}}
-{{ if.format_comments(struct.comment) }}
+{{ qtif.format_comments(struct.comment) }}
 */
 
 {{class}}::{{class}}()
@@ -115,18 +115,18 @@ QString {{class}}::type() const
 
 /*!
     \property {{class}}::{{field}}
-{{ if.format_comments(field.comment) }}
+{{ qtif.format_comments(field.comment) }}
 {% if field.const %}
     \note This property is constant and the value will not change once an instance has been created.
 {% endif %}
 */
-{{if.prop_getter(field, class)}}
+{{qtif.prop_getter(field, class)}}
 {
     return d->m_{{field}};
 }
 {%   if not field.readonly and not field.const %}
 
-{{if.prop_setter(field, class)}}
+{{qtif.prop_setter(field, class)}}
 {
     d->m_{{field}} = {{field}};
 }

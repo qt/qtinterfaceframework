@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}BackendInterface'.format(interface) %}
 {% if interface.tags.config.zoned %}
 {%   set base_class = 'QIfZonedFeatureInterface' %}
@@ -68,19 +68,19 @@ public:
 
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
-    virtual {{if.prop_setter(property, zoned = interface.tags.config.zoned)}} = 0;
+    virtual {{qtif.prop_setter(property, zoned = interface.tags.config.zoned)}} = 0;
 {%   endif %}
 {% endfor %}
 {% for operation in interface.operations %}
-    virtual {{if.operation(operation, zoned = interface.tags.config.zoned)}} = 0;
+    virtual {{qtif.operation(operation, zoned = interface.tags.config.zoned)}} = 0;
 {% endfor %}
 
 Q_SIGNALS:
 {% for signal in interface.signals %}
-    {{if.signal(signal, zoned = interface.tags.config.zoned)}};
+    {{qtif.signal(signal, zoned = interface.tags.config.zoned)}};
 {% endfor %}
 {% for property in interface.properties %}
-    {{if.prop_notify(property, zoned = interface.tags.config.zoned, model_interface = true, default_values = true)}};
+    {{qtif.prop_notify(property, zoned = interface.tags.config.zoned, model_interface = true, default_values = true)}};
 {% endfor %}
 };
 

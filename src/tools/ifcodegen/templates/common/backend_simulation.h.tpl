@@ -30,7 +30,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}Backend'.format(interface) %}
 {% set zone_class = '{0}Zone'.format(interface) %}
@@ -73,17 +73,17 @@ public:
     explicit {{zone_class}}(const QString &zone, {{class}}Interface *parent = nullptr);
 
 {% for property in interface.properties %}
-    {{if.prop_getter(property, model_interface = true)}};
+    {{qtif.prop_getter(property, model_interface = true)}};
 {% endfor %}
 
 public Q_SLOTS:
 {% for property in interface.properties %}
-    {{if.prop_setter(property, model_interface = true)}};
+    {{qtif.prop_setter(property, model_interface = true)}};
 {% endfor %}
 
 Q_SIGNALS:
 {% for property in interface.properties %}
-    {{if.prop_notify(property, model_interface = true)}};
+    {{qtif.prop_notify(property, model_interface = true)}};
 {% endfor %}
 
 private:
@@ -138,7 +138,7 @@ public:
 {%     endif %}
     Q_INVOKABLE {{type}} {{property|getter_name}}(const QString &zone = QString());
 {%   else %}
-    {{if.prop_getter(property, model_interface = true)}};
+    {{qtif.prop_getter(property, model_interface = true)}};
 {%   endif %}
 {% endfor %}
 {% if interface_zoned %}
@@ -148,14 +148,14 @@ public:
 public Q_SLOTS:
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}
-    {{if.prop_setter(property, zoned = interface_zoned, default_zone = true)}} override;
+    {{qtif.prop_setter(property, zoned = interface_zoned, default_zone = true)}} override;
 {%   else %}
-    {{if.prop_setter(property, zoned = interface_zoned, model_interface = true, default_zone = true)}};
+    {{qtif.prop_setter(property, zoned = interface_zoned, model_interface = true, default_zone = true)}};
 {%   endif %}
 {% endfor %}
 
 {% for operation in interface.operations %}
-    {{if.operation(operation, zoned = interface_zoned)}} override;
+    {{qtif.operation(operation, zoned = interface_zoned)}} override;
 {% endfor %}
 
 protected:

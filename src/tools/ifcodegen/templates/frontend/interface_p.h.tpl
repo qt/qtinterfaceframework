@@ -28,7 +28,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}'.format(interface) %}
 {% if interface.tags.config.zoned %}
 {%   set base_class = 'QIfAbstractZonedFeature' %}
@@ -89,10 +89,10 @@ public:
     void clearToDefaults();
 
 {% for property in interface.properties %}
-    {{if.on_prop_changed(property, zoned = interface.tags.config.zoned, model_interface = true)}};
+    {{qtif.on_prop_changed(property, zoned = interface.tags.config.zoned, model_interface = true)}};
 {% endfor %}
 {% for signal in interface.signals %}
-    void on{{signal|upperfirst}}({{if.join_params(signal, zoned = interface.tags.config.zoned)}});
+    void on{{signal|upperfirst}}({{qtif.join_params(signal, zoned = interface.tags.config.zoned)}});
 {% endfor %}
 
 {% if not module.tags.config.disablePrivateIF %}

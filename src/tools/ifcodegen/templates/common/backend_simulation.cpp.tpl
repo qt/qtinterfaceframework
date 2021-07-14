@@ -30,7 +30,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = '{0}Backend'.format(interface) %}
 {% set zone_class = '{0}Zone'.format(interface) %}
@@ -68,14 +68,14 @@ QT_BEGIN_NAMESPACE
 }
 
 {% for property in interface.properties %}
-{{if.prop_getter(property, zone_class, model_interface = true)}}
+{{qtif.prop_getter(property, zone_class, model_interface = true)}}
 {
     return m_{{property}};
 }
 {% endfor %}
 
 {% for property in interface.properties %}
-{{if.prop_setter(property, zone_class, model_interface = true)}}
+{{qtif.prop_setter(property, zone_class, model_interface = true)}}
 {
     if (m_{{property}} == {{property}})
         return;
@@ -200,7 +200,7 @@ void {{class}}::addZone(const QString &zone)
     return {{property|default_type_value}};
 }
 {%   else %}
-{{if.prop_getter(property, class, model_interface = true)}}
+{{qtif.prop_getter(property, class, model_interface = true)}}
 {
     return m_{{property}};
 }
@@ -208,7 +208,7 @@ void {{class}}::addZone(const QString &zone)
 {% endfor %}
 
 {% for property in interface.properties %}
-{{if.prop_setter(property, class, interface_zoned, model_interface = true)}}
+{{qtif.prop_setter(property, class, interface_zoned, model_interface = true)}}
 {
 {%   set parameters = property.name %}
 {%   if interface_zoned %}
@@ -240,7 +240,7 @@ void {{class}}::addZone(const QString &zone)
 {% endfor %}
 
 {% for operation in interface.operations %}
-{{if.operation(operation, class, interface_zoned)}}
+{{qtif.operation(operation, class, interface_zoned)}}
 {
 {%   set function_parameters = operation.parameters|join(', ') %}
 {%   if interface_zoned %}

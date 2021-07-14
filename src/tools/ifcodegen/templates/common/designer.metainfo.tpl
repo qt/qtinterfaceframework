@@ -27,7 +27,7 @@
 ##
 #############################################################################
 #}
-{% import 'common/qtif_macros.j2' as if %}
+{% import 'common/qtif_macros.j2' as qtif %}
 {% set module_qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 {% set default_category_name = module_qml_name %}
 {% if module.tags.designer and module.tags.designer.categoryName %}
