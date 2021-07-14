@@ -4,7 +4,7 @@
 ## QtIfVehicleFunctionsQtROPlugin Plugin:
 #####################################################################
 
-qt_internal_add_plugin(QtIfVehicleFunctionsQtROPlugin
+qt_internal_add_plugin(vehicle_qtro_plugin
     OUTPUT_NAME vehiclefunction_qtro
     TYPE interfaceframework
     DEFAULT_IF FALSE
@@ -15,7 +15,7 @@ qt_internal_add_plugin(QtIfVehicleFunctionsQtROPlugin
 )
 
 # Interface Framework Generator:
-qt_ifcodegen_extend_target(QtIfVehicleFunctionsQtROPlugin
+qt_ifcodegen_extend_target(vehicle_qtro_plugin
     IDL_FILES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
     TEMPLATE backend_qtro
     MODULE_NAME QtIfVehicleFunctions

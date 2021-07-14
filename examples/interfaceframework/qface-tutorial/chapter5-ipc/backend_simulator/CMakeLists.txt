@@ -25,7 +25,7 @@ qt6_ifcodegen_extend_target(ic_chapter5_simulation
 )
 
 target_link_libraries(ic_chapter5_simulation PUBLIC
-    QtIfInstrumentCluster_Chapter5
+    libIc_chapter5
     Qt::Core
     Qt::Gui
     Qt::InterfaceFramework

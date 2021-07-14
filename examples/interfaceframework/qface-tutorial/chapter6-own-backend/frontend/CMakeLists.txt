@@ -21,20 +21,20 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-add_library(QtIfInstrumentCluster_Chapter6)
-set_target_properties(QtIfInstrumentCluster_Chapter6 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+add_library(libIc_chapter6)
+set_target_properties(libIc_chapter6 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(QtIfInstrumentCluster_Chapter6
+qt6_ifcodegen_extend_target(libIc_chapter6
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE frontend
 )
 
-target_include_directories(QtIfInstrumentCluster_Chapter6 PUBLIC
+target_include_directories(libIc_chapter6 PUBLIC
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_link_libraries(QtIfInstrumentCluster_Chapter6 PUBLIC
+target_link_libraries(libIc_chapter6 PUBLIC
     Qt::Core
     Qt::Gui
     Qt::InterfaceFramework
@@ -43,7 +43,7 @@ target_link_libraries(QtIfInstrumentCluster_Chapter6 PUBLIC
     Qt::Quick
 )
 
-install(TARGETS QtIfInstrumentCluster_Chapter6
+install(TARGETS libIc_chapter6
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

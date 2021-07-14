@@ -22,10 +22,10 @@ qt6_ifcodegen_import_variables(CLUSTER
     TEMPLATE qmlplugin
 )
 
-qt_add_qml_module(instrument_cluster_chapter5_imports
+qt_add_qml_module(ic_chapter5_imports
     URI ${CLUSTER_URI}
     VERSION ${CLUSTER_VERSION}
-    PLUGIN_TARGET instrument_cluster_chapter5_imports
+    PLUGIN_TARGET ic_chapter5_imports
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
     NO_GENERATE_QMLTYPES
@@ -34,14 +34,14 @@ qt_add_qml_module(instrument_cluster_chapter5_imports
         ${CLUSTER_SOURCES}
 )
 
-target_link_libraries(instrument_cluster_chapter5_imports PUBLIC
-    QtIfInstrumentCluster_Chapter5
+target_link_libraries(ic_chapter5_imports PUBLIC
+    libIc_chapter5
     Qt::Core
     Qt::Gui
     Qt::InterfaceFramework
 )
 
-install(TARGETS instrument_cluster_chapter5_imports
+install(TARGETS ic_chapter5_imports
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

@@ -4,7 +4,7 @@
 ## QtIfVehicleFunctionsSimulatorPlugin Plugin:
 #####################################################################
 
-qt_internal_add_plugin(QtIfVehicleFunctionsSimulatorPlugin
+qt_internal_add_plugin(vehicle_simulator_plugin
     OUTPUT_NAME vehiclefunction_simulator
     TYPE interfaceframework
     DEFAULT_IF FALSE
@@ -20,7 +20,7 @@ set(qml_resource_files
     "simulation.qml"
 )
 
-qt_internal_add_resource(QtIfVehicleFunctionsSimulatorPlugin "qml"
+qt_internal_add_resource(vehicle_simulator_plugin "qml"
     PREFIX
         "/simulation"
     FILES
@@ -29,7 +29,7 @@ qt_internal_add_resource(QtIfVehicleFunctionsSimulatorPlugin "qml"
 
 
 # Interface Framework Generator:
-qt_ifcodegen_extend_target(QtIfVehicleFunctionsSimulatorPlugin
+qt_ifcodegen_extend_target(vehicle_simulator_plugin
     IDL_FILES ../../../ifvehiclefunctions/ifvehiclefunctions.qface
     TEMPLATE backend_simulator
     MODULE_NAME QtIfVehicleFunctions

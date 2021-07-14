@@ -16,16 +16,17 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-qt_add_executable(chapter4-simulation-behavior
+qt_add_executable(ic_chapter4
     main.cpp
 )
-set_target_properties(chapter4-simulation-behavior PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
-set_target_properties(chapter4-simulation-behavior PROPERTIES
+set_target_properties(ic_chapter4 PROPERTIES OUTPUT_NAME "chapter4-simulation-behavior")
+set_target_properties(ic_chapter4 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+set_target_properties(ic_chapter4 PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
 )
 
-target_link_libraries(chapter4-simulation-behavior PUBLIC
+target_link_libraries(ic_chapter4 PUBLIC
     Qt::Core
     Qt::Gui
     Qt::Qml
@@ -44,7 +45,7 @@ set(app_resource_files
     "Top.qml"
 )
 
-qt6_add_resources(chapter4-simulation-behavior "app"
+qt6_add_resources(ic_chapter4 "app"
     PREFIX
         "/"
     FILES
@@ -70,7 +71,7 @@ set(images_resource_files
     "../../images/top_bar.png"
 )
 
-qt6_add_resources(chapter4-simulation-behavior "images"
+qt6_add_resources(ic_chapter4 "images"
     PREFIX
         "/images"
     BASE
@@ -79,7 +80,7 @@ qt6_add_resources(chapter4-simulation-behavior "images"
         ${images_resource_files}
 )
 
-install(TARGETS chapter4-simulation-behavior
+install(TARGETS ic_chapter4
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

@@ -16,17 +16,18 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-qt_add_executable(chapter1-basics
+qt_add_executable(ic_chapter1
     main.cpp
 )
-set_target_properties(chapter1-basics PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
-set_target_properties(chapter1-basics PROPERTIES
+set_target_properties(ic_chapter1 PROPERTIES OUTPUT_NAME "chapter1-basics")
+set_target_properties(ic_chapter1 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+set_target_properties(ic_chapter1 PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
 )
 
-target_link_libraries(chapter1-basics PUBLIC
-    QtIfInstrumentCluster_Chapter1
+target_link_libraries(ic_chapter1 PUBLIC
+    libIc_chapter1
     Qt::Core
     Qt::Gui
     Qt::Qml
@@ -45,7 +46,7 @@ set(app_resource_files
     "Top.qml"
 )
 
-qt6_add_resources(chapter1-basics "app"
+qt6_add_resources(ic_chapter1 "app"
     PREFIX
         "/"
     FILES
@@ -71,7 +72,7 @@ set(images_resource_files
     "../../images/top_bar.png"
 )
 
-qt6_add_resources(chapter1-basics "images"
+qt6_add_resources(ic_chapter1 "images"
     PREFIX
         "/images"
     BASE
@@ -80,7 +81,7 @@ qt6_add_resources(chapter1-basics "images"
         ${images_resource_files}
 )
 
-install(TARGETS chapter1-basics
+install(TARGETS ic_chapter1
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

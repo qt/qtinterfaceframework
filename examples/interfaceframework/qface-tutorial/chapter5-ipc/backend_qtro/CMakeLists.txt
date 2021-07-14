@@ -15,23 +15,23 @@ find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS InterfaceFramework)
 
-qt_add_plugin(ic_qtro)
-set_target_properties(ic_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
+qt_add_plugin(ic_chapter5_qtro)
+set_target_properties(ic_chapter5_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(ic_qtro
+qt6_ifcodegen_extend_target(ic_chapter5_qtro
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE backend_qtro
 )
 
-target_link_libraries(ic_qtro PUBLIC
-    QtIfInstrumentCluster_Chapter5
+target_link_libraries(ic_chapter5_qtro PUBLIC
+    libIc_chapter5
     Qt::Core
     Qt::Gui
     Qt::InterfaceFramework
 )
 
-install(TARGETS ic_qtro
+install(TARGETS ic_chapter5_qtro
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

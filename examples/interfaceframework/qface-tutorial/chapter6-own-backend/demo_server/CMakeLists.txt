@@ -37,7 +37,7 @@ set_target_properties(chapter6-demo-server PROPERTIES
 )
 
 target_link_libraries(chapter6-demo-server PUBLIC
-    QtIfInstrumentCluster_Chapter6
+    libIc_chapter6
     Qt::Core
     Qt::DBus
     Qt::InterfaceFramework

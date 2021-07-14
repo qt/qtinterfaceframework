@@ -16,17 +16,18 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-qt_add_executable(chapter2-enums-structs
+qt_add_executable(ic_chapter2
     main.cpp
 )
-set_target_properties(chapter2-enums-structs PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
-set_target_properties(chapter2-enums-structs PROPERTIES
+set_target_properties(ic_chapter2 PROPERTIES OUTPUT_NAME "chapter2-enums-structs")
+set_target_properties(ic_chapter2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+set_target_properties(ic_chapter2 PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
 )
 
-target_link_libraries(chapter2-enums-structs PUBLIC
-    QtIfInstrumentCluster_Chapter2
+target_link_libraries(ic_chapter2 PUBLIC
+    libIc_chapter2
     Qt::Core
     Qt::Gui
     Qt::Qml
@@ -45,7 +46,7 @@ set(app_resource_files
     "Top.qml"
 )
 
-qt6_add_resources(chapter2-enums-structs "app"
+qt6_add_resources(ic_chapter2 "app"
     PREFIX
         "/"
     FILES
@@ -71,7 +72,7 @@ set(images_resource_files
     "../../images/top_bar.png"
 )
 
-qt6_add_resources(chapter2-enums-structs "images"
+qt6_add_resources(ic_chapter2 "images"
     PREFIX
         "/images"
     BASE
@@ -80,7 +81,7 @@ qt6_add_resources(chapter2-enums-structs "images"
         ${images_resource_files}
 )
 
-install(TARGETS chapter2-enums-structs
+install(TARGETS ic_chapter2
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"

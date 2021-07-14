@@ -16,16 +16,17 @@ find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-qt_add_executable(chapter6-own-backend
+qt_add_executable(ic_chapter6
     main.cpp
 )
-set_target_properties(chapter6-own-backend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
-set_target_properties(chapter6-own-backend PROPERTIES
+set_target_properties(ic_chapter6 PROPERTIES OUTPUT_NAME "chapter6-own-backend")
+set_target_properties(ic_chapter6 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+set_target_properties(ic_chapter6 PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
 )
 
-target_link_libraries(chapter6-own-backend PUBLIC
+target_link_libraries(ic_chapter6 PUBLIC
     Qt::Core
     Qt::Gui
     Qt::Qml
@@ -44,7 +45,7 @@ set(app_resource_files
     "Top.qml"
 )
 
-qt6_add_resources(chapter6-own-backend "app"
+qt6_add_resources(ic_chapter6 "app"
     PREFIX
         "/"
     FILES
@@ -70,7 +71,7 @@ set(images_resource_files
     "../../images/top_bar.png"
 )
 
-qt6_add_resources(chapter6-own-backend "images"
+qt6_add_resources(ic_chapter6 "images"
     PREFIX
         "/images"
     BASE
@@ -79,7 +80,7 @@ qt6_add_resources(chapter6-own-backend "images"
         ${images_resource_files}
 )
 
-install(TARGETS chapter6-own-backend
+install(TARGETS ic_chapter6
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
