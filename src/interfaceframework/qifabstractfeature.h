@@ -43,6 +43,7 @@
 #define QIFABSTRACTFEATURE_H
 
 #include <QtCore/QObject>
+#include <QtQml/QQmlEngine>
 #include <QtQml/QQmlParserStatus>
 
 #include <QtInterfaceFramework/qtifglobal.h>
@@ -55,6 +56,8 @@ class QIfAbstractFeaturePrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeature : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(AbstractFeature)
+    QML_UNCREATABLE("")
     Q_INTERFACES(QQmlParserStatus)
 
     Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)

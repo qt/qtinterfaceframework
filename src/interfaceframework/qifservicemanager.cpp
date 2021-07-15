@@ -541,6 +541,13 @@ QIfServiceManager *QIfServiceManager::instance()
     return instance;
 }
 
+QIfServiceManager *QIfServiceManager::create(QQmlEngine *, QJSEngine *)
+{
+    auto manager = QIfServiceManager::instance();
+    QQmlEngine::setObjectOwnership(manager, QQmlEngine::CppOwnership);
+    return manager;
+}
+
 /*!
     \qmlmethod list<ServiceObject> ServiceManager::findServiceByInterface(interface, searchFlags)
 

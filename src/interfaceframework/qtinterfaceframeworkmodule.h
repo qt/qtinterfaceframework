@@ -43,13 +43,17 @@
 #define QTINTERFACEFRAMEWORKMODULE_H
 
 #include <QtInterfaceFramework/qtifglobal.h>
-#include <QObject>
+#include <QtCore/QObject>
+#include <QtQml/QQmlEngine>
 
 QT_BEGIN_NAMESPACE
 
 class Q_QTINTERFACEFRAMEWORK_EXPORT QtInterfaceFrameworkModule : public QObject
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(QtInterfaceFrameworkModule)
+    QML_SINGLETON
+
 public:
     explicit QtInterfaceFrameworkModule(QObject *parent = nullptr);
 

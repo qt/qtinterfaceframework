@@ -30,6 +30,18 @@ qt_ifcodegen_extend_target(IfVehicleFunctions
     IDL_FILES ifvehiclefunctions.qface
 )
 
+qt_ifcodegen_import_variables(VEHICLEFUNCTIONS
+    NO_GENERATE
+    IDL_FILES ifvehiclefunctions.qface
+)
+
+qt_internal_add_qml_module(IfVehicleFunctions
+    URI ${VEHICLEFUNCTIONS_URI}
+    VERSION ${VEHICLEFUNCTIONS_VERSION}
+    CLASS_NAME QtIfVehicleFunctionsPlugin
+    PLUGIN_TARGET qtifvehiclefunctionsplugin
+)
+
 #####################################################################
 ## Documentation
 #####################################################################

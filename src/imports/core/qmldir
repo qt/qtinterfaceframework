@@ -1,3 +1,0 @@
-module QtInterfaceFramework
-plugin qtinterfaceframeworkplugin
-classname QtInterfaceFrameworkPlugin

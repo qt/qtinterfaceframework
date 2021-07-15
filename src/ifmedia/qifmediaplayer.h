@@ -54,6 +54,7 @@ class QIfPlayQueue;
 class Q_QTIFMEDIA_EXPORT QIfMediaPlayer : public QIfAbstractFeature
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(MediaPlayer)
 
     //TODO Status
     Q_PROPERTY(QIfPlayQueue *playQueue READ playQueue CONSTANT)

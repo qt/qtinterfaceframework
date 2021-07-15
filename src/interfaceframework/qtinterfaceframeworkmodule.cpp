@@ -56,13 +56,6 @@ QObject* qtinterfaceframeworkmodule_singletontype_provider(QQmlEngine*, QJSEngin
     return new QtInterfaceFrameworkModule();
 }
 
-QObject* serviceManagerSingelton(QQmlEngine *, QJSEngine *)
-{
-    auto manager = QIfServiceManager::instance();
-    QQmlEngine::setObjectOwnership(manager, QQmlEngine::CppOwnership);
-    return manager;
-}
-
 /*!
     \class QtInterfaceFrameworkModule
     \inmodule QtInterfaceFramework
@@ -170,9 +163,9 @@ void QtInterfaceFrameworkModule::registerQmlTypes(const QString &uri, int majorV
     qmlRegisterSingletonType<QtInterfaceFrameworkModule>(u, majorVersion, minorVersion,
                                         "QtInterfaceFrameworkModule",
                                         qtinterfaceframeworkmodule_singletontype_provider);
-    qmlRegisterUncreatableType<QIfAbstractFeature>(u, 1, 0, "AbstractFeature", QStringLiteral("AbstractFeature is not accessible directly"));
-    qmlRegisterUncreatableType<QIfAbstractZonedFeature>(u, 1, 0, "AbstractZonedFeature", QStringLiteral("AbstractZonedFeature is not accessible directly"));
-    qmlRegisterType<QIfPagingModel>(u, 1, 0, "PagingModel");
-    qmlRegisterType<QIfFilterAndBrowseModel>(u, 1, 0, "FilterAndBrowseModel");
-    qmlRegisterSingletonType<QIfServiceManager>(u, 1, 0, "ServiceManager", &serviceManagerSingelton);
+    qmlRegisterUncreatableType<QIfAbstractFeature>(u, majorVersion, minorVersion, "AbstractFeature", QStringLiteral("AbstractFeature is not accessible directly"));
+    qmlRegisterUncreatableType<QIfAbstractZonedFeature>(u, majorVersion, minorVersion, "AbstractZonedFeature", QStringLiteral("AbstractZonedFeature is not accessible directly"));
+    qmlRegisterType<QIfPagingModel>(u, majorVersion, minorVersion, "PagingModel");
+    qmlRegisterType<QIfFilterAndBrowseModel>(u, majorVersion, minorVersion, "FilterAndBrowseModel");
+    qmlRegisterSingletonType<QIfServiceManager>(u, majorVersion, minorVersion, "ServiceManager", &QIfServiceManager::create);
 }

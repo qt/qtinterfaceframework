@@ -4,7 +4,11 @@
 ## InterfaceFramework Module:
 #####################################################################
 
-qt_internal_add_module(InterfaceFramework
+qt_internal_add_qml_module(InterfaceFramework
+    URI "QtInterfaceFramework"
+    VERSION "${PROJECT_VERSION}"
+    PAST_MAJOR_VERSIONS 1
+    CLASS_NAME QtInterfaceFrameworkPlugin
     PLUGIN_TYPES interfaceframework
     SOURCES
         qifabstractfeature.cpp qifabstractfeature.h qifabstractfeature_p.h
