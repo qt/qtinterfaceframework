@@ -4,7 +4,11 @@
 ## IfMedia Module:
 #####################################################################
 
-qt_internal_add_module(IfMedia
+qt_internal_add_qml_module(IfMedia
+    URI "QtInterfaceFramework.Media"
+    VERSION "${PROJECT_VERSION}"
+    PAST_MAJOR_VERSIONS 1
+    CLASS_NAME QIfMediaPlugin
     SOURCES
         qifamfmtuner.cpp qifamfmtuner.h qifamfmtuner_p.h
         qifamfmtunerbackendinterface.cpp qifamfmtunerbackendinterface.h

@@ -55,6 +55,7 @@ class QIfFilterAndBrowseModelPrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFilterAndBrowseModel : public QIfPagingModel
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(FilterAndBrowseModel)
 
     Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
     Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged)

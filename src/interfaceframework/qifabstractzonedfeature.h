@@ -55,6 +55,8 @@ class QIfAbstractZonedFeaturePrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractZonedFeature : public QIfAbstractFeature
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(QIfAbstractZonedFeature)
+    QML_UNCREATABLE("")
 
     Q_PROPERTY(QString zone READ zone WRITE setZone NOTIFY zoneChanged)
     Q_PROPERTY(QStringList availableZones READ availableZones NOTIFY availableZonesChanged)

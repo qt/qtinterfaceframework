@@ -1,3 +1,0 @@
-module QtInterfaceFramework.Media
-plugin qtifmediaplugin
-classname QIfMediaPlugin

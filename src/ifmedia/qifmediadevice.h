@@ -50,6 +50,8 @@ QT_BEGIN_NAMESPACE
 class Q_QTIFMEDIA_EXPORT QIfMediaDevice : public QIfServiceObject
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(MediaDevice)
+    QML_ANONYMOUS
 
     Q_PROPERTY(QString type READ type CONSTANT)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
@@ -66,6 +68,8 @@ Q_SIGNALS:
 class Q_QTIFMEDIA_EXPORT QIfMediaUsbDevice : public QIfMediaDevice
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(MediaUsbDevice)
+    QML_ANONYMOUS
 
 public:
     explicit QIfMediaUsbDevice(QObject *parent = nullptr);

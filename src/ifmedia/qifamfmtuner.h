@@ -54,6 +54,7 @@ class QIfAmFmTunerPrivate;
 class Q_QTIFMEDIA_EXPORT QIfAmFmTuner : public QIfAbstractFeature
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(AmFmTuner)
 
     Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
     Q_PROPERTY(int minimumFrequency READ minimumFrequency NOTIFY minimumFrequencyChanged)

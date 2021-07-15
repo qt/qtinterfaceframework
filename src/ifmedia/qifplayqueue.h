@@ -43,6 +43,7 @@
 #define QIFPLAYQUEUE_H
 
 #include <QAbstractListModel>
+#include <QQmlEngine>
 #include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
@@ -53,6 +54,8 @@ class QIfPlayQueuePrivate;
 class Q_QTIFMEDIA_EXPORT QIfPlayQueue : public QAbstractListModel
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(PlayQueue)
+    QML_ANONYMOUS
 
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
     Q_PROPERTY(int chunkSize READ chunkSize WRITE setChunkSize NOTIFY chunkSizeChanged)

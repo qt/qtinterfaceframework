@@ -53,6 +53,7 @@ class QIfPagingModelPrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPagingModel : public QIfAbstractFeatureListModel
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(PagingModel)
 
     Q_PROPERTY(QtInterfaceFrameworkModule::ModelCapabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
     Q_PROPERTY(int chunkSize READ chunkSize WRITE setChunkSize NOTIFY chunkSizeChanged)

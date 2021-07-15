@@ -31,6 +31,7 @@
 #}
 {% set exportsymbol = 'Q_{0}_EXPORT'.format(module|upper|replace('.', '_')) %}
 {% set class = '{0}Factory'.format(module.module_name|upperfirst) %}
+{% set qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 {% set oncedefine = '{0}_H_'.format(class|upper) %}
 {% include 'common/generated_comment.cpp.tpl' %}
 
@@ -43,6 +44,7 @@
 #include "{{module.module_name|lower}}.h"
 {% endif %}
 #include <QObject>
+#include <QQmlEngine>
 
 {% for struct in module.structs %}
 #include "{{struct|lower}}.h"
@@ -53,6 +55,8 @@ QT_BEGIN_NAMESPACE
 class {{exportsymbol}} {{class}} : public {{module.module_name|upperfirst}}
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT({{qml_name}})
+    QML_SINGLETON
 
 public:
     {{class}}(QObject *parent = nullptr);

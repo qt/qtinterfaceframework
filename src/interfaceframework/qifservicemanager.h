@@ -43,6 +43,7 @@
 #define QIFSERVICEMANAGER_H
 
 #include <QtCore/QAbstractListModel>
+#include <QtQml/QQmlEngine>
 
 #include <QtInterfaceFramework/qtifglobal.h>
 #include <QtInterfaceFramework/QIfServiceObject>
@@ -55,6 +56,9 @@ class QIfServiceManagerPrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceManager : public QAbstractListModel
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(ServiceManager)
+    QML_SINGLETON
+
 public:
     enum Roles {
         NameRole = Qt::DisplayRole,
@@ -77,6 +81,7 @@ public:
     Q_ENUM(BackendType)
 
     static QIfServiceManager *instance();
+    static QIfServiceManager *create(QQmlEngine *, QJSEngine *);
 
     Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, SearchFlags searchFlags = IncludeAll);
     Q_INVOKABLE bool hasInterface(const QString &interface) const;

@@ -27,6 +27,5 @@ if(QT_FEATURE_interfaceframework AND QT_FEATURE_media_qtro_simulation_server AND
     add_subdirectory(tools/media-simulation-server)
 endif()
 add_subdirectory(plugins)
-add_subdirectory(imports)
 # special case end
 

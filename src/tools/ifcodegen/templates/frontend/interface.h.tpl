@@ -65,6 +65,7 @@ class {{class}}BackendInterface;
 class {{exportsymbol}} {{class}} : public {{base_class}}
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT({{interface|qml_type}})
 {% for property in interface.properties %}
     {{qtif.property(property)}}
 {% endfor %}
