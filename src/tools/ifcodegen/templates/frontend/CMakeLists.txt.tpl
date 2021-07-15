@@ -40,8 +40,21 @@ set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
     {{module.module_name|lower}}factory.cpp
 )
 
-set(${VAR_PREFIX}_DEFINES
+set_ifcodegen_variable(${VAR_PREFIX}_DEFINES
     QT_BUILD_{{module|upper|replace('.', '_')|strip_QT}}_LIB
+)
+
+set_ifcodegen_variable(${VAR_PREFIX}_URI
+    {{module|qml_type}}
+)
+
+string(REPLACE "." "/" uri_path "{{module|qml_type}}")
+set_ifcodegen_variable(${VAR_PREFIX}_URI_PATH
+    ${uri_path}
+)
+
+set_ifcodegen_variable(${VAR_PREFIX}_VERSION
+    {{module.majorVersion}}.{{module.minorVersion}}
 )
 
 if (TARGET ${CURRENT_TARGET})

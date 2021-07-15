@@ -23,13 +23,12 @@ qt6_ifcodegen_import_variables(CLUSTER
 )
 
 qt_add_qml_module(ic_chapter6_imports
+    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CLUSTER_URI_PATH}"
     URI ${CLUSTER_URI}
     VERSION ${CLUSTER_VERSION}
     PLUGIN_TARGET ic_chapter6_imports
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
-    NO_GENERATE_QMLTYPES
-    NO_GENERATE_QMLDIR
     SOURCES
         ${CLUSTER_SOURCES}
 )

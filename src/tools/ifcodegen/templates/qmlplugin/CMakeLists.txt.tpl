@@ -36,11 +36,16 @@ set_ifcodegen_variable(${VAR_PREFIX}_URI
     {{module|qml_type}}
 )
 
+string(REPLACE "." "/" uri_path "{{module|qml_type}}")
+set_ifcodegen_variable(${VAR_PREFIX}_URI_PATH
+    ${uri_path}
+)
+
 set_ifcodegen_variable(${VAR_PREFIX}_VERSION
     {{module.majorVersion}}.{{module.minorVersion}}
 )
 
-set_ifcodegen_variable(${VAR_PREFIX}_QMLTYPES
+set_ifcodegen_variable(${VAR_PREFIX}_TYPEINFO
     ${CMAKE_CURRENT_BINARY_DIR}/plugins.qmltypes
 )
 
