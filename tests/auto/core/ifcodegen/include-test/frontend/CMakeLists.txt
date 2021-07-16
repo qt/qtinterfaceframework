@@ -5,7 +5,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-add_library(include_test_frontend)
+qt6_add_library(include_test_frontend)
 set_target_properties(include_test_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:

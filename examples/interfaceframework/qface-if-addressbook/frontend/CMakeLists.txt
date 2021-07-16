@@ -17,7 +17,7 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-add_library(QtIfAdressBookExample)
+qt6_add_library(QtIfAdressBookExample)
 
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(QtIfAdressBookExample

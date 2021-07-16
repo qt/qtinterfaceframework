@@ -21,7 +21,7 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-add_library(QtIfRemoteExample)
+qt6_add_library(QtIfRemoteExample)
 
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(QtIfRemoteExample

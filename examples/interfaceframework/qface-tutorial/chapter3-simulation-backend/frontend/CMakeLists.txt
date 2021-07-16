@@ -17,7 +17,8 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-add_library(libIc_chapter3)
+qt6_add_library(libIc_chapter3)
+set_target_properties(libIc_chapter3 PROPERTIES OUTPUT_NAME "InstrumentCluster")
 set_target_properties(libIc_chapter3 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
