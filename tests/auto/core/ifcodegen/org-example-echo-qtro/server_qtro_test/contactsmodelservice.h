@@ -32,7 +32,7 @@
 #define CONTACTSMODELSERVICE_H
 
 #include "contact.h"
-#include "rep_qifpagingmodel_source.h"
+#include <QtIfRemoteObjectsHelper/rep_qifpagingmodel_source.h>
 
 class ContactsModelService : public QIfPagingModelSimpleSource
 {

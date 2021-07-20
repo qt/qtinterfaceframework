@@ -29,7 +29,7 @@
 
 #include "echozonedservice.h"
 
-#include <QtIfRemoteObjectsHelper>
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectPendingResult>
 #include <QTimer>
 
 #define SET_VALUE(m_VALUE, VALUE, CHANGED_SIGNAL) \

@@ -29,7 +29,7 @@
 ****************************************************************************/
 
 #include "echoservice.h"
-#include <QtIfRemoteObjectsHelper>
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectPendingResult>
 #include <QTimer>
 
 EchoService::EchoService()
