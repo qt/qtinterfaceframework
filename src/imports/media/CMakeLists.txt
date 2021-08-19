@@ -16,7 +16,7 @@ qt_internal_add_qml_module(qtifmediaplugin
     INSTALL_SOURCE_QMLTYPES "plugins.qmltypes"
     SOURCES
         plugin.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::InterfaceFramework
         Qt::IfMedia
 )

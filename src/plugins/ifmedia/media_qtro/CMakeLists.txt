@@ -6,7 +6,7 @@
 
 qt_internal_add_plugin(MediaQtROPlugin
     OUTPUT_NAME media_qtro
-    TYPE interfaceframework
+    PLUGIN_TYPE interfaceframework
     DEFAULT_IF FALSE
     SOURCES
         mediadiscoverybackend.cpp mediadiscoverybackend.h
@@ -15,7 +15,7 @@ qt_internal_add_plugin(MediaQtROPlugin
         mediaplugin.cpp mediaplugin.h
         filterandbrowsemodel.cpp filterandbrowsemodel.h
         usbdevice.cpp usbdevice.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::InterfaceFramework
         Qt::IfMedia
         Qt::RemoteObjects

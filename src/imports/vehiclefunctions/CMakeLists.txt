@@ -25,7 +25,7 @@ qt_internal_add_qml_module(qtifvehiclefunctionsplugin
     NO_GENERATE_QMLDIR
     SOURCES
         ${VEHICLEFUNCTIONS_SOURCES}
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::InterfaceFramework
         Qt::IfVehicleFunctions
 )

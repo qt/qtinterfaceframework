@@ -6,9 +6,9 @@
 
 qt_internal_add_plugin(vehicle_simulator_plugin
     OUTPUT_NAME vehiclefunction_simulator
-    TYPE interfaceframework
+    PLUGIN_TYPE interfaceframework
     DEFAULT_IF FALSE
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::InterfaceFramework
         Qt::IfVehicleFunctions

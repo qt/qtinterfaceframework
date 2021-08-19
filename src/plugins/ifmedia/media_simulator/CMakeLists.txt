@@ -8,7 +8,7 @@ qt_find_package(WrapTagLib PROVIDED_TARGETS WrapTagLib::WrapTagLib) # special ca
 
 qt_internal_add_plugin(MediaPlugin
     OUTPUT_NAME media_simulator
-    TYPE interfaceframework
+    PLUGIN_TYPE interfaceframework
     DEFAULT_IF FALSE
     SOURCES
         database_helper.h
@@ -22,7 +22,7 @@ qt_internal_add_plugin(MediaPlugin
         usbdevice.cpp usbdevice.h
     INCLUDE_DIRECTORIES
         ${CMAKE_CURRENT_SOURCE_DIR}
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::InterfaceFramework
         Qt::IfMedia

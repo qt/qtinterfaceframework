@@ -6,13 +6,13 @@
 
 qt_internal_add_plugin(TunerPlugin
     OUTPUT_NAME tuner_simulator
-    TYPE interfaceframework
+    PLUGIN_TYPE interfaceframework
     DEFAULT_IF FALSE
     SOURCES
         amfmtunerbackend.cpp amfmtunerbackend.h
         searchandbrowsebackend.cpp searchandbrowsebackend.h
         tunerplugin.cpp tunerplugin.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::InterfaceFramework
         Qt::IfMedia
