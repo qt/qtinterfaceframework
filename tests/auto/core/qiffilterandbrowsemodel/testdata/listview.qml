@@ -28,8 +28,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import QtInterfaceFramework 1.0
+import QtQuick
+import QtInterfaceFramework
 
 ListView {
     id: root

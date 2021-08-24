@@ -300,8 +300,8 @@ void tst_QIfPagingModel::testBasic_qml()
 
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("testBackend", service);
-    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; PagingModel{}");
-    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; PagingModel{ \
+    verifyQml(&engine, "import QtQuick; import QtInterfaceFramework; PagingModel{}");
+    verifyQml(&engine, "import QtQuick; import QtInterfaceFramework; PagingModel{ \
                             serviceObject: testBackend \n\
                         }");
 }

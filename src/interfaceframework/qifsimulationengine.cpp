@@ -161,8 +161,8 @@ using namespace qtif_helper;
     in a declarative form:
 
     \qml
-    import QtQuick 2.0
-    import Test 1.0
+    import QtQuick
+    import Test
 
     Item {
         MyClass {
@@ -188,8 +188,8 @@ using namespace qtif_helper;
     changes:
 
     \qml
-    import QtQuick 2.0
-    import Test 1.0
+    import QtQuick
+    import Test
 
     MyClass {
         onCurrentTemperatureChanged: print(currentTemperature)
@@ -233,8 +233,8 @@ using namespace qtif_helper;
     the console:
 
     \qml
-    import QtQuick 2.0
-    import Test 1.0
+    import QtQuick
+    import Test
 
     MyClass {
         function setCurrentTemperature(temperature) {
@@ -253,8 +253,8 @@ using namespace qtif_helper;
     calling the function in the \c Base object.
 
     \qml
-    import QtQuick 2.0
-    import Test 1.0
+    import QtQuick
+    import Test
 
     MyClass {
         function setCurrentTemperature(temperature) {

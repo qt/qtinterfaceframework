@@ -539,11 +539,11 @@ void tst_QIfFilterAndBrowseModel::testBasic_qml()
 
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("testBackend", service);
-    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; FilterAndBrowseModel{}");
-    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; FilterAndBrowseModel{ \
+    verifyQml(&engine, "import QtQuick; import QtInterfaceFramework; FilterAndBrowseModel{}");
+    verifyQml(&engine, "import QtQuick; import QtInterfaceFramework; FilterAndBrowseModel{ \
                             serviceObject: testBackend \n\
                         }");
-    verifyQml(&engine, "import QtQuick 2.0; import QtInterfaceFramework 1.0; FilterAndBrowseModel{ \
+    verifyQml(&engine, "import QtQuick; import QtInterfaceFramework; FilterAndBrowseModel{ \
                             serviceObject: testBackend \n\
                             contentType: 'simple' \n\
                         }");

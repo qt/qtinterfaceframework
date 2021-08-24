@@ -40,5 +40,5 @@
 ****************************************************************************/
 
 //! [0]
-import QtInterfaceFramework.VehicleFunctions 1.0
+import QtInterfaceFramework.VehicleFunctions
 //! [0]

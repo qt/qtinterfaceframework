@@ -50,10 +50,10 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.7
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Window
 //! [0]
-import Example.If.ClimateModule 1.0
+import Example.If.ClimateModule
 
 Window {
 

@@ -50,8 +50,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.10
-import Example.If.InstrumentClusterModule.simulation 1.0
+import QtQuick
+import Example.If.InstrumentClusterModule.simulation
 
 QtObject {
     property var settings : IfSimulator.findData(IfSimulator.simulationData, "InstrumentCluster")

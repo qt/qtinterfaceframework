@@ -31,8 +31,8 @@
 #}
 
 
-import QtQuick 2.10
-import {{module|qml_type}}.simulation {{module.majorVersion}}.{{module.minorVersion}}
+import QtQuick
+import {{module|qml_type}}.simulation
 
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 

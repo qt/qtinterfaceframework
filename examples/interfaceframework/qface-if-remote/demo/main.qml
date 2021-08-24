@@ -50,11 +50,11 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.7
-import QtQuick.Controls 2.3
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
 //! [0]
-import Example.If.RemoteModule 1.0
+import Example.If.RemoteModule
 
 Window {
     visible: true

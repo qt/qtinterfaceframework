@@ -50,12 +50,12 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.4
-import QtQuick.Controls 2.15
-import QtQuick.Window 2.2
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Window
+import QtQuick.Layouts
 
-import QtInterfaceFramework.VehicleFunctions 1.0
+import QtInterfaceFramework.VehicleFunctions
 
 ApplicationWindow {
     title: "Window Control"

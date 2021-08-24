@@ -51,8 +51,8 @@
 ****************************************************************************/
 
 //! [0]
-import QtQuick 2.0
-import Example.If.AddressBookModule.simulation 1.0
+import QtQuick
+import Example.If.AddressBookModule.simulation
 
 Item {
     AddressBookBackend {

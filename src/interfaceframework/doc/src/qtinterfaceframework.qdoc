@@ -65,7 +65,7 @@
     in your .qml file:
 
     \code
-    import QtInterfaceFramework 1.0
+    import QtInterfaceFramework
     \endcode
 
     \section1 QML Types

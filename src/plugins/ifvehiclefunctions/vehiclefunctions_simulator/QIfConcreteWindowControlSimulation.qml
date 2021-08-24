@@ -39,8 +39,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import QtInterfaceFramework.VehicleFunctions.simulation 1.0
+import QtQuick
+import QtInterfaceFramework.VehicleFunctions.simulation
 
 QtObject {
     property var settings : IfSimulator.findData(IfSimulator.simulationData, "QIfWindowControl")

@@ -65,7 +65,7 @@
     in your .qml file:
 
     \code
-    import QtInterfaceFramework.Media 1.0
+    import QtInterfaceFramework.Media
     \endcode
 
     \section1 QML Types

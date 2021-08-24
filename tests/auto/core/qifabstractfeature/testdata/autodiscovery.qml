@@ -28,9 +28,9 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
-import QtInterfaceFramework 1.0
-import testfeature 1.0
+import QtQuick
+import QtInterfaceFramework
+import testfeature
 
 Item {
 

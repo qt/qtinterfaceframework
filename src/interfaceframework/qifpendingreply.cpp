@@ -209,8 +209,8 @@ void QIfPendingReplyWatcherPrivate::callFailedCallback()
     fails.
 
     \qml
-    import QtQuick 2.0
-    import QtInterfaceFramework 1.0
+    import QtQuick
+    import QtInterfaceFramework
 
     Text {
         id: root

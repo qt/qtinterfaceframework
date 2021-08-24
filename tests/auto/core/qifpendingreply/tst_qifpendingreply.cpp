@@ -232,8 +232,8 @@ template <typename T> void tst_QIfPendingReply::qml_helper(TestObject *testObjec
     qmlRegisterType<TestObject>("testobject", 1, 0, "TestObject");
     engine.rootContext()->setContextProperty("testObject", testObject);
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import testobject 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import testobject; \n\
                      QtObject { \n\
                          property var result; \n\
                          property var reply; \n\
@@ -351,7 +351,7 @@ void tst_QIfPendingReply::testSuccessFromQml()
     engine.rootContext()->setContextProperty("voidReply", QVariant::fromValue(QIfPendingReplyBase(voidReply)));
     engine.rootContext()->setContextProperty("intReply", QVariant::fromValue(QIfPendingReplyBase(intReply)));
 
-    QByteArray qml ("import QtQuick 2.0; \n\
+    QByteArray qml ("import QtQuick; \n\
                      QtObject { \n\
                          Component.onCompleted: { \n\
                              voidReply.setSuccess(true) \n\
@@ -476,8 +476,8 @@ void tst_QIfPendingReply::testThenLater()
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("testObject", &testObject);
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import testobject 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import testobject; \n\
                      QtObject { \n\
                          property var result; \n\
                          property var reply; \n\

@@ -292,13 +292,13 @@ void tst_QIfSimulationEngine::testUsageInCorrectEngine()
 
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
-    verifyQml(&engine, "import TestAPI 1.0; BaseClass {}");
+    verifyQml(&engine, "import TestAPI; BaseClass {}");
 
     QCOMPARE(testObject.propertyInBase(), -1);
     QIfSimulationEngine engine2;
     QQmlComponent component(&engine2);
-    component.setData("import QtQuick 2.0; \n\
-                       import TestAPI 1.0; \n\
+    component.setData("import QtQuick; \n\
+                       import TestAPI; \n\
                        BaseClass { \n\
                             Component.onCompleted: { \n\
                                 propertyInBase = 100; \n\
@@ -376,8 +376,8 @@ void tst_QIfSimulationEngine::testPropertyRead()
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      BaseClass { \n\
                          property var initialPropertyValue; \n\
                          property var bindingProperty: PROPERTY; \n\
@@ -421,8 +421,8 @@ void tst_QIfSimulationEngine::testPropertyReadDerived()
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      DerivedClass { \n\
                          property var initialPropertyValue; \n\
                          property var bindingProperty: PROPERTY; \n\
@@ -465,8 +465,8 @@ void tst_QIfSimulationEngine::testPropertyChange()
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      BaseClass { \n\
                          property var updatedPropertyValue; \n\
                          property var bindingProperty: PROPERTY; \n\
@@ -514,8 +514,8 @@ void tst_QIfSimulationEngine::testPropertyChangeDerived()
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      DerivedClass { \n\
                          property var updatedPropertyValue; \n\
                          property var bindingProperty: PROPERTY; \n\
@@ -557,8 +557,8 @@ void tst_QIfSimulationEngine::testPropertyWrite()
     BaseClass testObject;
     engine.registerSimulationInstance<BaseClass>(&testObject, "TestAPI", 1, 0, "BaseClass");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      BaseClass { \n\
                          property var updatedPropertyValue; \n\
                          property var bindingProperty: PROPERTY; \n\
@@ -603,8 +603,8 @@ void tst_QIfSimulationEngine::testPropertyWriteDerived()
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      DerivedClass { \n\
                          property var updatedPropertyValue; \n\
                          property var bindingProperty: PROPERTY; \n\
@@ -637,8 +637,8 @@ void tst_QIfSimulationEngine::testAnimations()
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
     QSignalSpy spy(&testObject, SIGNAL(propertyInBaseChanged(int)));
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      DerivedClass { \n\
                         id: backend \n\
                         property var animation: SequentialAnimation { \n\
@@ -690,8 +690,8 @@ void tst_QIfSimulationEngine::testFunctionCalls()
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      SimpleAPI { \n\
                      }");
 
@@ -743,8 +743,8 @@ void tst_QIfSimulationEngine::testFunctionOverride()
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      SimpleAPI { \n\
                         function simpleFunction() { \n\
                             simpleFunctionCalled(); \n\
@@ -806,8 +806,8 @@ void tst_QIfSimulationEngine::testCallingBaseFunction()
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      SimpleAPI { \n\
                         function simpleFunction() { \n\
                             simpleFunctionCalled(); \n\
@@ -855,8 +855,8 @@ void tst_QIfSimulationEngine::testRecursionPrevention()
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      SimpleAPI { \n\
                         function setTestProperty(value) { \n\
                             testProperty = value \n\
@@ -892,8 +892,8 @@ void tst_QIfSimulationEngine::testMultipleInstances()
     SimpleAPI testObject;
     engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import TestAPI 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import TestAPI; \n\
                      Item { \n\
                          signal firstInstanceCalled(); \n\
                          signal secondInstanceCalled(); \n\

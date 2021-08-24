@@ -50,9 +50,9 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Window 2.2
-import Example.If.InstrumentClusterModule 1.0
+import QtQuick
+import QtQuick.Window
+import Example.If.InstrumentClusterModule
 
 Window {
     id: root

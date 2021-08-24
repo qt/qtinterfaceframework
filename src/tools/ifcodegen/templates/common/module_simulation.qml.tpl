@@ -30,8 +30,8 @@
 #############################################################################
 #}
 
-import QtQuick 2.0
-import {{module|qml_type}}.simulation {{module.majorVersion}}.{{module.minorVersion}}
+import QtQuick
+import {{module|qml_type}}.simulation
 
 QtObject {
 {% for iface in module.interfaces %}

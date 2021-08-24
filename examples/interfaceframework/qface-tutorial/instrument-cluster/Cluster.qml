@@ -50,8 +50,8 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.1
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Window
 
 Window {
     id: root

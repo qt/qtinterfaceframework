@@ -179,8 +179,8 @@ void ServiceManagerTest::testRetakeSingleton()
     QPointer<QIfServiceManager> serviceManager = QIfServiceManager::instance();
     QQmlEngine *engine = new QQmlEngine;
 
-    QByteArray qml ("import QtQuick 2.0; \n\
-                     import QtInterfaceFramework 1.0; \n\
+    QByteArray qml ("import QtQuick; \n\
+                     import QtInterfaceFramework; \n\
                      QtObject { \n\
                          Component.onCompleted: { \n\
                              var count = ServiceManager.count; \n\
