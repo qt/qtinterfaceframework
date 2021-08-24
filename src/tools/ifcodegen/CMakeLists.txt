@@ -4,7 +4,7 @@
 #####################################################################
 
 set(ifcodegen_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBEXECDIR}/ifcodegen")
-set(templates_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_ARCHDATADIR}/ifcodegen-templates")
+set(templates_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_DATADIR}/ifcodegen-templates")
 
 if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
     if (NOT CMAKE_GENERATOR MATCHES "^Ninja")

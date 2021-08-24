@@ -39,7 +39,7 @@ else: ENV = LC_ALL="en_US.UTF-8"
 VIRTUALENV_PATH = $$[QT_HOST_LIBEXECS]/ifcodegen/qtif_qface_virtualenv
 INTERNAL_VIRTUALENV_PATH = $$QTIF_BUILD_ROOT/src/tools/ifcodegen/qtif_qface_virtualenv
 IF_GENERATOR_PATH = $$[QT_HOST_LIBEXECS]/ifcodegen
-IF_TEMPLATE_PATH = $$[QT_INSTALL_ARCHDATA]/ifcodegen-templates
+IF_TEMPLATE_PATH = $$[QT_INSTALL_DATA]/ifcodegen-templates
 
 # Try to use the internal virtualenv when building interfaceframework
 # Because of the two stage build of COIN, it might not exist, but the installed version should still be there

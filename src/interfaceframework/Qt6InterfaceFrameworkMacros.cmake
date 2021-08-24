@@ -49,7 +49,7 @@ function(qt_ensure_ifcodegen)
         set (QT_IFCODEGEN_TEMPLATES_PATH ${QtInterfaceFramework_SOURCE_DIR}/src/tools/ifcodegen/templates CACHE FILEPATH "ifcodegen templates")
         set (QT_IFCODEGEN_TEMPLATE_TYPE "source")
     else()
-        set (QT_IFCODEGEN_TEMPLATES_PATH ${QTIF_INSTALL_PREFIX}/${QT6_INSTALL_ARCHDATA}/ifcodegen-templates CACHE FILEPATH "ifcodegen templates")
+        set (QT_IFCODEGEN_TEMPLATES_PATH ${QTIF_INSTALL_PREFIX}/${QT6_INSTALL_DATA}/ifcodegen-templates CACHE FILEPATH "ifcodegen templates")
         set (QT_IFCODEGEN_TEMPLATE_TYPE "installed")
     endif()
 
