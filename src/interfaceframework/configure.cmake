@@ -56,7 +56,9 @@ qt_feature("ifcodegen" PUBLIC
 )
 qt_feature("host-tools-only" PRIVATE
     LABEL "Only build the host tools"
-    CONDITION INPUT_host_tools_only STREQUAL 'yes'
+    AUTODETECT OFF
+    ENABLE INPUT_host_tools_only STREQUAL 'yes'
+    DISABLE INPUT_host_tools_only STREQUAL 'no'
 )
 qt_feature("remoteobjects" PUBLIC
     LABEL "QtRemoteObjects Support"
