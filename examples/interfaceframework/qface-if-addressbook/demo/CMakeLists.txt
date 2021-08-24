@@ -15,6 +15,7 @@ find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
+find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_executable(qface-if-addressbook
     main.cpp

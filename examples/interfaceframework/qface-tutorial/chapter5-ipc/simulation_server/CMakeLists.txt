@@ -12,6 +12,7 @@ endif()
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter5-ipc/simulation_server")
 
 find_package(Qt6 COMPONENTS Core)
+find_package(Qt6 COMPONENTS Quick)
 find_package(Qt6 COMPONENTS InterfaceFramework)
 
 qt_add_executable(chapter5-ipc-server)
