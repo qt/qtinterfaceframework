@@ -7,10 +7,6 @@ endif()
 
 #### Inputs
 
-# input ifcodegen
-set(INPUT_ifcodegen "undefined" CACHE STRING "")
-set_property(CACHE INPUT_ifcodegen PROPERTY STRINGS undefined no qt system)
-
 # input qface
 set(INPUT_qface "undefined" CACHE STRING "")
 set_property(CACHE INPUT_qface PROPERTY STRINGS undefined no qt system)
@@ -50,20 +46,13 @@ qt_feature("system-qface" PUBLIC
     ENABLE INPUT_qface STREQUAL 'system'
     DISABLE INPUT_qface STREQUAL 'no' OR INPUT_qface STREQUAL 'qt'
 )
-qt_feature("system-ifcodegen" PRIVATE
-    LABEL "System Interface Framework Generator"
-    ENABLE INPUT_ifcodegen STREQUAL 'system'
-    DISABLE ( NOT INPUT_ifcodegen STREQUAL 'system' )
-)
 qt_feature("host-ifcodegen" PRIVATE
     LABEL "Host Interface Framework Generator"
     CONDITION QT_FEATURE_interfaceframework AND QT_FEATURE_cross_compile
 )
 qt_feature("ifcodegen" PUBLIC
     LABEL "Interface Framework Generator"
-    CONDITION QT_FEATURE_interfaceframework AND (QT_FEATURE_python3 AND ( ( QT_FEATURE_python3_virtualenv AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/qface/setup.py" ) OR ( QT_FEATURE_system_qface ) )) OR QT_FEATURE_system_ifcodegen OR QT_FEATURE_host_ifcodegen
-    ENABLE INPUT_ifcodegen STREQUAL 'qt' OR INPUT_ifcodegen STREQUAL 'system'
-    DISABLE INPUT_ifcodegen STREQUAL 'no'
+    CONDITION QT_FEATURE_interfaceframework AND (QT_FEATURE_python3 AND ( ( QT_FEATURE_python3_virtualenv AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/qface/setup.py" ) OR ( QT_FEATURE_system_qface ) )) OR QT_FEATURE_host_ifcodegen
 )
 qt_feature("host-tools-only" PRIVATE
     LABEL "Only build the host tools"

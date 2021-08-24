@@ -5,7 +5,7 @@ qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/ifvehiclefunctions/con
 qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/ifmedia/configure.cmake") # special case
 
 add_subdirectory(3rdparty) # special case
-if(QT_FEATURE_interfaceframework AND QT_FEATURE_ifcodegen AND NOT QT_FEATURE_system_ifcodegen)
+if(QT_FEATURE_interfaceframework AND QT_FEATURE_ifcodegen)
     add_subdirectory(tools/ifcodegen)
 endif()
 
