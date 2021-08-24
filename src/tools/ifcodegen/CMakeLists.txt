@@ -7,6 +7,11 @@ set(ifcodegen_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBEXECDIR}/ifcodeg
 set(templates_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_ARCHDATADIR}/ifcodegen-templates")
 
 if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
+    if (NOT CMAKE_GENERATOR MATCHES "^Ninja")
+        message(FATAL_ERROR "Can't build the virtualenv with the current CMake Generator.\n"
+                            "Please use Ninja as Generator.")
+    endif()
+
     qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
 
     set(VIRTUALENV_NAME qtif_qface_virtualenv)
