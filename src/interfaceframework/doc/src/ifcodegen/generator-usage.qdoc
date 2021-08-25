@@ -45,7 +45,8 @@
     To run the generation, use the following command:
 
     \code
-    $$[QT_HOST_BINS]/ifcodegen/generate.py --format=backend_simulator interface.qface out_dir
+    $$[QT_HOST_LIBEXECS]/ifcodegen/generate.py -T $$[QT_INSTALL_DATA]/ifcodegen-templates
+    --format=backend_simulator interface.qface out_dir
     \endcode
 
     The options and parameters are:
@@ -58,16 +59,26 @@
             \li Specifies whether the generator should keep track of the changes in the IDL file
                 and update the output on the fly; the default is \c{--no-reload}
         \row
+            \target template-search-path-option
+            \li  \c -T, \c --template-search-path <search-path>
+                Adds the given path to the list of search paths. All directories in this list are
+                scanned for generation templates (identified by the \l{Generation YAML}).
+                The identified templates can be selected with the
+                \l{\target template}{--template option}.
+        \row
             \target template
             \li  \c -t, \c --template
-            \li Can be one of the following values:
+            \li Selects the template which should be used for the generation. Templates are searched
+                within the \l{template-search-path-option}{template search path}. Instead of the
+                template name, an absolute path to a template can be provided. This template doesn't
+                need to be part of the template search path.
+                The following templates are usually installed by default:
                 \list
                 \li \c frontend
                 \li \c qmlplugin
                 \li \c backend_simulator
                 \li \c backend_qtro
                 \li \c server_qtro
-                \li \c <folder>
                 \endlist
         \row
             \target annotations-option

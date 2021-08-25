@@ -165,6 +165,9 @@ endmacro()
 # EXTRA_HEADERS_OUTPUT_DIR: An additional location where all headers will be
 #   copied to. (OPTIONAL)
 #
+# EXTRA_TEMPLATE_SEARCH_PATH: list of additional directories, where templates are
+#   searched for. (OPTIONAL)
+#
 # VERBOSE: Print additional messages during generation. Useful for debugging
 #   purposes. (OPTIONAL)
 #
@@ -181,7 +184,7 @@ function(qt6_ifcodegen_generate)
         ARG
         # TARGET and PREFIX are not handled here, but we don't want the UNPARSED_ARGUMENTS error to
         # be triggered when provided (when called through the internal_ifcodegen_import() function
-        "VERBOSE" "IDL_FILES;TEMPLATE;MODULE_NAME;OUTPUT_DIR;EXTRA_HEADERS_OUTPUT_DIR;TARGET;PREFIX" "ANNOTATION_FILES;IMPORT_PATH"
+        "VERBOSE" "IDL_FILES;TEMPLATE;MODULE_NAME;OUTPUT_DIR;EXTRA_HEADERS_OUTPUT_DIR;TARGET;PREFIX" "ANNOTATION_FILES;IMPORT_PATH;EXTRA_TEMPLATE_SEARCH_PATH"
     )
 
     if (DEFINED ARG_KEYWORDS_MISSING_VALUES)
@@ -210,11 +213,36 @@ function(qt6_ifcodegen_generate)
     get_filename_component(IFCODEGEN_BASE_NAME "${IDL_FILES}" NAME_WLE)
     get_filename_component(IFCODEGEN_SOURCE_ANNOTATION ${IFCODEGEN_SOURCE_DIR}/${IFCODEGEN_BASE_NAME}.yaml REALPATH BASE_DIR)
 
-    set(TEMPLATE_PWD "${QT_IFCODEGEN_TEMPLATES_PATH}/${ARG_TEMPLATE}")
-    if(EXISTS ${TEMPLATE_PWD})
-        set(TEMPLATE_PATH ${TEMPLATE_PWD})
-        set(TEMPLATE ${ARG_TEMPLATE})
-    else()
+    # Add the built-in templates as default search path
+    list(APPEND TEMPLATE_SEARCH_PATH ${QT_IFCODEGEN_TEMPLATES_PATH})
+    list(APPEND TEMPLATE_SEARCH_PATH_ARGUMENTS -T ${QT_IFCODEGEN_TEMPLATES_PATH})
+
+    # Add the paths defined by the global variable
+    foreach(SEARCH_PATH ${QT_IFCODEGEN_TEMPLATE_SEARCH_PATH})
+        get_filename_component(SEARCH_PATH "${SEARCH_PATH}" REALPATH BASE_DIR)
+        list(APPEND TEMPLATE_SEARCH_PATH ${SEARCH_PATH})
+        list(APPEND TEMPLATE_SEARCH_PATH_ARGUMENTS -T ${SEARCH_PATH})
+    endforeach()
+
+    # Add the paths defined by function argument
+    foreach(SEARCH_PATH ${ARG_EXTRA_TEMPLATE_SEARCH_PATH})
+        get_filename_component(SEARCH_PATH "${SEARCH_PATH}" REALPATH BASE_DIR)
+        list(APPEND TEMPLATE_SEARCH_PATH ${SEARCH_PATH})
+        list(APPEND TEMPLATE_SEARCH_PATH_ARGUMENTS -T ${SEARCH_PATH})
+    endforeach()
+
+    # Find the used templates within the search path
+    foreach(SEARCH_PATH ${TEMPLATE_SEARCH_PATH})
+        set(TEMPLATE_PWD "${SEARCH_PATH}/${ARG_TEMPLATE}")
+        if(EXISTS ${TEMPLATE_PWD})
+            set(TEMPLATE_PATH ${TEMPLATE_PWD})
+            set(TEMPLATE ${ARG_TEMPLATE})
+            break()
+        endif()
+    endforeach()
+
+    # We didn't find the template in the search path, check whether it's a path to a template
+    if (NOT DEFINED TEMPLATE)
         get_filename_component(TEMPLATE_PATH "${ARG_TEMPLATE}" REALPATH)
         if(EXISTS ${TEMPLATE_PATH})
             set(TEMPLATE ${TEMPLATE_PATH})
@@ -242,7 +270,7 @@ function(qt6_ifcodegen_generate)
     file(GLOB COMMON_TEMPLATE_FILES ${QT_IFCODEGEN_TEMPLATES_PATH}/*common*/*)
     list(APPEND GEN_DEPENDENCIES ${COMMON_TEMPLATE_FILES})
 
-    set(GENERATOR_ARGUMENTS -T ${QT_IFCODEGEN_TEMPLATES_PATH} --template=${TEMPLATE} --force)
+    set(GENERATOR_ARGUMENTS ${TEMPLATE_SEARCH_PATH_ARGUMENTS} --template=${TEMPLATE} --force)
     foreach(ANNOTATION ${ARG_ANNOTATION_FILES})
         get_filename_component(ANNOTATION_PATH "${ANNOTATION}" REALPATH BASE_DIR)
         list(APPEND GENERATOR_ARGUMENTS -A ${ANNOTATION_PATH})
@@ -373,6 +401,9 @@ endif()
 # EXTRA_HEADERS_OUTPUT_DIR: An additional location where all headers will be
 #   copied to. (OPTIONAL)
 #
+# EXTRA_TEMPLATE_SEARCH_PATH: list of additional directories, where templates are
+#   searched for. (OPTIONAL)
+#
 # VERBOSE: Print additional messages during generation. Useful for debugging
 #   purposes. (OPTIONAL)
 #
@@ -429,6 +460,9 @@ endif()
 #
 # EXTRA_HEADERS_OUTPUT_DIR: An additional location where all headers will be
 #   copied to. (OPTIONAL)
+#
+# EXTRA_TEMPLATE_SEARCH_PATH: list of additional directories, where templates are
+#   searched for. (OPTIONAL)
 #
 # VERBOSE: Print additional messages during generation. Useful for debugging
 #   purposes. (OPTIONAL)

@@ -8,6 +8,7 @@
 #   IFCODEGEN_TEMPLATE = frontend (or backend, simulator... -- defaults to "frontend")
 #   IFCODEGEN_OUTPUT_DIR = my_output_dir (defaults to current build dir)
 #   IFCODEGEN_ANNOTATIONS += additional.yaml
+#   IFCODEGEN_EXTRA_TEMPLATE_SEARCH_PATH += extra_template_folder
 #
 QT_FOR_CONFIG += interfaceframework interfaceframework-private
 
@@ -75,12 +76,34 @@ qtConfig(system-qface) {
 }
 IF_GENERATOR = $$system_quote($$PYTHON) $$IF_GENERATOR_PATH/generate.py
 
+# Add the builtin templates as default search path
+IF_TEMPLATE_SEARCH_PATH = $$IF_TEMPLATE_PATH
+
+# Add the paths defined by the global variable
+for (SEARCH_PATH, QT_IFCODEGEN_TEMPLATE_SEARCH_PATH) {
+    dir = $$absolute_path($$SEARCH_PATH, $$_PRO_FILE_PWD_)
+
+    IF_TEMPLATE_SEARCH_PATH *= $$dir
+}
+
+# Add the paths defined by function argument
+for (SEARCH_PATH, IFCODEGEN_EXTRA_TEMPLATE_SEARCH_PATH) {
+    dir = $$absolute_path($$SEARCH_PATH, $$_PRO_FILE_PWD_)
+
+    IF_TEMPLATE_SEARCH_PATH *= $$dir
+}
+
+for (SEARCH_PATH, IF_TEMPLATE_SEARCH_PATH) {
+    IF_TEMPLATE_SEARCH_PATH_OPTIONS += -T $$system_quote($$system_path($$SEARCH_PATH))
+}
+
+
 # TODO make this work with multiple input files, or only support one IFCODEGEN_SOURCE
 # Although this could be extra_compiler it is a normal EXTRA_TARGET for a reason.
 # In the debug_and_release configuration, we want to have the generator executed
 # during the run of the meta Makefile to only generate the code once.
 PRI = $$IFCODEGEN_OUTPUT_DIR/$$lower($${IFCODEGEN_BASE_NAME}).pri
-IF_GENERATOR_OPTIONS = -T $$IF_TEMPLATE_PATH --template=$$IFCODEGEN_TEMPLATE --force
+IF_GENERATOR_OPTIONS = $$IF_TEMPLATE_SEARCH_PATH_OPTIONS --template=$$IFCODEGEN_TEMPLATE --force
 !isEmpty(IFCODEGEN_MODULE_NAME): IF_GENERATOR_OPTIONS += --module=$${IFCODEGEN_MODULE_NAME}
 for (ANNOTATION, IFCODEGEN_ANNOTATIONS) {
     file = $$absolute_path($$ANNOTATION, $$_PRO_FILE_PWD_)
@@ -115,14 +138,24 @@ ifcodegen_sources.depends += $$files($$IF_TEMPLATE_PATH/common/*)
 
 QMAKE_CLEAN += $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 
-# Add all templates of the generator format as dependency
-IFCODEGEN_TEMPLATE_PWD = $$IF_TEMPLATE_PATH/$${IFCODEGEN_TEMPLATE}
-exists($$IFCODEGEN_TEMPLATE_PWD) {
-    ifcodegen_sources.depends += $$files($${IFCODEGEN_TEMPLATE_PWD}/*)
-} else: exists($${IFCODEGEN_TEMPLATE}) {
-    ifcodegen_sources.depends += $$files($${IFCODEGEN_TEMPLATE}/*)
-} else {
-    error("Invalid IFCODEGEN_TEMPLATE: Couldn't find the template folder: $$IFCODEGEN_TEMPLATE_PWD")
+# Find the used templates within the search path
+FOUND_TEMPLATE = 0
+for (SEARCH_PATH, IF_TEMPLATE_SEARCH_PATH) {
+    IFCODEGEN_TEMPLATE_PWD = $$SEARCH_PATH/$${IFCODEGEN_TEMPLATE}
+    exists($$IFCODEGEN_TEMPLATE_PWD) {
+        ifcodegen_sources.depends += $$files($${IFCODEGEN_TEMPLATE_PWD}/*)
+        FOUND_TEMPLATE = 1
+        break()
+    }
+}
+
+# We didn't find the template in the search path, check whether it's a path to a template
+equals(FOUND_TEMPLATE, 0): {
+    exists($${IFCODEGEN_TEMPLATE}) {
+        ifcodegen_sources.depends += $$files($${IFCODEGEN_TEMPLATE}/*)
+    } else {
+        error("Invalid IFCODEGEN_TEMPLATE: Couldn't find the template: $$IFCODEGEN_TEMPLATE")
+    }
 }
 
 # Add the configuration yaml as dependency and to other files
