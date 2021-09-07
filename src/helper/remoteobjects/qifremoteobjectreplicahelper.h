@@ -47,6 +47,7 @@
 #include <QtRemoteObjects/QRemoteObjectReplica>
 #include <QtRemoteObjects/QRemoteObjectPendingCall>
 
+#include <QtIfRemoteObjectsHelper/qifremoteobjecthelper.h>
 #include <QtIfRemoteObjectsHelper/qifremoteobjectpendingresult.h>
 
 QT_BEGIN_NAMESPACE

@@ -283,7 +283,7 @@ bool {{class}}::connectToNode()
 
     QSettings settings(configPath, QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("{{module.module_name|lower}}"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:{{module.module_name|lower}}")).toString());
+    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
     if (m_url != registryUrl) {
         m_url = registryUrl;
         // QtRO doesn't allow to change the URL without destroying the Node

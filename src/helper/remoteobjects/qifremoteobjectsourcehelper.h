@@ -44,6 +44,7 @@
 #include <QtCore/QObject>
 #include <QtInterfaceFramework/QIfPendingReply>
 
+#include <QtIfRemoteObjectsHelper/qifremoteobjecthelper.h>
 #include <QtIfRemoteObjectsHelper/qifremoteobjectpendingresult.h>
 
 QT_BEGIN_NAMESPACE

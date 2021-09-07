@@ -18,7 +18,7 @@ qt_internal_add_module(IfRemoteObjectsHelperPrivate
         qifpagingmodelqtroadapter.cpp qifpagingmodelqtroadapter.h
         qifremoteobjectpendingresult.cpp qifremoteobjectpendingresult.h
         qifremoteobjectreplicahelper.cpp qifremoteobjectreplicahelper.h
-        qifremoteobjectsourcehelper.h
+        qifremoteobjectsourcehelper.h qifremoteobjecthelper.h
     PUBLIC_LIBRARIES
         Qt::InterfaceFramework
         Qt::Qml
