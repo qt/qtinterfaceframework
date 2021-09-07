@@ -34,7 +34,7 @@
 ## Do not edit! All changes made to it will be lost.
 #############################################################################
 
-QT += interfaceframework remoteobjects
+QT += interfaceframework remoteobjects ifremoteobjects_helper_private
 
 HEADERS += $$PWD/core.h
 
