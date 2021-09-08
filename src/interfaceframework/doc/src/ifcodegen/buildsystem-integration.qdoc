@@ -27,17 +27,20 @@
 **
 ****************************************************************************/
 /*!
-\page qmake-integration.html
-\title qmake Integration
+\page buildsystem-integration.html
+\title Build System Integration
 \previouspage Use the Generator
 
-Qt Interface Framework Generator is fully integrated in qmake to generate all or part of a project.
+The Qt Interface Framework Generator is fully integrated in qmake and cmake to generate all or
+part of a project.
 
-In it's simplest form, qmake can generate all the source code and the project only needs to
+In it's simplest form, qmake/cmake can generate all the source code and the project only needs to
 configure the type of project to build.
 
 For complex setups, you can combine generated code with application specific code to extend
 and use the generated code.
+
+\section2 QMake
 
 Example:
 \code
@@ -94,9 +97,21 @@ QT_FOR_CONFIG += interfaceframework
 \endcode
 \endquotation
 
+\section2 CMake
+
+In CMake the following functions and variables are provided by the QtInterfaceFramework package.
+
+\section3 Variables
+\annotatedlist cmake-variables-qtinterfaceframework
+
+\section3 Commands
+\annotatedlist cmake-macros-qtinterfaceframework
+
 \section1 QtModule Support
 
-The qmake integration also supports generating code that you can subsequently compile into a Qt
+\section2 QMake
+
+The  integration also supports generating code that you can subsequently compile into a Qt
 module. Since this module needs to work more closely with Qt's module building system, it shouldn't
 be loaded using the \c CONFIG variable, but using the \c load() function instead. The
 \c ifcodegen_qt_module feature replaces the \c load(qt_module) call.
@@ -118,6 +133,40 @@ IFCODEGEN_SOURCES += ifvehiclefunctions.qface
 
 load(ifcodegen_qt_module)
 \endcode
+
+\section2 CMake
+
+The following shows how you can use cmake to build the QtIfVehicleFunctions module:
+
+\badcode
+qt_ifcodegen_generate(
+    IDL_FILES ifvehiclefunctions.qface
+    TEMPLATE frontend
+    MODULE_NAME QtIfVehicleFunctions
+)
+
+qt_internal_add_module(IfVehicleFunctions
+    LIBRARIES
+        Qt::CorePrivate
+        Qt::InterfaceFrameworkPrivate
+    PUBLIC_LIBRARIES
+        Qt::Core
+        Qt::InterfaceFramework
+    PRIVATE_MODULE_INTERFACE
+        Qt::CorePrivate
+        Qt::InterfaceFrameworkPrivate
+)
+
+qt_ifcodegen_extend_target(IfVehicleFunctions
+    NO_GENERATE
+    IDL_FILES ifvehiclefunctions.qface
+)
+\endcode
+
+Before defining the module, the code needs to be generated as it has to be available
+for syncqt at this point. Afterwards the generated code is used to extend the module target.
+
+\section3 SyncQt
 
 In addition to the project file for the module library, the \c sync.profile also needs to be
 changed, as it's used to call the \c syncqt.pl script that generates the forwarding headers.

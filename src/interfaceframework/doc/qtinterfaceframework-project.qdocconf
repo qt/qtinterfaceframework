@@ -17,6 +17,7 @@ sourcedirs                   += . \
 imagedirs                    += images
 exampledirs                  += ../../../examples \
                                 $$BUILDDIR/../../examples \
+                                snippets/
 
 examples.fileextensions      += *.qface *.yaml
 

@@ -36,7 +36,7 @@
 
     \section1 Introduction
 
-    The Generator is a Python script that can be run manually or using the \l {qmake Integration}.
+    The Generator is a Python script that can be run manually or using the \l {Build System Integration}.
     This script uses QFace as the autogenerator framework which parses the IDL file, generates the
     domain model (similar to an Abstract Syntax Tree (AST)) and then feeds it to the generator.
     Depending on the type of the project to generate, different \c{formats} are specified.
