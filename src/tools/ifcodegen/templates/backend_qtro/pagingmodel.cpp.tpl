@@ -39,7 +39,7 @@ Q_LOGGING_CATEGORY(qLcRO{{interface}}{{property|upper_first}}, "{{module|qml_typ
 
 {{class}}::{{class}}(const QString &remoteObjectsLookupName, QObject* parent)
     : QIfPagingModelInterface(parent)
-    , m_helper(new QIfRemoteObjectReplicaHelper(qLcRO{{interface}}{{property|upper_first}}(), this))
+    , m_helper(new QIfRemoteObjectsReplicaHelper(qLcRO{{interface}}{{property|upper_first}}(), this))
     , m_node(nullptr)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
 {
@@ -96,7 +96,7 @@ bool {{class}}::connectToNode()
 
     QSettings settings(configPath, QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("{{module.module_name|lower}}"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
+    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectsHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
     if (m_url != registryUrl) {
         m_url = registryUrl;
         // QtRO doesn't allow to change the URL without destroying the Node
@@ -117,9 +117,9 @@ bool {{class}}::connectToNode()
 void {{class}}::setupConnections()
 {
     connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectsReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectsReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectsReplicaHelper::onReplicaStateChanged);
 
     connect(m_replica.data(), &QIfPagingModelReplica::supportedCapabilitiesChanged, this, &{{class}}::supportedCapabilitiesChanged);
     connect(m_replica.data(), &QIfPagingModelReplica::countChanged, this, &{{class}}::countChanged);

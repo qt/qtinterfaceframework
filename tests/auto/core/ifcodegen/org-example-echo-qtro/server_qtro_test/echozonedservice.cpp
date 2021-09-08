@@ -29,7 +29,7 @@
 
 #include "echozonedservice.h"
 
-#include <QtIfRemoteObjectsHelper/QIfRemoteObjectPendingResult>
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectsPendingResult>
 #include <QTimer>
 
 #define SET_VALUE(m_VALUE, VALUE, CHANGED_SIGNAL) \
@@ -258,7 +258,7 @@ QVariant EchoZonedService::getCombo(const QString &zone)
 QVariant EchoZonedService::timer(int interval, const QString &zone)
 {
     static quint64 counter = 0;
-    QIfRemoteObjectPendingResult pendingResult(counter++, false);
+    QIfRemoteObjectsPendingResult pendingResult(counter++, false);
     QTimer::singleShot(interval, this, [this, pendingResult, zone](){
         emit pendingResultAvailable(pendingResult.id(), true, zone);
     });

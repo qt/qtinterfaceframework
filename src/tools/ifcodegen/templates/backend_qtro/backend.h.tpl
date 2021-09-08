@@ -39,7 +39,7 @@
 #define {{oncedefine}}
 
 #include <QRemoteObjectNode>
-#include <QtIfRemoteObjectsHelper/QIfRemoteObjectReplicaHelper>
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectsReplicaHelper>
 {% if module.tags.config.module %}
 #include <{{module.tags.config.module}}/{{interface}}BackendInterface>
 {% else %}
@@ -136,7 +136,7 @@ protected:
     QUrl m_url;
     QString m_remoteObjectsLookupName;
     QHash<quint64, QIfPendingReplyBase> m_pendingReplies;
-    QIfRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectsReplicaHelper *m_helper;
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
     QIfPagingModelInterface *m_{{property}};

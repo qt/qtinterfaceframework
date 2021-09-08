@@ -58,7 +58,7 @@ private:
     void setupConnections();
 
     QSharedPointer<QIfPagingModelReplica> m_replica;
-    QIfRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectsReplicaHelper *m_helper;
     QRemoteObjectNode *m_node= nullptr;
     QString m_remoteObjectsLookupName;
     QUrl m_url;

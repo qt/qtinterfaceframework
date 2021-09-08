@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIFREMOTEOBJECTPENDINGRESULT_H
-#define QIFREMOTEOBJECTPENDINGRESULT_H
+#ifndef QIFREMOTEOBJECTSPENDINGRESULT_H
+#define QIFREMOTEOBJECTSPENDINGRESULT_H
 
 #include <QtCore/QDataStream>
 #include <QtCore/QObject>
@@ -51,15 +51,15 @@ namespace qtif_private {
     Q_DECLARE_LOGGING_CATEGORY(qLcQtIfRoHelper)
 }
 
-class QIfRemoteObjectPendingResult
+class QIfRemoteObjectsPendingResult
 {
     Q_GADGET
 
     Q_PROPERTY(quint64 id READ id WRITE setId)
     Q_PROPERTY(bool failed READ failed WRITE setFailed)
 public:
-    QIfRemoteObjectPendingResult();
-    explicit QIfRemoteObjectPendingResult(quint64 id, bool failed);
+    QIfRemoteObjectsPendingResult();
+    explicit QIfRemoteObjectsPendingResult(quint64 id, bool failed);
     quint64 id() const;
     void setId(quint64 id);
     bool failed() const;
@@ -70,23 +70,23 @@ private:
 };
 
 //POD, passing by value should be fine
-inline bool operator==(QIfRemoteObjectPendingResult left, QIfRemoteObjectPendingResult right) Q_DECL_NOTHROW {
+inline bool operator==(QIfRemoteObjectsPendingResult left, QIfRemoteObjectsPendingResult right) Q_DECL_NOTHROW {
     return left.id() == right.id() && left.failed() == right.failed();
 }
-inline bool operator!=(QIfRemoteObjectPendingResult left, QIfRemoteObjectPendingResult right) Q_DECL_NOTHROW {
+inline bool operator!=(QIfRemoteObjectsPendingResult left, QIfRemoteObjectsPendingResult right) Q_DECL_NOTHROW {
     return !(left == right);
 }
 
-inline QDataStream &operator<<(QDataStream &ds, QIfRemoteObjectPendingResult obj) {
+inline QDataStream &operator<<(QDataStream &ds, QIfRemoteObjectsPendingResult obj) {
     QtRemoteObjects::copyStoredProperties(&obj, ds);
     return ds;
 }
 
-inline QDataStream &operator>>(QDataStream &ds, QIfRemoteObjectPendingResult &obj) {
+inline QDataStream &operator>>(QDataStream &ds, QIfRemoteObjectsPendingResult &obj) {
     QtRemoteObjects::copyStoredProperties(ds, &obj);
     return ds;
 }
 
 QT_END_NAMESPACE
 
-#endif //QIFREMOTEOBJECTPENDINGRESULT_H
+#endif //QIFREMOTEOBJECTSPENDINGRESULT_H

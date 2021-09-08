@@ -38,8 +38,8 @@
 **
 ****************************************************************************/
 
-#ifndef QIFREMOTEOBJECTREPLICAHELPER_H
-#define QIFREMOTEOBJECTREPLICAHELPER_H
+#ifndef QIFREMOTEOBJECTSREPLICAHELPER_H
+#define QIFREMOTEOBJECTSREPLICAHELPER_H
 
 #include <QtInterfaceFramework/QIfPendingReply>
 #include <QtInterfaceFramework/QIfAbstractFeature>
@@ -47,17 +47,17 @@
 #include <QtRemoteObjects/QRemoteObjectReplica>
 #include <QtRemoteObjects/QRemoteObjectPendingCall>
 
-#include <QtIfRemoteObjectsHelper/qifremoteobjecthelper.h>
-#include <QtIfRemoteObjectsHelper/qifremoteobjectpendingresult.h>
+#include <QtIfRemoteObjectsHelper/qifremoteobjectshelper.h>
+#include <QtIfRemoteObjectsHelper/qifremoteobjectspendingresult.h>
 
 QT_BEGIN_NAMESPACE
 
-class QIfRemoteObjectReplicaHelper : public QObject
+class QIfRemoteObjectsReplicaHelper : public QObject
 {
     Q_OBJECT
 
 public:
-    QIfRemoteObjectReplicaHelper(const QLoggingCategory &category = qtif_private::qLcQtIfRoHelper(), QObject *parent = nullptr);
+    QIfRemoteObjectsReplicaHelper(const QLoggingCategory &category = qtif_private::qLcQtIfRoHelper(), QObject *parent = nullptr);
 
     QVariant fromRemoteObjectVariant(const QVariant &variant) const;
 
@@ -73,8 +73,8 @@ public:
 #else
                 QVariant value = self->returnValue().value<QVariant>();
 #endif
-                if (value.canConvert<QIfRemoteObjectPendingResult>()) {
-                    auto result = value.value<QIfRemoteObjectPendingResult>();
+                if (value.canConvert<QIfRemoteObjectsPendingResult>()) {
+                    auto result = value.value<QIfRemoteObjectsPendingResult>();
                     if (result.failed()) {
                         qCDebug(m_category) << "Pending Result with id:" << result.id() << "failed";
                         ifReply.setFailed();
@@ -109,4 +109,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif //QIFREMOTEOBJECTREPLICAHELPER_H
+#endif //QIFREMOTEOBJECTSREPLICAHELPER_H

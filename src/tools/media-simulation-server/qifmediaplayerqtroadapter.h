@@ -42,7 +42,7 @@
 #ifndef QIFMEDIAPLAYERQTROADAPTER_H
 #define QIFMEDIAPLAYERQTROADAPTER_H
 
-#include <QIfRemoteObjectSourceHelper>
+#include <QIfRemoteObjectsSourceHelper>
 
 #include "mediaplayerbackend.h"
 #include "rep_qifmediaplayer_source.h"
@@ -93,7 +93,7 @@ public Q_SLOTS:
 private:
     QString m_remoteObjectsLookupName;
     MediaPlayerBackend *m_backend;
-    QIfRemoteObjectSourceHelper<QIfMediaPlayerQtRoAdapter> m_helper;
+    QIfRemoteObjectsSourceHelper<QIfMediaPlayerQtRoAdapter> m_helper;
 };
 
 #endif // QIFMEDIAPLAYERQTROADAPTER_H

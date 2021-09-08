@@ -77,7 +77,7 @@ FilterAndBrowseModel::FilterAndBrowseModel(QObject *parent, const QString& remot
     : QIfFilterAndBrowseModelInterface(parent)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
     , m_node(nullptr)
-    , m_helper(new QIfRemoteObjectReplicaHelper(qLcROQIfFilterAndBrowseModel(), this))
+    , m_helper(new QIfRemoteObjectsReplicaHelper(qLcROQIfFilterAndBrowseModel(), this))
 {
     qRegisterMetaType<SearchAndBrowseItem>();
     qRegisterMetaType<QIfAudioTrackItem>();
@@ -234,11 +234,11 @@ bool FilterAndBrowseModel::connectToNode()
 
 void FilterAndBrowseModel::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectsReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectsReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectsReplicaHelper::onReplicaStateChanged);
     connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
-    connect(m_replica.data(), &QIfFilterAndBrowseModelReplica::pendingResultAvailable, m_helper, &QIfRemoteObjectReplicaHelper::onPendingResultAvailable);
+    connect(m_replica.data(), &QIfFilterAndBrowseModelReplica::pendingResultAvailable, m_helper, &QIfRemoteObjectsReplicaHelper::onPendingResultAvailable);
     connect(m_replica.data(), &QIfFilterAndBrowseModelReplica::canGoBackChanged, this, &FilterAndBrowseModel::canGoBackChanged);
     connect(m_replica.data(), &QIfFilterAndBrowseModelReplica::canGoForwardChanged, this, &FilterAndBrowseModel::canGoForwardChanged);
     connect(m_replica.data(), &QIfFilterAndBrowseModelReplica::supportedCapabilitiesChanged, this, &FilterAndBrowseModel::supportedCapabilitiesChanged);

@@ -42,7 +42,7 @@
 #define MEDIAINDEXERBACKEND_H
 
 #include <QtIfMedia/QIfMediaIndexerControlBackendInterface>
-#include <QIfRemoteObjectReplicaHelper>
+#include <QIfRemoteObjectsReplicaHelper>
 #include <QRemoteObjectNode>
 
 #include "rep_qifmediaindexer_replica.h"
@@ -65,7 +65,7 @@ private:
     QSharedPointer<QIfMediaIndexerReplica> m_replica;
     QRemoteObjectNode *m_node;
     QUrl m_url;
-    QIfRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectsReplicaHelper *m_helper;
 };
 
 #endif // MEDIAINDEXERBACKEND_H

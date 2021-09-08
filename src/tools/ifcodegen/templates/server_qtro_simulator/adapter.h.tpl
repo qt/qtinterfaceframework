@@ -36,7 +36,7 @@
 #ifndef {{oncedefine}}
 #define {{oncedefine}}
 
-#include <QtIfRemoteObjectsHelper/QIfRemoteObjectSourceHelper>
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectsSourceHelper>
 #include "QtIfRemoteObjectsHelper/rep_qifpagingmodel_source.h"
 
 #include "{{interface|lower}}backend.h"
@@ -104,7 +104,7 @@ private:
     QString m_remoteObjectsLookupName;
     {{interface}}Backend *m_backend;
     QMultiHash<QRemoteObjectHostBase *, QIfPagingModelQtRoAdapter *> m_modelAdapters;
-    QIfRemoteObjectSourceHelper<{{class}}> m_helper;
+    QIfRemoteObjectsSourceHelper<{{class}}> m_helper;
 };
 
 QT_END_NAMESPACE

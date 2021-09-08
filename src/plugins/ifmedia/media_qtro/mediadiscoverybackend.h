@@ -43,7 +43,7 @@
 
 #include <QtIfMedia/QIfMediaDeviceDiscoveryModelBackendInterface>
 #include <QtInterfaceFramework/QIfServiceObject>
-#include <QIfRemoteObjectReplicaHelper>
+#include <QIfRemoteObjectsReplicaHelper>
 #include <QRemoteObjectNode>
 
 #include "rep_qifmediadiscoverymodel_replica.h"
@@ -73,7 +73,7 @@ private:
     QUrl m_url;
     QHash<QString, QIfServiceObject*> m_deviceMap;
     bool m_initialized;
-    QIfRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectsReplicaHelper *m_helper;
 };
 
 #endif // MEDIADISCOVERYBACKEND_H

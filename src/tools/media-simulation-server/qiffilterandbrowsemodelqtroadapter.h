@@ -41,7 +41,7 @@
 #ifndef QIFSEARCHANDBROWSEMODELQTROADAPTER_H
 #define QIFSEARCHANDBROWSEMODELQTROADAPTER_H
 
-#include <QIfRemoteObjectSourceHelper>
+#include <QIfRemoteObjectsSourceHelper>
 
 #include "searchandbrowsebackend.h"
 #include "rep_qiffilterandbrowsemodel_source.h"
@@ -79,7 +79,7 @@ public Q_SLOTS:
 private:
     QString m_remoteObjectsLookupName;
     QIfFilterAndBrowseModelInterface *m_backend;
-    QIfRemoteObjectSourceHelper<QIfFilterAndBrowseModelQtRoAdapter> m_helper;
+    QIfRemoteObjectsSourceHelper<QIfFilterAndBrowseModelQtRoAdapter> m_helper;
 };
 
 #endif // QIFSEARCHANDBROWSEMODELQTROADAPTER_H

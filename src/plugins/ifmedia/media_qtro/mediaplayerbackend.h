@@ -42,7 +42,7 @@
 #define MEDIAPLAYERBACKEND_H
 
 #include <QtIfMedia/QIfMediaPlayerBackendInterface>
-#include <QIfRemoteObjectReplicaHelper>
+#include <QIfRemoteObjectsReplicaHelper>
 #include <QRemoteObjectNode>
 #include "rep_qifmediaplayer_replica.h"
 
@@ -77,7 +77,7 @@ private:
     QSharedPointer<QIfMediaPlayerReplica> m_replica;
     QRemoteObjectNode *m_node;
     QUrl m_url;
-    QIfRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectsReplicaHelper *m_helper;
 };
 
 #endif // MEDIAPLAYERBACKEND_H

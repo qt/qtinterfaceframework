@@ -48,7 +48,7 @@ Q_LOGGING_CATEGORY(qLcROQIfMediaIndexer, "interfaceframework.media.qifmediaindex
 MediaIndexerBackend::MediaIndexerBackend(QObject *parent)
     : QIfMediaIndexerControlBackendInterface(parent)
     , m_node(nullptr)
-    , m_helper(new QIfRemoteObjectReplicaHelper(qLcROQIfMediaIndexer(), this))
+    , m_helper(new QIfRemoteObjectsReplicaHelper(qLcROQIfMediaIndexer(), this))
 {
 }
 
@@ -113,9 +113,9 @@ bool MediaIndexerBackend::connectToNode()
 
 void MediaIndexerBackend::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectsReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectsReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectsReplicaHelper::onReplicaStateChanged);
     connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
     connect(m_replica.data(), &QIfMediaIndexerReplica::stateChanged, this, &MediaIndexerBackend::stateChanged);
     connect(m_replica.data(), &QIfMediaIndexerReplica::progressChanged, this, &MediaIndexerBackend::progressChanged);
