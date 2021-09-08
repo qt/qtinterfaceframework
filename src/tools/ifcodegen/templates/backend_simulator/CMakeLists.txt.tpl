@@ -28,7 +28,7 @@
 #############################################################################
 #}
 
-set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     {{interface|lower}}backend.cpp
 {% endfor %}

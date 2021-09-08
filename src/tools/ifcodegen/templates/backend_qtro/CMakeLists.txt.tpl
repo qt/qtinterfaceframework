@@ -32,20 +32,20 @@ if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivat
     find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelperPrivate)
 endif()
 
-set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     {{interface|lower}}robackend.cpp
 {% endfor %}
     {{module.module_name|lower}}roplugin.cpp
 )
 
-set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 {% for interface in module.interfaces %}
     ${CMAKE_CURRENT_BINARY_DIR}/{{interface|lower}}.rep
 {% endfor %}
 )
 
-set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::RemoteObjects
     Qt6::IfRemoteObjectsHelperPrivate
 )

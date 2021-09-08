@@ -129,9 +129,21 @@ endfunction()
 ## Public API
 #####################################################################
 
-macro(set_ifcodegen_variable name)
+macro(qt6_set_ifcodegen_variable name)
     set(${name} ${ARGN})
     set(${name} ${ARGN} PARENT_SCOPE)
+endmacro()
+
+if(NOT QT_NO_CREATE_VERSIONLESS_FUNCTIONS)
+    macro(qt_set_ifcodegen_variable)
+        qt6_set_ifcodegen_variable(${ARGV})
+    endmacro()
+endif()
+
+macro(set_ifcodegen_variable)
+    message(AUTHOR_WARNING
+        "The set_ifcodegen_variable macro is deprecated and will be removed soon. Please use qt6_set_ifcodegen_variable instead.")
+    qt6_set_ifcodegen_variable(${ARGV})
 endmacro()
 
 # Calls the interfaceframework code generator.
