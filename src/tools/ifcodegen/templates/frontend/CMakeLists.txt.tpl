@@ -28,7 +28,7 @@
 #############################################################################
 #}
 
-set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     {{interface|lower}}.cpp
     {{interface|lower}}backendinterface.cpp
@@ -40,20 +40,20 @@ set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
     {{module.module_name|lower}}factory.cpp
 )
 
-set_ifcodegen_variable(${VAR_PREFIX}_DEFINES
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_DEFINES
     QT_BUILD_{{module|upper|replace('.', '_')|strip_QT}}_LIB
 )
 
-set_ifcodegen_variable(${VAR_PREFIX}_URI
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_URI
     {{module|qml_type}}
 )
 
 string(REPLACE "." "/" uri_path "{{module|qml_type}}")
-set_ifcodegen_variable(${VAR_PREFIX}_URI_PATH
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_URI_PATH
     ${uri_path}
 )
 
-set_ifcodegen_variable(${VAR_PREFIX}_VERSION
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_VERSION
     {{module.majorVersion}}.{{module.minorVersion}}
 )
 
