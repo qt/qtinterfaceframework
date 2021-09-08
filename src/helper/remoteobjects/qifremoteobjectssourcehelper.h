@@ -38,26 +38,26 @@
 **
 ****************************************************************************/
 
-#ifndef QIFREMOTEOBJECTSOURCEHELPER_H
-#define QIFREMOTEOBJECTSOURCEHELPER_H
+#ifndef QIFREMOTEOBJECTSSOURCEHELPER_H
+#define QIFREMOTEOBJECTSSOURCEHELPER_H
 
 #include <QtCore/QObject>
 #include <QtInterfaceFramework/QIfPendingReply>
 
-#include <QtIfRemoteObjectsHelper/qifremoteobjecthelper.h>
-#include <QtIfRemoteObjectsHelper/qifremoteobjectpendingresult.h>
+#include <QtIfRemoteObjectsHelper/qifremoteobjectshelper.h>
+#include <QtIfRemoteObjectsHelper/qifremoteobjectspendingresult.h>
 
 QT_BEGIN_NAMESPACE
 
-template <class T> class QIfRemoteObjectSourceHelper
+template <class T> class QIfRemoteObjectsSourceHelper
 {
 public:
-    QIfRemoteObjectSourceHelper(T *adapter, const QLoggingCategory &category = qtif_private::qLcQtIfRoHelper())
+    QIfRemoteObjectsSourceHelper(T *adapter, const QLoggingCategory &category = qtif_private::qLcQtIfRoHelper())
         : m_adapter(adapter)
         , m_replyCounter(0)
         , m_category(category)
     {
-        qRegisterMetaType<QIfRemoteObjectPendingResult>();
+        qRegisterMetaType<QIfRemoteObjectsPendingResult>();
     }
 
     QVariant toRemoteObjectVariant(const QVariant &variant) const
@@ -78,9 +78,9 @@ public:
             const quint64 id = ++m_replyCounter;
             if (pendingReply.isResultAvailable()) { // the call failed
                 qCDebug(m_category) << "Returning failed reply";
-                return QVariant::fromValue(QIfRemoteObjectPendingResult(id, true /* failed */));
+                return QVariant::fromValue(QIfRemoteObjectsPendingResult(id, true /* failed */));
             }
-            QIfRemoteObjectPendingResult result = QIfRemoteObjectPendingResult(id, false /* failed */);
+            QIfRemoteObjectsPendingResult result = QIfRemoteObjectsPendingResult(id, false /* failed */);
             qCDebug(m_category) << "Returning a pending result: id:" << id;
             QObject::connect(pendingReply.watcher(), &QIfPendingReplyWatcher::valueChanged, [this, pendingReply, id] (const QVariant &value) {
                 qCDebug(m_category) << "Value for pending result available: id:" << id << "value:" << value;
@@ -98,4 +98,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif //QIFREMOTEOBJECTSOURCEHELPER_H
+#endif //QIFREMOTEOBJECTSSOURCEHELPER_H

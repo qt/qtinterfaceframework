@@ -38,23 +38,23 @@
 **
 ****************************************************************************/
 
-#include "qifremoteobjectreplicahelper.h"
+#include "qifremoteobjectsreplicahelper.h"
 
 QT_BEGIN_NAMESPACE
 
-QIfRemoteObjectReplicaHelper::QIfRemoteObjectReplicaHelper(const QLoggingCategory &category, QObject *parent)
+QIfRemoteObjectsReplicaHelper::QIfRemoteObjectsReplicaHelper(const QLoggingCategory &category, QObject *parent)
     : QObject(parent)
     , m_category(category)
 {
-    qRegisterMetaType<QIfRemoteObjectPendingResult>();
+    qRegisterMetaType<QIfRemoteObjectsPendingResult>();
 }
 
-QVariant QIfRemoteObjectReplicaHelper::fromRemoteObjectVariant(const QVariant &variant) const
+QVariant QIfRemoteObjectsReplicaHelper::fromRemoteObjectVariant(const QVariant &variant) const
 {
     return variant.value<QVariant>();
 }
 
-void QIfRemoteObjectReplicaHelper::onPendingResultAvailable(quint64 id, bool isSuccess, const QVariant &value)
+void QIfRemoteObjectsReplicaHelper::onPendingResultAvailable(quint64 id, bool isSuccess, const QVariant &value)
 {
     qCDebug(m_category) << "pending result available for id:" << id;
     if (!m_pendingReplies.contains(id)) {
@@ -70,7 +70,7 @@ void QIfRemoteObjectReplicaHelper::onPendingResultAvailable(quint64 id, bool isS
         ifReply.setFailed();
 }
 
-void QIfRemoteObjectReplicaHelper::onReplicaStateChanged(QRemoteObjectReplica::State newState, QRemoteObjectReplica::State oldState)
+void QIfRemoteObjectsReplicaHelper::onReplicaStateChanged(QRemoteObjectReplica::State newState, QRemoteObjectReplica::State oldState)
 {
     Q_UNUSED(oldState)
 
@@ -87,7 +87,7 @@ void QIfRemoteObjectReplicaHelper::onReplicaStateChanged(QRemoteObjectReplica::S
     }
 }
 
-void QIfRemoteObjectReplicaHelper::onNodeError(QRemoteObjectNode::ErrorCode code)
+void QIfRemoteObjectsReplicaHelper::onNodeError(QRemoteObjectNode::ErrorCode code)
 {
     qCWarning(m_category) << "QRemoteObjectNode error, code: " << code;
     QMetaEnum metaEnum = QMetaEnum::fromType<QRemoteObjectNode::ErrorCode>();

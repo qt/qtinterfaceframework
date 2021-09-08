@@ -38,7 +38,7 @@
 **
 ****************************************************************************/
 
-#include "qifremoteobjectpendingresult.h"
+#include "qifremoteobjectspendingresult.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -46,33 +46,33 @@ namespace qtif_private {
     Q_LOGGING_CATEGORY(qLcQtIfRoHelper, "qt.if.remoteobjects.helper", QtInfoMsg)
 }
 
-QIfRemoteObjectPendingResult::QIfRemoteObjectPendingResult()
+QIfRemoteObjectsPendingResult::QIfRemoteObjectsPendingResult()
     : m_id()
     , m_failed()
 {}
 
-QIfRemoteObjectPendingResult::QIfRemoteObjectPendingResult(quint64 id, bool failed)
+QIfRemoteObjectsPendingResult::QIfRemoteObjectsPendingResult(quint64 id, bool failed)
     : m_id(id)
     , m_failed(failed)
 {}
 
-quint64 QIfRemoteObjectPendingResult::id() const
+quint64 QIfRemoteObjectsPendingResult::id() const
 {
     return m_id;
 }
 
-void QIfRemoteObjectPendingResult::setId(quint64 id)
+void QIfRemoteObjectsPendingResult::setId(quint64 id)
 {
     if (id != m_id)
         m_id = id;
 }
 
-bool QIfRemoteObjectPendingResult::failed() const
+bool QIfRemoteObjectsPendingResult::failed() const
 {
     return m_failed;
 }
 
-void QIfRemoteObjectPendingResult::setFailed(bool failed)
+void QIfRemoteObjectsPendingResult::setFailed(bool failed)
 {
     if (failed != m_failed)
         m_failed = failed;

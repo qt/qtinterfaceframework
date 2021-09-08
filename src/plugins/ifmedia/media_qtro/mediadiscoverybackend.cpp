@@ -51,7 +51,7 @@ MediaDiscoveryBackend::MediaDiscoveryBackend(QObject *parent)
     : QIfMediaDeviceDiscoveryModelBackendInterface(parent)
     , m_node(nullptr)
     , m_initialized(false)
-    , m_helper(new QIfRemoteObjectReplicaHelper(qLcROQIfMediaDiscovery(), this))
+    , m_helper(new QIfRemoteObjectsReplicaHelper(qLcROQIfMediaDiscovery(), this))
 {
 }
 
@@ -131,9 +131,9 @@ bool MediaDiscoveryBackend::connectToNode()
 
 void MediaDiscoveryBackend::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectsReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectsReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectsReplicaHelper::onReplicaStateChanged);
     connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &QIfFeatureInterface::initializationDone);
     connect(m_replica.data(), &QIfMediaDiscoveryModelReplica::devicesChanged, this, &MediaDiscoveryBackend::onDevicesChanged);
     connect(m_replica.data(), &QIfMediaDiscoveryModelReplica::deviceAdded, this, &MediaDiscoveryBackend::onDeviceAdded);

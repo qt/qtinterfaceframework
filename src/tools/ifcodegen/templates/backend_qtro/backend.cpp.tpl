@@ -124,7 +124,7 @@ void {{zone_class}}::emitCurrentState()
     : {{interface}}BackendInterface(parent)
     , m_node(nullptr)
     , m_remoteObjectsLookupName(remoteObjectsLookupName)
-    , m_helper(new QIfRemoteObjectReplicaHelper(qLcRO{{interface}}(), this))
+    , m_helper(new QIfRemoteObjectsReplicaHelper(qLcRO{{interface}}(), this))
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {%     if interface_zoned %}
@@ -283,7 +283,7 @@ bool {{class}}::connectToNode()
 
     QSettings settings(configPath, QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("{{module.module_name|lower}}"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
+    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectsHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
     if (m_url != registryUrl) {
         m_url = registryUrl;
         // QtRO doesn't allow to change the URL without destroying the Node
@@ -306,11 +306,11 @@ bool {{class}}::connectToNode()
 
 void {{class}}::setupConnections()
 {
-    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectReplicaHelper::onNodeError);
-    connect(m_helper, &QIfRemoteObjectReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
+    connect(m_node, &QRemoteObjectNode::error, m_helper, &QIfRemoteObjectsReplicaHelper::onNodeError);
+    connect(m_helper, &QIfRemoteObjectsReplicaHelper::errorChanged, this, &QIfFeatureInterface::errorChanged);
 
-    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectReplicaHelper::onReplicaStateChanged);
-    connect(m_replica.data(), &{{interface}}Replica::pendingResultAvailable, m_helper, &QIfRemoteObjectReplicaHelper::onPendingResultAvailable);
+    connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, m_helper, &QIfRemoteObjectsReplicaHelper::onReplicaStateChanged);
+    connect(m_replica.data(), &{{interface}}Replica::pendingResultAvailable, m_helper, &QIfRemoteObjectsReplicaHelper::onPendingResultAvailable);
 {% if interface_zoned %}
     connect(m_replica.data(), &QRemoteObjectReplica::initialized, this, &{{class}}::syncZones);
     connect(m_replica.data(), &QRemoteObjectReplica::stateChanged, this, [this](QRemoteObjectReplica::State newState, QRemoteObjectReplica::State oldState){

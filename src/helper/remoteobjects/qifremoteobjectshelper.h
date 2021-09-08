@@ -37,15 +37,15 @@
 **
 ****************************************************************************/
 
-#ifndef QIFREMOTEOBJECTHELPER_H
-#define QIFREMOTEOBJECTHELPER_H
+#ifndef QIFREMOTEOBJECTSHELPER_H
+#define QIFREMOTEOBJECTSHELPER_H
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 
 QT_BEGIN_NAMESPACE
 
-class QIfRemoteObjectHelper {
+class QIfRemoteObjectsHelper {
 
 public:
     static QString buildDefaultUrl(const QString &url) {
@@ -65,4 +65,4 @@ public:
 
 QT_END_NAMESPACE
 
-#endif //QIFREMOTEOBJECTHELPER_H
+#endif //QIFREMOTEOBJECTSHELPER_H

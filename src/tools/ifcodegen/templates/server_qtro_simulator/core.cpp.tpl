@@ -37,7 +37,7 @@
 #include <QCoreApplication>
 #include <QSettings>
 
-#include <QtIfRemoteObjectsHelper/qifremoteobjecthelper.h>
+#include <QtIfRemoteObjectsHelper/qifremoteobjectshelper.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -65,7 +65,7 @@ void {{class}}::init()
         qDebug() << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
     QSettings settings(configPath, QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("{{module.module_name|lower}}"));
-    QUrl url = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
+    QUrl url = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectsHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
     m_host = new QRemoteObjectRegistryHost(url);
     qDebug() << "registry at: " << m_host->registryUrl().toString();
     connect(m_host, &QRemoteObjectNode::error, this, &{{class}}::reportError);

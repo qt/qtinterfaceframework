@@ -43,7 +43,7 @@
 
 #include <QtInterfaceFramework/QIfFilterAndBrowseModelInterface>
 #include <QtIfMedia/QIfPlayableItem>
-#include <QIfRemoteObjectReplicaHelper>
+#include <QIfRemoteObjectsReplicaHelper>
 #include <QRemoteObjectNode>
 #include "rep_qiffilterandbrowsemodel_replica.h"
 
@@ -96,7 +96,7 @@ private:
     QSharedPointer<QIfFilterAndBrowseModelReplica> m_replica;
     QRemoteObjectNode *m_node;
     QUrl m_url;
-    QIfRemoteObjectReplicaHelper *m_helper;
+    QIfRemoteObjectsReplicaHelper *m_helper;
 };
 
 #endif // SEARCHANDBROWSEMODEL_H
