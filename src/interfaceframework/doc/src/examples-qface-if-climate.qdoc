@@ -215,8 +215,23 @@ In this case, we use the \c frontend template, that generates a class derived fr
 the \l {Dynamic Backend System} from QtInterfaceFramework, providing an easy way to change the behavior
 implementations. For more details, see \l {Backend Simulator Plugin}.
 
-To call the autogenerator for our shared library, the qmake project file needs to use the
-\c ifcodegen qmake feature. The snippet below shows how to do this:
+To call the autogenerator for our shared library, it needs to be integrated into the build system.
+
+\e CMake:
+
+First the \c InterfaceFramework package needs to be found using \c find_package:
+
+\snippet ../../../../examples/interfaceframework/qface-if-climate/frontend/CMakeLists.txt 0
+
+Afterwards we proceed to build a library and let the autogenerator extend this target with
+the generated source code by invoking \l {qt6_ifcodegen_extend_target}.
+
+\snippet ../../../../examples/interfaceframework/qface-if-climate/frontend/CMakeLists.txt 1
+
+\e qmake:
+
+The qmake project file needs to use the \c ifcodegen qmake feature. The snippet below shows how
+to do this:
 
 \snippet ../../../../examples/interfaceframework/qface-if-climate/frontend/frontend.pro 1
 
@@ -238,17 +253,32 @@ and Windows.
 Since the \c frontend library uses the \l {Dynamic Backend System}, we need a corresponding
 \c backend plugin, for the library to provide some functionality. To generate a mock version of
 the backend plugin called "Simulator Backend", you can use the \c backend_simulator template from
-the same IDL file as the \c frontend library. The qmake integration works in the same way, but it
-uses the \c IFCODEGEN_TEMPLATE variable to tell the \c ifcodegen to use a different generation
-template.
+the same IDL file as the \c frontend library. The build system integration works in the same way, but it
+uses a different generation template.
+
+\e CMake:
+
+A plugin is defined and extended by calling the codegenerator, this time with the \c backend_simulator
+template:
+
+\snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/CMakeLists.txt 2
+
+\e qmake:
+
+As we want to generate a plugin instead of a plain library, we need to instruct qmake to do so by
+adding \c plugin to the \c CONFIG variable.
 
 \snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/backend_simulator.pro 2
 
-As we want to generate a plugin instead of a plain library, we need to instruct qmake to do so by
-adding \c plugin to the \c CONFIG variable. For the plugin to compile correctly it needs to get the
-backend interface header from the previously created library. However, this header is not part of
-our source tree but the build tree, because it is also generated. We provide this header by adding
-it to the include path using the following construct:
+For the plugin to compile correctly it needs to get the backend interface header from the previously
+created library. However, this header is not part of our source tree but the build tree, because it
+is also generated. We provide this header by adding it to the include path using the following code:
+
+\e CMake:
+
+\snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/CMakeLists.txt 1
+
+\e qmake:
 
 \snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/backend_simulator.pro 1
 
@@ -282,7 +312,13 @@ where our application looks for plugins. By default, Qt looks in the \b plugins 
 installation directory or in the application's current working directory. For QtInterfaceFramework plugins to be
 found, they need to be placed within a \b interfaceframework sub-folder.
 
-To make sure this is done automatically, we add the following line to our backend project file:
+To make sure this is done automatically, we add the following line to our backend build system file:
+
+\e CMake:
+
+\snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/CMakeLists.txt 0
+
+\e qmake:
 
 \snippet ../../../../examples/interfaceframework/qface-if-climate/backend_simulator/backend_simulator.pro 0
 

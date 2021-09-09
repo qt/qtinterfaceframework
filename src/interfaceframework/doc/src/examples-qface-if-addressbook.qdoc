@@ -103,7 +103,13 @@ This limitation is fixed by using the \l {config_simulator_simulationFile}{simul
 annotation to tell the autogenerator we want to provide our own simulation QML file.
 
 In the example the \e simulationFile annotation points to a QML file in a resource file. The
-resource file is added to the project file as usual like this:
+resource file is added to the build system like this.
+
+\e CMake:
+
+\snippet ../../../../examples/interfaceframework/qface-if-addressbook/backend_simulator/CMakeLists.txt 0
+
+\e qmake:
 
 \snippet ../../../../examples/interfaceframework/qface-if-addressbook/backend_simulator/backend_simulator.pro 0
 

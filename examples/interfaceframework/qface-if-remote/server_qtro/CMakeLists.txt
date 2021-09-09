@@ -25,11 +25,13 @@ qt_add_executable(qface-if-remote-server
     processingservice.cpp processingservice.h
 )
 
+#! [0]
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(qface-if-remote-server
     IDL_FILES ../example-if-remote.qface
     TEMPLATE server_qtro
 )
+#! [0]
 
 set_target_properties(qface-if-remote-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 

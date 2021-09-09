@@ -16,10 +16,13 @@ endif()
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-if-remote")
 
 find_package(Qt6 COMPONENTS Core)
+#! [0]
 find_package(Qt6 COMPONENTS InterfaceFramework)
+#! [0]
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
+#! [1]
 qt6_add_library(QtIfRemoteExample)
 
 # Interface Framework Generator:
@@ -27,6 +30,7 @@ qt6_ifcodegen_extend_target(QtIfRemoteExample
     IDL_FILES ../example-if-remote.qface
     TEMPLATE frontend
 )
+#! [1]
 
 set_target_properties(QtIfRemoteExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
