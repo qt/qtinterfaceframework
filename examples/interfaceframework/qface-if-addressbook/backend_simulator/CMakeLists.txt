@@ -33,6 +33,7 @@ target_link_libraries(addressbook_backend_simulator PUBLIC
 
 
 # Resources:
+#! [0]
 set(plugin_resource_resource_files
     "simulation.qml"
 )
@@ -43,6 +44,7 @@ qt6_add_resources(addressbook_backend_simulator "plugin_resource"
     FILES
         ${plugin_resource_resource_files}
 )
+#! [0]
 
 install(TARGETS addressbook_backend_simulator
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"

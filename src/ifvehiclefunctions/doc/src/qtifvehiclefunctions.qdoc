@@ -40,8 +40,13 @@
 
     \section1 Getting Started
 
-    To link against the Qt Interface Framework Vehicle Feature module, add this line to your
-    \c qmake project file:
+    To link against the Qt Interface Framework Vehicle Feature module, use the following directive:
+
+    Using cmake:
+
+    \snippet doc_src_ifvehiclefunctions.cmake 0
+
+    Using qmake:
 
     \snippet doc_src_ifvehiclefunctions.pro 0
 
@@ -58,8 +63,8 @@
     the element:
 
     \code
-   #include <QtIfVehicleFunctions/QIfClimateControl>
-   ...
+    #include <QtIfVehicleFunctions/QIfClimateControl>
+    ...
     QIfClimateControl* m_climateControl;
     m_climateControl = new QIfClimateControl(this);
     \endcode

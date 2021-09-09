@@ -15,21 +15,29 @@ find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS InterfaceFramework)
 
+#! [2]
 qt_add_plugin(remote_backend_qtro)
+#! [2]
+#! [0]
 set_target_properties(remote_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
+#! [0]
 
+#! [2]
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(remote_backend_qtro
     IDL_FILES ../example-if-remote.qface
     TEMPLATE backend_qtro
 )
+#! [2]
 
+#! [1]
 target_link_libraries(remote_backend_qtro PUBLIC
     QtIfRemoteExample
     Qt::Core
     Qt::Gui
     Qt::InterfaceFramework
 )
+#! [1]
 
 install(TARGETS remote_backend_qtro
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"

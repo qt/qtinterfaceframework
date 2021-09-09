@@ -15,21 +15,29 @@ find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS InterfaceFramework)
 
+#! [2]
 qt_add_plugin(climate_backend_simulator)
+#! [2]
+#! [0]
 set_target_properties(climate_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
+#! [0]
 
+#! [2]
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(climate_backend_simulator
     IDL_FILES ../example-if-climate.qface
     TEMPLATE backend_simulator
 )
+#! [2]
 
+#! [1]
 target_link_libraries(climate_backend_simulator PUBLIC
     QtIfClimateExample
     Qt::Core
     Qt::Gui
     Qt::InterfaceFramework
 )
+#! [1]
 
 install(TARGETS climate_backend_simulator
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"

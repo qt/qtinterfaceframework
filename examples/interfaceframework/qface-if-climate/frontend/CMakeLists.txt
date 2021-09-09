@@ -13,10 +13,13 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-if-clima
 
 find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
+#! [0]
 find_package(Qt6 COMPONENTS InterfaceFramework)
+#! [0]
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
+#! [1]
 qt6_add_library(QtIfClimateExample)
 
 # Interface Framework Generator:
@@ -24,6 +27,7 @@ qt6_ifcodegen_extend_target(QtIfClimateExample
     IDL_FILES ../example-if-climate.qface
     TEMPLATE frontend
 )
+#! [1]
 
 set_target_properties(QtIfClimateExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
