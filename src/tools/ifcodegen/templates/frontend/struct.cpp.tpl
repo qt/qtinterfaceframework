@@ -144,7 +144,7 @@ void {{class}}::fromJSON(const QVariant &variant)
     if (value.canConvert(QMetaType::fromType<QVariantList>()))
         value.convert(QMetaType::fromType<QVariantList>());
 
-    if (value.metaType() == QMetaType::fromType<QVariantList>()) {
+    if (value.metaType() == QMetaType::fromType<QVariantMap>()) {
         QVariantMap map = value.toMap();
 {% for field in struct.fields %}
         if (map.contains(QStringLiteral("{{field}}")))
