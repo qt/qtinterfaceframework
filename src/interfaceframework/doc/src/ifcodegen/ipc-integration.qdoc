@@ -71,6 +71,6 @@ parameters to the plugin and to the server are passed over a config file, either
 location or at a user-specified path.
 
 For a steb-by-step introduction to remote backends, see
-\l {interfaceframework/qface-if-remote}{Generate QtRemoteObjects based backends with the Qt Interface Framework Generator}.
+\l {interfaceframework/qface-remote}{Generate QtRemoteObjects based backends with the Qt Interface Framework Generator}.
 
 */

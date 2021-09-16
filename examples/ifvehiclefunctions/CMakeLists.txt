@@ -1,7 +1,7 @@
 # Generated from ifvehiclefunctions.pro.
 
-add_subdirectory(climate_qml)
-add_subdirectory(window_qml)
+add_subdirectory(climate-qml)
+add_subdirectory(window-qml)
 if(TARGET Qt::Widgets)
-    add_subdirectory(climate_widget)
+    add_subdirectory(climate-widget)
 endif()

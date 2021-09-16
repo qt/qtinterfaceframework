@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    climate_qml \
-    window_qml
+    climate-qml \
+    window-qml
 
-qtHaveModule(widgets): SUBDIRS += climate_widget
+qtHaveModule(widgets): SUBDIRS += climate-widget
