@@ -19,7 +19,7 @@ qt_add_executable(chapter5-ipc-server)
 set_target_properties(chapter5-ipc-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(chapter5-ipc-server
+qt_ifcodegen_extend_target(chapter5-ipc-server
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE server_qtro_simulator
 )
@@ -40,7 +40,7 @@ set(simulation_resource_files
     "../backend_simulator/simulation.qml"
 )
 
-qt6_add_resources(chapter5-ipc-server "simulation"
+qt_add_resources(chapter5-ipc-server "simulation"
     PREFIX
         "/"
     BASE

@@ -16,12 +16,12 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
-qt6_add_library(libIc_chapter4)
+qt_add_library(libIc_chapter4)
 set_target_properties(libIc_chapter4 PROPERTIES OUTPUT_NAME "InstrumentCluster")
 set_target_properties(libIc_chapter4 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(libIc_chapter4
+qt_ifcodegen_extend_target(libIc_chapter4
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE frontend
 )

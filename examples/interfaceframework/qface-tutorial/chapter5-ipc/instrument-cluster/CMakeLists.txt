@@ -45,7 +45,7 @@ set(app_resource_files
     "Top.qml"
 )
 
-qt6_add_resources(ic_chapter5 "app"
+qt_add_resources(ic_chapter5 "app"
     PREFIX
         "/"
     FILES
@@ -71,7 +71,7 @@ set(images_resource_files
     "../../images/top_bar.png"
 )
 
-qt6_add_resources(ic_chapter5 "images"
+qt_add_resources(ic_chapter5 "images"
     PREFIX
         "/images"
     BASE

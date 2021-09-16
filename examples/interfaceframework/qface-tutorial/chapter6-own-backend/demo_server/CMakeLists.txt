@@ -17,7 +17,7 @@ find_package(Qt6 COMPONENTS DBus)
 
 set_source_files_properties(instrumentcluster.xml PROPERTIES INCLUDE "")
 set(cluster_SRCS)
-qt6_add_dbus_adaptor(cluster_SRCS
+qt_add_dbus_adaptor(cluster_SRCS
     instrumentcluster.xml
     dbus_conversion.h
     "" # empty parent_class value on purpose to not pass -l flag

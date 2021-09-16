@@ -44,7 +44,7 @@ set(qml_resource_files
     "main.qml"
 )
 
-qt6_add_resources(qface-addressbook "qml"
+qt_add_resources(qface-addressbook "qml"
     PREFIX
         "/"
     FILES
