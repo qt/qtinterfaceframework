@@ -2,9 +2,9 @@ TEMPLATE = subdirs
 
 QT_FOR_CONFIG += interfaceframework
 qtConfig(ifcodegen) {
-    SUBDIRS += qface-if-climate \
-               qface-if-addressbook
+    SUBDIRS += qface-climate \
+               qface-addressbook
 }
-qtConfig(ifcodegen): qtConfig(remoteobjects): SUBDIRS += qface-if-remote
+qtConfig(ifcodegen): qtConfig(remoteobjects): SUBDIRS += qface-remote
 
 qtConfig(ifcodegen): qtConfig(remoteobjects): SUBDIRS += qface-tutorial

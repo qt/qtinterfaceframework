@@ -1,7 +1,0 @@
-# Generated from qface-if-addressbook.pro.
-cmake_minimum_required(VERSION 3.14)
-project(example_if_addressbook LANGUAGES CXX)
-
-add_subdirectory(frontend)
-add_subdirectory(backend_simulator)
-add_subdirectory(demo)
