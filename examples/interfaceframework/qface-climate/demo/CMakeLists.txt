@@ -44,7 +44,7 @@ set(qml_resource_files
     "main.qml"
 )
 
-qt6_add_resources(qface-climate "qml"
+qt_add_resources(qface-climate "qml"
     PREFIX
         "/"
     FILES

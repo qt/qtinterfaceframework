@@ -19,7 +19,7 @@ qt_add_plugin(ic_chapter3_simulation)
 set_target_properties(ic_chapter3_simulation PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(ic_chapter3_simulation
+qt_ifcodegen_extend_target(ic_chapter3_simulation
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE backend_simulator
 )

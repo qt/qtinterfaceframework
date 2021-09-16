@@ -17,7 +17,7 @@ find_package(Qt6 COMPONENTS InterfaceFramework)
 
 
 # Interface Framework Generator:
-qt6_ifcodegen_import_variables(CLUSTER
+qt_ifcodegen_import_variables(CLUSTER
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE qmlplugin
 )

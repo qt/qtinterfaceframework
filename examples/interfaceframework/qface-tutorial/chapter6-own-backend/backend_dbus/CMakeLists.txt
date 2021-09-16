@@ -21,7 +21,7 @@ set_target_properties(ic_chapter6_dbus PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../in
 
 set_source_files_properties(../demo_server/instrumentcluster.xml PROPERTIES INCLUDE dbus_conversion.h)
 set(cluster_SRCS)
-qt6_add_dbus_interface(cluster_SRCS
+qt_add_dbus_interface(cluster_SRCS
     ../demo_server/instrumentcluster.xml
     instrumentcluster_interface
 )

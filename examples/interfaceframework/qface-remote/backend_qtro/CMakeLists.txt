@@ -24,7 +24,7 @@ set_target_properties(remote_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ..
 
 #! [2]
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(remote_backend_qtro
+qt_ifcodegen_extend_target(remote_backend_qtro
     IDL_FILES ../example-remote.qface
     TEMPLATE backend_qtro
 )

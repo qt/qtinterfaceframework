@@ -19,7 +19,7 @@ qt_add_plugin(ic_chapter5_qtro)
 set_target_properties(ic_chapter5_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(ic_chapter5_qtro
+qt_ifcodegen_extend_target(ic_chapter5_qtro
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE backend_qtro
 )

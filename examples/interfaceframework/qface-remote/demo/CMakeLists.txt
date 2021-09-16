@@ -48,7 +48,7 @@ set(qml_resource_files
     "main.qml"
 )
 
-qt6_add_resources(qface-remote "qml"
+qt_add_resources(qface-remote "qml"
     PREFIX
         "/"
     FILES

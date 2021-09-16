@@ -20,10 +20,10 @@ find_package(Qt6 COMPONENTS Qml)
 find_package(Qt6 COMPONENTS Quick)
 
 #! [1]
-qt6_add_library(QtIfClimateExample)
+qt_add_library(QtIfClimateExample)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(QtIfClimateExample
+qt_ifcodegen_extend_target(QtIfClimateExample
     IDL_FILES ../example-climate.qface
     TEMPLATE frontend
 )

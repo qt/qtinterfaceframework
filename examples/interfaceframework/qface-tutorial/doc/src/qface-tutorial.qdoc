@@ -484,7 +484,7 @@
     \e CMake:
 
     \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/imports/CMakeLists.txt
-    \skipto qt6_ifcodegen_import_variables
+    \skipto qt_ifcodegen_import_variables
     \printto install
 
     Unlike all our previous generator calls we don't extend a previously defined target, but

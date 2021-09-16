@@ -42,7 +42,7 @@ set(qml_resource_files
     "main.qml"
 )
 
-qt6_add_resources(tuner "qml"
+qt_add_resources(tuner "qml"
     PREFIX
         "/"
     FILES

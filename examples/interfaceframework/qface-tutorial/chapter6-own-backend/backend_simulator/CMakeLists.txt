@@ -19,7 +19,7 @@ qt_add_plugin(ic_chapter6_simulation)
 set_target_properties(ic_chapter6_simulation PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(ic_chapter6_simulation
+qt_ifcodegen_extend_target(ic_chapter6_simulation
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE backend_simulator
 )
@@ -37,7 +37,7 @@ set(simulation_resource_files
     "simulation.qml"
 )
 
-qt6_add_resources(ic_chapter6_simulation "simulation"
+qt_add_resources(ic_chapter6_simulation "simulation"
     PREFIX
         "/"
     FILES

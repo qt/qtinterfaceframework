@@ -46,7 +46,7 @@ set(app_resource_files
     "Top.qml"
 )
 
-qt6_add_resources(instrument-cluster "app"
+qt_add_resources(instrument-cluster "app"
     PREFIX
         "/"
     FILES
@@ -72,7 +72,7 @@ set(images_resource_files
     "../images/top_bar.png"
 )
 
-qt6_add_resources(instrument-cluster "images"
+qt_add_resources(instrument-cluster "images"
     PREFIX
         "/images"
     BASE

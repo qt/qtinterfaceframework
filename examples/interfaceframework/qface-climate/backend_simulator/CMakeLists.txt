@@ -24,7 +24,7 @@ set_target_properties(climate_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECT
 
 #! [2]
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(climate_backend_simulator
+qt_ifcodegen_extend_target(climate_backend_simulator
     IDL_FILES ../example-climate.qface
     TEMPLATE backend_simulator
 )

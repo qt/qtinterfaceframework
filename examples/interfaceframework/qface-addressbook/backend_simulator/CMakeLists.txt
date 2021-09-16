@@ -19,7 +19,7 @@ qt_add_plugin(addressbook_backend_simulator)
 set_target_properties(addressbook_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(addressbook_backend_simulator
+qt_ifcodegen_extend_target(addressbook_backend_simulator
     IDL_FILES ../example-addressbook.qface
     TEMPLATE backend_simulator
 )
@@ -38,7 +38,7 @@ set(plugin_resource_resource_files
     "simulation.qml"
 )
 
-qt6_add_resources(addressbook_backend_simulator "plugin_resource"
+qt_add_resources(addressbook_backend_simulator "plugin_resource"
     PREFIX
         "/plugin_resource"
     FILES
