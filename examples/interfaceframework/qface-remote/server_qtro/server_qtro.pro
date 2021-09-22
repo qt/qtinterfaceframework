@@ -1,6 +1,7 @@
 TARGET = qface-remote-server
 #! [0]
 TEMPLATE = app
+QT += interfaceframework
 QT -= gui
 CONFIG += c++11 ifcodegen
 #! [0]
