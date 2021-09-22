@@ -1,5 +1,5 @@
 # Generated from chapter1-basics.pro.
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 project(qface-chapter1 LANGUAGES CXX)
 
 add_subdirectory(instrument-cluster)

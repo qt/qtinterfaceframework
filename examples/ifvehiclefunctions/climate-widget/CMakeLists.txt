@@ -1,6 +1,6 @@
 # Generated from climate_widget.pro.
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 project(climate_widget LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
