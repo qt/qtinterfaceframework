@@ -1,6 +1,6 @@
 # Generated from server_qtro.pro.
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 project(qface-remote-server LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

@@ -1,5 +1,5 @@
 # Generated from chapter3-simulation-backend.pro.
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.16)
 project(qface-chapter3 LANGUAGES CXX)
 
 add_subdirectory(instrument-cluster)
