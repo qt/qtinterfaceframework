@@ -140,9 +140,10 @@ void QIfAbstractFeaturePrivate::onInitializationDone()
     startAutoDiscovery() function. Once auto discovery is complete, use the isValid() function to
     check whether a suitable backend was found.
 
-    The type of backend to load can be controlled by setting the \c discoveryMode to
-    \c AutoDiscovery. This mode is enabled by default, which indicates that a production backend
-    is always preferred over a simulation backend.
+    The auto discovery gives you an easy way to automatically connect to the correct backend
+    implementation and can be controlled by the \c discoveryMode property. The \c discoveryMode is
+    set to \c AutoDiscovery by default, which indicates that a production backend is always
+    preferred over a simulation backend.
 
     Alternatively, it's also possible to use QIfServiceManager to retrieve all backends. Then,
     manually search for the right backend and call setServiceObject() to connect it to the
