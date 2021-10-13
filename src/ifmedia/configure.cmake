@@ -32,7 +32,7 @@ qt_feature("system-taglib" PRIVATE
 )
 qt_feature("media_simulation_backend" PRIVATE
     LABEL "Mediaplayer Simulation Backend"
-    CONDITION TARGET Qt::Multimedia
+    CONDITION TARGET Qt::Multimedia AND Qt::Sql
 )
 qt_feature("tuner_simulation_backend" PRIVATE
     LABEL "Tuner Simulation Backend"
@@ -44,7 +44,7 @@ qt_feature("media_qtro_backend" PRIVATE
 )
 qt_feature("media_qtro_simulation_server" PRIVATE
     LABEL "Mediaplayer Qt Remote Objects Simulation Server"
-    CONDITION QT_FEATURE_remoteobjects AND TARGET Qt::Multimedia
+    CONDITION QT_FEATURE_remoteobjects AND TARGET Qt::Multimedia AND Qt::Sql
 )
 qt_feature("ifmedia" PUBLIC
     LABEL "Qt Interface Framework Media"
