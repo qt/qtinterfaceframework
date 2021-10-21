@@ -42,7 +42,7 @@
 
     To link against the Qt Interface Framework Vehicle Feature module, use the following directive:
 
-    Using cmake:
+    Using CMake:
 
     \snippet doc_src_ifvehiclefunctions.cmake 0
 
@@ -70,7 +70,7 @@
     \endcode
 
     In order to trigger the auto discovery mechanism, call the startAutoDiscovery method. This will
-    load the appropriate backend and set a service object for the feature element. Please notice
+    load the appropriate back end and set a service object for the feature element. Please notice
     that calling this method sets the autoDiscovery property to true. To use dynamic services,
     simply do not call this method.
 
@@ -78,8 +78,8 @@
     m_climateControl->startAutoDiscovery();
     \endcode
 
-    After the startAutoDiscovery method has been called, the isValid property can be used to
-    determine if a backend was found or not.
+    After the \c startAutoDiscovery method has been called, the isValid property
+    can be used to determine if a back end was found or not.
 
     \code
     if (!m_climateControl->isValid())
@@ -146,8 +146,8 @@
    }
     \endcode
 
-    When the top-level component has been completed, the isValid property of the feature elements
-    can be used to determine if any of the backends are missing. In some situations this is expected
+    When the top-level component has been completed, the \l isValid property of the feature elements
+    can be used to determine if any of the back ends are missing. In some situations this is expected
     behavior; the isValid property can be used to enable or disable parts of the user
     interface.
 

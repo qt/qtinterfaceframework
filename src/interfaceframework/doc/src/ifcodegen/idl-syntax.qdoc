@@ -35,7 +35,8 @@
 \nextpage Jinja Template Syntax
 \keyword IDL
 
-This topic explains how to use the QFace IDL. A complete description of the library is available
+This topic explains how to use the QFace Interface Definition Language (IDL).
+A complete description of the library is available
 at \l {https://pelagicore.github.io/qface/}.
 
 QFace (Qt Interface Language) is an Interface Description Languge (IDL). While it's primarily

@@ -35,7 +35,7 @@ you can do build-time configuration and enable only the features that you need.
 
 \section1 Features Available
 
-The following table describes the featureas available in the module. Similar to other modules, the
+The following table describes the features available in the module. Similar to other modules, the
 available features are auto-detected and displayed after the configuration step in the "Configure
 summary".
 
@@ -49,14 +49,15 @@ summary".
         \keyword feature-ifcodegen
     \li python3
         python3-virtualenv
-    \li The Interface Framework Generator provides tooling to generate source code from IDL files. The Interface Framework
+    \li The Interface Framework Generator provides tooling to generate source
+        code from Interface Definition Language (IDL) files. The Interface Framework
         Generator comes with a set of templates for specific code generation use cases.
 \row
     \li QtRemoteObjects Support
         \keyword feature-qtremoteobjects
     \li QtRemoteObjects module
-    \li The QtRemoteObjects Support is needed to generate \c interfaceframework backends, using QtRemoteObjects
-        for its Inter-Process Communicationm (IPC). This feature also provides templates to
+    \li The QtRemoteObjects Support is needed to generate \c interfaceframework back ends, using QtRemoteObjects
+        for its Inter-Process Communications (IPC). This feature also provides templates to
         generate the server part of this IPC.
 \endtable
 
