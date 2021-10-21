@@ -31,10 +31,10 @@
 \title Build System Integration
 \previouspage Use the Generator
 
-The Qt Interface Framework Generator is fully integrated in qmake and cmake to generate all or
+The Qt Interface Framework Generator is fully integrated in qmake and CMake to generate all or
 part of a project.
 
-In it's simplest form, qmake/cmake can generate all the source code and the project only needs to
+In it's simplest form, qmake/CMake can generate all the source code and the project only needs to
 configure the type of project to build.
 
 For complex setups, you can combine generated code with application specific code to extend
@@ -77,7 +77,8 @@ The following qmake variables are available:
             \l{annotations-option}{Annotations Option}.
     \row
         \li IFCODEGEN_IMPORT_PATH
-        \li A list of import paths, which are considered when an IDL file uses an import statement.
+        \li A list of import paths, which are considered when an
+            Interface Definition Language (IDL) file uses an import statement.
             For more information, see the \l{import-option}{Import Option}.
 \endtable
 
@@ -136,7 +137,7 @@ load(ifcodegen_qt_module)
 
 \section2 CMake
 
-The following shows how you can use cmake to build the QtIfVehicleFunctions module:
+The following shows how you can use CMake to build the QtIfVehicleFunctions module:
 
 \badcode
 qt_ifcodegen_generate(

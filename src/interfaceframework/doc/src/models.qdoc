@@ -32,9 +32,10 @@
 \previouspage Dynamic Backend System
 \nextpage Qt Interface Framework Query Language
 
-To interact with lists in Qt applications, typically, you would use Qt's ListView classes, which
-are based on the Model-View-Controller (MVC) pattern. Similarly, QtInterfaceFramework has the following classes
-that support this use case, for you to provide your own models:
+To interact with lists in Qt applications you would use Qt's
+\l{ListView classes}. These are based on the Model-View-Controller (MVC) pattern.
+Similarly, QtInterfaceFramework has the following classes that support this use
+case, for you to provide your own models:
 
 \list
    \li \l{if-abstract-feature-list-model}{QIfAbstractFeatureListModel}
@@ -48,8 +49,8 @@ Apart from creating standalone models using one of classes mentioned above, you 
 \target if-abstract-feature-list-model
 \section1 QIfAbstractFeatureListModel
 
-Suppose you have to design a feature like a Contact List in a connected Mobile Phone, you can use
-QtInterfaceFramework's frontend/backend separation by derifng from QIfAbstractFeature. Then, you use your
+Suppose you have to design a feature like a contact list in a connected mobile phone. You can use
+QtInterfaceFramework's front end and back end separation by deriving from QIfAbstractFeature. Then, you use your
 subclass with a QAbstractItemView derived class to show your contacts in a list form.
 
 QtInterfaceFramework provides \l{QIfAbstractFeatureListModel::QIfAbstractFeatureListModel}{QIfAbstractFeatureListModel}
@@ -60,7 +61,7 @@ functionality from QIfAbstractFeature.
 \section1 QIfPagingModel
 
 The \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} is a list model that uses the well-known
-Pagination concept to only load content from the backend, when it is needed. This model provides
+Pagination concept to only load content from the back end, when it is needed. This model provides
 two different modes that determine when and how data should be retrieved and the number of items
 to fetch in each stage.
 
@@ -72,7 +73,7 @@ Since we don't have control on the data providers' interfaces, the
 \list 1
 \li If the number of items in the model is \b not known from the beginning, use the
     \l{QIfPagingModel::FetchMore}{FetchMore} mode. This mode fetches a number of items from the
-    backend when they are needed; the backend tells the frontend whether there is more data to be
+    back end when they are needed; the back end tells the front end whether there is more data to be
     fetched.
 
 \li If the number of items in the model is \b known from the beginning, use the
@@ -88,13 +89,13 @@ For more details on fetch modes, see \l{QIfPagingModel::QIfPagingModel}{QIfPagin
 \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} provides a classic item-based approach to
 working with the model; the items are provided by QIfStandardItem or classes derived from it. The
 best way to provide data to the QIfPagingModel is to create a new class derived from
-QIfStandardItem. Then, override the \c name() and \c type() accessor functions. The \c name and
+QIfStandardItem. Then, override the \c name() and \c type() accessing functions. The \c name and
 \c type properties for each QIfStandardItem can be retrieved directly from the model's \c data()
 function. This function also exposes those properties to delegates in item views, such as ListView.
-In addition, the \l{QIfPagingModel::}{ItemRole} provides a const pointer to the QIfStandardItem
+In addition, the \l{QIfPagingModel::}{ItemRole} provides a \c const pointer to the QIfStandardItem
 stored. Using \l{The Meta-Object System}, all the properties from the derived type are also
 available in QML, directly, with this pointer. From C++, you can use the \c at() template function
-to cast this const pointer directly to the type you need.
+to cast this \c const pointer directly to the type you need.
 
 \target if-search-and-browse-model
 \section1 QIfFilterAndBrowseModel
@@ -113,9 +114,9 @@ To filter and sort,
 \section2 Browse
 
 Although the Qt Interface Framework Query Language supports very complex queries, enabling you to filter content
-in a list, it may not suit all use cases. With the query language, the frontend developer defines
-which data is needed next. Sometimes, this is not possible, if the backend already has a fixed
-browsing order. For example, a DLNA backend already specifies that an artist needs to be selected
+in a list, it may not suit all use cases. With the query language, the front end developer defines
+which data is needed next. Sometimes, this is not possible, if the back end already has a fixed
+browsing order. For example, a DLNA back end already specifies that an artist needs to be selected
 first, only then is a list of all albums for that artist presented.
 
 For this scenario, the {QIfFilterAndBrowseModel::QIfFilterAndBrowseModel}{QIfFilterAndBrowseModel}
@@ -130,10 +131,10 @@ provides some methods to navigate through the models:
 
 \section2 Capabilities
 
-You might not need all of the features above simultaneously; or your backend may not support all of
-them. In this case, the QIfFilterAndBrowseModel has a capabilities feature where the backend
+You might not need all of the features above simultaneously; or your back end may not support all of
+them. In this case, the QIfFilterAndBrowseModel has a capabilities feature where the back end
 reports which capabilities it can support. Based on that information, only the supported
-functionalities are enabled in the frontend API.
+functionalities are enabled in the front end API.
 
 \section2 Modify the Content
 
@@ -159,16 +160,16 @@ This play queue might be long, a vector or list is not a suitable container for 
 conclusion.
 
 As the {QIfPagingModel::QIfPagingModel}{QIfPagingModel} is a also a QtInterfaceFramework Feature, it has its
-own backend interface which the backend plugin needs to implement.
+own back end interface which the back end plugin needs to implement.
 
 \image models-as-properties.png
 
-Each model property needs to map to a unique model interface implementation in the backend, as
+Each model property needs to map to a unique model interface implementation in the back end, as
 each model is filled with different data and the data is requested at a different time.
 Ultimately, every model instance needs to maintain its own state.
 
 To implement this concept, we use the QIfProxyServiceObject to connect the
-{QIfPagingModel::QIfPagingModel}{QIfPagingModel} instance provided with the correct backend
+{QIfPagingModel::QIfPagingModel}{QIfPagingModel} instance provided with the correct back end
 interface instance.
 
 \image models-as-properties-details.png
@@ -176,16 +177,16 @@ interface instance.
 For the MediaPlayer play queue example, we would implement the following:
 
 \list a
-    \li For the Backend
+    \li For the Back end
     \list 1
         \li Implement the QIfPagingModelInterface to retrieve the play queue items
         \li Implement the MediaPlayer feature interface and return a pointer to the
             QIfPagingModelInterface implementation for the play queue property
     \endlist
 
-    \li For the Frontend
+    \li For the Front end
     \list 1
-        \li Retrieve the QIfPagingModelInterface pointer from the backend
+        \li Retrieve the QIfPagingModelInterface pointer from the back end
         \li Create a QIfProxyServiceObject that holds the QIfPagingModelInterface
         \li Create a \l{QIfPagingModel::QIfPagingModel}{QIfPagingModel} instance and set the
             QIfProxyServiceObject on it
@@ -194,7 +195,7 @@ For the MediaPlayer play queue example, we would implement the following:
     \endlist
 \endlist
 
-All these steps are already implemented in the Qt Interface Framework Generator, via \c model type for a
-property in an \c interface.
+All these steps are already implemented in the Qt Interface Framework Generator,
+using the \c model type for a property in an \c interface.
 
 */

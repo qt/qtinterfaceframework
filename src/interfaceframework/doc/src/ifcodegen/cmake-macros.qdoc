@@ -80,10 +80,12 @@ qt_ifcodegen_generate(
 
 \section1 Description
 
-Generates files from a qface IDL file by invoking \l ifcodegen. It would
-normally be called internally by \l {qt_ifcodegen_extend_target} or \l {qt_ifcodegen_import_variables}.
-You should not call this function directly unless you have special circumstances that require you
-to generate files by invoking ifcodegen, but not use them within CMake in any way.
+Generates files from a qface Interface Definition Language (IDL) file by
+invoking \l ifcodegen. It would normally be called internally by
+\l {qt_ifcodegen_extend_target} or \l {qt_ifcodegen_import_variables}.
+You should not call this function directly unless you have special circumstances
+that require you to generate files by invoking ifcodegen, but not use them within
+CMake in any way.
 
 //! [generic-arguments]
 The input IDL file is specified using \c IDL_FILES, while \c TEMPLATE specifies
@@ -146,7 +148,7 @@ qt_ifcodegen_extend_target(
 \section1 Description
 
 Extends a \c target with files generated from a qface IDL file by invoking \l ifcodegen.
-How the \c target is extended is defined by the template and the generated cmake file.
+How the \c target is extended is defined by the template and the generated CMake file.
 
 \include cmake-macros.qdoc generic-arguments
 
@@ -197,7 +199,7 @@ start with the \c prefix followed by a underscore and are defined by the referen
 
 \include cmake-macros.qdoc generic-arguments
 
-Using \c NO_GENERATE it is possible to skip calling \a {ifcodegen}. This is usually only needed
+Using \c NO_GENERATE it is possible to skip calling \b {ifcodegen}. This is usually only needed
 if you are sure the files are already generated e.g. by using \l {qt_ifcodegen_generate} before.
 
 For more details on the generator's command line arguments, see \l {Use the Generator}.

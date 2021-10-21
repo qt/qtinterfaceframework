@@ -53,6 +53,6 @@ For more runtime configuration options, see \l{QtInterfaceFramework Backends}{ba
 \section2 Logging
 
 The \c qt.if.servicemanagement Logging Category can be used to get more information on which
-backends were considered, when searching for the correct backend for a feature, as well as why that
-backend was chosen.
+back ends were considered, when searching for the correct back end for a feature, as well as why that
+back end was chosen.
 */

@@ -48,9 +48,10 @@ The code generation is driven by a small script which iterates over the domain m
 files using the Python Jinja template language.
 
 
-Given that generator script has read and parsed the IDL file into a domain model, this latter one
-is then used as the root object for the code generation inside the template language. Below is an
-example of the code traversing the domain model:
+Given that generator script has read and parsed the Interface Definition Language
+(IDL) file into a domain model, this latter one is then used as the root object
+for the code generation inside the template language. Below is an example of the
+code traversing the domain model:
 
 \code
 {% for module in system.modules %}

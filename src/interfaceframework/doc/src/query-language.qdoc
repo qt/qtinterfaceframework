@@ -33,27 +33,27 @@
 \previouspage Models
 \nextpage Qt Interface Framework Simulation System
 
-Automotive systems are getting bigger and including more features, particularly in entertainment
-and connectifty. Modern systems can handle phone calls, access the mobile phone's address book,
+Automotive systems are getting bigger and including more features, particularly around entertainment
+and connectivity. Modern systems can handle phone calls, access the mobile phone's address book,
 and have a media player that manages a media database. Since address books and media databases
 can be quite large these days, it's important for users to be able to filter, sort, and search
 through them in a convenient way.
 
 The Qt Interface Framework Query Language provides you with a minimal language to express what you want to be
-displayed and how it should be sorted. This language is independent from both, the underlying
-architecture and potentially underlying database languages like SQL or PSQL. The Qt Interface Framework Query
+displayed and how it should be sorted. This language is independent from both the underlying
+architecture and potentially underlying database languages: like SQL or PSQL. The Qt Interface Framework Query
 Language does not specify the data itself, but is only used to filter and sort.
 
 
 \section1 Work with the Query Language
 
 Currently the \l QIfFilterAndBrowseModel is the only class that supports the use of the query
-language. In this case, the model's backend informs the query parser about the identifiers
-available to filter and sort.
+language. In this case, the model's back end informs the query parser about the identifiers
+available to filter and sort by.
 
 An identifier is the name of a column or property which can be used in the query language.
 
-Suppose you use the QIfFilterAndBrowseModel to access a list of QIfAudioTrackItems, then
+Suppose you use the QIfFilterAndBrowseModel to access a list of QIfAudioTrackItems: then
 every property of the QIfAudioTrackItem are your identifiers.
 
 The following query results in a search for tracks on the album "Nevermind":
@@ -89,51 +89,52 @@ To filter a result, the following operators can be used to match an identifier t
         \li Description
     \row
         \li =
-        \li Tests whether the identifier's value is equal to the given value. For strings, the
+        \li Tests whether the value of the identifier is equal to the given value. For strings, the
             comparison is case-sensitive.
             \note The \c{==} operator is an alias and delivers the same result.
 
     \row
         \li !=
-        \li Tests whether the identifier's value is not equal to the given value. For strings,
+        \li Tests whether the value of the identifier is not equal to the given value. For strings,
             the comparison is case-sensitive.
 
     \row
         \li ~=
-        \li Tests whether the identifier's value is equal to the given value. For strings,
+        \li Tests whether the value of the identifier is equal to the given value. For strings,
             the comparison is case-insensitive.
 
     \row
         \li >
-        \li Tests whether the lefthand-side value is greater than the righthand-side value.
+        \li Tests whether the leftmost value is greater than the rightmost value.
             This comparison only works for numbers.
 
     \row
         \li >=
-        \li Tests whether the lefthand-side value is greater than or equal to the righthand-side
+        \li Tests whether the leftmost value is greater than or equal to the rightmost
             value. This comparison only works for numbers.
 
     \row
         \li <
-        \li Tests whether the lefthand-side value is less than the righthand-side value. This
+        \li Tests whether the leftmost value is less than the rightmost value. This
             comparison only works for numbers.
 
     \row
         \li <=
-        \li Tests whether the lefthand-side value is less than or equal to the righthand-side
+        \li Tests whether the leftmost value is less than or equal to the rightmost
             value. This comparison only works for numbers.
 
 \endtable
 
-When you compare an identifier against a string, the string always needs to be encapsulated either
-between two quotation marks - single \c{'} or double \c{"}. Numbers are supported in various
+\note When you compare an identifier against a string, the string always needs to be encapsulated either
+between single \c{'} or double \c{"}. Numbers are supported in various
 formats, including signed numbers, unsigned numbers, and floats using an exponent, such as -5.0E15.
 
 \section3 Sort
 
 The second part of a query is used to sort the result. It's optional and if not provided, the
-backend can decide the order in which the result should be listed. To sort \c trackNumber in
-ascending order, write the following:
+back end can decide the order in which the result should be listed.
+
+To sort \c trackNumber in ascending order, write the following:
 
 \code
 [/trackNumber]
@@ -145,7 +146,7 @@ To sort in descending order:
 [\trackNumber]
 \endcode
 
-Using this query on a big list of songs may not give the intendend result, as there could be two
+Using this query on a big list of songs may not give the intended result, as there could be two
 different tracks with the same \c trackNumber.
 
 In this case, you can provide multiple sort orders.
@@ -175,9 +176,9 @@ You can also use brackets to negate filters:
 (album='Metallica') & !(trackNumber>5)
 \endcode
 
-\section1 Integrate with the Backend
+\section1 Integrate with the Back End
 
-For the backend, the query is translated from a string to a binary representation, similar to an
+For the back end, the query is translated from a string to a binary representation, similar to an
 Abstract Syntax Tree (AST). Like the query itself, the representation is split into two parts:
 
 \list 1
@@ -186,7 +187,7 @@ Abstract Syntax Tree (AST). Like the query itself, the representation is split i
     \li A QList<QIfOrderTerm> that provides the order in which the user wants the result to be in.
 \endlist
 
-Usually, this C++ representation is translated into any form the backend supports.
+Usually, this C++ representation is translated into any form the back end supports.
 
 For example, to get the results from an SQL database:
 

@@ -31,34 +31,59 @@
     \title Qt Interface Framework
     \brief Overview of the Qt Interface Framework Module
 
-    The Qt Interface Framework module provides both, the tools and the core APIs, for you
-    to implement Middleware APIs, Middleware Backends, and Middlware Services. The
-    \l{Qt Interface Framework Generator} provides a flexible way to define new APIs via an Interface Definition
-    Language (IDL) and generate classes for use, from C++ and QML.
+    The Qt Interface Framework module provides both the tools and the core APIs,
+    for you to implement Middleware APIs, Middleware Back ends, and Middleware
+    Services. The \l{Qt Interface Framework Generator} provides a flexible way
+    to define new APIs via an Interface Definition Language (IDL) and generate
+    classes for use, from C++ and QML.
 
-    Qt Interface Framework is built around a pattern that separates the API exposed to the application developer,
-    the so called \e {feature}, and the code that implements it, the \e {backend}. There can be
-    multiple backends per feature; the Core module provides support for finding the corresponding
-    backend in an easy-to-use way.
+    Qt Interface Framework consists of three types of building blocks:
+    \list
+    \li The \l{Qt Interface Framework Core}{core module} provides base classes
+    and common code for all APIs created by you, the developer.
+    \li The user created API definitions like a climate API or a
+    mediaplayer API. Each of these APIs is the second building block called
+    \e Features, which define the API exposed to the application developer.
+    \li The last block consists of a \e{ back end interface} and one or more
+    \e{back ends} implementing it to either connect to the underlying vehicle
+    or do a simulation of it.
+    \endlist
 
-    The following diagram illustrates the generic architecture in Qt Interface Framework: Middleware API,
-    Middleware Backend, and Middleware Service.
+    Qt Interface Framework is built around a pattern that separates the \e feature
+    and the \b{back ends}.
+
+    There can be multiple back ends per feature; the Core module provides support
+    for easily finding the corresponding back end.
+
+    The following diagram illustrates the generic architecture in Qt Interface
+    Framework: Middleware API, Middleware Back end, and Middleware Service.
 
     \image qtinterfaceframework-overview.png "Qt Interface Framework Architecture"
 
-    This pattern of separation is necessary to drive the following use cases:
+    This pattern of separation is necessary to accommodate the following use cases:
 
-    \list
-    \li Early development - where the UI can rely on a feature with a basic backend implementation.
-    \li Testing and Simulation - where the backends can be tested separately from the app and the
-        app can be tested using a specialized testing backend.
-    \li Targets with different hardware configurations - where certain parts of the system are
-        represented by simulated backends while others use a real hardware integration.
-    \li Dynamic services - when services are only available intermittently, with backends that come
-        and go over time.
-    \endlist
+    \table
+    \row
+        \li Early development
+        \li This is where the UI can rely on a feature with a basic back end
+        implementation.
+    \row
+        \li Testing and Simulation
+        \li This is where the back ends can be tested separately from the app
+        and the app can be tested using a specialized testing back end.
+    \row
+        \li Targets with different hardware configurations
+        \li This is where certain parts of the system are represented by
+        simulated back ends while others use a real hardware integration.
+    \row
+        \li Dynamic services
+        \li Situations when services are only available intermittently, with
+        back ends that come and go over time.
+    \endtable
 
-    The following are some key topics that provide more details on the Qt Interface Framework module:
+    \section1 Overviews and Tutorials
+    The following are some key topics that provide more details on the
+    Qt Interface Framework module:
 
     \list
        \li \l{Installation}
@@ -74,7 +99,7 @@
     In addition to the tools and core APIs, the Qt Interface Framework module also provides an extendable set of
     reference APIs for automotive features. This module can be used to develop automotive
     applications and to provide automotive features to Qt-based applications in a structured
-    manner. This reference API already contains some simulation backends, which provide partially
+    manner. This reference API already contains some simulation back ends, which provide partially
     simulated behavior of a real middleware service.
 
     \list
@@ -105,11 +130,12 @@
     In addition, it is available under the \l{GNU Lesser General Public License, version 3}, or
     See \l{Qt Licensing} for further details.
 
-    Executables on Windows potentially link against \l{The QtEntryPoint Library}. This library is
-    available under commercial licenses and also under the \l{BSD 3-clause "New" or "Revised" License}.
+    An executable on Windows will potentially link against
+    \l{The QtEntryPoint Library}. This library is available under commercial
+    licenses and also under the \l{BSD 3-clause "New" or "Revised" License}.
 
-    Furthermore Qt Interface Framework potentially contains third party modules under following
-    permissive licenses:
+    Furthermore Qt Interface Framework potentially contains third party modules
+    under the following permissive licenses:
 
     \generatelist{groupsbymodule attributions-qtinterfaceframework}
 

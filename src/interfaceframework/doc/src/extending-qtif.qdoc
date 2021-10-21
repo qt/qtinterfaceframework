@@ -32,11 +32,11 @@
 
 \section1 Introduction
 
-Qt Interface Framework provides a pattern for extending Qt with more features in a way that suites the
-automotive use-case.
+Qt Interface Framework provides a pattern for extending Qt with more features
+in a way that suites the automotive use-case.
 
-A key aspect is the separation between the frontend that defines the API, from the
-backend that implements the functionality. This separation makes it possible to have
+A key aspect is the separation between the front end that defines the API, from the
+back end that implements the functionality. This separation makes it possible to have
 multiple implementations of the same API which can be used to interface various hardware
 configurations, but also to provide stubbed or simulated implementations for early
 development and testing purposes.
@@ -45,16 +45,16 @@ development and testing purposes.
 
 Qt Interface Framework consists of three types of building blocks. The core module provides base classes
 and common code for all the more specific modules and API definitions like a climate API
-or a mediaplayer API. Each of these APIs is the second building block called \e Feature,
+or a media player API. Each of these APIs is the second building block called \e Feature,
 which defines the API used by the application developers. The last block consists of a
-backend interface and one or more \e Backends implementing it to either connect to the
+back end interface and one or more \e Back ends implementing it to either connect to the
 underlying vehicle or do a simulation of it.
 
 \section2 Features
 
 A feature is a set of classes for working with a specific function. It defines the interface
 towards application developers, but it does not implement the complete functionality. Instead, it
-defines a backend interface to be implemented by a backend providing the actual function.
+defines a back end interface to be implemented by a back end providing the actual function.
 
 For easy deployment, Qt Interface Framework extensions should be built as Qt modules. This makes it easy to
 install and find headers, shared libraries, and plugin modules from app projects.
@@ -66,7 +66,7 @@ module in the following way:
 QT += <module>
 \endcode
 
-In addition, your module is properly set up to work with cmake, qdoc, and auto test."
+In addition, your module is properly set up to work with qdoc and auto test.
 
 \code
 make tests
@@ -75,15 +75,15 @@ make tests
 When creating a new Qt Interface Framework module, it is recommended that you pick a name such as
 \e {OemFeatureName}, where \e {Oem} is the name of the car maker or platform owner, and
 \e {FeatureName} is the name of the feature(s) of the module. In addition to the name, a reverse
-domain name prefix is needed for prefixing backend interface names, for example \e {com.example}
+domain name prefix is needed for prefixing back end interface names, for example \e {com.example}
 
 Features are based on the QIfAbstractFeature base class, or QIfAbstractZonedFeature for
-zoned features. These classes provide the basic functions expected by users, e.g. backend
+zoned features. These classes provide the basic functions expected by users, e.g. back end
 loading.
 
-Features define the backend interface to be implemented by the backends providing the
-functionality. The backend interface is commonly based on the QObject class. It is important
-to keep this API as unbiased as possible, as there might be multiple backend implementations
+Features define the back end interface to be implemented by the back ends providing the
+functionality. The back end interface is commonly based on the QObject class. It is important
+to keep this API as unbiased as possible, as there might be multiple back end implementations
 relying on different technological solutions.
 
 Some key rules to keep in mind are:
@@ -91,36 +91,36 @@ Some key rules to keep in mind are:
 \list
 \li Keep everything asynchronous to avoid blocking the main loop.
 \li Avoid call-to-signal sequences and try to keep signals independent from calls, For example,
-when a value change is signalled, it must not be due to a call to change the value from
+when a value change is signaled, it must not be due to a call to change the value from
 the feature (and visa versa). In other words a call to change a value is not required to always
 result in a value changed signal.
-\li Avoid stateful APIs whenever possible as the backend may be replaced at any time.
+\li Implement stateless APIs whenever possible as the back end may be replaced at any time.
 \endlist
 
-It is common to provide a stubbed backend implementation and a testing backend with each
+It is common to provide a stubbed back end implementation and a testing back end with each
 feature.
 
-\section2 Backends
+\section2 Back ends
 
-A backend class is derived from the (commonly QObject-derived) backend interface class specified
-by a feature. Instances of the backend class are called \e {service objects}.
+A back end class is derived from the (commonly QObject-derived) back end interface
+class specified by a feature. Instances of the back end class are called \e {service objects}.
 
-Backends are implemented as an ordinary Qt C++ plugin project that depends on
+Back ends are implemented as an ordinary Qt C++ plugin project that depends on
 \l {QtInterfaceFramework}{Qt Interface Framework Core} and the corresponding feature module.
 
-The backends are loaded by Qt Interface Framework Core when the features request them. Each backend has to provide
-a Qt Interface Framework plugin that exposes a \e factory to the Core. This is what is used to load and create
-backends. The plugin interface is called QIfServiceInterface.
+The back ends are loaded by Qt Interface Framework Core when the features request them.
+Each back end has to provide a Qt Interface Framework plugin that exposes a \e factory to the Core.
+This is what is used to load and create back ends. The plugin interface is called QIfServiceInterface.
 
 \section2 Service Manager
 
-In most cases, the backend loading is handed over to the Qt Interface Framework Core, however, QIfServiceManager
-can be used in this case to manually search for plugins with a specific BackendInterface. The
-discovery and loading of the backends takes place in this class.
+In most cases, the back end loading is handed over to the Qt Interface Framework Core.
+In some cases QIfServiceManager can to manually search for plugins with a specific
+BackendInterface. The discovery and loading of the back ends takes place in this class.
 
-The QIfServiceManager class can also be used to register backends which are part of the same
-application and shouldn’t go into a plugin. This is especially useful for autotest as you need
-to control the backend and the feature at the same time.
+The QIfServiceManager class can also be used to register back ends which are part
+of the same application and shouldn’t go into a plugin. This is especially useful
+for automated testing as you need to control the back end and the feature at the same time.
 
 \section1 Common Practices
 

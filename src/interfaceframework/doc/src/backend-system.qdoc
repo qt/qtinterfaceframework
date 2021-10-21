@@ -27,168 +27,175 @@
 **
 ****************************************************************************/
 /*!
-\page backend-system.html
-\title Dynamic Backend System
-\nextpage Models
+    \page backend-system.html
+    \title Dynamic Backend System
+    \nextpage Models
 
-\section1 Feature
+    \section1 Feature
 
-Modern automotive systems are very complex, usually developed on a strict timeframe. Consequently,
-it is efficient to reuse parts of previously developed systems, for a new system. At the same time,
-the main development is done by independent companies (tier-1). To make it possible to reuse code
-from previous projects, and also incorportae code from tier-1 partners, the APIs are split into two
-layers: a frontend and a backend. In Qt Interface Framework, the frontend API is called a \b feature, as usually a
-specific class is responsible for a specific feature area, such as QIfClimateControl, which
-controls the climate feature area.
+    Modern automotive systems are very complex, usually developed on a strict time frame. Consequently,
+    it is efficient to reuse parts of previously developed systems, for a new system. At the same time,
+    the main development is done by independent companies (tier-1). To make it possible to reuse code
+    from previous projects, and also incorporate code from tier-1 partners, the APIs are split into two
+    layers: a front end and a back end. Inf Qt Interface Framework, the front end API is called a \b feature, as usually a
+    specific class is responsible for a specific feature area, such as QIfClimateControl, which
+    controls the climate feature area.
 
-\section1 Backend
+    \section1 Back end
 
-To function correctly, every feature needs to have a backend connected to it. This backend must
-implement a corresponding feature backend interface. Only then, you can create a valid connection
-between the feature and its backend.
+    To function correctly, every feature needs to have a back end connected to it. This back end must
+    implement a corresponding feature back end interface. Only then, you can create a valid connection
+    between the feature and its back end.
 
-Usually, every feature has only one backend interface class, which the backend needs to implement
-for the feature to work. Every backend interface is derived from QIfFeatureInterface, which
-provides generic functions and signals that every feature needs, such as error handling.
+    Usually, every feature has only one back end interface class, which the back end needs to implement
+    for the feature to work. Every back end interface is derived from QIfFeatureInterface, which
+    provides generic functions and signals that every feature needs, such as error handling.
 
-The backend implementations are grouped together and implemented inside a
-\l{How to Create Qt Plugins}{Qt plugin}. This makes it easy to provide multiple backends
-simultaneously and switch the backend at runtime. These backend plugins are loaded through
-\l{QtInterfaceFramework}. A plugin can provide backend implementations for multiple features; there is no
-need to create a separate plugin for each feature.
+    The back end implementations are grouped together and implemented inside a
+    \l{How to Create Qt Plugins}{Qt plugin}. This makes it easy to provide multiple back ends
+    simultaneously and switch the back end at runtime. These back-end plugins are loaded through
+    \l{QtInterfaceFramework}. A plugin can provide back end implementations for multiple features; there is no
+    need to create a separate plugin for each feature.
 
-Qt Interface Framework also distinguishes between two types of backends:
+    Qt Interface Framework also distinguishes between two types of back ends:
 
-\list
-    \li \b{production} - On a production system, you want to have only production backends running.
-    \li \b{simulation} - During the development phase, it may be useful to have a simulation
-        backend that you can use for frontend development, until the backend services are usable.
-\endlist
+    \list
+        \li \b{production} - On a production system, you want to have only production back ends running.
+        \li \b{simulation} - During the development phase, it may be useful to have a simulation
+            back end that you can use for front end development, until the back end services are usable.
+    \endlist
 
-Qt Interface Framework uses a simple naming scheme to identify whether a plugin provides simulation or production
-backends. Every simulation plugin needs to have either "simulation" or "simulator" in its name.
-Alternatively, you can also set the "simulation" key in the plugin's metadata. This is especially
-useful for static plugins.
+    Qt Interface Framework uses a simple naming scheme to identify whether a plugin provides simulation or production
+    back ends. Every simulation plugin needs to have either "simulation" or "simulator" in its name.
+    Alternatively, you can also set the "simulation" key in the plugin's metadata. This is especially
+    useful for static plugins.
 
-\image backend-types.png "Types of Backend"
+    \image backend-types.png "Types of back ends"
 
-\section1 QtInterfaceFramework
+    \section1 QtInterfaceFramework
 
-The QtInterfaceFramework module provides all the classes that are needed to glue the parts together. In
-addition to providing the base classes like QIfAbstractFeature or QIfServiceObject, this module
-also provides the QIfServiceManager, responsible for loading the necessary backend plugins.
+    The QtInterfaceFramework module provides all the classes that are needed to glue the parts together. In
+    addition to providing the base classes like QIfAbstractFeature or QIfServiceObject, this module
+    also provides the QIfServiceManager, responsible for loading the necessary back-end plugins.
 
-\image feature-backend.png "Relationship between the Feature and the Backend"
+    \image feature-backend.png "Relationship between the feature and the back end"
 
-\section2 QIfServiceManager
+    \section2 QIfServiceManager
 
-The QIfServiceManager is the central part of QtInterfaceFramework, keeping a record of all the available
-backends and their exported interfaces. The service manager scans through all available plugins and
-their accompanying metadata. This process gives it the ability to only load plugins that a Feature
-requires, to reduce the startup time. All of this information is collected in the service manager
-in the form of a model, which enables developers to choose the plugin they want to use.
+    The QIfServiceManager is the central part of QtInterfaceFramework, keeping a record of all the available
+    back ends and their exported interfaces. The service manager scans through all available plugins and
+    their accompanying metadata. This process gives it the ability to only load plugins that a Feature
+    requires, to reduce the startup time. All of this information is collected in the service manager
+    in the form of a model, which enables developers to choose the plugin they want to use.
 
-\section2 ServiceObjects
+    \section2 ServiceObjects
 
-The ServiceObject concept keeps the features flexible, and makes it possible to switch between
-backends at runtime. A QIfServiceObject is a handle, which the feature uses to connect to the
-correct backend interface. This handle provides methods to query the backend interfaces available,
-which the ServiceObject implements. ServiceObjects automatically wrap around plugins, making it
-possible to share the ServiceObject between multiple features and to explicitly select which
-backend to use for your feature instance.
+    The ServiceObject concept keeps the features flexible, and makes it possible to switch between
+    back ends at runtime. A QIfServiceObject is a handle, which the feature uses to connect to the
+    correct back end interface. This handle provides methods to query the back end interfaces available,
+    which the ServiceObject implements. ServiceObjects automatically wrap around plugins, making it
+    possible to share the ServiceObject between multiple features and to explicitly select which
+    back end to use for your feature instance.
 
-\image app-service-object-backend.png "Relationship between the App and the Backend"
+    \image app-service-object-backend.png "Relationship between the app and the back end"
 
-Based on the diagram above, the ServiceObject is the handle for a specific plugin. \b {Feature A}
-and \b {Feature B} both use the same ServiceObject, which returns an instance of \b
-Feature_A_Interface for \b {Feature A} and \b Feature_B_Interface for \b {Feature B}. The Feature
-classes derive from QIfAbstractFeature; the backend interfaces derive from QIfFeatureInterface.
+    Based on the diagram above, the ServiceObject is the handle for a specific plugin. \b {Feature A}
+    and \b {Feature B} both use the same ServiceObject, which returns an instance of \b
+    Feature_A_Interface for \b {Feature A} and \b Feature_B_Interface for \b {Feature B}. The Feature
+    classes derive from QIfAbstractFeature; the back end interfaces derive from QIfFeatureInterface.
 
-\section2 ProxyServiceObjects
+    \section2 ProxyServiceObjects
 
-In contrast to the normal QIfServiceObject, which represents a handle to a backend plugin, the
-QIfProxyServiceObject doesn't need a plugin to work. It can be instantiated on the application
-side and filled with any QIfFeatureInterface derived class. QIfProxyServiceObject is useful for
-scenarios when a backend implementation of a feature should not be done inside a separate plugin,
-but inside the application's code base itself.
+    In contrast to the normal QIfServiceObject, which represents a handle to a back-end plugin, the
+    QIfProxyServiceObject doesn't need a plugin to work. It can be instantiated on the application
+    side and filled with any QIfFeatureInterface derived class. QIfProxyServiceObject is useful for
+    scenarios when a back end implementation of a feature should not be done inside a separate plugin,
+    but inside the application's code base itself.
 
-\image proxy-service-objects.png "Proxy Service Objects"
+    \image proxy-service-objects.png "Proxy Service Objects"
 
-ProxyServiceObjects are also used for models that are properties of another feature. For more
-details, see \l{Models}.
+    ProxyServiceObjects are also used for models that are properties of another feature. For more
+    details, see \l{Models}.
 
-\section1 How a Feature Finds its Backend
+    \section1 How a Feature Finds its Back end
 
-Typically, all Features use the auto discovery mode. From QML, you can set the
-QIfAbstractFeature::discoveryMode property; from C++, you can start this with
-QIfAbstractFeature::startAutoDiscovery(). This property asks the QIfServiceManager for all the
-backends available, that implement the required interface for your feature. The manager then
-chooses the first matching backend and connects the feature to it. QIfAbstractFeature always
-asks for production backends first; if none are available, it falls back to a simulation backend.
-This behavior can be controlled using the QIfAbstractFeature::discoveryMode, that defaults to
-QIfAbstractFeature::AutoDiscovery. The resulting backend type can be retrieved via
-QIfAbstractFeature::discoveryResult. After the feature has loaded a backend successfully, the
-QIfAbstractFeature::serviceObject property holds the loaded ServiceObject and
-QIfAbstractFeature::isValid returns \c true.
+    Typically, all Features use the auto discovery mode. From QML, you can set the
+    QIfAbstractFeature::discoveryMode property; from C++, you can start this with
+    QIfAbstractFeature::startAutoDiscovery(). This property asks the QIfServiceManager for all the
+    back ends available, that implement the required interface for your feature. The manager then
+    chooses the first matching back end and connects the feature to it. QIfAbstractFeature always
+    asks for production back ends first; if none are available, it falls back to a simulation back end.
+    This behavior can be controlled using the QIfAbstractFeature::discoveryMode, that defaults to
+    QIfAbstractFeature::AutoDiscovery. The resulting back-end type can be retrieved via
+    QIfAbstractFeature::discoveryResult. After the feature has loaded a back end successfully, the
+    QIfAbstractFeature::serviceObject property holds the loaded ServiceObject and
+    QIfAbstractFeature::isValid returns \c true.
 
-\section2 Detailed Connection Order
+    \section2 Detailed Connection Order
 
-Based on the aforementioned climate control example, the detailed connection would be as follows:
+    Based on the \l{Climate Control QML Example}, the detailed connection would be as follows:
 
-\list 1
-    \li A ClimateControl element is created in QML.
-    \li ClimateControl calls QIfAbstractFeature::startAutoDiscovery upon completion.
-    \li QIfAbstractFeature::startAutoDiscovery queries QIfServiceManager for all backends
-        available.
-    \li QIfServiceManager searches for all plugins available and the interfaces they implement;
-        this search is only done once.
-    \li QIfAbstractFeature accepts the first QIfServiceObject and connect to the corresponding
-        interface.
-    \li The ClimateControl element is ready to be used.
-\endlist
+    \list 1
+        \li A ClimateControl element is created in QML.
+        \li ClimateControl calls QIfAbstractFeature::startAutoDiscovery upon completion.
+        \li QIfAbstractFeature::startAutoDiscovery queries QIfServiceManager for all back ends
+            available.
+        \li QIfServiceManager searches for all plugins available and the interfaces they implement;
+            this search is only done once.
+        \li QIfAbstractFeature accepts the first QIfServiceObject and connect to the corresponding
+            interface.
+        \li The ClimateControl element is ready to be used.
+    \endlist
 
-\section2 Manual Assignment
+    \section2 Manual Assignment
 
-If you don't want your feature to use the auto discovery mechanism, set the discoveryMode to
-QIfAbstractFeature::NoAutoDiscovery. After that, the feature won't search for a backend anymore,
-and you need to assign a ServiceObject manually.
+    If you don't want your feature to use the auto discovery mechanism, set the discoveryMode to
+    QIfAbstractFeature::NoAutoDiscovery. After that, the feature won't search for a back end anymore,
+    and you need to assign a ServiceObject manually.
 
-\section2 DiscoveryModels
+    \section2 Discovery Models
 
-For features like the climate control example, the auto discovery mechanism is fitting, as there
-is usually a 1:1 mapping between a feature and a backend providing the implementation for that
-feature. For more generic interfaces like a media player, this might not be sufficient: you could
-control a built-in media player backend with this, but you might also want to control the media
-player running on your mobile phone over bluetooth.
+    For features like the climate control example, the auto discovery mechanism is fitting, as there
+    is usually a 1:1 mapping between a feature and a back end which provides the implementation for that
+    feature. For more generic interfaces, like a media player, this might not be sufficient: you could
+    control a built-in media player back end with this, but you might also want to control the media
+    player running on your mobile phone over Bluetooth.
 
-For this to work, first, you would need to discover the devices available and then pass the
-ServiceObject of the selected device to the media player interface. The discovery of the available
-mobile phones can be done using a DiscoveryModel. This provides you with a ServiceObject for each
-device found. The concept of a discovery model is not limited to mobile phones, it can be used for
-all backends that are not hard wired to the system, like Internet services or controlling multiple
-rearseat systems.
+    For this to work, first, you would need to discover the devices available and then pass the
+    ServiceObject of the selected device to the media player interface. The discovery of the available
+    mobile phones can be done using a DiscoveryModel. This provides you with a ServiceObject for each
+    device found. The concept of a discovery model is not limited to mobile phones, it can be used for
+    all back ends that are not hard wired to the system, like internet services or controlling multiple
+    rear seat systems.
 
-\section1 Zoned Features
+    \section1 Zoned Features
 
-Zones are a standard way to provide a single API for multiple points in the vehicle. For instance,
-climate control commonly has a driver zone and passenger zone; or even a back seat zone. The same
-concept applies to wheels, doors, mirrors, windows, and more.
+    Zones are a standard way to provide a single API for multiple points in the vehicle. For instance,
+    climate control commonly has a driver zone and passenger zone; or even a back seat zone. The same
+    concept applies to:
+    \list
+        \li wheels
+        \li doors
+        \li mirrors
+        \li windows
+        \li and more...
+    \endlist
 
-A common pattern is to combine zones with property attributes to handle small differences in
-capabilities between zones; for example, there's no steering wheel heater in a car's passenger side.
+    A common pattern is to combine zones with property attributes to handle small differences in
+    capabilities between zones; for example, there's no steering wheel heater in a car's passenger side.
 
-Technically, a zoned feature consists of multiple instances of the same feature, a top-level
-instance which provides the zone-independent API and access to instances for a specific zone.
-The feature needs to derive from QIfAbstractZonedFeature and implement createZoneFeature() to
-provide zone-specific instances.
+    Technically, a zoned feature consists of multiple instances of the same feature, a top-level
+    instance which provides the zone-independent API and access to instances for a specific zone.
+    The feature needs to derive from QIfAbstractZonedFeature and implement createZoneFeature() to
+    provide zone-specific instances.
 
-The top-level interface can provide vehicle wide settings. For example, whether recirculation
-should be used in a climate control API. In contrast, the zoned interface provides per-zone
-functions, such as the desired temperature.
+    The top-level interface can provide vehicle wide settings. For example, whether re-circulation
+    should be used in a climate control API. In contrast, the zoned interface provides per-zone
+    functions, such as the desired temperature.
 
-Building a zoned feature requires the backend interface to be derived from QIfZonedFeatureInterface.
-This class provides the backend with an interface to enumerate the zones available. This interface
-also includes the necessary QIfZonedFeatureInterface::initialize method to initialize any
-properties.
+    Building a zoned feature requires the back-end interface to be derived from QIfZonedFeatureInterface.
+    This class provides the back end with an interface to enumerate the zones available. This interface
+    also includes the necessary QIfZonedFeatureInterface::initialize method to initialize any
+    properties.
 
 */

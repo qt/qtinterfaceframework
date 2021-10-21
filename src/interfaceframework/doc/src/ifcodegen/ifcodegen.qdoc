@@ -33,7 +33,7 @@
 
 Qt Interface Framework provides a way for you to describe interfaces using its own Interface Definition Language
 (IDL) and then generate Qt/QML API code based on this definition. This generator is based on the
-QFace library, that provides a generic autogeneration framework.
+QFace library, that provides a generic auto-generation framework.
 
 \list
     \li \l {QFace IDL Syntax}

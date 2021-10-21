@@ -30,9 +30,9 @@
 /*!
 \page interfaceframework-backends.html
 \title QtInterfaceFramework Backends
-\brief A list of QtInterfaceFramework backends available.
+\brief A list of QtInterfaceFramework back ends available.
 
-The following backends are avaialble:
+The following back ends are available:
 
 \annotatedlist qtif_backend
 
