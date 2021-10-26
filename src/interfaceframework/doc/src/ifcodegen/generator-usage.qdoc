@@ -65,7 +65,7 @@
                 Adds the given path to the list of search paths. All directories in this list are
                 scanned for generation templates (identified by the \l{Generation YAML}).
                 The identified templates can be selected with the
-                \l{\target template}{--template option}.
+                \l{template}{--template option}.
         \row
             \target template
             \li  \c -t, \c --template

@@ -146,10 +146,10 @@
    }
     \endcode
 
-    When the top-level component has been completed, the \l isValid property of the feature elements
-    can be used to determine if any of the back ends are missing. In some situations this is expected
-    behavior; the isValid property can be used to enable or disable parts of the user
-    interface.
+    When the top-level component has been completed, the \l {AbstractFeature::}{isValid} property
+    of the feature elements can be used to determine if any of the back ends are missing. In some
+    situations this is expected behavior; the isValid property can be used to enable or disable
+    parts of the user interface.
 
     \code
     Component.onCompleted: {

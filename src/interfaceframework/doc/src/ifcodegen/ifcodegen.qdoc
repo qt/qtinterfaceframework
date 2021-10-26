@@ -29,6 +29,7 @@
 /*!
 \page ifcodegen.html
 \title Qt Interface Framework Generator
+\target ifcodegen
 \keyword QFace
 
 Qt Interface Framework provides a way for you to describe interfaces using its own Interface Definition Language
