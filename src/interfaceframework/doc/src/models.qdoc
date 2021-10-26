@@ -33,7 +33,7 @@
 \nextpage Qt Interface Framework Query Language
 
 To interact with lists in Qt applications you would use Qt's
-\l{ListView classes}. These are based on the Model-View-Controller (MVC) pattern.
+\l{The Model/View Classes}{ListView classes}. These are based on the Model-View-Controller (MVC) pattern.
 Similarly, QtInterfaceFramework has the following classes that support this use
 case, for you to provide your own models:
 

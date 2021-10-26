@@ -214,7 +214,7 @@ implementation of our module and its interface.
 In this case, we use the \c frontend template, that generates a class derived from
 \c {QIfAbstractZonedFeature} including all the specified properties. The generated library uses
 the \l {Dynamic Backend System} from QtInterfaceFramework, providing an easy way to change the behavior
-implementations. For more details, see \l {Backend Simulator Plugin}.
+implementations. For more details, see \l {Back End Simulator Plugin}.
 
 To call the autogenerator for our shared library, it needs to be integrated into the build system.
 

@@ -39,8 +39,8 @@
 
     Qt Interface Framework consists of three types of building blocks:
     \list
-    \li The \l{Qt Interface Framework Core}{core module} provides base classes
-    and common code for all APIs created by you, the developer.
+    \li The \l{Qt Interface Framework Core C++ Classes}{core module} provides
+    base classes and common code for all APIs created by you, the developer.
     \li The user created API definitions like a climate API or a
     mediaplayer API. Each of these APIs is the second building block called
     \e Features, which define the API exposed to the application developer.

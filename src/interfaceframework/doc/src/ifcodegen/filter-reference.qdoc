@@ -31,7 +31,7 @@
 \page filter-reference.html
 \title Filter Reference
 \previouspage Use the Generator
-\nextpage Qmake Integration
+\nextpage Build System Integration
 
 In addition to the built-in Jinja filters listed \l
 {http://jinja.pocoo.org/docs/2.9/templates/#list-of-builtin-filters} {here}, the following

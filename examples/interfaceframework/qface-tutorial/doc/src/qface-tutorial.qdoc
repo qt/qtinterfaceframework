@@ -129,11 +129,11 @@
     \printto install
 
     First \e find_package needs to be used to get all needed libraries into the CMake build system.
-    A new library is defined with \l {qt6_add_library} and, using CMake target_properties, the
+    A new library is defined with \l {qt_add_library} and, using CMake target_properties, the
     output name, as well as the output directory are set. As we need to link to this library in the
     future, it is easier to put the file into the upper directory.
 
-    By calling the \l {qt6_ifcodegen_extend_target} function, the \c autogenerator is called and the
+    By calling the \l {qt_ifcodegen_extend_target} function, the \c autogenerator is called and the
     previously defined library is extended with the generated files. The input file is specified
     using the \e IDL_FILES argument. See \l{Build System Integration} for more information.
 
@@ -161,7 +161,7 @@
     should be generated from a QFace file. Using qmake, the template needs to be defined by the
     \c IFCODEGEN_TEMPLATE variable. If it is not defined, it defaults to the "frontend" template.
     In CMake the template needs to be specified using the \c TEMPLATE argument of
-    \l {qt6_ifcodegen_extend_target} and friends.
+    \l {qt_ifcodegen_extend_target} and friends.
     For more details on these templates, see \l{Use the Generator}.
 
     In short, the "frontend" template generates:
@@ -355,7 +355,7 @@
     is a simulation back end. When a "production" back end is available, it is preferred over the
     "simulation" one. For more information, see \l{Dynamic Backend System}.
 
-    As before, the Interface Framework Generator is called by using the \l{qt6_ifcodegen_extend_target}
+    As before, the Interface Framework Generator is called by using the \l{qt_ifcodegen_extend_target}
     function, this time setting "backend_simulator" as the \c TEMPLATE.
 
     \e qmake:
@@ -489,7 +489,7 @@
 
     Unlike all our previous generator calls we don't extend a previously defined target, but
     import the generated code into CMake and pass it to the \l {qt_add_qml_module} function.
-    The \l {qt6_ifcoegen_import_variables} function will call the generator and export variables
+    The \l {qt_ifcodegen_import_variables} function will call the generator and export variables
     starting with \e CLUSTER as prefix to the current CMake scope.
     Those variables reference auto-generated code, but also expose other information like the QML
     import URI.
@@ -711,9 +711,10 @@
 
     The name of the plugin doesn't end with "_simulation" to indicate that this is a "production"
     back end. The template is now changed to "backend_qtro" to generate a back end that uses
-    \l{Qt Remote Objects Replicas} to connect to a \l{Qt Remote Objects Source} that provides the values. In
-    addition to a back end based on QtRemoteObject, we also need a server based on QtRemoteObject . This
-    part can also be auto-generated using the Interface Framework Generator in a similar fashion:
+    \l{Qt Remote Objects Replica}{Qt Remote Objects Replicas} to connect to a \l{Qt Remote Objects Source}
+    that provides the values. In addition to a back end based on QtRemoteObject, we also need a
+    server based on QtRemoteObject . This part can also be auto-generated using the Interface
+    Framework Generator in a similar fashion:
 
     \e CMake:
 
@@ -727,7 +728,7 @@
     \printto RESOURCES
 
     Because we'd like to generate a server binary, the qmake \c TEMPLATE needs to be set to "app"
-    instead of "lib", in CMake we use \l {qt_add_exectuable} instead. Similar to the plugin, the
+    instead of "lib", in CMake we use \l {qt_add_executable} instead. Similar to the plugin, the
     server also needs to link against our library to give it access to the defined enums,
     structures, and other types. The template we use to generate a simulation server is called
     "server_qtro_simulator".
@@ -802,7 +803,7 @@
     Let's start with a build system file for our back end. This is very similar to previous
     files, but it doesn't use the Interface Framework Generator. Instead, it uses \c DBUS_INTERFACES
     for qmake to auto-generate some client code which sends and receives messages over D-Bus.
-    In the CMake case the \l {qt6_add_dbus_interface} function is used to do the same.
+    In the CMake case the \l {qt_add_dbus_interface} function is used to do the same.
 
     Now, we need to define an entry point for our plugin. This plugin class needs to derive from
     QIfServiceInterface and implement two functions:
