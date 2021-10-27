@@ -31,6 +31,15 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
         set(DEPLOY_VIRTUALENV ${CMAKE_CURRENT_SOURCE_DIR}/deploy-virtualenv.sh)
     endif()
 
+    # The virtualenv created on new macOS versions doesn't work out of the box when copying the executables
+    # because of a broken code signature
+    # The signature needs to be recreated ad-hoc, but as we need to use pip3 for the package installation
+    # this needs to be done right after the virtualenv is created.
+    set(FIX_VIRTUALENV_COMMAND)
+    if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Darwin")
+       set(FIX_VIRTUALENV_COMMAND COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/fix-macos-virtualenv.sh ${VIRTUALENV_PATH})
+    endif()
+
     add_custom_command(OUTPUT ${VIRTUALENV_ACTIVATE}
                        COMMAND ${CMAKE_COMMAND} -E make_directory ${VIRTUALENV_PATH}
 
@@ -46,6 +55,8 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
                        COMMAND ${CMAKE_COMMAND} -E chdir ${VIRTUALENV_PATH}
                                ${Python3_EXECUTABLE} ${RELOCATE_VIRTUALENV} .
                        COMMENT "Setting up virtualenv for qface, name: ${VIRTUALENV_NAME}"
+
+                       ${FIX_VIRTUALENV_COMMAND}
                        )
 
     # This is not very nice, but it gives us at least a good way to handle virtualenv rebuilding when
