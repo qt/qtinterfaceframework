@@ -7,4 +7,4 @@ include($QT_INSTALL_DOCS/global/qt-module-defaults-online.qdocconf)
 HTML.nosubdirs = "false"
 HTML.outputsubdir = "interfaceframework"
 
-include(../interfaceframework-project.qdocconf)
+include(../qtinterfaceframework-project.qdocconf)

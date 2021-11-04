@@ -85,8 +85,14 @@ qt_internal_extend_target(InterfaceFramework CONDITION NOT enable-qlalr
 ## Documentation
 #####################################################################
 
+if(QT_BUILD_ONLINE_DOCS)
+    set(DOC_CONF "doc/online/qtinterfaceframework.qdocconf")
+else()
+    set(DOC_CONF "doc/qtinterfaceframework.qdocconf")
+endif()
+
 qt_internal_add_docs(InterfaceFramework
-    doc/qtinterfaceframework.qdocconf
+    ${DOC_CONF}
 )
 
 file(GLOB_RECURSE allDocFiles "doc/*.qdoc" "doc/*.png" "doc/*.qdocconf")
