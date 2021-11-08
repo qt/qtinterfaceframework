@@ -11,6 +11,9 @@ accept_configuration:
 
 instructions:
   Build:
+  - type: EnvironmentVariable
+    variableName: BUILD_DOCUMENTATION
+    variableValue: "1"
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_CONFIGURE_ARGS
     variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
