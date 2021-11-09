@@ -151,7 +151,7 @@ def test_type_value(symbol):
         return '{0}{1}::{2}'.format(prefix, upper_first(module_name), value)
     elif t.is_flag:
         module_name = t.reference.module.module_name
-        value = next(iter(t.reference.members))
+        value = list(iter(t.reference.members))[-1]
         return '{0}{1}::{2}'.format(prefix, upper_first(module_name), value)
     elif symbol.type.is_list:
         value = test_type_value(t.nested.type)
