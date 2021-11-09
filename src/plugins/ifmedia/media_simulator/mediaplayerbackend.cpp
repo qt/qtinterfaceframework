@@ -74,7 +74,9 @@ MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *pa
     connect(m_player, &QMediaPlayer::mediaStatusChanged,
             this, &MediaPlayerBackend::onMediaStatusChanged);
     connect(m_player->audioOutput(), &QAudioOutput::volumeChanged,
-            this, &MediaPlayerBackend::volumeChanged);
+            this, [this](float volume) {
+                this->volumeChanged(volume);
+            });
     connect(m_player->audioOutput(), &QAudioOutput::mutedChanged,
             this, &MediaPlayerBackend::mutedChanged);
     connect(this, &MediaPlayerBackend::playTrack,
