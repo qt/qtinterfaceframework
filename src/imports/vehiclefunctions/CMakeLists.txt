@@ -21,8 +21,6 @@ qt_internal_add_qml_module(qtifvehiclefunctionsplugin
     PLUGIN_TARGET qtifvehiclefunctionsplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
-    NO_GENERATE_QMLTYPES
-    NO_GENERATE_QMLDIR
     SOURCES
         ${VEHICLEFUNCTIONS_SOURCES}
     LIBRARIES
