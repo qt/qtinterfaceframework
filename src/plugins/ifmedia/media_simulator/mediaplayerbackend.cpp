@@ -64,6 +64,8 @@ MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *pa
 {
     qRegisterMetaType<QIfAudioTrackItem>();
 
+    m_player->setAudioOutput(new QAudioOutput(m_player));
+
     m_threadPool->setMaxThreadCount(1);
     connect(m_player, &QMediaPlayer::durationChanged,
             this, &MediaPlayerBackend::onDurationChanged);
@@ -75,7 +77,7 @@ MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *pa
             this, &MediaPlayerBackend::onMediaStatusChanged);
     connect(m_player->audioOutput(), &QAudioOutput::volumeChanged,
             this, [this](float volume) {
-                this->volumeChanged(volume);
+                emit this->volumeChanged(volume);
             });
     connect(m_player->audioOutput(), &QAudioOutput::mutedChanged,
             this, &MediaPlayerBackend::mutedChanged);
@@ -84,7 +86,6 @@ MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *pa
             Qt::QueuedConnection);
 
     m_db = database;
-    m_player->setAudioOutput(new QAudioOutput(m_player));
 }
 
 void MediaPlayerBackend::initialize()
