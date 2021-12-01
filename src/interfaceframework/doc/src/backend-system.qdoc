@@ -37,8 +37,8 @@
     it is efficient to reuse parts of previously developed systems, for a new system. At the same time,
     the main development is done by independent companies (tier-1). To make it possible to reuse code
     from previous projects, and also incorporate code from tier-1 partners, the APIs are split into two
-    layers: a front end and a back end. Inf Qt Interface Framework, the front end API is called a \b feature, as usually a
-    specific class is responsible for a specific feature area, such as QIfClimateControl, which
+    layers: a front end and a back end. In the Qt Interface Framework, the front end API is called a \b feature,
+    as usually a specific class is responsible for a specific feature area, such as QIfClimateControl, which
     controls the climate feature area.
 
     \section1 Back end
