@@ -153,6 +153,7 @@ add_custom_target(generator SOURCES
     deploy-virtualenv-files.txt
     deploy-virtualenv.bat
     deploy-virtualenv.sh
+    fix-macos-virtualenv.sh
     generate.py
 )
 
