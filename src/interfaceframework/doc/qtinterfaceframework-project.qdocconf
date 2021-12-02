@@ -72,3 +72,9 @@ navigation.qmltypespage = "Qt Interface Framework QML Types"
 buildversion = "Qt Interface Framework $QT_VERSION"
 
 macro.fileLink = "\\l {https://code.qt.io/cgit/qt/interfaceframework.git/tree/\1?h=$QT_VER}{\2}"
+
+manifestmeta.filters                    =  interfaceframework qtinterfaceframework qtif qif
+manifestmeta.interfaceframework.names   = *
+manifestmeta.qtinterfaceframework.names = *
+manifestmeta.qtif.names                 = *
+manifestmeta.qif.names                  = *
