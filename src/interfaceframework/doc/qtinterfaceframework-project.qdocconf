@@ -13,10 +13,10 @@ headerdirs                   += . \
 
 sourcedirs                   += . \
                                 .. \
+                                $$BUILDDIR/../../examples \
                                 ../../imports/core
 imagedirs                    += images
 exampledirs                  += ../../../examples \
-                                $$BUILDDIR/../../examples \
                                 snippets/
 
 examples.fileextensions      += *.qface *.yaml
@@ -73,8 +73,6 @@ buildversion = "Qt Interface Framework $QT_VERSION"
 
 macro.fileLink = "\\l {https://code.qt.io/cgit/qt/interfaceframework.git/tree/\1?h=$QT_VER}{\2}"
 
-manifestmeta.filters                    =  interfaceframework qtinterfaceframework qtif qif
-manifestmeta.interfaceframework.names   = *
-manifestmeta.qtinterfaceframework.names = *
-manifestmeta.qtif.names                 = *
-manifestmeta.qif.names                  = *
+manifestmeta.filters = interfaceframework
+manifestmeta.interfaceframework.names = *
+manifestmeta.interfaceframework.tags  = interfaceframework qtinterfaceframework qtif qif
