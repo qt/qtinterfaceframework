@@ -14,6 +14,7 @@ qt6_ifcodegen_import_variables(ECHO
 qt_add_qml_module(echo_qmlplugin
     URI ${ECHO_URI}
     VERSION ${ECHO_VERSION}
+    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/echo_qmlplugin/"
     PLUGIN_TARGET echo_qmlplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
