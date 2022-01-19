@@ -147,9 +147,15 @@ QtInterfaceFrameworkModule::QtInterfaceFrameworkModule(QObject *parent)
 */
 void QtInterfaceFrameworkModule::registerTypes()
 {
+    static bool once = false;
+    if (once)
+        return;
+    once = true;
+
     qRegisterMetaType<QIfServiceObject*>();
     qRegisterMetaType<QList<QIfServiceObject*>>("QList<QIfServiceObject*>");
     qRegisterMetaType<QtInterfaceFrameworkModule::ModelCapabilities>();
+    qifRegisterPendingReplyBasicTypes();
     qIfRegisterPendingReplyType<QtInterfaceFrameworkModule::ModelCapabilities>();
 }
 

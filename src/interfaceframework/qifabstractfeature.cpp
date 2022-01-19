@@ -67,6 +67,8 @@ QIfAbstractFeaturePrivate::QIfAbstractFeaturePrivate(const QString &interfaceNam
     , m_supportsPropertyOverriding(false)
     , m_propertyOverride(nullptr)
 {
+    QtInterfaceFrameworkModule::registerTypes();
+
     qRegisterMetaType<QIfAbstractFeature::Error>();
     qRegisterMetaType<QIfAbstractFeature::DiscoveryMode>();
     qRegisterMetaType<QIfAbstractFeature::DiscoveryResult>();
