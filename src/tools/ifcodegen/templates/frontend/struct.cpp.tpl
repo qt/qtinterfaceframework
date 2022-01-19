@@ -79,12 +79,14 @@ public:
     : QIfStandardItem()
     , d(new {{class}}Private)
 {
+    {{module.module_name|upperfirst}}::registerTypes();
 }
 
 {{class}}::{{class}}(const {{class}} &rhs)
     : QIfStandardItem(rhs)
     , d(rhs.d)
 {
+    {{module.module_name|upperfirst}}::registerTypes();
 }
 
 {{class}} &{{class}}::operator=(const {{class}} &rhs)

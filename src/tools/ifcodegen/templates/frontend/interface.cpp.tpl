@@ -80,6 +80,7 @@ QT_BEGIN_NAMESPACE
     , m_{{property}}({{property|default_type_value}})
 {% endfor %}
 {
+    {{module.module_name|upperfirst}}::registerTypes();
 {% if not module.tags.config.disablePrivateIF %}
     m_supportsPropertyOverriding = true;
 {% endif %}
