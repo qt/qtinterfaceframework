@@ -137,6 +137,7 @@ qt_ifcodegen_extend_target(
     [OUTPUT_DIR output_dir]
     [EXTRA_HEADERS_OUTPUT_DIR extra_headers_output_dir]
     [EXTRA_TEMPLATE_SEARCH_PATH ...]
+    [PREFIX prefix]
     [VERBOSE]
     [NO_GENERATE]
 )
@@ -151,6 +152,9 @@ Extends a \c target with files generated from a qface IDL file by invoking \l if
 How the \c target is extended is defined by the template and the generated CMake file.
 
 \include cmake-macros.qdoc generic-arguments
+
+\c PREFIX can be used to combine this command with \l {qt_ifcodegen_import_variables} and also
+expose all variables using \c prefix.
 
 Using \c NO_GENERATE it is possible to skip calling \a {ifcodegen}. This is usually only needed
 if you are sure the files are already generated e.g. by using \l {qt_ifcodegen_generate} before.

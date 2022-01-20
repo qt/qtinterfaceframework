@@ -27,11 +27,7 @@ qt_internal_add_module(IfVehicleFunctions
 
 qt_ifcodegen_extend_target(IfVehicleFunctions
     NO_GENERATE
-    IDL_FILES ifvehiclefunctions.qface
-)
-
-qt_ifcodegen_import_variables(VEHICLEFUNCTIONS
-    NO_GENERATE
+    PREFIX VEHICLEFUNCTIONS
     IDL_FILES ifvehiclefunctions.qface
 )
 
