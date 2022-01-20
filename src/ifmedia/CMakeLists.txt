@@ -23,6 +23,8 @@ qt_internal_add_qml_module(IfMedia
         qifplayqueue.cpp qifplayqueue.h qifplayqueue_p.h
         qiftunerstation.cpp qiftunerstation.h
         qtifmediaglobal.h qtifmediaglobal_p.h
+    IMPORTS
+        QtInterfaceFramework/auto
     LIBRARIES
         Qt::CorePrivate
         Qt::InterfaceFrameworkPrivate
