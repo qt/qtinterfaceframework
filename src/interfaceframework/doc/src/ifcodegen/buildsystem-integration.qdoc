@@ -182,4 +182,65 @@ Usually, the \c sync.profile is setup to search for these headers in the source 
 ...
 \endcode
 
+\section1 QML Type Registration
+
+Depending on the build system used and the version of the QtInterfaceFramework module, there are
+several ways for generating QML plugins and registering the QML types.
+
+\section2 CMake
+
+The preferred way in CMake is to use the new QML Type registration system, which is available in the
+QtInterfaceFramework module from version 6.3 onwards. In that version the generated code is already
+using the new registration macros and provides all the necessary information for CMake to generate
+the rest:
+
+\badcode
+qt_ifcodegen_extend_target(IfVehicleFunctions
+    NO_GENERATE
+    PREFIX VEHICLEFUNCTIONS
+    IDL_FILES ifvehiclefunctions.qface
+)
+
+qt_add_qml_module(IfVehicleFunctions
+    URI ${VEHICLEFUNCTIONS_URI}
+    VERSION ${VEHICLEFUNCTIONS_VERSION}
+    CLASS_NAME QtIfVehicleFunctionsPlugin
+    PLUGIN_TARGET qtifvehiclefunctionsplugin
+    IMPORTS QtInterfaceFramework/auto
+)
+\endcode
+
+By using the \c PREFIX argument in the \l qt_ifcodegen_extend_target call, additional variables get
+exposed to using \c VEHICLEFUNCTIONS as their prefix.
+Those variables can be used in the following call to \l qt_add_qml_module, which handles the QML
+type registration for all types and also generates a QML plugin.
+
+\section2 Before 6.3
+
+Instead of using the new QML Type registration, ifcodegen can be used to generate a QML plugin,
+which registers all types when loaded:
+
+\badcode
+qt_ifcodegen_import_variables(VEHICLEFUNCTIONS
+    IDL_FILES ifvehiclefunctions.qface
+    TEMPLATE qmlplugin
+    MODULE_NAME QtIfVehicleFunctions
+)
+
+qt_internal_add_qml_module(qtifvehiclefunctionsplugin
+    URI ${VEHICLEFUNCTIONS_URI}
+    VERSION ${VEHICLEFUNCTIONS_VERSION}
+    PLUGIN_TARGET qtifvehiclefunctionsplugin
+    NO_PLUGIN_OPTIONAL
+    NO_GENERATE_PLUGIN_SOURCE
+    NO_GENERATE_QMLTYPES
+    NO_GENERATE_QMLDIR
+    SOURCES
+        ${VEHICLEFUNCTIONS_SOURCES}
+    PUBLIC_LIBRARIES
+        Qt::InterfaceFramework
+        Qt::IfVehicleFunctions
+)
+\endcode
+
 */
