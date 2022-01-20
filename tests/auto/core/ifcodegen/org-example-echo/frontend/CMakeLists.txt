@@ -11,7 +11,14 @@ set_target_properties(echo_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(echo_frontend
     IDL_FILES ../../org.example.echo.qface
+    PREFIX ECHO
     TEMPLATE frontend
+)
+
+qt_add_qml_module(echo_frontend
+    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../imports/${ECHO_URI_PATH}"
+    URI ${ECHO_URI}
+    VERSION ${ECHO_VERSION}
 )
 
 target_link_libraries(echo_frontend PUBLIC
