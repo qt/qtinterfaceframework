@@ -40,6 +40,7 @@ qt_internal_add_qml_module(IfVehicleFunctions
     VERSION ${VEHICLEFUNCTIONS_VERSION}
     CLASS_NAME QtIfVehicleFunctionsPlugin
     PLUGIN_TARGET qtifvehiclefunctionsplugin
+    IMPORTS QtInterfaceFramework/auto
 )
 
 #####################################################################
