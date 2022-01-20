@@ -498,6 +498,26 @@
     the correct folder structure is generated and we can import the QML plugin directly from within
     the build folder.
 
+    \note Instead of generating a QML plugin, the new QML type registration can be used, which was
+    introduced in \b 6.3. In order to use this new mechanism the frontend CMakeLists.txt has to be
+    extended like this:
+
+    \badcode
+    qt_ifcodegen_extend_target(libIc_chapter3
+        IDL_FILES ../instrument-cluster.qface
+        PREFIX CLUSTER
+        TEMPLATE frontend
+    )
+    qt_add_qml_module(libIc_chapter3
+        OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../imports/${CLUSTER_URI_PATH}"
+        URI ${CLUSTER_URI}
+        VERSION ${CLUSTER_VERSION}
+        IMPORTS QtInterfaceFramework/auto
+    )
+    \endcode
+
+    Please see \l {QML Type Registration} for more information.
+
     \e qmake:
 
     \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/imports/imports.pro

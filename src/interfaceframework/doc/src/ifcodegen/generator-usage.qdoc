@@ -458,6 +458,9 @@
 
     Generates a C++ QML Plugin which registers all types from the frontend in QML.
 
+    \note For CMake this template has been superseded by the new QML type registration system.
+    Please see \l {QML Type Registration} for more information.
+
     \table 100%
         \header
             \li Filename
