@@ -131,7 +131,7 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
             )
     else()
         add_custom_target(copy_virtualenv
-                           COMMAND ${CMAKE_COMMAND} -E copy ${VIRTUALENV_PATH} "${ifcodegen_install_dir}"
+                           COMMAND ${CMAKE_COMMAND} -E copy_directory ${VIRTUALENV_PATH} "${ifcodegen_install_dir}/${VIRTUALENV_NAME}"
                            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
                           )
         add_dependencies(ifcodegen copy_virtualenv)
