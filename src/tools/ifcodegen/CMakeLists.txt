@@ -3,8 +3,8 @@
 ## Virtual env creation
 #####################################################################
 
-set(ifcodegen_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_LIBEXECDIR}/ifcodegen")
-set(templates_install_dir "${CMAKE_INSTALL_PREFIX}/${INSTALL_DATADIR}/ifcodegen-templates")
+qt_path_join(ifcodegen_install_dir "${QT_INSTALL_DIR}" "${INSTALL_LIBEXECDIR}/ifcodegen")
+qt_path_join(templates_install_dir "${QT_INSTALL_DIR}" "${INSTALL_DATADIR}/ifcodegen-templates")
 
 if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
     if (NOT CMAKE_GENERATOR MATCHES "^Ninja")
