@@ -20,7 +20,7 @@ qt_find_package(WrapSystemTagLib PROVIDED_TARGETS WrapSystemTagLib::WrapSystemTa
 
 qt_feature("taglib" PRIVATE
     LABEL "taglib"
-    CONDITION QT_FEATURE_shared
+    CONDITION (WrapSystemTagLib_FOUND OR QT_FEATURE_shared)
     DISABLE INPUT_taglib STREQUAL 'no'
 )
 qt_feature_definition("taglib" "QTIF_NO_TAGLIB" NEGATE)
