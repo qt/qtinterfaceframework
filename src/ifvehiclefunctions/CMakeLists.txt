@@ -28,6 +28,7 @@ qt_internal_add_module(IfVehicleFunctions
 qt_ifcodegen_extend_target(IfVehicleFunctions
     NO_GENERATE
     IDL_FILES ifvehiclefunctions.qface
+    TEMPLATE frontend
 )
 
 #####################################################################
