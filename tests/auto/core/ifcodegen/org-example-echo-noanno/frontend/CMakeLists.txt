@@ -12,6 +12,7 @@ set_target_properties(echo_noanno_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY .
 qt6_ifcodegen_extend_target(echo_noanno_frontend
     IDL_FILES ../../org.example.echo.noannotation.qface
     TEMPLATE frontend
+    OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/gen_frontend
 )
 
 target_link_libraries(echo_noanno_frontend PUBLIC
