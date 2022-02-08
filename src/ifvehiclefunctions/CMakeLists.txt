@@ -9,6 +9,7 @@ qt_ifcodegen_generate(
     IDL_FILES ifvehiclefunctions.qface
     TEMPLATE frontend
     MODULE_NAME QtIfVehicleFunctions
+    OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}
     EXTRA_HEADERS_OUTPUT_DIR ${QT_BUILD_DIR}/src/ifvehiclefunctions
 )
 make_directory(${QT_BUILD_DIR}/src/ifvehiclefunctions)
@@ -30,6 +31,7 @@ qt_ifcodegen_extend_target(IfVehicleFunctions
     PREFIX VEHICLEFUNCTIONS
     IDL_FILES ifvehiclefunctions.qface
     TEMPLATE frontend
+    OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 qt_internal_add_qml_module(IfVehicleFunctions

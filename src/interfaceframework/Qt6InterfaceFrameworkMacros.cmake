@@ -97,8 +97,11 @@ function(internal_ifcodegen_import)
 
     set(OUTPUT_DIR ${ARG_OUTPUT_DIR})
     if (NOT DEFINED ARG_OUTPUT_DIR)
-        set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
+        get_filename_component(TEMPLATE_NAME "${ARG_TEMPLATE}" NAME)
+        set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TEMPLATE_NAME})
     endif()
+    make_directory(${OUTPUT_DIR})
+
     if (NOT DEFINED ARG_IDL_FILES)
         message(FATAL_ERROR
             "Called without input files. Please specify some using the IDL_FILES argument."
@@ -165,7 +168,7 @@ endmacro()
 #   searched for. (OPTIONAL)
 #
 # OUTPUT_DIR: Overwrite the default output path. By default the generated code
-#   will be put in ${CMAKE_CURRENT_BINARY_DIR}. Use this argument to provide
+#   will be put in ${CMAKE_CURRENT_BINARY_DIR}/<template-name>. Use this argument to provide
 #   a replacement. (OPTIONAL)
 #
 # EXTRA_HEADERS_OUTPUT_DIR: An additional location where all headers will be
@@ -207,8 +210,11 @@ function(qt6_ifcodegen_generate)
     endif()
     set(OUTPUT_DIR ${ARG_OUTPUT_DIR})
     if (NOT DEFINED ARG_OUTPUT_DIR)
-        set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
+        get_filename_component(TEMPLATE_NAME "${ARG_TEMPLATE}" NAME)
+        set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/${TEMPLATE_NAME})
     endif()
+    make_directory(${OUTPUT_DIR})
+
     if (NOT DEFINED ARG_IDL_FILES)
         message(FATAL_ERROR
             "Called without input files. Please specify some using the IDL_FILES argument."
@@ -401,7 +407,7 @@ endif()
 #   searched for. (OPTIONAL)
 #
 # OUTPUT_DIR: Overwrite the default output path. By default the generated code
-#   will be put in ${CMAKE_CURRENT_BINARY_DIR}. Use this argument to provide
+#   will be put in ${CMAKE_CURRENT_BINARY_DIR}/<template-name>. Use this argument to provide
 #   a replacement. (OPTIONAL)
 #
 # EXTRA_HEADERS_OUTPUT_DIR: An additional location where all headers will be
