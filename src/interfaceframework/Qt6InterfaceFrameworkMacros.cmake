@@ -93,6 +93,8 @@ function(internal_ifcodegen_import)
     if (NOT DEFINED ARG_OUTPUT_DIR)
         set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
     endif()
+    make_directory(${OUTPUT_DIR})
+
     if (NOT DEFINED ARG_IDL_FILES)
         message(FATAL_ERROR
             "Called without input files. Please specify some using the IDL_FILES argument."
@@ -203,6 +205,8 @@ function(qt6_ifcodegen_generate)
     if (NOT DEFINED ARG_OUTPUT_DIR)
         set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR})
     endif()
+    make_directory(${OUTPUT_DIR})
+
     if (NOT DEFINED ARG_IDL_FILES)
         message(FATAL_ERROR
             "Called without input files. Please specify some using the IDL_FILES argument."

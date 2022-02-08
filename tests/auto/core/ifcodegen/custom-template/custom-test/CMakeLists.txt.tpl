@@ -30,5 +30,5 @@
 
 target_sources(${CURRENT_TARGET}
                PUBLIC
-    tst_custom.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/tst_custom.cpp
 )

@@ -34,14 +34,14 @@ endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
-    {{interface|lower}}robackend.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}robackend.cpp
 {% endfor %}
-    {{module.module_name|lower}}roplugin.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}roplugin.cpp
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 {% for interface in module.interfaces %}
-    ${CMAKE_CURRENT_BINARY_DIR}/{{interface|lower}}.rep
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.rep
 {% endfor %}
 )
 
@@ -62,6 +62,10 @@ if (TARGET ${CURRENT_TARGET})
 
     target_link_libraries(${CURRENT_TARGET} PRIVATE
         ${${VAR_PREFIX}_LIBRARIES}
+    )
+
+    target_include_directories(${CURRENT_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 
     ### MISSING

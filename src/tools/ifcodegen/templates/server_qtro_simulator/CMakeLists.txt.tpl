@@ -34,20 +34,20 @@ endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
-    {{interface|lower}}backend.cpp
-    {{interface|lower}}adapter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backend.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}adapter.cpp
 {% endfor %}
-    core.cpp
-    main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/core.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_RESOURCES
-    ${CMAKE_CURRENT_BINARY_DIR}/{{module.module_name|lower}}_simulation.qrc
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}_simulation.qrc
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 {% for interface in module.interfaces %}
-    ${CMAKE_CURRENT_BINARY_DIR}/{{interface|lower}}.rep
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.rep
 {% endfor %}
 )
 
@@ -72,6 +72,10 @@ if (TARGET ${CURRENT_TARGET})
 
     target_link_libraries(${CURRENT_TARGET} PRIVATE
         ${${VAR_PREFIX}_LIBRARIES}
+    )
+
+    target_include_directories(${CURRENT_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 
     ### MISSING

@@ -30,14 +30,14 @@
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
-    {{interface|lower}}.cpp
-    {{interface|lower}}backendinterface.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backendinterface.cpp
 {% endfor %}
 {% for struct in module.structs %}
-    {{struct|lower}}.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{struct|lower}}.cpp
 {% endfor %}
-    {{module.module_name|lower}}.cpp
-    {{module.module_name|lower}}factory.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}factory.cpp
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_DEFINES
@@ -66,6 +66,6 @@ if (TARGET ${CURRENT_TARGET})
     )
 
     target_include_directories(${CURRENT_TARGET} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 endif()
