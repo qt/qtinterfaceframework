@@ -69,7 +69,7 @@ function(internal_ifcodegen_import)
     cmake_parse_arguments(
         PARSE_ARGV 0
         ARG
-        "NO_GENERATE;VERBOSE" "TARGET;PREFIX;IDL_FILES;OUTPUT_DIR" ""
+        "NO_GENERATE;VERBOSE" "TARGET;PREFIX;IDL_FILES;TEMPLATE;OUTPUT_DIR" ""
     )
 
     if (DEFINED ARG_KEYWORDS_MISSING_VALUES)
@@ -82,6 +82,12 @@ function(internal_ifcodegen_import)
 
     if (NOT ARG_TARGET AND NOT ARG_PREFIX)
         message(FATAL_ERROR "Either PREFIX or TARGET needs to be provided to this function")
+    endif()
+
+    if (NOT DEFINED ARG_TEMPLATE)
+        message(FATAL_ERROR
+            "Called without generator template. Please specify one using the TEMPLATE argument."
+            )
     endif()
 
     if (NOT ARG_NO_GENERATE)
