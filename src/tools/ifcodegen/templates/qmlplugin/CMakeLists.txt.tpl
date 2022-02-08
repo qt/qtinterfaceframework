@@ -29,7 +29,7 @@
 #}
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
-    ${CMAKE_CURRENT_BINARY_DIR}/plugin.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/plugin.cpp
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_URI
@@ -46,7 +46,7 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_VERSION
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_TYPEINFO
-    ${CMAKE_CURRENT_BINARY_DIR}/plugins.qmltypes
+    ${CMAKE_CURRENT_LIST_DIR}/plugins.qmltypes
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
@@ -79,6 +79,10 @@ if (TARGET ${CURRENT_TARGET})
     target_link_libraries(${CURRENT_TARGET}
         PUBLIC
             ${${VAR_PREFIX}_LIBRARIES}
+    )
+
+    target_include_directories(${CURRENT_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 endif()
 

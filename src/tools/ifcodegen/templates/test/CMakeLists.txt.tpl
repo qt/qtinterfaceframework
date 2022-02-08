@@ -30,14 +30,18 @@
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
-    tst_{{interface|lower}}.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/tst_{{interface|lower}}.cpp
 {% endfor %}
-    main.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
 if (TARGET ${CURRENT_TARGET})
     target_sources(${CURRENT_TARGET}
                    PRIVATE
         ${${VAR_PREFIX}_SOURCES}
+    )
+
+    target_include_directories(${CURRENT_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 endif()

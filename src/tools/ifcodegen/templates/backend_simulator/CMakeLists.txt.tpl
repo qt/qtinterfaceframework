@@ -30,19 +30,23 @@
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
-    {{interface|lower}}backend.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backend.cpp
 {% endfor %}
-    {{module.module_name|lower}}simulatorplugin.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}simulatorplugin.cpp
 )
 
 if (TARGET ${CURRENT_TARGET})
     qt_add_resources(${VAR_PREFIX}_SOURCES
-        ${CMAKE_CURRENT_BINARY_DIR}/{{module.module_name|lower}}_simulation.qrc
+        ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}_simulation.qrc
     )
 
     target_sources(${CURRENT_TARGET}
         PRIVATE
         ${${VAR_PREFIX}_SOURCES}
+    )
+
+    target_include_directories(${CURRENT_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 
     ### MISSING

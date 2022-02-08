@@ -33,12 +33,12 @@ if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivat
 endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
-    core.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/core.cpp
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 {% for interface in module.interfaces %}
-    ${CMAKE_CURRENT_BINARY_DIR}/{{interface|lower}}.rep
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.rep
 {% endfor %}
 )
 
@@ -59,5 +59,9 @@ if (TARGET ${CURRENT_TARGET})
 
     target_link_libraries(${CURRENT_TARGET} PRIVATE
         ${${VAR_PREFIX}_LIBRARIES}
+    )
+
+    target_include_directories(${CURRENT_TARGET} PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 endif()
