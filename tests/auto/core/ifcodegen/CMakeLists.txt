@@ -2,6 +2,7 @@
 
 add_subdirectory(custom-template)
 add_subdirectory(org-example-echo)
+add_subdirectory(flat-cmake-hierarchy-test)
 add_subdirectory(org-example-echo-noprivate)
 add_subdirectory(org-example-echo-noanno)
 add_subdirectory(include-test)
