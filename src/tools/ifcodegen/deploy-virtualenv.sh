@@ -118,6 +118,13 @@ if [ "$PLATFORM" == "linux" ]; then
         echo "copying $LIBSSL"
         cp -Lf "$LIBSSL" "$VIRTUALENV/bin"
     fi
+    CTYPESLIB=`find $LIB_FOLDER/lib-dynload -iname '_ctypes.*'`
+    if [[ -e "$CTYPESLIB" ]] ; then
+        LIBFFI=`ldd $CTYPESLIB | awk '{print $3}' | grep libffi`
+        echo "copying $LIBFFI"
+        cp -Lf "$LIBFFI" "$VIRTUALENV/bin"
+    fi
+
 else
     # Find the linked Python lib and its framework
     PYTHON_LIB_PATH=`otool -L $VIRTUALENV/bin/python | awk '{print $1}' | grep Python`
