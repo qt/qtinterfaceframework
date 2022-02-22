@@ -103,6 +103,7 @@ The simulation system makes it possible to separate the simulation business logi
 simulation data. The simulation data is stored in \c JSON files. This is required for the
 QIfSimulationEngine::loadSimulationData() function to load. Once the simulation data is loaded,
 the IfSimulator global object provides the content to all QML simulation files.
+More information about the Data format can be found \l{IfSimulatorDataFormat}{here}
 
 For example, you can use the IfSimulator::findData function to read the data for a specific
 interface only:
