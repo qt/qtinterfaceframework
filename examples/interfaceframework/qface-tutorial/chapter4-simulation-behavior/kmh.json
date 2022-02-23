@@ -1,0 +1,11 @@
+
+{
+  "InstrumentCluster": {
+    "systemType": {
+      "default": {
+        "type": "enum",
+        "value": "InstrumentClusterModule::Metric"
+      }
+    }
+  }
+}
