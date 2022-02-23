@@ -38,6 +38,12 @@ target_link_libraries(qface-climate PUBLIC
     Qt::Quick
 )
 
+set(import_path "${CMAKE_CURRENT_BINARY_DIR}/frontend/qml")
+if (NOT ${import_path} IN_LIST QML_IMPORT_PATH)
+    list (APPEND QML_IMPORT_PATH "${import_path}")
+    set(QML_IMPORT_PATH ${QML_IMPORT_PATH} CACHE INTERNAL "" FORCE)
+endif()
+
 
 # Resources:
 set(qml_resource_files
