@@ -29,10 +29,7 @@
 ##
 #############################################################################
 #}
-#############################################################################
-## This is an auto-generated file.
-## Do not edit! All changes made to it will be lost.
-#############################################################################
+{% include "common/generated_comment.qmake.tpl" %}
 
 HEADERS += \
 {% for interface in module.interfaces %}
