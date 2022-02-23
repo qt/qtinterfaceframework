@@ -30,6 +30,7 @@
 ##
 #############################################################################
 #}
+{% include "common/generated_comment.cpp.tpl" %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned  %}
 {% if interface_zoned %}
 {% set class = 'Zoned{0}ModelBackend'.format(property|upperfirst) %}

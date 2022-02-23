@@ -2,6 +2,7 @@
 #############################################################################
 ##
 ## Copyright (C) 2021 The Qt Company Ltd.
+## Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 ## Contact: https://www.qt.io/licensing/
 ##
 ## This file is part of the QtInterfaceFramework module of the Qt Toolkit.
@@ -27,42 +28,11 @@
 ##
 #############################################################################
 #}
-{% include "common/generated_comment.cmake.tpl" %}
+/////////////////////////////////////////////////////////////////////////////
+// Generated from '{{module}}.qface'
+//
+// Created by: The QFace generator (QtAS {{qtASVersion}})
+//
+// WARNING! All changes made in this file will be lost!
+/////////////////////////////////////////////////////////////////////////////
 
-if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivate)
-    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelperPrivate)
-endif()
-
-qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/core.cpp
-)
-
-qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
-{% for interface in module.interfaces %}
-    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.rep
-{% endfor %}
-)
-
-qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
-    Qt6::RemoteObjects
-    Qt6::IfRemoteObjectsHelperPrivate
-)
-
-if (TARGET ${CURRENT_TARGET})
-    target_sources(${CURRENT_TARGET}
-                   PRIVATE
-        ${${VAR_PREFIX}_SOURCES}
-    )
-
-    qt6_add_repc_sources(${CURRENT_TARGET}
-        ${${VAR_PREFIX}_REPLICAS}
-    )
-
-    target_link_libraries(${CURRENT_TARGET} PRIVATE
-        ${${VAR_PREFIX}_LIBRARIES}
-    )
-
-    target_include_directories(${CURRENT_TARGET} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
-    )
-endif()

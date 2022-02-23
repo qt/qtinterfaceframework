@@ -29,10 +29,7 @@
 ##
 #############################################################################
 #}
-#############################################################################
-## This is an auto-generated file.
-## Do not edit! All changes made to it will be lost.
-#############################################################################
+{% include "common/generated_comment.qmake.tpl" %}
 
 # Export all symbols when building this library
 DEFINES *= QT_BUILD_{{module|upper|replace('.', '_')|strip_QT}}_LIB

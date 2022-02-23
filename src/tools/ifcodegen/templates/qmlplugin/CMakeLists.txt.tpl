@@ -27,6 +27,7 @@
 ##
 #############################################################################
 #}
+{% include "common/generated_comment.cmake.tpl" %}
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/plugin.cpp

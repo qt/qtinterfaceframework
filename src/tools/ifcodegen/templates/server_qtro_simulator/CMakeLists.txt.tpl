@@ -27,6 +27,7 @@
 ##
 #############################################################################
 #}
+{% include "common/generated_comment.cmake.tpl" %}
 
 if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivate)
     find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelperPrivate)
