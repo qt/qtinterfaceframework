@@ -30,12 +30,14 @@ set(INCLUDE_DIRECTORIES
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/trueaudio>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/wavpack>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/taglib/taglib/xm>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/taglib/3rdparty>
 )
 
 qt_internal_add_3rdparty_library(BundledTagLib
     QMAKE_LIB_NAME taglib
     SKIP_AUTOMOC
     INSTALL
+    EXCEPTIONS
     SOURCES
         taglib/taglib/audioproperties.cpp
         taglib/taglib/tagutils.cpp
@@ -150,8 +152,18 @@ qt_disable_warnings(BundledTagLib)
 qt_set_symbol_visibility_hidden(BundledTagLib)
 
 qt_internal_extend_target(BundledTagLib CONDITION UNIX
-    SOURCES
-        taglib/taglib/toolkit/unicode.cpp
+    PUBLIC_DEFINES
+        HAVE_GCC_ATOMIC=1
+)
+
+qt_internal_extend_target(BundledTagLib CONDITION WIN32
+    PUBLIC_DEFINES
+        HAVE_WIN_ATOMIC=1
+)
+
+qt_internal_extend_target(BundledTagLib CONDITION APPLE
+    PUBLIC_DEFINES
+        HAVE_MAC_ATOMIC=1
 )
 
 target_include_directories(BundledTagLib SYSTEM PUBLIC ${INCLUDE_DIRECTORIES})
