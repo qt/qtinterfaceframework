@@ -31,7 +31,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // Generated from '{{module}}.qface'
 //
-// Created by: The QFace generator (QtAS {{qtASVersion}})
+// Created by: The Qt Interface Framework Generator ({{ifcodegenVersion}})
 //
 // WARNING! All changes made in this file will be lost!
 /////////////////////////////////////////////////////////////////////////////
