@@ -29,15 +29,9 @@
 ##
 #############################################################################
 #}
-/////////////////////////////////////////////////////////////////////////////
-// Generated from '{{module}}.qface'
-//
-// Created by: The QFace generator (QtAS {{qtASVersion}})
-//
-// WARNING! All changes made in this file will be lost!
-/////////////////////////////////////////////////////////////////////////////
-{% set class = '{0}'.format(interface) %}
 {% import 'common/qtif_macros.j2' as qtif %}
+{% include "common/generated_comment.rep.tpl" %}
+{% set class = '{0}'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 {% if interface.module.tags.config.module %}
 #include <{{interface.module.tags.config.module}}/{{module.module_name|lower}}.h>

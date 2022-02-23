@@ -29,6 +29,7 @@
 #############################################################################
 #}
 {% import 'common/qtif_macros.j2' as qtif %}
+{% include "common/generated_comment.qml.tpl" %}
 {% set module_qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 import QtQuick.tooling 1.2
 

@@ -29,10 +29,7 @@
 ##
 #############################################################################
 #}
-#############################################################################
-## This is an auto-generated file.
-## Do not edit! All changes made to it will be lost.
-#############################################################################
+{% include "common/generated_comment.qmake.tpl" %}
 
 QT += remoteobjects ifremoteobjects_helper_private
 

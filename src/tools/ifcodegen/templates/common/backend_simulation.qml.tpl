@@ -29,7 +29,7 @@
 ##
 #############################################################################
 #}
-
+{% include "common/generated_comment.qml.tpl" %}
 
 import QtQuick
 import {{module|qml_type}}.simulation

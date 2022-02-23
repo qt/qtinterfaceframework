@@ -28,10 +28,7 @@
 ##
 #############################################################################
 #}
-#############################################################################
-## This is an auto-generated file.
-## Do not edit! All changes made to it will be lost.
-#############################################################################
+{% include "common/generated_comment.qmake.tpl" %}
 
 TARGET = {{module.module_name|lower}}plugin
 URI = {{module|qml_type}}

@@ -175,6 +175,10 @@ add_custom_target(generator SOURCES
 qt_copy_or_install(
     FILES
     templates/common/generated_comment.cpp.tpl
+    templates/common/generated_comment.cmake.tpl
+    templates/common/generated_comment.qmake.tpl
+    templates/common/generated_comment.qml.tpl
+    templates/common/generated_comment.rep.tpl
     templates/common/qtif_macros.j2
     templates/common/simulation.qmltypes.tpl
     templates/common/plugins.qmltypes.tpl

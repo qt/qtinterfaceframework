@@ -27,6 +27,7 @@
 ##
 #############################################################################
 #}
+{% include "common/generated_comment.cmake.tpl" %}
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
