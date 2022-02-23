@@ -575,10 +575,10 @@
     be multiple engines run by different back ends, we need to define which engine we're referring
     to. In the auto-generated code, the module name is always used as the engine specifier. For this
     chapter, we already prepared a second JSON file which is part of our source directory. Setting
-    the environment variable as follows, changes the \c systemType to mph instead of km/h:
+    the environment variable as follows, changes the \c systemType to km/h instead of mph:
 
     \badcode
-    QTIF_SIMULATION_DATA_OVERRIDE=instrumentcluster=<path-to-file>/miles.json
+    QTIF_SIMULATION_DATA_OVERRIDE=example.if.instrumentclustermodule=<path-to-file>/kmh.json
     \endcode
 
     \section2 Define a QML Behavior
