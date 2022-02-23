@@ -75,7 +75,7 @@ E.g. by running the following command:
 
 or disable taglib by passing --taglib=no
 ]]
-    CONDITION NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/taglib/taglib/INSTALL" AND QT_FEATURE_taglib AND NOT QT_FEATURE_system_taglib
+    CONDITION NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/taglib/taglib/INSTALL.md" AND QT_FEATURE_taglib AND NOT QT_FEATURE_system_taglib
 # special case end
 )
 qt_configure_add_report_entry(

@@ -7,7 +7,7 @@
 
     "Description": "TagLib is a library for reading and editing the meta-data of several popular audio formats.",
     "Homepage": "https://taglib.org/",
-    "Version": "1.11",
+    "Version": "1.12",
 
     "License": "Lesser GNU General Public License and Mozilla Public License",
     "LicenseId": "LGPL AND MPL",
