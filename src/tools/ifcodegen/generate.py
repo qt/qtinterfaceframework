@@ -105,7 +105,13 @@ def generate(template_search_paths, tplconfig, moduleConfig, annotations, import
     srcFile = os.path.basename(src[0])
     srcBase = os.path.splitext(srcFile)[0]
     global_functions.currentSrcFile = srcFile
-    ctx = {'qtASVersion': builtin_config.config["VERSION"], 'srcFile': srcFile, 'srcBase': srcBase}
+    ctx = {
+       # To be backward compatible
+       'qtASVersion': builtin_config.config["VERSION"],
+       'ifcodegenVersion': builtin_config.config["VERSION"],
+       'srcFile': srcFile,
+       'srcBase': srcBase
+    }
     search_path = [tplconfig]
     search_path += template_search_paths
     generator = CustomRuleGenerator(search_path=search_path, destination=dst,
