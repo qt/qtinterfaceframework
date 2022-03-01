@@ -37,15 +37,6 @@ if (NOT ${import_path} IN_LIST QML_IMPORT_PATH)
     set(QML_IMPORT_PATH ${QML_IMPORT_PATH} CACHE INTERNAL "" FORCE)
 endif()
 
-target_link_libraries(libIc_chapter6 PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)
-
 install(TARGETS libIc_chapter6
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"

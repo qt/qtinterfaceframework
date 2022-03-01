@@ -16,7 +16,4 @@ qt6_ifcodegen_extend_target(echo_noanno_simulator
 
 target_link_libraries(echo_noanno_simulator PUBLIC
     echo_noanno_frontend
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )

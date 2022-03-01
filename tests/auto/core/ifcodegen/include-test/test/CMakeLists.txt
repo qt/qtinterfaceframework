@@ -12,9 +12,6 @@ qt_internal_add_test(tst_qface_include
     PUBLIC_LIBRARIES
         include_test_common
         include_test_frontend
-        Qt::Core
-        Qt::InterfaceFramework
-        Qt::Test
 )
 set_target_properties(tst_qface_include PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 

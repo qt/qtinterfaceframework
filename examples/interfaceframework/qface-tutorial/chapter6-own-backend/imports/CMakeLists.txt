@@ -35,9 +35,6 @@ qt_add_qml_module(ic_chapter6_imports
 
 target_link_libraries(ic_chapter6_imports PUBLIC
     libIc_chapter6
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 
 install(TARGETS ic_chapter6_imports

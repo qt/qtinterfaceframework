@@ -32,9 +32,6 @@ target_compile_definitions(qface-addressbook PUBLIC
 
 target_link_libraries(qface-addressbook PUBLIC
     QtIfAdressBookExample
-    Qt::Core
-    Qt::Gui
-    Qt::Qml
     Qt::Quick
 )
 

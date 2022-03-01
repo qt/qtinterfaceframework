@@ -30,8 +30,6 @@ set_target_properties(chapter5-ipc-server PROPERTIES
 
 target_link_libraries(chapter5-ipc-server PUBLIC
     libIc_chapter5
-    Qt::Core
-    Qt::InterfaceFramework
 )
 
 

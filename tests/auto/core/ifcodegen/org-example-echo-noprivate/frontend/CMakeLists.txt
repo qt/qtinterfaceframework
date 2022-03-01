@@ -14,12 +14,3 @@ qt6_ifcodegen_extend_target(echo_noprivate_frontend
     TEMPLATE frontend
     ANNOTATION_FILES ../../no-private.yaml
 )
-
-target_link_libraries(echo_noprivate_frontend PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)

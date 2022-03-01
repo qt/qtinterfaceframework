@@ -15,9 +15,4 @@ qt6_ifcodegen_extend_target(org-example-echo-qtro-simulation-server
 
 target_link_libraries(org-example-echo-qtro-simulation-server PUBLIC
     echo_qtro_frontend
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::Qml
-    Qt::Quick
 )

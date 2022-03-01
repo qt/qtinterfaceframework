@@ -38,9 +38,7 @@ set_target_properties(chapter6-demo-server PROPERTIES
 
 target_link_libraries(chapter6-demo-server PUBLIC
     libIc_chapter6
-    Qt::Core
     Qt::DBus
-    Qt::InterfaceFramework
 )
 
 install(TARGETS chapter6-demo-server

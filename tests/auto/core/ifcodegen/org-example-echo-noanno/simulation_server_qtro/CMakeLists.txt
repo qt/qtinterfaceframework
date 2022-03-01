@@ -15,9 +15,4 @@ qt6_ifcodegen_extend_target(org-example-echo-noanno-simu-server
 
 target_link_libraries(org-example-echo-noanno-simu-server PUBLIC
     echo_noanno_frontend
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::Qml
-    Qt::Quick
 )

@@ -33,9 +33,6 @@ qt_ifcodegen_extend_target(climate_backend_simulator
 #! [1]
 target_link_libraries(climate_backend_simulator PUBLIC
     QtIfClimateExample
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 #! [1]
 

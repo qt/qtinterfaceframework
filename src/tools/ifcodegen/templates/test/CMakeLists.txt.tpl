@@ -36,6 +36,11 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
+    Qt6::InterfaceFramework
+    Qt6::Test
+)
+
 if (TARGET ${CURRENT_TARGET})
     target_sources(${CURRENT_TARGET}
                    PRIVATE
@@ -44,5 +49,9 @@ if (TARGET ${CURRENT_TARGET})
 
     target_include_directories(${CURRENT_TARGET} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+    )
+
+    target_link_libraries(${CURRENT_TARGET} PUBLIC
+        ${${VAR_PREFIX}_LIBRARIES}
     )
 endif()

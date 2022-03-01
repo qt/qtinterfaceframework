@@ -35,9 +35,6 @@ qt_add_qml_module(ic_chapter4_imports
 
 target_link_libraries(ic_chapter4_imports PUBLIC # special case
     libIc_chapter4
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 
 install(TARGETS ic_chapter4_imports # special case

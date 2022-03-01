@@ -17,7 +17,4 @@ qt6_ifcodegen_extend_target(include_test_simulator
 
 target_link_libraries(include_test_simulator PUBLIC
     include_test_frontend
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )

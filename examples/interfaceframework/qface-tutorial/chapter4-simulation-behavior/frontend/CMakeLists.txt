@@ -26,14 +26,6 @@ qt_ifcodegen_extend_target(libIc_chapter4
     TEMPLATE frontend
 )
 
-target_link_libraries(libIc_chapter4 PUBLIC
-    Qt::Core
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)
-
 set(import_path "${CMAKE_CURRENT_BINARY_DIR}/frontend/qml")
 if (NOT ${import_path} IN_LIST QML_IMPORT_PATH)
     list (APPEND QML_IMPORT_PATH "${import_path}")

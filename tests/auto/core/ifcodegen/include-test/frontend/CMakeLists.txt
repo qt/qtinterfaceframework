@@ -17,10 +17,4 @@ qt6_ifcodegen_extend_target(include_test_frontend
 
 target_link_libraries(include_test_frontend PUBLIC
     include_test_common
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
 )

@@ -44,6 +44,7 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
+    Qt6::InterfaceFramework
     Qt6::RemoteObjects
     Qt6::IfRemoteObjectsHelperPrivate
 )
@@ -58,7 +59,7 @@ if (TARGET ${CURRENT_TARGET})
         ${${VAR_PREFIX}_REPLICAS}
     )
 
-    target_link_libraries(${CURRENT_TARGET} PRIVATE
+    target_link_libraries(${CURRENT_TARGET} PUBLIC
         ${${VAR_PREFIX}_LIBRARIES}
     )
 

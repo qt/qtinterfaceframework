@@ -13,13 +13,3 @@ qt6_ifcodegen_extend_target(include_test_common
     IDL_FILES ../../qface\ imports/common.qface
     TEMPLATE frontend
 )
-
-target_link_libraries(include_test_common PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)
-

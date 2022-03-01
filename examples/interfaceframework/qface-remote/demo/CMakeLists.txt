@@ -36,9 +36,6 @@ target_compile_definitions(qface-remote PUBLIC
 
 target_link_libraries(qface-remote PUBLIC
     QtIfRemoteExample
-    Qt::Core
-    Qt::Gui
-    Qt::Qml
     Qt::Quick
 )
 
