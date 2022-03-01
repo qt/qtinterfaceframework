@@ -32,9 +32,6 @@ target_compile_definitions(qface-climate PUBLIC
 
 target_link_libraries(qface-climate PUBLIC
     QtIfClimateExample
-    Qt::Core
-    Qt::Gui
-    Qt::Qml
     Qt::Quick
 )
 

@@ -11,9 +11,6 @@ qt_internal_add_test(tst_org-example-echo-noprivate
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
     PUBLIC_LIBRARIES
         echo_noprivate_frontend
-        Qt::Core
-        Qt::InterfaceFramework
-        Qt::Test
 )
 set_target_properties(tst_org-example-echo-noprivate PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 

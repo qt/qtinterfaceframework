@@ -33,9 +33,6 @@ qt_ifcodegen_extend_target(remote_backend_qtro
 #! [1]
 target_link_libraries(remote_backend_qtro PUBLIC
     QtIfRemoteExample
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 #! [1]
 

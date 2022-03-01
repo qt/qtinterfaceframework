@@ -26,9 +26,6 @@ qt_ifcodegen_extend_target(ic_chapter5_qtro
 
 target_link_libraries(ic_chapter5_qtro PUBLIC
     libIc_chapter5
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 
 install(TARGETS ic_chapter5_qtro

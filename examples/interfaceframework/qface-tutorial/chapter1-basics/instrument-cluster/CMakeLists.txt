@@ -28,9 +28,6 @@ set_target_properties(ic_chapter1 PROPERTIES
 
 target_link_libraries(ic_chapter1 PUBLIC
     libIc_chapter1
-    Qt::Core
-    Qt::Gui
-    Qt::Qml
     Qt::Quick
 )
 

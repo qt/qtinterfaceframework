@@ -46,7 +46,6 @@ target_compile_definitions(qface-remote-server PUBLIC
 
 target_link_libraries(qface-remote-server PUBLIC
     QtIfRemoteExample
-    Qt::Core
 )
 
 install(TARGETS qface-remote-server

@@ -31,15 +31,6 @@ qt_ifcodegen_extend_target(QtIfClimateExample
 
 set_target_properties(QtIfClimateExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
-target_link_libraries(QtIfClimateExample PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)
-
 install(TARGETS QtIfClimateExample
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"

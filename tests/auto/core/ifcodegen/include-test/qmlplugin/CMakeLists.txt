@@ -26,5 +26,4 @@ qt_add_qml_module(include_test_qmlplugin
 
 target_link_libraries(include_test_qmlplugin PRIVATE
     include_test_frontend
-    Qt::InterfaceFramework
 )

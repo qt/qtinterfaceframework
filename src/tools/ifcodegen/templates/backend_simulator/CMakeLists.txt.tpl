@@ -36,6 +36,10 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}simulatorplugin.cpp
 )
 
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
+    Qt6::InterfaceFramework
+)
+
 if (TARGET ${CURRENT_TARGET})
     qt_add_resources(${VAR_PREFIX}_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}_simulation.qrc
@@ -50,8 +54,7 @@ if (TARGET ${CURRENT_TARGET})
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 
-    ### MISSING
-    # OTHER_FILES += \
-    #    $$PWD/{{module.module_name|lower}}.json \
-    #    $$PWD/{{module.module_name|lower}}_simulation_data.json
+    target_link_libraries(${CURRENT_TARGET} PUBLIC
+        ${${VAR_PREFIX}_LIBRARIES}
+    )
 endif()

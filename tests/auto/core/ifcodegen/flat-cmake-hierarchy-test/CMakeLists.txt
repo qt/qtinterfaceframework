@@ -13,15 +13,6 @@ qt6_ifcodegen_extend_target(echo_flat_frontend
     TEMPLATE frontend
 )
 
-target_link_libraries(echo_flat_frontend PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)
-
 ####### BACKEND #######
 
 qt_add_plugin(echo_flat_simulator)
@@ -38,9 +29,6 @@ qt6_ifcodegen_extend_target(echo_flat_simulator
 
 target_link_libraries(echo_flat_simulator PUBLIC
     echo_flat_frontend
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 
 ####### TEST #######
@@ -51,9 +39,6 @@ qt_internal_add_test(tst_flat-cmake-hierarchy
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
     PUBLIC_LIBRARIES
         echo_flat_frontend
-        Qt::Core
-        Qt::InterfaceFramework
-        Qt::Test
 )
 
 # Interface Framework Generator:

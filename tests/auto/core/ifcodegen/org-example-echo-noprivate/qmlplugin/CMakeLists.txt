@@ -27,5 +27,4 @@ qt_add_qml_module(echo_noprivate_qmlplugin
 
 target_link_libraries(echo_noprivate_qmlplugin PRIVATE
     echo_noprivate_frontend
-    Qt::InterfaceFramework
 )

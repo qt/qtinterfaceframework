@@ -20,12 +20,3 @@ qt_add_qml_module(echo_frontend
     URI ${ECHO_URI}
     VERSION ${ECHO_VERSION}
 )
-
-target_link_libraries(echo_frontend PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)

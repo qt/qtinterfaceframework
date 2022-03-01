@@ -34,14 +34,6 @@ qt_ifcodegen_extend_target(QtIfRemoteExample
 
 set_target_properties(QtIfRemoteExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)
 
-target_link_libraries(QtIfRemoteExample PUBLIC
-    Qt::Core
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)
-
 set(import_path "${CMAKE_CURRENT_BINARY_DIR}/frontend/qml")
 if (NOT ${import_path} IN_LIST QML_IMPORT_PATH)
     list (APPEND QML_IMPORT_PATH "${import_path}")

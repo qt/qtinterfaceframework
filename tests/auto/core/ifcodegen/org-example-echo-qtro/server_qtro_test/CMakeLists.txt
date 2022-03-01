@@ -15,10 +15,6 @@ qt_internal_add_test(tst_org-example-echo-qtro
         tst_echoqtro.cpp tst_echoqtro.h
     PUBLIC_LIBRARIES
         echo_qtro_frontend
-        Qt::Core
-        Qt::InterfaceFramework
-        Qt::Test
-        Qt::IfRemoteObjectsHelperPrivate
 )
 set_target_properties(tst_org-example-echo-qtro PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 

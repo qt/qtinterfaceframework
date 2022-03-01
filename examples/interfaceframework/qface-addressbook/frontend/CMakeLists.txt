@@ -26,14 +26,6 @@ qt_ifcodegen_extend_target(QtIfAdressBookExample
 
 set_target_properties(QtIfAdressBookExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
-target_link_libraries(QtIfAdressBookExample PUBLIC
-    Qt::Core
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)
-
 set(import_path "${CMAKE_CURRENT_BINARY_DIR}/frontend/qml")
 if (NOT ${import_path} IN_LIST QML_IMPORT_PATH)
     list (APPEND QML_IMPORT_PATH "${import_path}")

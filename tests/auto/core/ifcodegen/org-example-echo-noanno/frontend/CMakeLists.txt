@@ -14,12 +14,3 @@ qt6_ifcodegen_extend_target(echo_noanno_frontend
     TEMPLATE frontend
     OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/gen_frontend
 )
-
-target_link_libraries(echo_noanno_frontend PUBLIC
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
-    Qt::InterfaceFrameworkPrivate
-    Qt::Qml
-    Qt::Quick
-)

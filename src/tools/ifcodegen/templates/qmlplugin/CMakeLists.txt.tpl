@@ -54,23 +54,6 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::InterfaceFramework
 )
 
-#string(REPLACE "." "/" TARGET_PATH "{{module|qml_type}}")
-#qt_add_qml_module(${CURRENT_TARGET}
-#    URI "{{module|qml_type}}"
-#    VERSION "{{module.majorVersion}}.{{module.minorVersion}}"
-#    PLUGIN_TARGET ${CURRENT_TARGET}
-#    NO_PLUGIN_OPTIONAL
-#    NO_GENERATE_PLUGIN_SOURCE
-#    NO_GENERATE_QMLTYPES
-#    NO_GENERATE_QMLDIR
-#    # TODO remove this again
-#    # This is needed to make the test build work as it would create duplicate qmldir entries
-#    # in the global qml folder
-#    OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TARGET_PATH}
-#    SOURCES
-#        ${CMAKE_CURRENT_BINARY_DIR}/plugin.cpp
-#)
-
 if (TARGET ${CURRENT_TARGET})
     target_sources(${CURRENT_TARGET}
                    PRIVATE
@@ -85,8 +68,8 @@ if (TARGET ${CURRENT_TARGET})
     target_include_directories(${CURRENT_TARGET} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
-endif()
 
-### MISSING
-# AUX_QML_FILES += $$PWD/qmldir \
-#    $$PWD/designer/{{module.module_name|lower}}.metainfo
+    target_link_libraries(${CURRENT_TARGET} PUBLIC
+        ${${VAR_PREFIX}_LIBRARIES}
+    )
+endif()

@@ -26,9 +26,6 @@ qt_ifcodegen_extend_target(addressbook_backend_simulator
 
 target_link_libraries(addressbook_backend_simulator PUBLIC
     QtIfAdressBookExample
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 
 set(import_path "${CMAKE_CURRENT_BINARY_DIR}/backend_simulator/qml")

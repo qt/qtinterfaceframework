@@ -19,7 +19,4 @@ qt6_ifcodegen_extend_target(echo_simulator
 
 target_link_libraries(echo_simulator PUBLIC
     echo_frontend
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )

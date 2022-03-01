@@ -47,6 +47,7 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
+    Qt6::InterfaceFramework
     Qt6::RemoteObjects
     Qt6::IfRemoteObjectsHelperPrivate
 )
@@ -61,15 +62,11 @@ if (TARGET ${CURRENT_TARGET})
         ${${VAR_PREFIX}_REPLICAS}
     )
 
-    target_link_libraries(${CURRENT_TARGET} PRIVATE
+    target_link_libraries(${CURRENT_TARGET} PUBLIC
         ${${VAR_PREFIX}_LIBRARIES}
     )
 
     target_include_directories(${CURRENT_TARGET} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
-
-    ### MISSING
-    # OTHER_FILES += \
-    #    $$PWD/{{module.module_name|lower}}.json
 endif()

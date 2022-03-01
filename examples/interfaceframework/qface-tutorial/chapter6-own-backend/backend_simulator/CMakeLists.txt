@@ -26,9 +26,6 @@ qt_ifcodegen_extend_target(ic_chapter6_simulation
 
 target_link_libraries(ic_chapter6_simulation PUBLIC
     libIc_chapter6
-    Qt::Core
-    Qt::Gui
-    Qt::InterfaceFramework
 )
 
 set(import_path "${CMAKE_CURRENT_BINARY_DIR}/backend_simulator/qml")
