@@ -739,9 +739,9 @@ void QIfAbstractFeature::disconnectFromServiceObject(QIfServiceObject *serviceOb
     \property QIfAbstractFeature::isValid
     \brief Indicates whether the feature is ready to use.
 
-    The property is \c true if the feature is ready to be used, otherwise \c false. Not being
-    ready usually indicates that no suitable service object could be found, or that automatic
-    discovery has not been triggered.
+    The property is \c true if the feature has an associated service object, otherwise \c false.
+    Not being valid usually indicates that no suitable service object could be found, or that
+    automatic discovery has not been triggered.
 
     The backend still might not have sent all properties yet and is not fully initialized.
     Use isInitialized instead to know when the feature holds all correct values.

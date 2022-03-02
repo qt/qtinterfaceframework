@@ -51,13 +51,13 @@ and transparency for the UI code.
 \section1 Qt Remote Objects
 
 The Qt Interface Framework Generator makes it possible to generate Middleware Backends that utilize the
-QtRemoteObjects module. The client-side code is generated as a QtInterfaceFramework backend plugin and and as a
+QtRemoteObjects module. The client-side code is generated as a QtInterfaceFramework backend plugin and as
 a Middleware Service, either a server stub or a full simulation server. The client is generated
 using the \l{backend-qtro-template} {backend_qtro} template; the server using the
-\l{server-qtro-template} {server_qtro} template. Both the plugin and the server contain generated
-C++ code and an intermediate \c{.rep} file that is further processed by Qt’s
-\l [QtRemoteObjects] {Qt Remote Objects Compiler} {replica compiler} to produce the actual source
-and replica classes.
+\l{server-qtro-template} {server_qtro} template or \l{server-qtro-simulator-template}
+{server_qtro_simulator}. Both the plugin and the server contain generated C++ code and an
+intermediate \c{.rep} file that is further processed by Qt’s \l {Qt Remote Objects Compiler}
+{replica compiler} to produce the actual source and replica classes.
 
 The generated plugin is loaded and used in the same way as other QtInterfaceFramework plugins and is
 interchangeable with any other backend implementation with the same API. Since all method calls
