@@ -299,7 +299,8 @@ void BaseTest::testAutoDiscoveryFailure()
     TestBackend* backend2 = new TestBackend();
     m_manager->registerService(backend2, backend2->interfaces());
 
-    QTest::ignoreMessage(QtWarningMsg, "There is more than one backend implementing \"testFeature\" . Using the first one");
+    QTest::ignoreMessage(QtWarningMsg, "There is more than one backend implementing \"testFeature\". Using the first "
+                                       "one (enable \"qt.if.servicemanagement\" logging to see which are found)");
     result = f->startAutoDiscovery();
     QVERIFY(f->serviceObject());
     QCOMPARE(result, QIfAbstractFeature::ProductionBackendLoaded);
@@ -329,8 +330,10 @@ void BaseTest::testAutoDiscoveryWithMultipleBackends()
     //The first backend is not accepted, test that the second backend is tested as well and accepted now.
     QIfFeatureTester *f = createTester();
     acceptCounter = 0;
-    if (firstBackendType == secondBackendType)
-        QTest::ignoreMessage(QtWarningMsg, "There is more than one backend implementing \"testFeature\" . Using the first one");
+    if (firstBackendType == secondBackendType) {
+        QTest::ignoreMessage(QtWarningMsg, "There is more than one backend implementing \"testFeature\". Using the first "
+                                           "one (enable \"qt.if.servicemanagement\" logging to see which are found)");
+    }
     if (secondBackendType != QIfServiceManager::ProductionBackend)
         QTest::ignoreMessage(QtWarningMsg, "There is no production backend implementing \"testFeature\" .");
     QTest::ignoreMessage(QtWarningMsg, "ServiceObject is not accepted");

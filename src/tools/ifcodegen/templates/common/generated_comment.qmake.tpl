@@ -28,7 +28,7 @@
 #############################################################################
 #}
 #############################################################################
-## Generated from '{{module}}.qface'
+## Generated from '{{srcFile}}': module {{module}}
 ##
 ## Created by: The Qt Interface Framework Generator ({{ifcodegenVersion}})
 ##
