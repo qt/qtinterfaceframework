@@ -601,8 +601,11 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::startAutoDiscovery()
         }
     }
 
-    if (Q_UNLIKELY(serviceObjects.count() > 1))
-        qWarning() << "There is more than one backend implementing" << d->m_interface << ". Using the first one";
+    if (Q_UNLIKELY(serviceObjects.count() > 1)) {
+        qWarning().nospace() << "There is more than one backend implementing " << d->m_interface
+                             << ". Using the first one (enable \"" << qLcIfServiceManagement().categoryName()
+                             << "\" logging to see which are found)";
+    }
 
     if (Q_UNLIKELY(!serviceObjectSet)) {
         qWarning() << "No suitable ServiceObject found.";
