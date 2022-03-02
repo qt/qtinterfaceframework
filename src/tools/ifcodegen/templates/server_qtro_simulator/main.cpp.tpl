@@ -29,7 +29,8 @@
 #############################################################################
 #}
 {% include "common/generated_comment.cpp.tpl" %}
-#include <QCoreApplication>
+#include <QGuiApplication>
+#include <QCommandLineParser>
 #include <QDir>
 #include <QLockFile>
 
@@ -43,12 +44,56 @@
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication app(argc, argv);
+{% if module.tags.config_simulator and module.tags.config_simulator.defaultServerMode %}
+{%   set defaultMode = module.tags.config_simulator.defaultServerMode %}
+{% else %}
+{%   set defaultMode = "headless" %}
+{% endif %}
+{% if defaultMode == "headless" %}
+    bool gui = false;
+{% elif defaultMode == "gui" %}
+    bool gui = true;
+{% else %}
+{{   error("Unknown value in 'config_simulator.defaultServerMode'. Valid modes are: 'headless', 'gui'")}}
+{% endif %}
+    bool guiOptionSet = false;
+    bool headlessOptionSet = false;
+    for (int i=1; i<argc; i++) {
+        if (qstrcmp(argv[i], "--gui") == 0) {
+            gui = true;
+            guiOptionSet = true;
+        } else if (qstrcmp(argv[i], "--headless") == 0) {
+            gui = false;
+            headlessOptionSet = true;
+        }
+    }
+
+    if (guiOptionSet && headlessOptionSet)
+        qFatal("--gui and --headless can't be used at the same time!");
+
+    QScopedPointer<QCoreApplication> app;
+    if (gui)
+        app.reset(new QGuiApplication(argc, argv));
+    else
+        app.reset(new QCoreApplication(argc, argv));
+
+    QCommandLineParser parser;
+    parser.addHelpOption();
+
+    QCommandLineOption guiOption("gui", "Gui mode. Starts using a QGuiApplication and allows "
+                                        "instantiating visual elements in the simulation code");
+    parser.addOption(guiOption);
+    QCommandLineOption headlessOption("headless", "Headless mode. Starts using a QCoreApplication "
+                                                  "and does NOT allow instantiating visual elements "
+                                                  "in the simulation code");
+    parser.addOption(headlessOption);
+
+    parser.process(qApp->arguments());
 
     // single instance guard
-    QLockFile lockFile(QStringLiteral("%1/%2.lock").arg(QDir::tempPath(), app.applicationName()));
+    QLockFile lockFile(QStringLiteral("%1/%2.lock").arg(QDir::tempPath(), qApp->applicationName()));
     if (!lockFile.tryLock(100)) {
-        qCritical("%s already running, aborting...", qPrintable(app.applicationName()));
+        qCritical("%s already running, aborting...", qPrintable(qApp->applicationName()));
         return EXIT_FAILURE;
     }
 
@@ -85,5 +130,5 @@ int main(int argc, char *argv[])
 {% endfor %}
 
 
-    return app.exec();
+    return qApp->exec();
 }
