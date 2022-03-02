@@ -335,6 +335,17 @@
                 embed.
         \row
             \li
+            \target config_simulator_defaultServerMode
+            \code
+            config_simulator:
+                defaultApplicationMode: "gui"
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Defines the default mode used by the server generated from the \l {server_qtro_simulator}
+                template. Valid options are "gui" or "headless" (default).
+        \row
+            \li
             \code
             config_simulator:
                 zones: [ FrontLeft,
@@ -600,6 +611,11 @@
     The code produced contains a fully-implemented server that uses the same implementation as the
     backend_simulator template, which uses the QIfSimulationEngine to implement the simulation
     behavior in QML.
+
+    By default a QCoreApplication is used in the generated server and enables the server to be
+    run headless. To also allow instantiating UI controls inside the simulation QML code, the
+    server can be started in GUI mode (--gui option). The default mode can be changed using the
+    \l{config_simulator_defaultServerMode} annotation.
 
     \table 100%
         \header

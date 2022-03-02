@@ -30,7 +30,7 @@
 #}
 {% include "common/generated_comment.qmake.tpl" %}
 
-QT += remoteobjects ifremoteobjects_helper_private
+QT += gui remoteobjects ifremoteobjects_helper_private
 
 HEADERS += \
 {% for interface in module.interfaces %}
