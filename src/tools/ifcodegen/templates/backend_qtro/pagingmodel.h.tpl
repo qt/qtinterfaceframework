@@ -40,6 +40,8 @@
 
 #include "QtIfRemoteObjectsHelper/rep_qifpagingmodel_replica.h"
 
+{{ module|begin_namespace }}
+
 class {{class}} : public QIfPagingModelInterface
 {
     Q_OBJECT
@@ -64,4 +66,6 @@ private:
     QUrl m_url;
     QVariantList m_list;
 };
+
+{{ module|end_namespace }}
 

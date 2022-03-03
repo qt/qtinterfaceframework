@@ -30,13 +30,14 @@
 ##
 #############################################################################
 #}
-{% include "common/generated_comment.cpp.tpl" %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned  %}
 {% if interface_zoned %}
 {% set class = 'Zoned{0}ModelBackend'.format(property|upperfirst) %}
 {% else %}
 {% set class = '{0}ModelBackend'.format(property|upperfirst) %}
 {% endif %}
+
+{{ module|begin_namespace }}
 
 {{class}}::{{class}}(QObject* parent)
     : QIfPagingModelInterface(parent)
@@ -131,3 +132,5 @@ void {{class}}::update(int index, const {{property.type.nested}} &item)
 {
     return m_list.at(index);
 }
+
+{{ module|end_namespace }}

@@ -30,7 +30,6 @@
 ##
 #############################################################################
 #}
-{% include "common/generated_comment.cpp.tpl" %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned  %}
 {% if interface_zoned %}
 {% set class = 'Zoned{0}ModelBackend'.format(property|upperfirst) %}
@@ -40,6 +39,8 @@
 
 #include <QIfPagingModelInterface>
 #include "{{property.type.nested|lower}}.h"
+
+{{ module|begin_namespace }}
 
 class {{class}} : public QIfPagingModelInterface
 {
@@ -69,3 +70,4 @@ private:
     QList<{{property.type.nested}}> m_list;
 };
 
+{{ module|end_namespace }}

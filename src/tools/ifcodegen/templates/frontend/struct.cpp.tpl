@@ -38,7 +38,7 @@
 
 #include <qifqmlconversion_helper.h>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{class}}Private : public QSharedData
 {
@@ -200,4 +200,4 @@ QDebug &operator<<(QDebug &dbg, const {{class}} &obj)
     return dbg;
 }
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}

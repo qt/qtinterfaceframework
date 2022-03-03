@@ -40,7 +40,7 @@
 
 #include <QtIfRemoteObjectsHelper/qifremoteobjectshelper.h>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 {{class}}* {{class}}::s_instance(nullptr);
 
@@ -91,4 +91,4 @@ void {{class}}::reportError(QRemoteObjectNode::ErrorCode code)
     qWarning() << "QRemoteObjects Error: " << code;
 }
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}

@@ -1,3 +1,4 @@
+@config: { namespace: "module" }
 module Common 1.0;
 
 struct CommonStruct {

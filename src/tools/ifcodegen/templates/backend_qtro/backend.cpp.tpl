@@ -43,13 +43,13 @@
 
 Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lower}}backend.remoteobjects", QtInfoMsg)
 
+{{ module|begin_namespace }}
+
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {% include "pagingmodel.cpp.tpl" %}
 {%   endif %}
 {% endfor %}
-
-QT_BEGIN_NAMESPACE
 
 {% if interface_zoned %}
 {{zone_class}}::{{zone_class}}(const QString &zone, {{class}} *parent)
@@ -359,4 +359,4 @@ void {{class}}::onZoneSyncDone()
 }
 {% endif %}
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}

@@ -56,7 +56,7 @@
 #include <QtInterfaceFramework/QIfPendingReply>
 #include <QtInterfaceFramework/QIfPagingModelInterface>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{exportsymbol}} {{class}} : public {{base_class}}
 {
@@ -86,6 +86,6 @@ Q_SIGNALS:
 
 #define {{module.module_name|upperfirst}}_{{interface}}_iid ("{{interface.tags.config.id | default(interface.qualified_name)}}")
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

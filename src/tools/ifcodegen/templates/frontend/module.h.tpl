@@ -58,7 +58,7 @@
 
 #include <QObject>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{exportsymbol}} {{class}} : public QObject
 {
@@ -91,6 +91,6 @@ public:
 {{exportsymbol}} QDataStream &operator>>(QDataStream &in, {{class}}::{{enum|flag_type}} &var);
 {% endfor %}
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

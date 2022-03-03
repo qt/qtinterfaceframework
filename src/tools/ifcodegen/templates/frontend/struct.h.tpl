@@ -53,7 +53,7 @@
 #include <QDebug>
 #include <QIfStandardItem>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{class}}Private;
 
@@ -98,7 +98,6 @@ private:
     friend {{exportsymbol}} bool operator==(const {{class}} &left, const {{class}} &right) Q_DECL_NOTHROW;
     friend {{exportsymbol}} QDataStream &operator>>(QDataStream &stream, {{class}} &obj);
 };
-Q_DECLARE_TYPEINFO({{class}}, Q_MOVABLE_TYPE);
 
 {{exportsymbol}} bool operator==(const {{class}} &left, const {{class}} &right) Q_DECL_NOTHROW;
 {{exportsymbol}} bool operator!=(const {{class}} &left, const {{class}} &right) Q_DECL_NOTHROW;
@@ -108,8 +107,12 @@ Q_DECLARE_TYPEINFO({{class}}, Q_MOVABLE_TYPE);
 
 {{exportsymbol}} QDebug &operator<<(QDebug &dbg, const {{class}} &obj);
 
+{{ module|end_namespace }}
+
+QT_BEGIN_NAMESPACE
+Q_DECLARE_TYPEINFO({{struct|add_namespace_prefix}}, Q_MOVABLE_TYPE);
 QT_END_NAMESPACE
 
-Q_DECLARE_METATYPE({{class}})
+Q_DECLARE_METATYPE({{struct|add_namespace_prefix}})
 
 #endif // {{oncedefine}}

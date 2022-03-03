@@ -63,7 +63,7 @@ def default_type_value(symbol):
     """
     Find the default value for the type. Models are initialized as nullptr
     """
-    prefix = Filters.classPrefix
+    prefix = namespace_prefix(symbol.module)
     t = symbol.type
     if t.is_primitive:
         if t.is_int:
@@ -79,16 +79,19 @@ def default_type_value(symbol):
     elif t.is_void:
         return ''
     elif t.is_enum:
+        prefix = namespace_prefix(t.reference.module)
         module_name = t.reference.module.module_name
         value = next(iter(t.reference.members))
         return '{0}{1}::{2}'.format(prefix, upper_first(module_name), value)
     elif t.is_flag:
+        prefix = namespace_prefix(t.reference.module)
         module_name = t.reference.module.module_name
         return '{0}{1}::{2}()'.format(prefix, upper_first(module_name), flag_type(symbol))
     elif symbol.type.is_list:
         nested = Filters.returnType(symbol.type.nested)
         return 'QVariantList()'.format(nested)
     elif symbol.type.is_struct:
+        prefix = namespace_prefix(symbol.type.reference.module)
         return '{0}{1}()'.format(prefix, symbol.type.reference.name)
     elif symbol.type.is_model:
         return 'nullptr'
@@ -99,7 +102,7 @@ def test_type_value(symbol):
     """
     Find a value different than the default value for the type. Models are initialized as nullptr
     """
-    prefix = Filters.classPrefix
+    prefix = namespace_prefix(symbol.module)
     t = symbol.type
     if t.is_primitive:
         if t.is_int:
@@ -115,10 +118,12 @@ def test_type_value(symbol):
     elif t.is_void:
         return ''
     elif t.is_enum:
+        prefix = namespace_prefix(t.reference.module)
         module_name = t.reference.module.module_name
         value = list(iter(t.reference.members))[-1]
         return '{0}{1}::{2}'.format(prefix, upper_first(module_name), value)
     elif t.is_flag:
+        prefix = namespace_prefix(t.reference.module)
         module_name = t.reference.module.module_name
         value = list(iter(t.reference.members))[-1]
         return '{0}{1}::{2}'.format(prefix, upper_first(module_name), value)
@@ -128,6 +133,7 @@ def test_type_value(symbol):
             value = 'QVariant::fromValue({0})'.format(value)
         return 'QVariantList({{{0}}})'.format(value)
     elif symbol.type.is_struct:
+        prefix = namespace_prefix(symbol.type.reference.module)
         values_string = ', '.join(test_type_value(e) for e in symbol.type.reference.fields)
         return '{0}{1}({2})'.format(prefix, symbol.type.reference.name, values_string)
     elif symbol.type.is_model:
@@ -179,8 +185,9 @@ def parameter_type_default(symbol):
     """
     Return the parameter declaration for properties, handle camel case module name
     """
-    prefix = Filters.classPrefix
+    prefix = namespace_prefix(symbol.module)
     if symbol.type.is_enum or symbol.type.is_flag:
+        prefix = namespace_prefix(symbol.type.reference.module)
         return '{0}{1}::{2} {3}={4}'.format(prefix, upper_first(symbol.type.reference.module.module_name), flag_type(symbol), symbol, default_type_value(symbol))
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
@@ -200,6 +207,7 @@ def parameter_type_default(symbol):
         elif nested.is_complex:
             return 'QIfPagingModel *{0}=nullptr'.format(symbol)
     else:
+        prefix = namespace_prefix(symbol.type.reference.module)
         return 'const {0}{1} &{2}={0}{1}()'.format(prefix, symbol.type.reference.name, symbol)
     jinja_error('parameter_type_default: Unknown parameter {0} of type {1}'.format(symbol,
                                                                                    symbol.type))
@@ -209,8 +217,9 @@ def parameter_type(symbol):
     """
     Return the parameter declaration for properties, handle camel case module name
     """
-    prefix = Filters.classPrefix
+    prefix = namespace_prefix(symbol.module)
     if symbol.type.is_enum or symbol.type.is_flag:
+        prefix = namespace_prefix(symbol.type.reference.module)
         return '{0}{1}::{2} {3}'.format(prefix, upper_first(symbol.type.reference.module.module_name), flag_type(symbol), symbol)
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
@@ -230,6 +239,7 @@ def parameter_type(symbol):
         elif nested.is_complex:
             return 'QIfPagingModel *{0}'.format(symbol)
     else:
+        prefix = namespace_prefix(symbol.type.reference.module)
         return 'const {0}{1} &{2}'.format(prefix, symbol.type.reference.name, symbol)
     jinja_error('parameter_type: Unknown parameter {0} of type {1}'.format(symbol, symbol.type))
 
@@ -238,11 +248,12 @@ def return_type(symbol):
     """
     Return the type declaration for properties, handle camel case module name
     """
-    prefix = Filters.classPrefix
+    prefix = namespace_prefix(symbol.module)
     if symbol.type.is_enum or symbol.type.is_flag:
-        return('{0}{1}::{2}'.format(prefix,
+        prefix = namespace_prefix(symbol.type.reference.module)
+        return '{0}{1}::{2}'.format(prefix,
                                           upper_first(symbol.type.reference.module.module_name),
-                                          flag_type(symbol)))
+                                          flag_type(symbol))
     if symbol.type.is_void or symbol.type.is_primitive:
         if symbol.type.name == 'string':
             return 'QString'
@@ -261,6 +272,7 @@ def return_type(symbol):
         elif nested.is_complex:
             return 'QIfPagingModel *'
     else:
+        prefix = namespace_prefix(symbol.type.reference.module)
         return '{0}{1}'.format(prefix, symbol.type.reference.name)
     jinja_error('return_type: Unknown symbol {0} of type {1}'.format(symbol, symbol.type))
 
@@ -453,6 +465,86 @@ def comment_text(comment):
         processed.append(line)
     return processed
 
+def add_namespace_prefix(symbol, module = None):
+    """
+    Appends the string retrieved from \l namespace_prefix to the provided symbol.
+    """
+    if isinstance(symbol, Module):
+        module = symbol
+    elif not isinstance(symbol, str):
+        module = symbol.module
+
+    return namespace_prefix(module) + str(symbol)
+
+def namespace_prefix(symbol):
+    """
+    Reads the namespace from the annotation of the module the symbol is part of and transforms this
+    into a C++ prefix, which can be easily appended to a C++ class name.
+    """
+    if not isinstance(symbol, Module):
+        jinja_error("symbol is not a module")
+
+    ns = namespace(symbol);
+
+    if len(ns):
+        return "::" + ns + "::"
+    return ""
+
+def namespace(symbol):
+    """
+    Returns the namespace from the annotation of the module the symbol is part of.
+    """
+    if not isinstance(symbol, Module):
+        jinja_error("symbol is not a module")
+
+    if not 'config' in symbol.tags or not 'namespace' in symbol.tags['config']:
+        return ""
+    elif symbol.tags["config"]["namespace"] == 'qt':
+        # The raw Qt namespace is not available outside of C++
+        return ''
+    elif symbol.tags["config"]["namespace"] == 'module':
+        return str(symbol).replace('.', '::')
+    elif len(symbol.tags["config"]["namespace"]):
+        return symbol.tags["config"]["namespace"]
+    else:
+        return ""
+
+def begin_namespace(symbol):
+    """
+    Returns a C++ statement to start a new namespace.
+    """
+    if not isinstance(symbol, Module):
+        jinja_error("symbol is not a module")
+
+    if not 'config' in symbol.tags or not 'namespace' in symbol.tags['config']:
+        return ""
+    elif symbol.tags["config"]["namespace"] == 'qt':
+        return 'QT_BEGIN_NAMESPACE'
+    elif symbol.tags["config"]["namespace"] == 'module':
+        return 'namespace {0} {{'.format(str(symbol).replace('.', '::'))
+    elif len(symbol.tags["config"]["namespace"]):
+        return 'namespace {0} {{'.format(symbol.tags["config"]["namespace"])
+    else:
+        return ""
+
+def end_namespace(symbol):
+    """
+    Returns a C++ statement to end a namespace.
+    """
+    if not isinstance(symbol, Module):
+        jinja_error("symbol is not a module")
+
+    if not 'config' in symbol.tags or not 'namespace' in symbol.tags['config']:
+        return ""
+    elif symbol.tags["config"]["namespace"] == 'qt':
+        return 'QT_END_NAMESPACE'
+    elif symbol.tags["config"]["namespace"] == 'module':
+        return '}}; // namespace {0}'.format(str(symbol).replace('.', '::'))
+    if len(symbol.tags["config"]["namespace"]):
+        return '}}; // namespace {0}'.format(symbol.tags["config"]["namespace"])
+    else:
+        return ""
+
 
 def register_filters(generator):
     generator.env.keep_trailing_newline = True
@@ -471,3 +563,8 @@ def register_filters(generator):
     generator.register_filter('qml_type', qml_type)
     generator.register_filter('struct_includes', struct_includes)
     generator.register_filter('comment_text', comment_text)
+    generator.register_filter('begin_namespace', begin_namespace)
+    generator.register_filter('end_namespace', end_namespace)
+    generator.register_filter('namespace', namespace)
+    generator.register_filter('namespace_prefix', namespace_prefix)
+    generator.register_filter('add_namespace_prefix', add_namespace_prefix)

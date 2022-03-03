@@ -42,7 +42,9 @@
 #include "{{interface|lower}}backend.h"
 #include "rep_{{interface|lower}}_source.h"
 
-QT_BEGIN_NAMESPACE
+QT_FORWARD_DECLARE_CLASS(QIfPagingModelQtRoAdapter)
+
+{{ module|begin_namespace }}
 
 /*
 * When using the templated enableRemoting method of QtRO, there is no way to specify
@@ -56,7 +58,6 @@ struct {{interface}}AddressWrapper: public {{interface}}SourceAPI<ObjectType> {
     {}
 };
 
-class QIfPagingModelQtRoAdapter;
 
 class {{class}} : public {{interface}}Source
 {
@@ -107,6 +108,6 @@ private:
     QIfRemoteObjectsSourceHelper<{{class}}> m_helper;
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

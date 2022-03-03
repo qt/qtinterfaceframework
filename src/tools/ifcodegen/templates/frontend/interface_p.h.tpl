@@ -61,7 +61,7 @@
 {% endif %}
 #include <QIfPagingModelInterface>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{class}};
 
@@ -109,6 +109,6 @@ public:
 {% endif %}
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

@@ -46,6 +46,8 @@ Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lo
 * the value is send with the pendingResultAvailable value
 */
 
+{{ module|begin_namespace }}
+
 {{class}}::{{class}}({{interface}}Backend *parent)
     : {{class}}(QStringLiteral("{{interface.qualified_name}}"), parent)
 {
@@ -176,3 +178,5 @@ QVariant {{class}}::{{operation}}({{qtif.join_params(operation, zoned = interfac
     return m_helper.fromPendingReply(pendingReply);
 }
 {% endfor %}
+
+{{ module|end_namespace }}

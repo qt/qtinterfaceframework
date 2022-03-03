@@ -46,7 +46,7 @@
 {%   endif %}
 {% endfor %}
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 {% if interface_zoned %}
 {{zone_class}}::{{zone_class}}(const QString &zone, {{class}}Interface *parent)
@@ -266,4 +266,4 @@ void {{class}}::addZone(const QString &zone)
 
 {% endfor %}
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}

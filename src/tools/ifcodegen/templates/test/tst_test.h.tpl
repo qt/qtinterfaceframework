@@ -41,6 +41,8 @@
 
 QT_FORWARD_DECLARE_CLASS(QIfServiceManager);
 
+{{ module|begin_namespace }}
+
 class {{interface}}Test : public QObject
 {
     Q_OBJECT
@@ -66,3 +68,5 @@ private Q_SLOTS:
 private:
     QIfServiceManager *manager;
 };
+
+{{ module|end_namespace }}

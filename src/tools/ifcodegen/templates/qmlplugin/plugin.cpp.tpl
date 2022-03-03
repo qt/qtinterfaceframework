@@ -45,7 +45,7 @@
 #include "{{module.module_name|lower}}factory.h"
 {% endif %}
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{module_name}}QmlPlugin : public QQmlExtensionPlugin
 {
@@ -61,7 +61,7 @@ public:
     }
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #include "plugin.moc"
 

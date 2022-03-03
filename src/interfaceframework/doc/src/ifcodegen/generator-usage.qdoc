@@ -227,6 +227,19 @@
             \li Purpose
         \row
             \li \code
+                @config: {namespace: "module"}
+                \endcode
+            \li Main IDL file
+            \li Module
+            \li Defines the C++ namespace the generated code should use. Available options are:
+                \list
+                    \li \b <novalue> Use no namespace (\b default)
+                    \li \b qt Use the qt namespace
+                    \li \b module Use the full module name as namespace
+                    \li \b <value> Use the provided value as namespace
+                \endlist
+        \row
+            \li \code
                 @config: {interfaceBuilder: "FunctionName"}
                 \endcode
             \li Main IDL file

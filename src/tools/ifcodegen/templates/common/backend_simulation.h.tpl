@@ -47,15 +47,15 @@
 #include "{{class|lower}}interface.h"
 {% endif %}
 
+QT_FORWARD_DECLARE_CLASS(QIfSimulationEngine)
+
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {% include "common/pagingmodel_simulation.h.tpl" %}
 {%   endif %}
 {% endfor %}
 
-QT_BEGIN_NAMESPACE
-
-class QIfSimulationEngine;
+{{ module|begin_namespace }}
 
 {% if interface_zoned %}
 class {{zone_class}} : public QObject
@@ -173,6 +173,6 @@ protected:
 {% endif %}
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

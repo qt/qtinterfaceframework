@@ -37,7 +37,7 @@
 
 #include <QtCore/qglobal.h>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 #ifndef QT_STATIC
 #  if defined(QT_BUILD_{{exportsymbol|strip_QT}}_LIB)
@@ -49,6 +49,6 @@ QT_BEGIN_NAMESPACE
 #  define Q_{{exportsymbol}}_EXPORT
 #endif
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

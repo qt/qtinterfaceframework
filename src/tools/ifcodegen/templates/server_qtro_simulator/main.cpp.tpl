@@ -42,6 +42,11 @@
 #include "core.h"
 #include <QtInterfaceFramework/QIfSimulationEngine>
 
+{% set ns = module|namespace %}
+{% if ns|length %}
+using namespace {{ns}};
+{% endif %}
+
 int main(int argc, char *argv[])
 {
 {% if module.tags.config_simulator and module.tags.config_simulator.defaultServerMode %}

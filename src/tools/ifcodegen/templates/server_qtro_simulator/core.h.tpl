@@ -36,7 +36,7 @@
 
 #include <QRemoteObjectNode>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{class}} : public QObject
 {
@@ -57,6 +57,6 @@ private:
     QRemoteObjectRegistryHost *m_host;
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif

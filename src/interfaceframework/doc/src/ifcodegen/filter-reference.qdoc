@@ -141,6 +141,43 @@ Returns the text of the passed comment without the leading/trailing comment toke
 
 Returns the correct type for the symbol, to be used inside the qmltype templates.
 
+\target add_namespace_prefix(symbol, module)
+\section2 add_namespace_prefix(symbol, module)
+
+Appends the string retrieved from \l namespace_prefix to the provided symbol.
+
+The namespace is read from the annotation of the module the symbol is part of. In case the symbol
+is a string, the additional module argument can be provided where the namespace annotation is read
+from.
+
+\target namespace_prefix(symbol)
+\section2 namespace_prefix(symbol)
+
+Reads the namespace from the annotation of the module the symbol is part of and transforms this in
+a C++ prefix, which can be easily appended to a C++ class name.
+
+\target namespace(symbol)
+\section2 namespace(symbol)
+
+Returns the namespace from the annotation of the module the symbol is part of.
+
+This filter is mainly used for \l namespace_prefix and \l add_namespace_prefix and provides special
+handling for the 'qt' namespace for which it returns an empty string.
+
+\target begin_namespace(symbol)
+\section2 begin_namespace(symbol)
+
+Returns a C++ statement to start a new namespace.
+
+The namespace is read from the annotation of the module the symbol is part of.
+
+\target end_namespace(symbol)
+\section2 end_namespace(symbol)
+
+Returns a C++ statement to end a namespace.
+
+The namespace is read from the annotation of the module the symbol is part of.
+
 \section1 Global Functions
 
 \target error(msg)

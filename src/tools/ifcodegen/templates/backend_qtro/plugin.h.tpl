@@ -39,7 +39,7 @@
 #include <QVector>
 #include <QtInterfaceFramework/QIfServiceInterface>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{class}} : public QObject, QIfServiceInterface
 {
@@ -59,6 +59,6 @@ private:
     QVector<QIfFeatureInterface *> m_interfaces;
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

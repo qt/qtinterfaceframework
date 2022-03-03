@@ -42,7 +42,7 @@
 #include <QStringList>
 #include <QtInterfaceFramework/QIfSimulationEngine>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 {% if module.tags.config.interfaceBuilder %}
 extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
@@ -97,4 +97,4 @@ QIfFeatureInterface *{{class}}::interfaceInstance(const QString &interface) cons
      return index < 0 ? nullptr : m_interfaces.at(index);
 }
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}

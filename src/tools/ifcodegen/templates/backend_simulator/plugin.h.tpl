@@ -40,9 +40,9 @@
 #include <QVector>
 #include <QtInterfaceFramework/QIfServiceInterface>
 
-QT_BEGIN_NAMESPACE
+QT_FORWARD_DECLARE_CLASS(QIfSimulationEngine)
 
-class QIfSimulationEngine;
+{{ module|begin_namespace }}
 
 class {{class}} : public QObject, QIfServiceInterface
 {
@@ -63,6 +63,6 @@ private:
     QIfSimulationEngine *m_simulationEngine;
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

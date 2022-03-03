@@ -53,7 +53,7 @@
 {%   endif %}
 {% endfor %}
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 {% if interface_zoned %}
 class {{class}};
@@ -151,6 +151,6 @@ protected:
 {% endif %}
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

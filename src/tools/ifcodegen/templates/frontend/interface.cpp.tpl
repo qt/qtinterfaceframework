@@ -41,7 +41,7 @@
 #include <QIfServiceObject>
 #include <QIfProxyServiceObject>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 /*!
     \class {{interface}}
@@ -486,6 +486,6 @@ void {{class}}::clearServiceObject()
 {{ qtif.format_comments(signal.comment) }}
 */
 {% endfor %}
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #include "moc_{{class|lower}}.cpp"

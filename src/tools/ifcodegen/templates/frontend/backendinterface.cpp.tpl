@@ -34,7 +34,7 @@
 
 #include "{{class|lower}}.h"
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 /*!
     \class {{class}}
@@ -129,4 +129,4 @@ QT_BEGIN_NAMESPACE
 */
 {% endfor %}
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}

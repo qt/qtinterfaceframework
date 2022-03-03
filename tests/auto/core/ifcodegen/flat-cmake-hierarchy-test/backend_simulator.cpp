@@ -30,8 +30,6 @@
 #include "echozonedbackend.h"
 #include "echomodulesimulatorplugin.h"
 
-QT_BEGIN_NAMESPACE
-
 extern QVector<QIfFeatureInterface *> echoInterfaceBuilder(EchomoduleSimulatorPlugin *plugin)
 {
     QVector<QIfFeatureInterface *> res;
@@ -39,5 +37,3 @@ extern QVector<QIfFeatureInterface *> echoInterfaceBuilder(EchomoduleSimulatorPl
     res << new EchoZonedBackend(plugin);
     return res;
 }
-
-QT_END_NAMESPACE

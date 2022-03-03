@@ -57,7 +57,7 @@
 #include <QtInterfaceFramework/QIfPendingReply>
 #include <QtInterfaceFramework/QIfPagingModel>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{class}}Private;
 class {{class}}BackendInterface;
@@ -127,6 +127,6 @@ private:
 {% endif %}
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

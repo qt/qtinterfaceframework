@@ -50,7 +50,7 @@
 #include "{{struct|lower}}.h"
 {% endfor %}
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 class {{exportsymbol}} {{class}} : public {{module.module_name|upperfirst}}
 {
@@ -67,6 +67,6 @@ public:
 {% endfor %}
 };
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
 
 #endif // {{oncedefine}}

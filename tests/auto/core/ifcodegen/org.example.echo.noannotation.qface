@@ -1,6 +1,7 @@
 /**
  * module
  */
+@config: { namespace: "module" }
 module org.example.echomodule 1.0
 
 /**

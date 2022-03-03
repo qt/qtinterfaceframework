@@ -1,4 +1,4 @@
-@config: { qml_name: "QtInterfaceFramework.VehicleFunctions" }
+@config: { qml_name: "QtInterfaceFramework.VehicleFunctions", namespace: "qt" }
 @config_simulator: { simulationFile: "qrc:/simulation/simulation.qml" }
 @designer: { categoryName: "QtInterfaceFramework - Vehicle Functions" }
 module QtIfVehicleFunctions 1.0;

@@ -46,6 +46,8 @@
 #include <{{interface|lower}}.h>
 #include <{{interface|lower}}backendinterface.h>
 
+{{ module|begin_namespace }}
+
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {% include "pagingmodel.h.tpl" %}
@@ -508,5 +510,7 @@ void {{interface}}Test::testModels()
 {%   endfor %}
 }
 {% endif %}
+
+{{ module|end_namespace }}
 
 #include "tst_{{interface|lower}}.moc"

@@ -44,7 +44,7 @@
 #include <QDebug>
 #include <QDataStream>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 /*! \internal */
 QObject* {{class|lower}}_singletontype_provider(QQmlEngine*, QJSEngine*)
@@ -118,7 +118,7 @@ void {{class}}::registerTypes()
 {%   set name = import.split(' ')[0] %}
 {%   for mod in system.modules %}
 {%     if mod.name == name %}
-    {{mod.module_name|upperfirst}}::registerTypes();
+    {{mod.module_name|upperfirst|add_namespace_prefix(mod)}}::registerTypes();
 {%     endif %}
 {%   endfor %}
 {% endfor %}
@@ -169,4 +169,4 @@ QDataStream &operator>>(QDataStream &in, {{class}}::{{enum|flag_type}} &var)
 }
 {% endfor %}
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}

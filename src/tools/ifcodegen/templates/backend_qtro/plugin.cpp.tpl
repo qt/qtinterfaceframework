@@ -40,7 +40,7 @@
 
 #include <QStringList>
 
-QT_BEGIN_NAMESPACE
+{{ module|begin_namespace }}
 
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
@@ -66,4 +66,4 @@ QIfFeatureInterface *{{class}}::interfaceInstance(const QString &interface) cons
      return index < 0 ? nullptr : m_interfaces.at(index);
 }
 
-QT_END_NAMESPACE
+{{ module|end_namespace }}
