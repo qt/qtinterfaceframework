@@ -48,37 +48,6 @@ def deprecated_filter(name=None):
                   "versions".format(name))
 
 
-def tag_by_path(symbol, path, default_value=False):
-    """
-    Find the tag given by its full path in the object hierarchy,
-    like "property.config_sim.zones.right". If some part of the
-    path is missing, return None
-    """
-    deprecated_filter()
-
-    path_parts = path.split(".")
-    cur_level_obj = symbol.tags
-    for path_part in path_parts:
-        if path_part in cur_level_obj:
-            cur_level_obj = cur_level_obj[path_part]
-        else:
-            cur_level_obj = None
-            break
-    if cur_level_obj is None:
-        cur_level_obj = default_value
-    return cur_level_obj
-
-
-def conf_sim_tag(symbol, path, default_value=False):
-    """
-    Find tag, given by its path, located under "config_simulator" sub-object.
-    Returns None, of any of the path parts is missing
-    """
-    deprecated_filter()
-
-    return tag_by_path(symbol, "config_simulator." + path, default_value)
-
-
 def enum_value_to_cppliteral(value, module_name):
     value = value.strip().rsplit('.', 1)[-1]
     return '{0}{1}::{2}'.format(Filters.classPrefix, upper_first(module_name), value)
@@ -206,27 +175,6 @@ def default_value_helper(symbol, res):
     return '{0}'.format(res)
 
 
-def default_value(symbol, zone='='):
-    """
-    Find the default value used by the simulator backend
-    """
-    deprecated_filter()
-
-    res = default_type_value(symbol)
-    if symbol.type.is_model:
-        res = '{}'
-    if 'config_simulator' in symbol.tags and 'default' in symbol.tags['config_simulator']:
-        res = symbol.tags['config_simulator']['default']
-        if isinstance(res, dict):
-            if zone in res:
-                res = res[zone]
-            elif '=' in res:
-                res = res['=']
-        return default_value_helper(symbol, res)
-
-    return res
-
-
 def parameter_type_default(symbol):
     """
     Return the parameter declaration for properties, handle camel case module name
@@ -331,19 +279,6 @@ def flag_type(symbol):
     return actualType
 
 
-def domain_values(symbol):
-    """
-    Returns domain values for property (if defined by @domain)
-    """
-    deprecated_filter()
-
-    if type(symbol) is Property:
-        if 'config_simulator' in symbol.tags:
-            if 'domain' in symbol.tags['config_simulator']:
-                return symbol.tags['config_simulator']['domain']
-    return None
-
-
 def getter_name(symbol):
     """
     Returns the getter name of the property
@@ -364,53 +299,6 @@ def setter_name(symbol):
     return 'set' + symbol.name[0].upper() + symbol.name[1:]
 
 
-def range_value(symbol, index, key):
-    """
-    Returns value for property (if defined by @range index or key)
-    """
-    deprecated_filter()
-
-    if type(symbol) is Property and symbol.type.is_int or symbol.type.is_real:
-        if 'config_simulator' in symbol.tags:
-            if 'range' in symbol.tags['config_simulator']:
-                return symbol.tags['config_simulator']['range'][index]
-            if key in symbol.tags['config_simulator']:
-                return symbol.tags['config_simulator'][key]
-    return None
-
-
-def range_high(symbol):
-    """
-    Returns maximum value for property (if defined by @range or @maximum)
-    """
-    deprecated_filter()
-
-    return range_value(symbol, 1, 'maximum')
-
-
-def range_low(symbol):
-    """
-    Returns minimum value for property (if defined by @range or @minimum)
-    """
-    deprecated_filter()
-
-    return range_value(symbol, 0, 'minimum')
-
-
-def has_domains(properties):
-    """
-    Returns true if any property has range or domain tags
-    """
-    deprecated_filter()
-
-    for property in properties:
-        if 'config_simulator' in property.tags:
-            for p in ['range', 'domain', 'minimum', 'maximum']:
-                if p in property.tags['config_simulator']:
-                    return True
-    return False
-
-
 def strip_QT(s):
     """
     If the given string starts with QT, stip it away.
@@ -419,26 +307,6 @@ def strip_QT(s):
     if s.startswith('QT'):
         return s[2:]
     return s
-
-
-def json_domain(properties):
-    """
-    Returns property domains formated in json
-    """
-    deprecated_filter()
-
-    data = {}
-    if len(properties):
-        data["ifVersion"] = builtin_config.config["VERSION"]
-    for property in properties:
-        if 'config_simulator' in property.tags:
-            for p in ['range', 'domain', 'minimum', 'maximum']:
-                if (property.tags['config_simulator'] is not None
-                        and p in property.tags['config_simulator']):
-                    if property.name not in data:
-                        data[property.name] = {}
-                    data[property.name][p] = property.tags['config_simulator'][p]
-    return json.dumps(data, separators=(',', ':'))
 
 
 def simulationData(module):
@@ -495,160 +363,6 @@ def symbolToJson(data, symbol):
     return data
 
 
-def qml_control_properties(symbol, backend_object):
-    """
-    Returns properties of the QML control matching to this
-    IDL type (e.g. min/max properties)
-    """
-    deprecated_filter()
-
-    prop_str = lower_first(symbol) + "Control"
-    if isinstance(symbol, Property):
-        top = range_high(symbol)
-        bottom = range_low(symbol)
-        binding = "value: {0}.{1};".format(backend_object, symbol.name)
-        if top is not None and bottom is not None:
-            return 'id: {0};  from: {1}; to: {2}; {3}'.format(prop_str, bottom, top, binding)
-
-        if top is not None or bottom is not None:
-            if top is None:
-                return 'id: {0};  from: {1}; to:100000; {2}'.format(prop_str, bottom, binding)
-            elif bottom is None:
-                return 'id: {0};  from:-100000; to: {1}; {2}'.format(prop_str, top, binding)
-
-        values = domain_values(symbol)
-        if values is None and (symbol.type.is_enum or symbol.type.is_flag):
-            values_string = ' '.join('ListElement {{ key: "{0}"; value: {1}.{0} }}'.format(e, qml_type(symbol.interface)) for e in symbol.type.reference.members)
-            return 'id: {0}; textRole: "key"; {2} model: ListModel {{ {1} }}'.format(prop_str,
-                                                                                     values_string,
-                                                                                     binding)
-        if values is not None:
-            values_string = ','.join('"'+str(e)+'"' for e in values)
-            return 'id: {0}; model: [ {1} ]; '.format(prop_str, values_string)
-        if symbol.type.is_bool:
-            binding = "checked: {0}.{1};".format(backend_object, symbol.name)
-            return 'id: {0}; {1}'.format(prop_str, binding)
-        if symbol.type.is_real or symbol.type.is_int or symbol.type.is_string:
-            binding = "text: {0}.{1};".format(backend_object, symbol.name)
-            return 'id: {0}; {1}'.format(prop_str, binding)
-
-    if isinstance(symbol, Parameter):
-        return 'id: {1}Param{0}'.format(prop_str, symbol.operation)
-    if isinstance(symbol, Field):
-        return 'id: {1}_{0}'.format(prop_str, lower_first(symbol.struct))
-
-
-def qml_control_signal_parameters(symbol):
-    """
-    Returns the parameters for calling the signal using the values from the ui controls
-    """
-    deprecated_filter()
-
-    return ', '.join('{0}Param{1}Control.{2}'.format(e.operation, lower_first(e),qml_binding_property(e)) for e in symbol.parameters)
-
-
-def qml_meta_control_name(symbol):
-    """
-    Returns name of the QML control needed to display this type based on the meta
-    data of  the symbol -- if symbol has some meta data (e.g. value limits or domain)
-    then control name is taken based on these constraints. Otherwise returns None.
-    """
-    deprecated_filter()
-
-    top = range_high(symbol)
-    bottom = range_low(symbol)
-    if top is not None and bottom is not None:
-        return 'Slider'
-
-    if top is not None or bottom is not None:
-        return 'SpinBox'
-
-    values = domain_values(symbol)
-    if values is not None:
-        return "ComboBox"
-
-
-def qml_type_control_name(symbol):
-    """
-    Returns name of the QML control inferred based on the type of the symbol.
-    """
-    deprecated_filter()
-
-    t = symbol.type
-    if t.is_string or t.is_int or t.is_real:
-        return "TextField"
-    elif t.is_bool:
-        return "CheckBox"
-    elif t.is_enum:
-        if t.reference.is_enum:
-            return "EnumControl"
-        elif t.reference.is_flag:
-            return "FlagControl"
-    elif t.is_flag:
-        return "FlagControl"
-    return "TextField"
-
-
-def qml_control_name(symbol):
-    """
-    Returns name of the QML control for the symbol. First it checks meta data (as it may
-    influence the control type) and if nothing is  defined there, it falls back to the
-    symbol actual type.
-    """
-    deprecated_filter()
-
-    # First try to calculate control name based on the tags
-    control_name = qml_meta_control_name(symbol)
-    # If nothing is defined, calculate it based on its type
-    if control_name is None:
-        control_name = qml_type_control_name(symbol)
-    return control_name
-
-
-def qml_control(symbol, backend_object):
-    """
-    Returns QML code for the control (or group of controls) to represent the editing UI for the
-    symbol.
-    """
-    deprecated_filter()
-
-    if symbol.type.is_struct:
-        return qml_struct_control(symbol)
-
-    return "{0} {{ {1} }}".format(qml_control_name(symbol),
-                                  qml_control_properties(symbol, backend_object))
-
-
-def qml_binding_property(symbol):
-    """
-    :param symbol: property which is being bound by the control
-    :return: name of the property of the QML control to be bound with
-    """
-    deprecated_filter()
-
-    control_name = qml_control_name(symbol)
-    if control_name == "CheckBox":
-        return "checked"
-    elif (control_name == "Slider" or control_name == "SpinBox" or control_name == "FlagControl"
-            or control_name == "EnumControl"):
-        return "value"
-    elif control_name == "TextField":
-        return "text"
-    elif control_name == "ComboBox":
-        return "currentIndex"
-
-
-def qml_struct_control(symbol):
-    deprecated_filter()
-
-    if symbol.type.is_struct and symbol.type.reference.fields:
-        result = "Rectangle { ColumnLayout { "
-        for field in symbol.type.reference.fields:
-            result += qml_control(field)
-        result += "}}"
-        return result
-
-
 def qml_info_type(symbol):
     """
     Returns the correct type for the symbol, to be used inside the qmltype templates
@@ -684,15 +398,6 @@ def qml_type(symbol):
     elif 'qml_name' in symbol.tags['config']:
         result = symbol.tags['config']['qml_name']
     return result
-
-
-def model_type(symbol):
-    deprecated_filter()
-
-    if symbol.type.is_model:
-        nested = symbol.type.nested
-        return '{0}Model'.format(nested)
-    return None
 
 
 def struct_includes(symbol):
@@ -758,23 +463,11 @@ def register_filters(generator):
     generator.register_filter('setter_name', setter_name)
     generator.register_filter('test_type_value', test_type_value)
     generator.register_filter('default_type_value', default_type_value)
-    generator.register_filter('default_value', default_value)
-    generator.register_filter('model_type', model_type)
     generator.register_filter('flag_type', flag_type)
-    generator.register_filter('range_low', range_low)
-    generator.register_filter('range_high', range_high)
     generator.register_filter('strip_QT', strip_QT)
-    generator.register_filter('domain_values', domain_values)
     generator.register_filter("enum_value", enum_value)
-    generator.register_filter("tag_by_path", tag_by_path)
-    generator.register_filter("conf_sim_tag", conf_sim_tag)
-    generator.register_filter('has_domains', has_domains)
     generator.register_filter('simulationData', simulationData)
-    generator.register_filter('json_domain', json_domain)
     generator.register_filter('qml_info_type', qml_info_type)
     generator.register_filter('qml_type', qml_type)
-    generator.register_filter('qml_control', qml_control)
-    generator.register_filter('qml_binding_property', qml_binding_property)
-    generator.register_filter('qml_control_signal_parameters', qml_control_signal_parameters)
     generator.register_filter('struct_includes', struct_includes)
     generator.register_filter('comment_text', comment_text)
