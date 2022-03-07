@@ -1,0 +1,10 @@
+@config_simulator: { simulationFile: "qrc:/simulation.qml" }
+module Simu 1.0
+
+interface SomeInterface {
+    int simpleProperty;
+    int hardcodedProperty;
+    int otherHardcodedProperty;
+
+    int addOne(int value);
+}

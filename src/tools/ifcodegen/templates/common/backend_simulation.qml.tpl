@@ -12,12 +12,12 @@ import {{module|qml_type}}.simulation
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 
 QtObject {
-    property var settings : IfSimulator.findData(IfSimulator.simulationData, "{{interface}}")
+    property var settings: IfSimulator.findData(IfSimulator.simulationData, "{{interface}}")
     property bool defaultInitialized: false
     property LoggingCategory qLc{{interface|upperfirst}}: LoggingCategory {
         name: "{{module|qml_type|lower}}.simulation.{{interface|lower}}backend"
     }
-    property var backend : {{interface|upperfirst}}Backend {
+    property var backend: {{interface|upperfirst}}Backend {
 
         function initialize() {
             console.log(qLc{{interface|upperfirst}}, "INITIALIZE")

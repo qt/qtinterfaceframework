@@ -12,7 +12,9 @@
 #include <private/qmetaobjectbuilder_p.h>
 
 QT_BEGIN_NAMESPACE
-Q_LOGGING_CATEGORY(qLcIfSimulationEngine, "qt.if.simulationengine");
+
+Q_LOGGING_CATEGORY(qLcIfSimulationEngine, "qt.if.simulationengine")
+Q_LOGGING_CATEGORY(qLcIfRecGuard, "qt.if.simulationengine.recursionguard")
 
 namespace qtif_private {
 
@@ -172,13 +174,6 @@ bool QIfSimulationProxyBase::callQmlMethod(const char *function, QGenericReturnA
     if (m_noSimulationEngine)
         return false;
 
-    //Prevent recursion
-    static bool recursionGuard = false;
-    if (recursionGuard)
-        return false;
-
-    recursionGuard = true;
-
     bool functionExecuted = false;
     const QMetaObject *mo = metaObject();
 
@@ -195,7 +190,6 @@ bool QIfSimulationProxyBase::callQmlMethod(const char *function, QGenericReturnA
             break;
         }
     }
-    recursionGuard = false;
     return functionExecuted;
 }
 

@@ -17,6 +17,7 @@
 QT_BEGIN_NAMESPACE
 
 Q_DECLARE_LOGGING_CATEGORY(qLcIfSimulationEngine)
+Q_QTINTERFACEFRAMEWORK_EXPORT Q_DECLARE_LOGGING_CATEGORY(qLcIfRecGuard)
 
 class QIfSimulationEngine;
 
@@ -147,6 +148,7 @@ namespace qtif_private {
 
         static QMetaObject staticMetaObject;
         static QList<QIfSimulationProxy<T> *> proxies;
+        static QByteArray recursionGuard;
 
     private:
         static QIfSimulationEngine *m_engine;
@@ -157,14 +159,64 @@ namespace qtif_private {
     template <typename T> T *QIfSimulationProxy<T>::m_instance = nullptr;
     template <typename T> QIfSimulationEngine *QIfSimulationProxy<T>::m_engine = nullptr;
     template <typename T> QList<QIfSimulationProxy<T> *> QIfSimulationProxy<T>::proxies =  QList<QIfSimulationProxy<T> *>();
+    template <typename T> QByteArray QIfSimulationProxy<T>::recursionGuard = QByteArray();
+
+    template <class T> class RecursionGuard
+    {
+    public:
+        RecursionGuard() {
+            m_savedValue = qtif_private::QIfSimulationProxy<T>::recursionGuard;
+        }
+
+        ~RecursionGuard() {
+            qCDebug(qLcIfRecGuard, "Reset recursion guard to: %s", m_savedValue.constData());
+            // When the recursion guards gets destroyed we want to restore the previous value.
+            // This helps to prevent recursions also for the following script call.
+            qtif_private::QIfSimulationProxy<T>::recursionGuard = m_savedValue;
+        }
+
+        bool trySet(const QByteArray &value) {
+            // Try to set the recursion guard to a new value
+            // If the guard is already at that value, this calls fails and QIF_SIMULATION_TRY_CALL_FUNC
+            // can act accordingly and not call the QML function again.
+            if (qtif_private::QIfSimulationProxy<T>::recursionGuard == value) {
+                qCDebug(qLcIfRecGuard, "Prevent recursion calling: %s", value.constData());
+                return false;
+            }
+
+            qCDebug(qLcIfRecGuard, "Update recursion guard to: %s", value.constData());
+            qtif_private::QIfSimulationProxy<T>::recursionGuard = value;
+            return true;
+        }
+
+        void saveAndRelease() {
+            // If the recursion is prevented this function can be used to save the current
+            // guard for later and reset the guard.
+            // Reseting the guard is important as a signal might be emitted after this call.
+            // If the slots for those signals are executed directly, new calls to the simulation
+            // (via the QtIF frontend API) are allowed.
+            qCDebug(qLcIfRecGuard, "Disable recursion guard and saving current value");
+            m_savedValue = qtif_private::QIfSimulationProxy<T>::recursionGuard;
+            qtif_private::QIfSimulationProxy<T>::recursionGuard.clear();
+        }
+
+        private:
+            QByteArray m_savedValue;
+    };
 }
 
+
 #define QIF_SIMULATION_TRY_CALL_FUNC(instance_type, function, ret_func, ...) \
-for (auto _qif_instance : qtif_private::QIfSimulationProxy<instance_type>::proxies) { \
-    QVariant return_value; \
-    if (_qif_instance->callQmlMethod(function, return_value, ##__VA_ARGS__)) { \
-        ret_func; \
+qtif_private::RecursionGuard<instance_type> _guard; \
+if (_guard.trySet(function)) { \
+    for (auto _qif_instance : qtif_private::QIfSimulationProxy<instance_type>::proxies) { \
+        QVariant return_value; \
+        if (_qif_instance->callQmlMethod(function, return_value, ##__VA_ARGS__)) { \
+            ret_func; \
+        } \
     } \
+} else { \
+    _guard.saveAndRelease(); \
 } \
 
 
