@@ -23,6 +23,7 @@ tst_*
 !tst_*.h
 !tst_*.tpl
 !tst_*.qface
+!tst_*.qml
 *Makefile.tst_*
 
 # Directories to ignore
