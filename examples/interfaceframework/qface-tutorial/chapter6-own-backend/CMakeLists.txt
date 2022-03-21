@@ -1,4 +1,3 @@
-# Generated from chapter6-own-backend.pro.
 cmake_minimum_required(VERSION 3.16)
 project(qface-chapter6 LANGUAGES CXX)
 

@@ -1,19 +1,12 @@
-# Generated from backend_simulator.pro.
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-addressbook/interfaceframework/")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS InterfaceFramework)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
 
 qt_add_plugin(addressbook_backend_simulator)
 set_target_properties(addressbook_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
@@ -34,7 +27,6 @@ if (NOT ${import_path} IN_LIST QML_IMPORT_PATH)
     set(QML_IMPORT_PATH ${QML_IMPORT_PATH} CACHE INTERNAL "" FORCE)
 endif()
 
-
 # Resources:
 #! [0]
 set(plugin_resource_resource_files
@@ -47,6 +39,7 @@ qt_add_resources(addressbook_backend_simulator "plugin_resource"
     FILES
         ${plugin_resource_resource_files}
 )
+
 #! [0]
 
 install(TARGETS addressbook_backend_simulator

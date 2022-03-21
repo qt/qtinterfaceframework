@@ -1,25 +1,15 @@
-# Generated from frontend.pro.
-
 cmake_minimum_required(VERSION 3.16)
 project(QtIfInstrumentCluster LANGUAGES CXX)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter6-own-backend")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS InterfaceFramework)
-find_package(Qt6 COMPONENTS Qml)
-find_package(Qt6 COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework Qml Quick)
 
 qt_add_library(libIc_chapter6)
 set_target_properties(libIc_chapter6 PROPERTIES OUTPUT_NAME "InstrumentCluster")

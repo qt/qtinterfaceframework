@@ -1,23 +1,16 @@
-# Generated from frontend.pro.
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-climate")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Gui)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework Qml Quick)
+
 #! [0]
-find_package(Qt6 COMPONENTS InterfaceFramework)
+
 #! [0]
-find_package(Qt6 COMPONENTS Qml)
-find_package(Qt6 COMPONENTS Quick)
 
 #! [1]
 qt_add_library(QtIfClimateExample)
@@ -27,6 +20,7 @@ qt_ifcodegen_extend_target(QtIfClimateExample
     IDL_FILES ../example-climate.qface
     TEMPLATE frontend
 )
+
 #! [1]
 
 set_target_properties(QtIfClimateExample PROPERTIES RUNTIME_OUTPUT_DIRECTORY ..)

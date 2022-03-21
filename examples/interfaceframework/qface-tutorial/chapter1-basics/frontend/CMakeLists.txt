@@ -1,20 +1,12 @@
-# Generated from frontend.pro.
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter1-basics")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS InterfaceFramework)
-find_package(Qt6 COMPONENTS Qml)
-find_package(Qt6 COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core InterfaceFramework Qml Quick)
 
 qt_add_library(libIc_chapter1)
 set_target_properties(libIc_chapter1 PROPERTIES OUTPUT_NAME "InstrumentCluster")

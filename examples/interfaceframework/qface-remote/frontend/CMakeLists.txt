@@ -1,26 +1,18 @@
-# Generated from frontend.pro.
-
 cmake_minimum_required(VERSION 3.16)
 project(QtIfRemoteExample LANGUAGES CXX)
 
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-remote")
 
-find_package(Qt6 COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Qml Quick)
 #! [0]
-find_package(Qt6 COMPONENTS InterfaceFramework)
+find_package(Qt6 REQUIRED COMPONENTS InterfaceFramework)
 #! [0]
-find_package(Qt6 COMPONENTS Qml)
-find_package(Qt6 COMPONENTS Quick)
 
 #! [1]
 qt_add_library(QtIfRemoteExample)
