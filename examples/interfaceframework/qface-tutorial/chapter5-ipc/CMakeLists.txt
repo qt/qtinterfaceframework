@@ -1,4 +1,3 @@
-# Generated from chapter5-ipc.pro.
 cmake_minimum_required(VERSION 3.16)
 project(qface-chapter5 LANGUAGES CXX)
 

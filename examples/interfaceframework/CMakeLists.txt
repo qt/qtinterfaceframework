@@ -1,5 +1,3 @@
-# Generated from interfaceframework.pro.
-
 cmake_minimum_required(VERSION 3.16)
 project(example LANGUAGES CXX)
 

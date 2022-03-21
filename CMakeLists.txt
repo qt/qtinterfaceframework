@@ -1,5 +1,3 @@
-# Generated from interfaceframework.pro.
-
 cmake_minimum_required(VERSION 3.16)
 
 include(.cmake.conf)
@@ -16,8 +14,8 @@ set(QT_REPO_NOT_WARNINGS_CLEAN TRUE)
 # Make sure we only use latest private CMake API, aka no compatibility wrappers.
 set(QT_NO_INTERNAL_COMPATIBILITY_FUNCTIONS TRUE)
 
-find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core) # special case
-find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Gui Qml Quick RemoteObjects Multimedia Sql DBus Widgets) # special case
+find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
+find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Gui Qml Quick RemoteObjects Multimedia Sql DBus Widgets)
 
 include(src/interfaceframework/Qt6InterfaceFrameworkMacros.cmake)
 

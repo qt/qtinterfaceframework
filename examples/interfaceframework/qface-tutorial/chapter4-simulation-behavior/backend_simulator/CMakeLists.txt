@@ -1,19 +1,12 @@
-# Generated from backend_simulator.pro.
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter4-simulation-behavior")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS InterfaceFramework)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
 
 qt_add_plugin(ic_chapter4_simulation)
 set_target_properties(ic_chapter4_simulation PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
@@ -33,7 +26,6 @@ if (NOT ${import_path} IN_LIST QML_IMPORT_PATH)
     list (APPEND QML_IMPORT_PATH "${import_path}")
     set(QML_IMPORT_PATH ${QML_IMPORT_PATH} CACHE INTERNAL "" FORCE)
 endif()
-
 
 # Resources:
 set(simulation_resource_files

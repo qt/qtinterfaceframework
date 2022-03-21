@@ -1,24 +1,17 @@
-# Generated from instrument-cluster.pro.
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter4-simulation-behavior")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Gui)
-find_package(Qt6 COMPONENTS Qml)
-find_package(Qt6 COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
 
 qt_add_executable(ic_chapter4
     main.cpp
 )
+
 set_target_properties(ic_chapter4 PROPERTIES OUTPUT_NAME "chapter4-simulation-behavior")
 set_target_properties(ic_chapter4 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 set_target_properties(ic_chapter4 PROPERTIES
@@ -32,7 +25,6 @@ target_link_libraries(ic_chapter4 PUBLIC
     Qt::Qml
     Qt::Quick
 )
-
 
 # Resources:
 set(app_resource_files

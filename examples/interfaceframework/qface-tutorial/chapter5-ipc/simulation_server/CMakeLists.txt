@@ -1,19 +1,14 @@
-# Generated from simulation_server.pro.
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
-  set(INSTALL_EXAMPLESDIR "examples")
+    set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter5-ipc/simulation_server")
 
-find_package(Qt6 COMPONENTS Core)
-find_package(Qt6 COMPONENTS Quick)
-find_package(Qt6 COMPONENTS InterfaceFramework)
+find_package(Qt6 REQUIRED COMPONENTS Core InterfaceFramework Quick)
 
 qt_add_executable(chapter5-ipc-server)
 set_target_properties(chapter5-ipc-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
@@ -23,6 +18,7 @@ qt_ifcodegen_extend_target(chapter5-ipc-server
     IDL_FILES ../instrument-cluster.qface
     TEMPLATE server_qtro_simulator
 )
+
 set_target_properties(chapter5-ipc-server PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
@@ -31,7 +27,6 @@ set_target_properties(chapter5-ipc-server PROPERTIES
 target_link_libraries(chapter5-ipc-server PUBLIC
     libIc_chapter5
 )
-
 
 # Resources:
 set(simulation_resource_files

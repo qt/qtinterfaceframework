@@ -1,4 +1,3 @@
-# Generated from chapter1-basics.pro.
 cmake_minimum_required(VERSION 3.16)
 project(qface-chapter1 LANGUAGES CXX)
 
