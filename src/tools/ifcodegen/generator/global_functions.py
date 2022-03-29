@@ -34,7 +34,6 @@ import inspect
 import click
 
 from jinja2 import TemplateAssertionError
-from jinja2 import contextfunction
 
 currentSrcFile = ""
 
