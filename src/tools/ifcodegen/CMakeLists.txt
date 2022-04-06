@@ -22,11 +22,13 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
     if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
         set(VIRTUALENV_ACTIVATE ${VIRTUALENV_PATH}/Scripts/activate.bat)
         set(VIRTUALENV_ACTIVATE_COMMAND ${VIRTUALENV_ACTIVATE})
+        set(VIRTUALENV_PYTHON ${VIRTUALENV_PATH}/Scripts/python.exe)
         set(IFCODEGEN_BIN ${VIRTUALENV_PATH}/Scripts/qface.exe)
         set(DEPLOY_VIRTUALENV ${CMAKE_CURRENT_SOURCE_DIR}/deploy-virtualenv.bat)
     else()
         set(VIRTUALENV_ACTIVATE ${VIRTUALENV_PATH}/bin/activate)
         set(VIRTUALENV_ACTIVATE_COMMAND . ${VIRTUALENV_ACTIVATE})
+        set(VIRTUALENV_PYTHON ${VIRTUALENV_PATH}/bin/python)
         set(IFCODEGEN_BIN ${VIRTUALENV_PATH}/bin/qface)
         set(DEPLOY_VIRTUALENV ${CMAKE_CURRENT_SOURCE_DIR}/deploy-virtualenv.sh)
     endif()
@@ -63,6 +65,15 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
     # someone is working on the qface sources
     file(GLOB_RECURSE IFCODEGEN_SOURCE_FILES ${IFCODEGEN_SOURCE_DIR}/*.py)
 
+    # If the upstream python packages introduce a regression this option can be used to install
+    # the minimum version for all required python package and produce a working setup
+    # Those packages might be outdated and may contain security holes, but they are known to be
+    # working.
+    set(INSTALL_MINIMAL_QFACE_PACKAGES_COMMAND)
+    if (QT_USE_MINIMAL_QFACE_PACKAGES)
+        set(INSTALL_MINIMAL_QFACE_PACKAGES_COMMAND COMMAND pip3 install -r ${IFCODEGEN_SOURCE_DIR}/requirements_minimal.txt)
+    endif()
+
     # On the CI we use the special wheel folder when available to not download all packages again on each build
     set(PYTHON3_WHEEL_CACHE "$ENV{PYTHON3_WHEEL_CACHE}" CACHE PATH "Python3 wheel cache")
     if (EXISTS "${PYTHON3_WHEEL_CACHE}")
@@ -74,6 +85,7 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
 
     add_custom_command(OUTPUT ${IFCODEGEN_BIN}
                        COMMAND ${VIRTUALENV_ACTIVATE_COMMAND}
+                       ${INSTALL_MINIMAL_QFACE_PACKAGES_COMMAND}
                        COMMAND ${PIP3_INSTALL_COMMAND}
                        DEPENDS ${VIRTUALENV_ACTIVATE}
                                ${IFCODEGEN_SOURCE_DIR}/requirements.txt
@@ -82,16 +94,23 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
                        )
 
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
-                              ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
                        COMMAND ${DEPLOY_VIRTUALENV} qtif_qface_virtualenv
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-deploy_virtualenv
-                       COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
                        DEPENDS ${IFCODEGEN_BIN}
+                      )
+
+   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
+                             ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
+                      COMMAND ${VIRTUALENV_PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/verify_generator.py
+                      COMMAND ${CMAKE_COMMAND} -E touch .stamp-generator-verified
+                      COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
+                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
+                      COMMENT "Verifying generator"
                       )
 
     # main target which just relies on the stamp file to be uptodate
     add_custom_target(ifcodegen ALL
-                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
+                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
                       )
     # Create the rerun cmake stamp file here to be able to add cmake configure dependency
@@ -109,6 +128,7 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
     #####################################################################
 
     set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_CLEAN_FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
         ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
         ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
         ${VIRTUALENV_PATH}
