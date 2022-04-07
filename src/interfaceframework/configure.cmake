@@ -100,7 +100,7 @@ qt_configure_add_summary_entry(
     CONDITION NOT QT_FEATURE_interfaceframework
 )
 qt_configure_add_report_entry(
-    TYPE ERROR
+    TYPE WARNING
 # special case begin
     MESSAGE [[
 Cannot build the Interface Framework Generator because its dependencies are not satisfied.
