@@ -37,24 +37,24 @@
     it is efficient to reuse parts of previously developed systems, for a new system. At the same time,
     the main development is done by independent companies (tier-1). To make it possible to reuse code
     from previous projects, and also incorporate code from tier-1 partners, the APIs are split into two
-    layers: a front end and a back end. In the Qt Interface Framework, the front end API is called a \b feature,
+    layers: a front end and a back end. In the Qt Interface Framework, the front-end API is called a \b feature,
     as usually a specific class is responsible for a specific feature area, such as QIfClimateControl, which
     controls the climate feature area.
 
     \section1 Back end
 
     To function correctly, every feature needs to have a back end connected to it. This back end must
-    implement a corresponding feature back end interface. Only then, you can create a valid connection
+    implement a corresponding feature back-end interface. Only then, you can create a valid connection
     between the feature and its back end.
 
-    Usually, every feature has only one back end interface class, which the back end needs to implement
-    for the feature to work. Every back end interface is derived from QIfFeatureInterface, which
+    Usually, every feature has only one back-end interface class, which the back end needs to implement
+    for the feature to work. Every back-end interface is derived from QIfFeatureInterface, which
     provides generic functions and signals that every feature needs, such as error handling.
 
-    The back end implementations are grouped together and implemented inside a
+    The back-end implementations are grouped together and implemented inside a
     \l{How to Create Qt Plugins}{Qt plugin}. This makes it easy to provide multiple back ends
     simultaneously and switch the back end at runtime. These back-end plugins are loaded through
-    \l{QtInterfaceFramework}. A plugin can provide back end implementations for multiple features; there is no
+    \l{QtInterfaceFramework}. A plugin can provide back-end implementations for multiple features; there is no
     need to create a separate plugin for each feature.
 
     Qt Interface Framework also distinguishes between two types of back ends:
@@ -62,7 +62,7 @@
     \list
         \li \b{production} - On a production system, you want to have only production back ends running.
         \li \b{simulation} - During the development phase, it may be useful to have a simulation
-            back end that you can use for front end development, until the back end services are usable.
+            back end that you can use for front-end development, until the back-end services are usable.
     \endlist
 
     Qt Interface Framework uses a simple naming scheme to identify whether a plugin provides simulation or production
@@ -84,7 +84,7 @@
 
     The QIfServiceManager is the central part of QtInterfaceFramework, keeping a record of all the available
     back ends and their exported interfaces. The service manager scans through all available plugins and
-    their accompanying metadata. This process gives it the ability to only load plugins that a Feature
+    their accompanying metadata. This process gives it the ability to only load plugins that a feature
     requires, to reduce the startup time. All of this information is collected in the service manager
     in the form of a model, which enables developers to choose the plugin they want to use.
 
@@ -92,7 +92,7 @@
 
     The ServiceObject concept keeps the features flexible, and makes it possible to switch between
     back ends at runtime. A QIfServiceObject is a handle, which the feature uses to connect to the
-    correct back end interface. This handle provides methods to query the back end interfaces available,
+    correct back-end interface. This handle provides methods to query the back-end interfaces available,
     which the ServiceObject implements. ServiceObjects automatically wrap around plugins, making it
     possible to share the ServiceObject between multiple features and to explicitly select which
     back end to use for your feature instance.
@@ -102,14 +102,14 @@
     Based on the diagram above, the ServiceObject is the handle for a specific plugin. \b {Feature A}
     and \b {Feature B} both use the same ServiceObject, which returns an instance of \b
     Feature_A_Interface for \b {Feature A} and \b Feature_B_Interface for \b {Feature B}. The Feature
-    classes derive from QIfAbstractFeature; the back end interfaces derive from QIfFeatureInterface.
+    classes derive from QIfAbstractFeature; the back-end interfaces derive from QIfFeatureInterface.
 
     \section2 ProxyServiceObjects
 
     In contrast to the normal QIfServiceObject, which represents a handle to a back-end plugin, the
     QIfProxyServiceObject doesn't need a plugin to work. It can be instantiated on the application
     side and filled with any QIfFeatureInterface derived class. QIfProxyServiceObject is useful for
-    scenarios when a back end implementation of a feature should not be done inside a separate plugin,
+    scenarios when a back-end implementation of a feature should not be done inside a separate plugin,
     but inside the application's code base itself.
 
     \image proxy-service-objects.png "Proxy Service Objects"
@@ -119,7 +119,7 @@
 
     \section1 How a Feature Finds its Back end
 
-    Typically, all Features use the auto discovery mode. From QML, you can set the
+    Typically, all features use the auto discovery mode. From QML, you can set the
     QIfAbstractFeature::discoveryMode property; from C++, you can start this with
     QIfAbstractFeature::startAutoDiscovery(). This property asks the QIfServiceManager for all the
     back ends available, that implement the required interface for your feature. The manager then
@@ -133,7 +133,7 @@
 
     \section2 Detailed Connection Order
 
-    Based on the \l{Climate Control QML Example}, the detailed connection would be as follows:
+    Based on the \l{Climate Control QML Example}, the detailed connection order would be as follows:
 
     \list 1
         \li A ClimateControl element is created in QML.
@@ -142,7 +142,7 @@
             available.
         \li QIfServiceManager searches for all plugins available and the interfaces they implement;
             this search is only done once.
-        \li QIfAbstractFeature accepts the first QIfServiceObject and connect to the corresponding
+        \li QIfAbstractFeature accepts the first QIfServiceObject and connects to the corresponding
             interface.
         \li The ClimateControl element is ready to be used.
     \endlist

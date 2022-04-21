@@ -44,7 +44,7 @@
     \li The user created API definitions like a climate API or a
     mediaplayer API. Each of these APIs is the second building block called
     \e Features, which define the API exposed to the application developer.
-    \li The last block consists of a \e{ back end interface} and one or more
+    \li The last block consists of a \e{back-end interface} and one or more
     \e{back ends} implementing it to either connect to the underlying vehicle
     or do a simulation of it.
     \endlist

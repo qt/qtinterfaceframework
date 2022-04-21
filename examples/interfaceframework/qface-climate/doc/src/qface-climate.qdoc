@@ -41,8 +41,8 @@ build a new component. Based on a single QFace Interface Definition Language
 (IDL) file, the example generates:
 
 \list
-    \li a shared library with the front end code
-    \li a back end simulator plugin
+    \li a shared library with the front-end code
+    \li a back-end simulator plugin
     \li a demo application that shows the values in the current module
 \endlist
 
@@ -202,7 +202,7 @@ Some of these extra configurations are highlighted below:
                 config_simulator:
                     default: RecirculationMode.RecirculationOff
             \endcode
-        \li Specifies the default value assigned to a property in the simulator back end plugin.
+        \li Specifies the default value assigned to a property in the simulator back-end plugin.
 \endtable
 
 
@@ -251,11 +251,11 @@ and Windows.
 
 \section1 Back End Simulator Plugin
 
-Since the \c{front end} library uses the \l {Dynamic Backend System}, we need a corresponding
-\c{back end} plugin, for the library to provide some functionality. To generate a mock version of
-the back end plugin called "Simulator Backend", you can use the \c backend_simulator template from
-the same IDL file as the \c{front end} library uses the \l {Dynamic Backend System}, we need a corresponding
-\c{back end} plugin, fo library. The build system integration works in the same way, but it
+Since the \c{front-end} library uses the \l {Dynamic Backend System}, we need a corresponding
+\c{back-end} plugin, for the library to provide some functionality. To generate a mock version of
+the back-end plugin called "Simulator Backend", you can use the \c backend_simulator template from
+the same IDL file as the \c{front-end} library uses the \l {Dynamic Backend System}, we need a corresponding
+\c{back-end} plugin, fo library. The build system integration works in the same way, but it
 uses a different generation template.
 
 \e CMake:
@@ -290,7 +290,7 @@ in the annotations and checks the boundaries of new values using the \c minimum/
 annotations.
 
 Using the \c zones annotations, the generated back end provides individual values for every zone
-and communicates the available zones to the front end library. For more information, see the
+and communicates the available zones to the front-end library. For more information, see the
 \l {Climate Control QML Example}.
 
 \section1 Demo Application
@@ -298,7 +298,7 @@ and communicates the available zones to the front end library. For more informat
 The demo application presents a simple QML interface with all the properties of the generated
 interface.
 
-Since we do not provide a QML plugin, the application needs to link to the generated front end
+Since we do not provide a QML plugin, the application needs to link to the generated front-end
 library and call the \c {ClimateModule::registerTypes} and \c {ClimateModule::registerQmlTypes}
 methods that are generated in the module singleton to register all auto-generated interfaces and
 types with the QML engine.
@@ -309,12 +309,12 @@ in the IDL file. Afterwards, the interface can be instantiated like a regular QM
 \snippet interfaceframework/qface-climate/demo/main.qml 0
 \dots 0
 
-Our application doesn't know about our back end plugin, so, we need to put this plugin in the folder
+Our application doesn't know about our back-end plugin, so, we need to put this plugin in the folder
 where our application looks for plugins. By default, Qt looks in the \b plugins folder within its
 installation directory or in the application's current working directory. For QtInterfaceFramework plugins to be
 found, they need to be placed within a \b interfaceframework sub-folder.
 
-To make sure this is done automatically, we add the following line to our back end
+To make sure this is done automatically, we add the following line to our back-end
 build system file:
 
 \e CMake:

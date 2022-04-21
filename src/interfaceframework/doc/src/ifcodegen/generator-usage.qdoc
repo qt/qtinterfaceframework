@@ -122,7 +122,7 @@
             \li Generates an API using base classes from qtinterfaceframework and the \l{Dynamic Backend System}
         \row
             \li \l {QML Plugin} {qmlplugin}
-            \li Generates a C++ QML Plugin which registers all types from the frontend in QML.
+            \li Generates a C++ QML Plugin which registers all frontend types in QML.
         \row
             \li \l {Backend Simulator} {backend_simulator}
             \target backend-simulator-template
@@ -319,7 +319,7 @@
             \li Main IDL file
             \li Interface
             \li The typeIcon is a 16x16 icon used in the Navigator Pane within Qt Design Studio.
-                \note The icon needs to copied to the correct folder by a custom qmake rule.
+                \note The icon needs to be copied to the correct folder by a custom qmake rule.
         \row
             \li \code
                 @designer: {libraryIcon: "images/climate.png"}
@@ -327,7 +327,7 @@
             \li Main IDL file
             \li Interface
             \li The libraryIcon is shown in the Library within Qt Design Studio.
-                \note The icon needs to copied to the correct folder by a custom qmake rule.
+                \note The icon needs to be copied to the correct folder by a custom qmake rule.
     \endtable
 
     Annotations that are not logically part of the interface description, but rather the ones used
@@ -394,7 +394,8 @@
             config_simulator:
             default: {
                 FrontLeft: 21.0,
-                FrontRight: 22.5, =: 0.0
+                FrontRight: 22.5,
+                =: 0.0
             }
             \endcode
         \row
