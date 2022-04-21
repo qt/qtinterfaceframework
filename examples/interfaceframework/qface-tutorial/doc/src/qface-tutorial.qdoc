@@ -38,11 +38,11 @@
     following steps:
 
     \list 1
-        \li \l{chapter1}{Integrate a basic interface without a back-end}
+        \li \l{chapter1}{Integrate a basic interface without a back end}
         \li \l{chapter2}{Extend the interface and add annotations}
         \li \l{chapter3}{Add a simulation back end and corresponding simulation annotations; with a QML plugin}
         \li \l{chapter4}{Add a custom simulation behavior}
-        \li \l{chapter5}{Add a simulation server and use it from a Qt Remote Objects Back End}
+        \li \l{chapter5}{Add a simulation server and use it from a Qt Remote Objects back end}
         \li \l{chapter6}{Develop a production back end that connects to a DBus interface}
     \endlist
 
@@ -171,12 +171,12 @@
             and functions.
     \endlist
 
-    To inspect the C++ code yourself, you can view these files in the your library's build folder.
+    To inspect the C++ code yourself, you can view these files in the library's build folder.
 
     Right now, the most important auto-generated file for us, is the resulting C++ class for our
     defined interface. It looks like this:
 
-    \quotefile interfaceframework/qface-tutorial/chapter1-basics/frontend/instrumentcluster.h
+    \quotefile interfaceframework/qface-tutorial/chapter1-basics/frontend/frontend/instrumentcluster.h
 
     As you can see, the auto-generated C++ class implements a \c speed property, that we previously
     defined in the QFace file. By using the \c Q_OBJECT and \c Q_PROPERTY macros, the class is now
@@ -184,7 +184,7 @@
 
     \section2 Integrate the Front End Library with the QML Code
 
-    For this integration, we use the auto-generated front end library from the QML code. For the sake
+    For this integration, we use the auto-generated front-end library from the QML code. For the sake
     of simplicity, we follow the standard Qt example pattern and use a small C++ main function
     which registers our auto-generated types to QML and loads the Instrument Cluster QML code into
     the QQmlApplicationEngine:
@@ -348,7 +348,7 @@
     \skipto find_package
     \printto target_link_libraries
 
-    Similar to the front end library, first the used components are imported using \e find_package.
+    Similar to the front-end library, first the used components are imported using \e find_package.
     As we want to build a plugin (dynamic library) which is loaded at runtime instead of linking
     against it, we use the \l {qt_add_plugin} function instead. One important aspect
     here is that the library name ends with "_simulation", which is a way to tell QtInterfaceFramework that this
@@ -367,7 +367,7 @@
     \skipto IFCODEGEN_TEMPLATE
     \printto CONFIG += install_ok
 
-    Just like for the front end library, the project file builds a \c lib and defines the library
+    Just like for the front-end library, the project file builds a \c lib and defines the library
     name using \c qtLibraryTarget to also support the Windows debug postfix. One important aspect
     here is that the library name ends with "_simulation", which is a way to tell QtInterfaceFramework that this
     is a simulation back end. When a "production" back end is available, it is preferred over the
@@ -381,12 +381,12 @@
     \section2 Link Settings and Locating Plugins
 
     Trying to build the project file just as it is, right now, would result in compilation and
-    linking errors. This is because: to do the front end and back end separation, we need to have the
+    linking errors. This is because: to do the front end and back-end separation, we need to have the
     back end implement a defined interface class, that is known to the front end. This interface is
-    aptly called "backend interface" and is automatically generated as part of the front end
+    aptly called "backend interface" and is automatically generated as part of the front-end
     library. Because this class provides signals and slots and uses QObject for its base class, you
-    need to link to the front end library when you inherit from it. As this is needed for the
-    back end plugin, we need to add the following lines in addition:
+    need to link to the front-end library when you inherit from it. As this is needed for the
+    back-end plugin, we need to add the following lines in addition:
 
     \e CMake:
 
@@ -394,7 +394,7 @@
     \skipto target_link_libraries
     \printto install
 
-    By defining the front end library named \e libIc_chapter3 as a target link library the include
+    By defining the front-end library named \e libIc_chapter3 as a target link library the include
     path gets updated accordingly.
 
     \e qmake:
@@ -422,7 +422,7 @@
     has it's own sub-folder, such as \c platforms, for the platform plugins used to talk to the
     underlying platform API and the windowing system.
 
-    Similarly, QtInterfaceFramework searches for its back end plugins in the \c interfaceframework folder.
+    Similarly, QtInterfaceFramework searches for its back-end plugins in the \c interfaceframework folder.
 
     To make sure our simulation back end ends up in such a folder, we add the following changes in
     our build system file:
@@ -439,7 +439,7 @@
     \skipto DESTDIR
     \printuntil DESTDIR
 
-    You might wonder how creating a \c interfaceframework folder in the upper directory solves this problem of
+    You might wonder how creating an \c interfaceframework folder in the upper directory solves the problem of
     finding the plugin as it's not part of the system plugins folder. But Qt supports searching in
     multiple folders for such plugins and one of those folders is the path to where the executable
     itself is located.
@@ -448,7 +448,7 @@
     function or using the \c QT_PLUGIN_PATH environment variable. For more information, see
     \l{https://doc.qt.io/qt-5/plugins-howto.html}{How to create Qt Plugins}.
 
-    Now everything is in place, but because our plugin links against the front end library, we need
+    Now everything is in place, but because our plugin links against the front-end library, we need
     to make sure the library can be found by the dynamic linker. This can be achieved by
     setting the \c LD_LIBRARY_PATH environment variable to our library folder. But this results
     in the problem, that every user would need to set this variable to be able to use our
@@ -456,7 +456,7 @@
 
     \e CMake:
 
-    Using CMake, the location of our front end library is automatically added as a \e RUNPATH to the
+    Using CMake, the location of our front-end library is automatically added as a \e RUNPATH to the
     the binary and no further steps are needed.
 
     \e qmake:
@@ -473,7 +473,7 @@
 
     In the first chapter, we extended our \c main.cpp to register all types of our auto-generated
     Middleware APIs. Although this works fine, in bigger projects it's common to use a QML Plugin
-    instead and be able to use \c qmlscene for development. Although the code for doing this is
+    instead and be able to use the \c qml executable for development. Although the code for doing this is
     not complex, the Interface Framework Generator supports this as well and makes it even easier.
 
     From the first chapter, we know that the module name is used for the QML import URI. This is
@@ -524,7 +524,7 @@
     \printto target.path
 
     All lines until \c IFCODEGEN_SOURCES should be familiar. We use \c CONFIG to build a plugin, then
-    define the settings for the linker to link against our front end library. Then, we use
+    define the settings for the linker to link against our front-end library. Then, we use
     \c IFCODEGEN_TEMPLATE to define "qmlplugin" as the generation template. Instead of adding
     \c ifcodegen to \c CONFIG, this time we use
     \l{https://doc.qt.io/qt-5/qmake-test-function-reference.html#load-feature}
@@ -579,10 +579,10 @@
     annotation was transformed into a JSON file that's now part of the "simulation backend" build
     folder. This JSON file looks like this:
 
-    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/instrumentclustermodule.json
+    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/backend_simulator/instrumentclustermodule.json
 
-    But how is this JSON file related to the actual simulation back end code? The auto-generated
-    simulation back end code uses QIfSimulationEngine, that reads the JSON file and provides its
+    But how is this JSON file related to the actual simulation back-end code? The auto-generated
+    simulation back-end code uses QIfSimulationEngine, that reads the JSON file and provides its
     data to a QML simulation file. A default QML file is also auto-generated and loaded from the
     QIfSimulationEngine. This default QML file provides the behavior of what should happen in the
     the simulation back end.
@@ -615,7 +615,7 @@
 
     The InstrumentClusterSimulation.qml file is very interesting:
 
-    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/InstrumentClusterSimulation.qml
+    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/backend_simulator/InstrumentClusterSimulation.qml
 
     First, there's a \c settings property, that's initialized with the return value from the
     \l{IfSimulator::findData}{IfSimulator.findData} method, which takes the
@@ -632,14 +632,14 @@
     our \c InstrumentCluster QML front end class. But, apart from the front end, these properties are
     also writable to make it possible to change them to provide a useful simulation.
 
-    Each time a front end instance connects to a back end, the \c initialize() function is called.
+    Each time a front-end instance connects to a back end, the \c initialize() function is called.
     The same applies to the QML simulation: as the \c initialize() C++ function forwards this to
     the QML instance. This also applies to all other functions, like setters and getters, for
     properties or methods. For more details, see \l{QIfSimulationEngine}.
 
     Inside the QML \c initialize() function, we call \c{IfSimulator.initializeDefault()}, to read
     the default values from the \c simulationData object and initialize all properties. This is
-    done only \b once, as we don't want the properties be reset to default when the next front end
+    done only \b once, as we don't want the properties be reset to default when the next front-end
     instance connects to the back end. Lastly, the base implementation is called to make sure that
     the \c initializationDone signal is sent to the front end.
 
@@ -677,6 +677,7 @@
 
     \quotefromfile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/simulation.qml
     \skipto import
+    \printuntil /^\}/
 
     The next step is to tell the Interface Framework Generator and the QIfSimulationEngine about our new
     simulation file. Similar to QML files, the best approach here is to put the simulation file into
@@ -901,7 +902,7 @@
     The same slot is also used during the initialization phase to save and emit the value.
 
     You might wonder why saving the value is needed at all, if we can just emit the signal. This is
-    because the back end plugin is used directly by every instance of the \c InstrumentCluster class
+    because the back-end plugin is used directly by every instance of the \c InstrumentCluster class
     and every instance calls the \c initialize() function to retrieve the current state. Instead of
     fetching all properties again, the second \c initialize() call just emits values that were
     already saved; and the slots keep them up to date.

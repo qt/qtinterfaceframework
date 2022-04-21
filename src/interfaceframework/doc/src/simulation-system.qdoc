@@ -57,9 +57,9 @@ follows the same schema:
 
 \image feature-backend.png "Relationship between the Feature and the Backend"
 
-Each back end plugin needs to implement the back end interface to provide the necessary functionality
+Each back-end plugin needs to implement the back-end interface to provide the necessary functionality
 to the front end. For example, the QIfClimateControlBackendInterface class for the
-QIfClimateControl front end API.
+QIfClimateControl front-end API.
 
 In the back end, every call from the front end is forwarded to QML, where we can script simulation
 behavior.
@@ -71,7 +71,7 @@ behavior.
 The core of the Qt Interface Framework Simulation System is the QIfSimulationEngine. This engine extends
 QQmlApplicationEngine and provides the extra functionality to connect C++ and QML logic together.
 
-Each back end uses its own simulation engine to separate the front end code from the back end QML
+Each back end uses its own simulation engine to separate the front-end code from the back-end QML
 code. To provide a binding between QML and C++ objects, the C++ instance must be registered
 with the QIfSimulationEngine under a certain name. For each registered C++ instance, the engine
 creates a proxy object and exposes it as a QML type. These QML types can be used to provide the
@@ -141,7 +141,7 @@ For more information about simulation and the data format, see \l{IfSimulator}.
 For app development or unit testing, it is often useful to trigger a certain behavior in the
 back end. For example, when implementing message boxes for error recovery, the app developer may
 need a way to easily trigger this exact error condition. Suppose that the simulation behavior
-provided by the back end developer, for this use case, is not be sufficient.
+provided by the back-end developer, for this use case, is not sufficient.
 
 In this case, the Qt Interface Framework Simulation System provides an override system to load your own simulation
 behavior file or data file, via an environment variable.

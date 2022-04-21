@@ -99,7 +99,7 @@ called users:
 <h1>Members</h1>
 <ul>
 {% for user in users %}
-    <li>{{ user.username|e }}</li>
+    <li>{{ user.username }}</li>
 {% endfor %}
 </ul>
 \endcode
@@ -110,8 +110,8 @@ containers like dict:
 \code
 <dl>
 {% for key, value in my_dict.iteritems() %}
-    <dt>{{ key|e }}</dt>
-    <dd>{{ value|e }}</dd>
+    <dt>{{ key }}</dt>
+    <dd>{{ value }}</dd>
 {% endfor %}
 </dl>
 \endcode
@@ -155,11 +155,11 @@ users which are hidden:
 
 \code
 {% for user in users if not user.hidden %}
-    <li>{{ user.username|e }}</li>
+    <li>{{ user.username }}</li>
 {% endfor %}
 \endcode
 
-The advantage is that the special loop variable will count correctly; thus not counting the users
+The advantage is that the special loop variables will count correctly; thus not counting the users
 not iterated over.
 
 If no iteration took place because the sequence was empty or the filtering removed all the items
@@ -168,7 +168,7 @@ from the sequence, one can render a default block by using else:
 \code
 <ul>
 {% for user in users %}
-    <li>{{ user.username|e }}</li>
+    <li>{{ user.username }}</li>
 {% else %}
     <li><em>no users found</em></li>
 {% endfor %}
@@ -179,7 +179,7 @@ In Python, \e {else} blocks are executed whenever the corresponding loop did not
 Jinja loops cannot break anyway, a slightly different behavior of the \e {else} keyword was chosen.
 
 It is also possible to use loops recursively. This is useful when dealing with recursive data such
-as sitemaps or RDFa. To use loops recursively, one basically has to add the recursive modifier to
+as sitemaps or RDFs. To use loops recursively, one basically has to add the recursive modifier to
 the loop definition and call the loop variable with the new iterable where recursion is needed.
 
 The following example implements a sitemap with recursive loops:
@@ -187,7 +187,7 @@ The following example implements a sitemap with recursive loops:
 \code
 <ul class="sitemap">
 {%- for item in sitemap recursive %}
-    <li><a href="{{ item.href|e }}">{{ item.title }}</a>
+    <li><a href="{{ item.href }}">{{ item.title }}</a>
     {%- if item.children -%}
         <ul class="submenu">{{ loop(item.children) }}</ul>
     {%- endif %}</li>
@@ -212,7 +212,7 @@ can use it to test if a variable is defined, not empty and not false:
 {% if users %}
 <ul>
 {% for user in users %}
-    <li>{{ user.username|e }}</li>
+    <li>{{ user.username }}</li>
 {% endfor %}
 </ul>
 {% endif %}
@@ -279,7 +279,7 @@ env = Environment(
 env.filters['lowerfirst'] = lower_first_filter
 \endcode
 
-After that filter called lower first will be available from the template:
+After that a filter called lowerfirst will be available from the template:
 \code
 {{ var | lowerfirst }}
 \endcode
@@ -289,7 +289,7 @@ A list of all supported filters can be found in the \l{Filter Reference}.
 
 \section2 Variables
 Template variables are defined by the context dictionary passed to the template. Variables can be
-complex object having their own attributes.
+complex objects having their own attributes.
 
 One can use a dot (.) to access attributes of a variable in addition to the standard Python
 __getitem__ “subscript” syntax ([]).
@@ -301,7 +301,7 @@ The following lines are equivalent:
 {{ foo['bar'] }}
 \endcode
 
-If a variable or attribute does not exist, its value will result to undefined value. The
+If a variable or attribute does not exist, its value will result in an undefined value. The
 interpretation of that kind of value depends on the application configuration: the default
 behavior is to evaluate to an empty string if printed or iterated over, and to fail for every
 other operation.
@@ -376,7 +376,7 @@ newline sign):
 
 \section2 Assignments
 
-Inside code blocks, you can also assign values to variables. Assignments at top level (outside of
+Inside code blocks, you can also assign values to variables. Assignments at the top level (outside of
 blocks, macros or loops) are exported from the template like top level macros and can be imported
 by other templates.
 
@@ -446,7 +446,7 @@ block:
 \endcode
 
 It's also possible to strip whitespace in templates by hand. With a minus sign (-) at the start or
-end of a block (e.g. a For tag), a comment, or a variable expression, the whitespaces before or
+end of a block (e.g. a for tag), a comment, or a variable expression, the whitespaces before or
 after that block will be removed:
 
 \code
