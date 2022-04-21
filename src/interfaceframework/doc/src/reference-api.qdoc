@@ -33,7 +33,7 @@
 \section1 Overview
 
 The Qt Interface Framework module contains a reference API that provides interfaces to common automotive
-functionality. These APIs rely on the separation of the front end API from the back end
+functionality. These APIs rely on the separation of the front-end API from the back-end
 implementation. The Qt Interface Framework module also introduces a set of concepts used in the APIs, such as
 zones and property attributes. For more about concepts, see \l{Concepts and Architecture}.
 
@@ -44,7 +44,7 @@ Qt Interface Framework consists of the following C++ modules:
 \annotatedlist qtif_modules
 
 \b {Qt Interface Framework Core} provides core base classes for the Qt Interface Framework features, and handles the discovery of
-Qt Interface Framework back end plugins. Application developers do not need to use Qt Interface Framework Core directly. This
+Qt Interface Framework back-end plugins. Application developers do not need to use Qt Interface Framework Core directly. This
 module is only necessary when you implement a new Interface Framework feature, such as Qt Interface Framework Vehicle Functions
 ClimateControl.
 

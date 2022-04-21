@@ -58,12 +58,12 @@ This QIfPagingModel instance can be used from C++, as well as from QML and alrea
 basic functionality for retrieving its data in an optimized fashion using the so called \e
 Pagination concept.
 
-For the back end interface the property type is different and will be a \l QIfPagingModelInterface
+For the back-end interface the property type is different and will be a \l QIfPagingModelInterface
 pointer. This is needed as the QIfPagingModel is also a QtInterfaceFramework feature and, like all features, it
-uses a back end interface for the front end-back end separation. For more information, see
+uses a back-end interface for the front-end - back-end separation. For more information, see
 \l{Concepts and Architecture}.
 
-The back end plugin needs to implement the \l QIfPagingModelInterface class for every exposed
+The back-end plugin needs to implement the \l QIfPagingModelInterface class for every exposed
 property.
 The \l backend_simulator template already takes care of this and generates all the needed code.
 
@@ -116,15 +116,15 @@ resource file is added to the build system like this.
 
 \section2 Providing the simulation behavior in QML
 
-The auto-generated simulation back end code loads the simulation behavior from a QML file using a
-QIfSimulationEngine. This special engine makes sure the auto-generated back end interfaces are
+The auto-generated simulation back-end code loads the simulation behavior from a QML file using a
+QIfSimulationEngine. This special engine makes sure the auto-generated back-end interfaces are
 provided to the QML file and they can be extended from there. It also makes sure that the
 interfaces are available only to this engine instance and to no other engine running in the same
 process (e.g. in the frontend). See the QIfSimulationEngine documentation for more information
 about how the engine works.
 
 Using the ifcodegen for the simulation back end, the simulation interfaces are provided in the \e
-example.if.addressbook.simulation uri. The provided types are named after the back end interfaces
+example.if.addressbook.simulation uri. The provided types are named after the back-end interfaces
 implemented by the simulation back end. For our example two types are registered:
 
 \list

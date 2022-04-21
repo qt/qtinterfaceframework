@@ -39,7 +39,7 @@ This topic explains how to use the QFace Interface Definition Language (IDL).
 A complete description of the library is available
 at \l {https://pelagicore.github.io/qface/}.
 
-QFace (Qt Interface Language) is an Interface Description Languge (IDL). While it's primarily
+QFace (Qt Interface Language) is an Interface Definition/Description Languge (IDL). While it's primarily
 designed to define an interface between Qt, QML, and C++, it is flexible enough to be used in other
 contexts.
 
@@ -50,7 +50,7 @@ Additionally, the IDL knows about lists and \l {Model/View Programming}{models}:
 
 \list
     \li list - an array of primitive or complex types
-    \li model - an container for large data sets, typically used via a defined API
+    \li model - a container for large data sets, typically used via a defined API
 \endlist
 
 \code
@@ -163,7 +163,7 @@ code outside. But it's up to the generator to enforce this constraint.
 
 \section1 Enum or Flag
 
-Enum and flags allows you to encode information used inside the struct or interface as data types.
+Enums and flags allow you to encode information used inside the struct or interface as data types.
 Enums and flags are common concepts in many popular programming languages. But in the IDL, enums
 are allowed to take single value only, whereas flags can take a combination of multiple values
 that are combined with the bitwise OR operator.

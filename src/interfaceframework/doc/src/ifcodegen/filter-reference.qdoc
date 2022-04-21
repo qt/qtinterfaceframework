@@ -50,7 +50,7 @@ E.g. QString for a symbol of type "string".
 \target parameter_type(symbol)
 \section2 parameter_type(symbol)
 
-Return the C++ type for the passed symbol. This returns the same type as return_type(), but already
+Returns the C++ type for the passed symbol. This returns the same type as return_type(), but already
 prepared to be used as a parameter for methods.
 
 E.g. "const QString &<name>" for a symbol of type "string"

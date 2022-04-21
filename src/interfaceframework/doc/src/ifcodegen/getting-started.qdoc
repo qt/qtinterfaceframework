@@ -34,7 +34,7 @@ This topic explains how to get started with the Qt Interface Framework Generator
 source code from an Interface Definition Language (IDL) file. The kind of code to generate is
 determined by the template that you select.
 
-The Qt Interface Framework Generator is located in the \c bin folder of your Qt installation. If it is not
+The Qt Interface Framework Generator is located in the \c{libexec/ifcodegen} folder of your Qt installation. If it is not
 available, make sure that your configuration meets all of the prerequisites listed in the
 qmake configuration summary. For more details on how to configure Qt Interface Framework, see \l {Configuration}.
 

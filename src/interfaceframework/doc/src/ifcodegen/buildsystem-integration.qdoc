@@ -86,7 +86,7 @@ For more details on the generator's command line arguments, see \l {Use the Gene
 
 \quotation
 \note Since the \c ifcodegen has specific system dependencies, it may not be available in all
-      QtInterfaceFramework installation. In this case, the \c ifcodegen qmake feature is also not
+      QtInterfaceFramework installations. In this case, the \c ifcodegen qmake feature is also not
       available and this can result in build errors.
 
 In this case, use the following code snippet that makes sure the build stops and provides a

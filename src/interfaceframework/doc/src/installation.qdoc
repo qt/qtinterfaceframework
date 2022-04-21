@@ -57,7 +57,7 @@ summary".
         \keyword feature-qtremoteobjects
     \li QtRemoteObjects module
     \li The QtRemoteObjects Support is needed to generate \c interfaceframework back ends, using QtRemoteObjects
-        for its Inter-Process Communications (IPC). This feature also provides templates to
+        for its Inter-Process Communication (IPC). This feature also provides templates to
         generate the server part of this IPC.
 \endtable
 
@@ -70,8 +70,8 @@ needs:
     \li Description
 \row
     \li --host-tools-only
-    \li Only compiles the tools needed on the host to cross-compile for another target.
-        For example, the Interface Framework Generator.
+    \li Only compiles the tools needed on the host to cross-compile for another target,
+        for example, the Interface Framework Generator.
 \row
     \li --ifcodegen <no|qt|system>
     \li \value no
@@ -93,7 +93,7 @@ These command-line options can be passed to qmake using the \c QMAKE_EXTRA_ARGS 
 \section2 Build the Required Features Only
 
 By default, all QtInterfaceFramework modules are configured to be built, depending on whether all the required
-dependencies are available for the respective module or not. Similar to other Qt Features, you can
+dependencies are available for the respective module or not. Similar to other Qt features, you can
 request for every module to be built or skip it explicitly using the \c{--[no-]feature-<modulename>}
 argument, when you invoke \c qmake.
 
