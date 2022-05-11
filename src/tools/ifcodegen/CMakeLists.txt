@@ -276,7 +276,7 @@ qt_copy_or_install(
     )
 
 # Don't install if we are building for a target and currently using a host Qt
-if ("${QT_HOST_PATH}" STREQUAL "" OR (CMAKE_CROSSCOMPILING AND QT_BUILD_TOOLS_WHEN_CROSSCOMPILING))
+if ("${QT_HOST_PATH}" STREQUAL "" OR (CMAKE_CROSSCOMPILING AND QT_FORCE_BUILD_TOOLS))
     qt_copy_or_install(
         FILES
         templates/backend_qtro/backend.cpp.tpl
