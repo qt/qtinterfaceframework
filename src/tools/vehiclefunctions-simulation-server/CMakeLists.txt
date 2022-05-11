@@ -1,12 +1,10 @@
 # Generated from vehiclefunctions-simulation-server.pro.
 
 #####################################################################
-## ifvehiclefunctions-simulation-server Tool:
+## ifvehiclefunctions-simulation-server app:
 #####################################################################
 
-qt_get_tool_target_name(target_name ifvehiclefunctions-simulation-server)
-qt_internal_add_tool(${target_name}
-     TOOLS_TARGET IfVehicleFunctions
+qt_internal_add_app(ifvehiclefunctions-simulation-server
      LIBRARIES
         Qt::InterfaceFramework
         Qt::IfVehicleFunctions
@@ -21,7 +19,7 @@ set(qml_resource_files
     "../../plugins/ifvehiclefunctions/vehiclefunctions_simulator/simulation.qml"
 )
 
-qt_internal_add_resource(${target_name} "qml"
+qt_internal_add_resource(ifvehiclefunctions-simulation-server "qml"
     PREFIX
         "/simulation"
     BASE
@@ -31,16 +29,11 @@ qt_internal_add_resource(${target_name} "qml"
 )
 
 
-# Interface Framework Generator:
-# When cross-compiling the tool might not be compiled and the target
-# doesn't exist in this case
-if (TARGET ${target_name})
-    qt6_ifcodegen_extend_target(${target_name}
-        IDL_FILES ../../ifvehiclefunctions/ifvehiclefunctions.qface
-        TEMPLATE server_qtro_simulator
-        MODULE_NAME QtIfVehicleFunctions
-    )
-endif()
+qt6_ifcodegen_extend_target(ifvehiclefunctions-simulation-server
+    IDL_FILES ../../ifvehiclefunctions/ifvehiclefunctions.qface
+    TEMPLATE server_qtro_simulator
+    MODULE_NAME QtIfVehicleFunctions
+)
 
 #### Keys ignored in scope 1:.:.:vehiclefunctions-simulation-server.pro:<TRUE>:
 # QML_IMPORT_PATH = "$$OUT_PWD/qml"
