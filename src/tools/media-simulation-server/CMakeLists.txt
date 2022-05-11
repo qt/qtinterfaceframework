@@ -1,12 +1,10 @@
 # Generated from media-simulation-server.pro.
 
 #####################################################################
-## ifmedia-simulation-server Tool:
+## ifmedia-simulation-server app:
 #####################################################################
 
-qt_get_tool_target_name(target_name ifmedia-simulation-server)
-qt_internal_add_tool(${target_name}
-    TOOLS_TARGET IfMedia
+qt_internal_add_app(ifmedia-simulation-server
     SOURCES
         ../../plugins/ifmedia/media_simulator/database_helper.h
         ../../plugins/ifmedia/media_simulator/logging.cpp ../../plugins/ifmedia/media_simulator/logging.h
@@ -33,18 +31,14 @@ qt_internal_add_tool(${target_name}
         Qt::IfRemoteObjectsHelperPrivate
 )
 
-# When cross-compiling the tool might not be compiled and the target
-# doesn't exist in this case
-if (TARGET ${target_name})
-    qt6_add_repc_sources(${target_name}
-        qifmediaindexer.rep
-        qifmediaplayer.rep
-        qifmediadiscoverymodel.rep
-        qiffilterandbrowsemodel.rep
-    )
-endif()
+qt6_add_repc_sources(ifmedia-simulation-server
+    qifmediaindexer.rep
+    qifmediaplayer.rep
+    qifmediadiscoverymodel.rep
+    qiffilterandbrowsemodel.rep
+)
 
-qt_internal_extend_target(${target_name} CONDITION QT_FEATURE_taglib
+qt_internal_extend_target(ifmedia-simulation-server CONDITION QT_FEATURE_taglib
     LIBRARIES
         WrapTagLib::WrapTagLib
 )
