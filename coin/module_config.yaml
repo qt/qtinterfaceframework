@@ -12,9 +12,31 @@ instructions:
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_CONFIGURE_ARGS
     variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    disable_if:
+      condition: property
+      property: features
+      contains_value: UseConfigure
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_TARGET_CONFIGURE_ARGS
     variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    disable_if:
+      condition: property
+      property: features
+      contains_value: UseConfigure
+  - type: AppendToEnvironmentVariable
+    variableName: NON_QTBASE_CMAKE_ARGS
+    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    enable_if:
+      condition: property
+      property: features
+      contains_value: UseConfigure
+  - type: AppendToEnvironmentVariable
+    variableName: NON_QTBASE_TARGET_CMAKE_ARGS
+    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    enable_if:
+      condition: property
+      property: features
+      contains_value: UseConfigure
   - type: Group
     instructions:
       - !include "{{qt/qtbase}}/coin_module_build_template_v2.yaml"
