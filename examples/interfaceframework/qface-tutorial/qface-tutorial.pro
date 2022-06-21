@@ -1,10 +1,10 @@
 TEMPLATE = subdirs
 SUBDIRS += \
     instrument-cluster \
-    chapter1-basics \
-    chapter2-enums-structs \
-    chapter3-simulation-backend \
-    chapter4-simulation-behavior \
-    chapter5-ipc \
+    ch1-basics \
+    ch2-enums-structs \
+    ch3-simulation-backend \
+    ch4-simulation-behavior \
+    ch5-ipc \
 
-!win32:qtHaveModule(dbus): SUBDIRS += chapter6-own-backend
+!win32:qtHaveModule(dbus): SUBDIRS += ch6-own-backend

@@ -70,18 +70,18 @@
 
     Let's start to define a very simple interface which provides us with a speed property:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/instrument-cluster.qface
     \printuntil }
 
     First, we need to define which module we want to describe. The module acts as a namespace,
     because the IDL file can contain multiple interfaces.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/instrument-cluster.qface
     \printuntil module
 
     The most important part of the module is its interface definition.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/instrument-cluster.qface
     \skipto interface
     \printuntil }
 
@@ -100,7 +100,7 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/frontend/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/frontend/CMakeLists.txt
     \skipto find_package
     \printto install
 
@@ -115,7 +115,7 @@
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/frontend/frontend.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/frontend/frontend.pro
     \printto CONFIG += install_ok
 
     Most of the \c{.pro} file is a standard setup to define a C++ library, using "lib" \c TEMPLATE
@@ -152,7 +152,7 @@
     Right now, the most important auto-generated file for us, is the resulting C++ class for our
     defined interface. It looks like this:
 
-    \quotefile interfaceframework/qface-tutorial/chapter1-basics/frontend/frontend/instrumentcluster.h
+    \quotefile interfaceframework/qface-tutorial/ch1-basics/frontend/frontend/instrumentcluster.h
 
     As you can see, the auto-generated C++ class implements a \c speed property, that we previously
     defined in the QFace file. By using the \c Q_OBJECT and \c Q_PROPERTY macros, the class is now
@@ -165,7 +165,7 @@
     which registers our auto-generated types to QML and loads the Instrument Cluster QML code into
     the QQmlApplicationEngine:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/instrument-cluster/main.cpp
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/instrument-cluster/main.cpp
     \skipto #include "instrumentclustermodule.h"
     \printuntil }
 
@@ -173,7 +173,7 @@
     the \c speed property to the \c leftDial. This is done by instantiating the element first with
     the \c instrumentCluster ID.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/instrument-cluster/Cluster.qml
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/instrument-cluster/Cluster.qml
     \skipto import
     \printuntil InstrumentCluster
     \printuntil }
@@ -195,7 +195,7 @@
     \l{define-speed-property}{Previously}, we defined the speed property in our QFace file in the
     following way:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter1-basics/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch1-basics/instrument-cluster.qface
     \printuntil }
 
     This property is defined as readable and writable, as we didn't use any extra specifiers.
@@ -204,7 +204,7 @@
 
     To define the property as read-only, use the \c readonly keyword.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch2-enums-structs/instrument-cluster.qface
     \printuntil readonly
     \skipto }
     \printuntil }
@@ -214,7 +214,7 @@
     open the \c instrumentcluster.h from the build folder and notice that the generated
     \c speed property changed -- it no longer has a setter anymore and is now read-only.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/instrumentcluster.h
+    \quotefromfile interfaceframework/qface-tutorial/ch2-enums-structs/frontend/instrumentcluster.h
     \skipto class Q_EXAMPLE
     \printuntil Q_PROPERTY
     \dots
@@ -226,7 +226,7 @@
     To reach our goal to provide a full simulation for the Instrument Cluster, we need to add more
     properties to our QFace file: \c rpm, \c fuel and \c temperature:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch2-enums-structs/instrument-cluster.qface
     \printuntil readonly real temperature
     \skipto }
     \printuntil }
@@ -242,7 +242,7 @@
     but doesn't offer a nice API, so we define a new enum type in the QFace file and use it as the
     type for our new \c system property:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch2-enums-structs/instrument-cluster.qface
     \printuntil readonly SystemType
     \skipto }
     \printuntil enum
@@ -251,7 +251,7 @@
     In the auto-generated code, this results in an enum which is part of the module class, making it
     possible for the same enum to be used by multiple classes which are part of the same module:
 
-    \quotefile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/instrumentclustermodule.h
+    \quotefile interfaceframework/qface-tutorial/ch2-enums-structs/frontend/instrumentclustermodule.h
 
     \section2 Add a New Structure
 
@@ -259,14 +259,14 @@
     stores color, icon, and text for the warning; instead of using 3 independent properties.
     Similar to defining an interface, we can use the \c struct keyword in our QFace file:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch2-enums-structs/instrument-cluster.qface
     \skipto struct
     \printuntil }
 
     Using this new structure as a type for a property, works in the same way as when using an enum.
     The QFace file should now look like this:
 
-    \quotefile interfaceframework/qface-tutorial/chapter2-enums-structs/instrument-cluster.qface
+    \quotefile interfaceframework/qface-tutorial/ch2-enums-structs/instrument-cluster.qface
 
     \section2 Integrate the New Properties
 
@@ -277,7 +277,7 @@
     property. As we used an enum in our QFace file, we need to convert the value first by testing
     the \c sytemType property for the "Metric" value.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/instrument-cluster/Cluster.qml
+    \quotefromfile interfaceframework/qface-tutorial/ch2-enums-structs/instrument-cluster/Cluster.qml
     \skipto LeftDial
     \printuntil }
     \codeline
@@ -320,7 +320,7 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/backend_simulator/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/CMakeLists.txt
     \skipto find_package
     \printto target_link_libraries
 
@@ -336,7 +336,7 @@
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/backend_simulator/backend_simulator.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/backend_simulator.pro
     \printto DESTDIR
     \skipto QT
     \printuntil CONFIG
@@ -366,16 +366,16 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/backend_simulator/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/CMakeLists.txt
     \skipto target_link_libraries
     \printto install
 
-    By defining the front-end library named \e libIc_chapter3 as a target link library the include
+    By defining the front-end library named \e libIc_ch3 as a target link library the include
     path gets updated accordingly.
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/backend_simulator/backend_simulator.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/backend_simulator.pro
     \skipuntil CONFIG
     \printuntil INCLUDEPATH
 
@@ -405,13 +405,13 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/backend_simulator/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/CMakeLists.txt
     \skipuntil qt_add_plugin
     \printuntil set_target_properties
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/backend_simulator/backend_simulator.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/backend_simulator.pro
     \skipto DESTDIR
     \printuntil DESTDIR
 
@@ -441,7 +441,7 @@
     and annotate our plugin with the information for the linker, where it might find the needed
     libraries, relative to the plugin's location:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/backend_simulator/backend_simulator.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/backend_simulator.pro
     \skipto INCLUDEPATH
     \printuntil QMAKE_RPATHDIR
 
@@ -459,7 +459,7 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/imports/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/imports/CMakeLists.txt
     \skipto qt_ifcodegen_import_variables
     \printto install
 
@@ -479,12 +479,12 @@
     extended like this:
 
     \badcode
-    qt_ifcodegen_extend_target(libIc_chapter3
+    qt_ifcodegen_extend_target(libIc_ch3
         IDL_FILES ../instrument-cluster.qface
         PREFIX CLUSTER
         TEMPLATE frontend
     )
-    qt_add_qml_module(libIc_chapter3
+    qt_add_qml_module(libIc_ch3
         OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../imports/${CLUSTER_URI_PATH}"
         URI ${CLUSTER_URI}
         VERSION ${CLUSTER_VERSION}
@@ -496,7 +496,7 @@
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/imports/imports.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/imports/imports.pro
     \printto target.path
 
     All lines until \c IFCODEGEN_SOURCES should be familiar. We use \c CONFIG to build a plugin, then
@@ -521,7 +521,7 @@
     linking step in the \c instrument-cluster build system file and change our main file
     accordingly:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter3-simulation-backend/instrument-cluster/main.cpp
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/instrument-cluster/main.cpp
     \skipto #include
     \printuntil }
 
@@ -547,7 +547,7 @@
     Currently, in our Instrument Cluster, the temperature defaults to 0. Let's change this to a
     temperature in spring, 15 degrees Celsius, with the following YAML fragment:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter4-simulation-behavior/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch4-simulation-behavior/instrument-cluster.qface
     \printuntil }
 
     Compile the plugin again for this temperature change to be reflected in our Instrument Cluster.
@@ -555,7 +555,7 @@
     annotation was transformed into a JSON file that's now part of the "simulation backend" build
     folder. This JSON file looks like this:
 
-    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/backend_simulator/instrumentclustermodule.json
+    \quotefile interfaceframework/qface-tutorial/ch4-simulation-behavior/backend_simulator/backend_simulator/instrumentclustermodule.json
 
     But how is this JSON file related to the actual simulation back-end code? The auto-generated
     simulation back-end code uses QIfSimulationEngine, that reads the JSON file and provides its
@@ -591,7 +591,7 @@
 
     The InstrumentClusterSimulation.qml file is very interesting:
 
-    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/backend_simulator/InstrumentClusterSimulation.qml
+    \quotefile interfaceframework/qface-tutorial/ch4-simulation-behavior/backend_simulator/backend_simulator/InstrumentClusterSimulation.qml
 
     First, there's a \c settings property, that's initialized with the return value from the
     \l{IfSimulator::findData}{IfSimulator.findData} method, which takes the
@@ -633,7 +633,7 @@
     not exactly what we'd like to achieve. Instead, we use QML Animation objects to change the
     values over time:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/simulation.qml
+    \quotefromfile interfaceframework/qface-tutorial/ch4-simulation-behavior/backend_simulator/simulation.qml
     \skipto NumberAnimation
     \printuntil }
 
@@ -641,7 +641,7 @@
     accelerating car. Extending this to the other properties, and combining both sequential and
     parallel animations, we can create a full simulation:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/simulation.qml
+    \quotefromfile interfaceframework/qface-tutorial/ch4-simulation-behavior/backend_simulator/simulation.qml
     \skipto property var animation
     \printuntil property: "fuel"
     \printuntil property: "fuel"
@@ -651,7 +651,7 @@
     Then, to provide a nice simulation for the \c rpm property, we use a binding which does some
     calculations based on the current speed. The complete simulation file looks like this:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/simulation.qml
+    \quotefromfile interfaceframework/qface-tutorial/ch4-simulation-behavior/backend_simulator/simulation.qml
     \skipto import
     \printuntil /^\}/
 
@@ -662,7 +662,7 @@
 
     In our QFace file, this location now needs to be added in the form of an annotation:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter4-simulation-behavior/instrument-cluster.qface
+    \quotefromfile interfaceframework/qface-tutorial/ch4-simulation-behavior/instrument-cluster.qface
     \printuntil module
     \dots
 
@@ -694,13 +694,13 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter5-ipc/backend_qtro/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/backend_qtro/CMakeLists.txt
     \skipto qt_add_plugin
     \printto install
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter5-ipc/backend_qtro/backend_qtro.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/backend_qtro/backend_qtro.pro
     \printto CONFIG += install_ok
 
     These files are almost identical to the ones we used earlier for our simulation back end.
@@ -715,13 +715,13 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter5-ipc/simulation_server/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/simulation_server/CMakeLists.txt
     \skipto qt_add_executable
     \printto # Resources:
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter5-ipc/simulation_server/simulation_server.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/simulation_server/simulation_server.pro
     \printto RESOURCES
 
     Because we'd like to generate a server binary, the qmake \c TEMPLATE needs to be set to "app"
@@ -744,13 +744,13 @@
 
     \e CMake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter5-ipc/simulation_server/CMakeLists.txt
+    \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/simulation_server/CMakeLists.txt
     \skipto # Resources:
     \printto install
 
     \e qmake:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter5-ipc/simulation_server/simulation_server.pro
+    \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/simulation_server/simulation_server.pro
     \skipto RESOURCES
     \printuntil RESOURCES
 
@@ -780,7 +780,7 @@
     As mentioned above, we use D-Bus for this chapter and we already have an XML file that
     describes the D-Bus interface, similar to our QFace file:
 
-    \quotefile interfaceframework/qface-tutorial/chapter6-own-backend/demo_server/instrumentcluster.xml
+    \quotefile interfaceframework/qface-tutorial/ch6-own-backend/demo_server/instrumentcluster.xml
 
     This XML file is used to let qmake generate a base class which is extended by the server with
     actual functionality. For more information, see \l{QtDBus}.
@@ -791,7 +791,7 @@
     maximum of 250 is reached. Similarly, the \c rpm value is increased to 5000. For all other
     properties, we provide hard-coded values.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter6-own-backend/demo_server/instrumentcluster.cpp
+    \quotefromfile interfaceframework/qface-tutorial/ch6-own-backend/demo_server/instrumentcluster.cpp
     \skipto timerEvent
     \printuntil }
 
@@ -815,14 +815,14 @@
     Additionally, we also need to provide a list of interfaces we support as plugin metadata, in
     the form of a JSON file which looks like this:
 
-    \quotefile interfaceframework/qface-tutorial/chapter6-own-backend/backend_dbus/instrumentcluster_dbus.json
+    \quotefile interfaceframework/qface-tutorial/ch6-own-backend/backend_dbus/instrumentcluster_dbus.json
 
     We need this list, as it gives QtInterfaceFramework the chance to know which interfaces a back end supports,
     before instantiating it and loading only the plugins which the application code needs.
 
     Our plugin code looks like this:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter6-own-backend/backend_dbus/instrumentclusterplugin.cpp
+    \quotefromfile interfaceframework/qface-tutorial/ch6-own-backend/backend_dbus/instrumentclusterplugin.cpp
     \skipto #include
     \printto
 
@@ -846,7 +846,7 @@
 
     In our back end, we define a fetch function for each property that's implemented like this:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter6-own-backend/backend_dbus/instrumentclusterbackend.cpp
+    \quotefromfile interfaceframework/qface-tutorial/ch6-own-backend/backend_dbus/instrumentclusterbackend.cpp
     \skipto ::fetchSpeed
     \printto ::fetchRpm
 
@@ -859,7 +859,7 @@
 
     The \c checkInitDone() function is defined as follows:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter6-own-backend/backend_dbus/instrumentclusterbackend.cpp
+    \quotefromfile interfaceframework/qface-tutorial/ch6-own-backend/backend_dbus/instrumentclusterbackend.cpp
     \skipto ::checkInitDone
     \printto onSpeedChanged
 
@@ -871,7 +871,7 @@
     server changes one of its properties. To handle this, we define a slot for each property. This
     slot saves the property in our class an emits the change signal:
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter6-own-backend/backend_dbus/instrumentclusterbackend.cpp
+    \quotefromfile interfaceframework/qface-tutorial/ch6-own-backend/backend_dbus/instrumentclusterbackend.cpp
     \skipto void InstrumentClusterBackend::onSpeedChanged(int speed)
     \printto onRpmChanged
 
