@@ -8,7 +8,7 @@
 
 #include <QtInterfaceFramework/QIfAbstractFeature>
 #include <QtIfMedia/qtifmediaglobal.h>
-#include <QVariant>
+#include <QtCore/QVariant>
 
 QT_BEGIN_NAMESPACE
 

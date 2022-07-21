@@ -6,7 +6,7 @@
 #ifndef QIFPAGINGMODELINTERFACE_H
 #define QIFPAGINGMODELINTERFACE_H
 
-#include <QUuid>
+#include <QtCore/QUuid>
 #include <QtInterfaceFramework/QIfFeatureInterface>
 #include <QtInterfaceFramework/QIfPagingModel>
 #include <QtInterfaceFramework/QtInterfaceFrameworkModule>

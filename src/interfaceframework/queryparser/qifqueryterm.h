@@ -6,9 +6,9 @@
 #ifndef QUERYTERM_H
 #define QUERYTERM_H
 
-#include <QObject>
-#include <QSharedData>
-#include <QVariant>
+#include <QtCore/QObject>
+#include <QtCore/QSharedData>
+#include <QtCore/QVariant>
 
 #include <QtInterfaceFramework/qtifglobal.h>
 
