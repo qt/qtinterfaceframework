@@ -16,7 +16,7 @@
 // We mean it.
 //
 
-#include <QMetaProperty>
+#include <QtCore/QMetaProperty>
 #include <private/qtifglobal_p.h>
 #include <vector>
 

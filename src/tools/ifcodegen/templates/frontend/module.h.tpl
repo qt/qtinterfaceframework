@@ -31,7 +31,7 @@
 {%   endfor %}
 {% endfor %}
 
-#include <QObject>
+#include <QtCore/QObject>
 
 {{ module|begin_namespace }}
 
