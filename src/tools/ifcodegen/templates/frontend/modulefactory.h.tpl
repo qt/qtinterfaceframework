@@ -42,7 +42,8 @@
 {% else %}
 #include "{{module.module_name|lower}}.h"
 {% endif %}
-#include <QObject>
+#include <QtCore/QObject>
+#include <QtQml/QQmlEngine>
 
 {% for struct in module.structs %}
 #include "{{struct|lower}}.h"

@@ -42,7 +42,8 @@
 #ifndef QIFPLAYQUEUE_H
 #define QIFPLAYQUEUE_H
 
-#include <QAbstractListModel>
+#include <QtCore/QAbstractListModel>
+#include <QtQml/QQmlEngine>
 #include <QtIfMedia/qtifmediaglobal.h>
 
 QT_BEGIN_NAMESPACE
