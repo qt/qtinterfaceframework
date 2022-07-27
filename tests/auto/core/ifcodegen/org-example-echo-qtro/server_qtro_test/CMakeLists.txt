@@ -13,7 +13,7 @@ qt_internal_add_test(tst_org-example-echo-qtro
         main.cpp
         server.cpp server.h
         tst_echoqtro.cpp tst_echoqtro.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         echo_qtro_frontend
 )
 set_target_properties(tst_org-example-echo-qtro PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)

@@ -9,7 +9,7 @@ qt_internal_add_test(tst_qifpagingmodel
         tst_qifpagingmodel.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::CorePrivate
         Qt::Gui
         Qt::InterfaceFramework

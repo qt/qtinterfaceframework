@@ -9,7 +9,7 @@ qt_internal_add_test(tst_qiffilterandbrowsemodel
         tst_qiffilterandbrowsemodel.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::InterfaceFramework
         Qt::Quick

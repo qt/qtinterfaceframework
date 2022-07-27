@@ -9,7 +9,7 @@ qt_internal_add_cmake_library(wrong_plugin
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
     SOURCES
         wrongplugin.cpp wrongplugin.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Gui
         Qt::InterfaceFramework

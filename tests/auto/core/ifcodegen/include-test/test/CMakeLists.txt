@@ -9,7 +9,7 @@ file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
 qt_internal_add_test(tst_qface_include
     SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         include_test_common
         include_test_frontend
 )

@@ -7,7 +7,7 @@
 qt_internal_add_test(tst_qifsimulationglobalobject
     SOURCES
         tst_qifsimulationglobalobject.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::InterfaceFramework
         Qt::InterfaceFrameworkPrivate

@@ -16,7 +16,7 @@ qt_internal_add_test(tst_qifabstractfeature
         tst_qifabstractfeature.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::InterfaceFramework
         Qt::InterfaceFrameworkPrivate

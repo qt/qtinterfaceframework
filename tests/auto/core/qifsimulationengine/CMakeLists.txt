@@ -7,7 +7,7 @@
 qt_internal_add_test(tst_qifsimulationengine
     SOURCES
         tst_qifsimulationengine.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::InterfaceFramework
         Qt::InterfaceFrameworkPrivate

@@ -8,7 +8,7 @@ file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
 qt_internal_add_test(tst_vehiclefunctions_basic
     SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::InterfaceFramework
         Qt::IfVehicleFunctions

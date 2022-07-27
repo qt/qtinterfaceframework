@@ -15,7 +15,7 @@ qt_internal_add_test(tst_qifpendingreply
         tst_qifpendingreply.cpp
     DEFINES
         SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Gui
         Qt::InterfaceFramework
         Qt::Qml
