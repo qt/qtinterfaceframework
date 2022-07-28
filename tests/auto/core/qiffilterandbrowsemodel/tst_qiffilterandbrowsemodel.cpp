@@ -926,7 +926,7 @@ void tst_QIfFilterAndBrowseModel::testIndexOf_qml()
     model.setContentType("simple");
 
     QQmlEngine engine;
-    QQmlComponent component(&engine, QUrl::fromLocalFile(QFINDTESTDATA("testdata/listview.qml")));
+    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/testdata/listview.qml")));
     QObject *obj = component.create();
 
     QVERIFY2(obj, qPrintable(component.errorString()));

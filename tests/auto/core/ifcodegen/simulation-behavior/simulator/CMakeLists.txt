@@ -1,4 +1,7 @@
-qt_add_plugin(simu_simulator)
+qt_add_plugin(simu_simulator
+    OUTPUT_NAME simu_simulator
+    PLUGIN_TYPE interfaceframework
+)
 
 qt_ifcodegen_extend_target(
     simu_simulator
