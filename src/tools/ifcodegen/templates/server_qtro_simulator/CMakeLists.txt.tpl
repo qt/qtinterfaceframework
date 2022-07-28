@@ -48,11 +48,11 @@ if (TARGET ${CURRENT_TARGET})
         ${${VAR_PREFIX}_REPLICAS}
     )
 
-    target_link_libraries(${CURRENT_TARGET} PUBLIC
-        ${${VAR_PREFIX}_LIBRARIES}
+    target_include_directories(${CURRENT_TARGET} PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 
-    target_include_directories(${CURRENT_TARGET} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+    target_link_libraries(${CURRENT_TARGET} PRIVATE
+        ${${VAR_PREFIX}_LIBRARIES}
     )
 endif()

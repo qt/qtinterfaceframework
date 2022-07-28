@@ -22,11 +22,11 @@ if (TARGET ${CURRENT_TARGET})
         ${${VAR_PREFIX}_SOURCES}
     )
 
-    target_include_directories(${CURRENT_TARGET} PUBLIC
+    target_include_directories(${CURRENT_TARGET} PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     )
 
-    target_link_libraries(${CURRENT_TARGET} PUBLIC
+    target_link_libraries(${CURRENT_TARGET} PRIVATE
         ${${VAR_PREFIX}_LIBRARIES}
     )
 endif()
