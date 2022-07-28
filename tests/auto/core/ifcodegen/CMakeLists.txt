@@ -1,5 +1,16 @@
 # Generated from ifcodegen.pro.
 
+# Skip building these tests in a top-level build configured with -make tests
+# to avoid configuration errors like
+#  CMake Error: AUTOMOC for target tst_template_full_path: The "moc"
+#  executable ".../qtbase/libexec/moc" does not exist.
+#
+# It happens because targets are added using non-internal API which do not call
+# qt_autogen_tools_initial_setup.
+if(QT_SUPERBUILD)
+    return()
+endif()
+
 add_subdirectory(custom-template)
 add_subdirectory(org-example-echo)
 add_subdirectory(flat-cmake-hierarchy-test)
