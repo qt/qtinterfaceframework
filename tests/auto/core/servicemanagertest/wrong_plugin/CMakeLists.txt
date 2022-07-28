@@ -4,8 +4,9 @@
 ## wrong_plugin Generic Library:
 #####################################################################
 
-qt_internal_add_cmake_library(wrong_plugin
-    MODULE
+qt_internal_add_plugin(wrongPlugin
+    OUTPUT_NAME wrong_plugin
+    PLUGIN_TYPE interfaceframework
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
     SOURCES
         wrongplugin.cpp wrongplugin.h
@@ -22,4 +23,4 @@ qt_internal_add_cmake_library(wrong_plugin
 ## Scopes:
 #####################################################################
 
-qt_autogen_tools_initial_setup(wrong_plugin)
+qt_autogen_tools_initial_setup(wrongPlugin)

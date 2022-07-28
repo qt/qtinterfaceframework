@@ -4,12 +4,14 @@
 ## wrongmetadata_plugin_static Generic Library:
 #####################################################################
 
-qt_internal_add_cmake_library(wrongmetadata_plugin_static
+qt_internal_add_plugin(wrongmetadataStaticPlugin
+    OUTPUT_NAME wrongmetadata_plugin_static
+    PLUGIN_TYPE interfaceframework
     STATIC
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
     SOURCES
         wrongmetadatastaticplugin.cpp wrongmetadatastaticplugin.h
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::Core
         Qt::Gui
         Qt::InterfaceFramework
@@ -21,6 +23,6 @@ qt_internal_add_cmake_library(wrongmetadata_plugin_static
 ## Scopes:
 #####################################################################
 
-qt_autogen_tools_initial_setup(wrongmetadata_plugin_static)
+qt_autogen_tools_initial_setup(wrongmetadataStaticPlugin)
 
-target_compile_definitions(wrongmetadata_plugin_static PRIVATE QT_STATICPLUGIN)
+target_compile_definitions(wrongmetadataStaticPlugin PRIVATE QT_STATICPLUGIN)

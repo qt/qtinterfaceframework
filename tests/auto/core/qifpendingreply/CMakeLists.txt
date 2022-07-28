@@ -22,6 +22,14 @@ qt_internal_add_test(tst_qifpendingreply
     TESTDATA ${test_data}
 )
 
+# This dummy QML file is not used by the test itself, but helps
+# to let tools like androiddeployqt know what QML dependencies we
+# have and package everything correctly
+qt_add_resources(tst_qifpendingreply "qml"
+    PREFIX "/"
+    FILES qml_dependencies.qml
+)
+
 #### Keys ignored in scope 1:.:.:qifpendingreply.pro:<TRUE>:
 # OTHER_FILES = "testdata/*"
 # QMAKE_PROJECT_NAME = "$$TARGET"

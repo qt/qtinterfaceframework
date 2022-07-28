@@ -4,8 +4,9 @@
 ## simple_plugin Generic Library:
 #####################################################################
 
-qt_internal_add_cmake_library(simple_plugin
-    MODULE
+qt_internal_add_plugin(simplePlugin
+    OUTPUT_NAME simple_plugin
+    PLUGIN_TYPE interfaceframework
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
     SOURCES
         simpleplugin.cpp simpleplugin.h
@@ -22,4 +23,4 @@ qt_internal_add_cmake_library(simple_plugin
 ## Scopes:
 #####################################################################
 
-qt_autogen_tools_initial_setup(simple_plugin)
+qt_autogen_tools_initial_setup(simplePlugin)

@@ -4,8 +4,9 @@
 ## wrongmetadata_plugin Generic Library:
 #####################################################################
 
-qt_internal_add_cmake_library(wrongmetadata_plugin
-    MODULE
+qt_internal_add_plugin(wrongmetadataPlugin
+    OUTPUT_NAME wrongmetadata_plugin
+    PLUGIN_TYPE interfaceframework
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
     SOURCES
         wrongmetadataplugin.cpp wrongmetadataplugin.h
@@ -21,4 +22,4 @@ qt_internal_add_cmake_library(wrongmetadata_plugin
 ## Scopes:
 #####################################################################
 
-qt_autogen_tools_initial_setup(wrongmetadata_plugin)
+qt_autogen_tools_initial_setup(wrongmetadataPlugin)
