@@ -304,6 +304,8 @@ void tst_QIfSimulationGlobalObject::testConvertFromJSONErrors()
 void tst_QIfSimulationGlobalObject::testParseDomainValue_data()
 {
     qRegisterMetaType<SimpleAPI*>();
+    qRegisterMetaType<TestStruct>();
+    qRegisterMetaType<SimpleAPI::TestEnum>();
 
     QTest::addColumn<QString>("json");
     QTest::addColumn<QVariant>("expectedResult");
