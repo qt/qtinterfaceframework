@@ -350,7 +350,7 @@ void ServiceManagerTest::pluginLoaderTest()
     QCOMPARE(services.count(), 1);
 
     QVERIFY(manager->hasInterface("wrong_plugin"));
-    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("ServiceManager::serviceObjects - failed to cast to interface from '.*wrong_plugin.*'"));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("ServiceManager::serviceObjects - failed to cast to interface from '.*wrong.*'"));
     QList<QIfServiceObject *> wServices = manager->findServiceByInterface("wrong_plugin");
     QCOMPARE(wServices.count(), 0);
 
@@ -358,9 +358,6 @@ void ServiceManagerTest::pluginLoaderTest()
     manager->unloadAllBackends();
     QCOMPARE(manager->rowCount(), 0);
 }
-
-Q_IMPORT_PLUGIN(SimpleStaticPlugin)
-Q_IMPORT_PLUGIN(WrongMetadataStaticPlugin)
 
 QTEST_MAIN(ServiceManagerTest)
 
