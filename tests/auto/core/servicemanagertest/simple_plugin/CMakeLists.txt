@@ -4,23 +4,21 @@
 ## simple_plugin Generic Library:
 #####################################################################
 
-qt_internal_add_plugin(simplePlugin
-    OUTPUT_NAME simple_plugin
+qt_add_plugin(simplePlugin
     PLUGIN_TYPE interfaceframework
-    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
-    SOURCES
-        simpleplugin.cpp simpleplugin.h
-    PUBLIC_LIBRARIES
-        Qt::Core
-        Qt::Gui
-        Qt::InterfaceFramework
 )
 
-#### Keys ignored in scope 1:.:.:simple_plugin.pro:<TRUE>:
-# DISTFILES = "simple_plugin.json"
-# TEMPLATE = "lib"
-
-## Scopes:
-#####################################################################
+target_sources(simplePlugin PRIVATE
+    simpleplugin.cpp
+    simpleplugin.h
+)
 
 qt_autogen_tools_initial_setup(simplePlugin)
+
+set_target_properties(simplePlugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
+
+target_link_libraries(simplePlugin PRIVATE
+    Qt::Core
+    Qt::Gui
+    Qt::InterfaceFramework
+)
