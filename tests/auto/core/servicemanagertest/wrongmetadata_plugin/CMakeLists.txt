@@ -4,22 +4,21 @@
 ## wrongmetadata_plugin Generic Library:
 #####################################################################
 
-qt_internal_add_plugin(wrongmetadataPlugin
-    OUTPUT_NAME wrongmetadata_plugin
+qt_add_plugin(wrongmetadataPlugin
     PLUGIN_TYPE interfaceframework
-    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
-    SOURCES
-        wrongmetadataplugin.cpp wrongmetadataplugin.h
-    LIBRARIES
-        Qt::Core
-        Qt::Gui
-        Qt::InterfaceFramework
 )
 
-#### Keys ignored in scope 1:.:.:wrongmetadata_plugin.pro:<TRUE>:
-# TEMPLATE = "lib"
-
-## Scopes:
-#####################################################################
+target_sources(wrongmetadataPlugin PRIVATE
+    wrongmetadataplugin.cpp
+    wrongmetadataplugin.h
+)
 
 qt_autogen_tools_initial_setup(wrongmetadataPlugin)
+
+set_target_properties(wrongmetadataPlugin PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
+
+target_link_libraries(wrongmetadataPlugin PRIVATE
+    Qt::Core
+    Qt::Gui
+    Qt::InterfaceFramework
+)
