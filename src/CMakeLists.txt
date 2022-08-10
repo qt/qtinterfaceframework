@@ -33,6 +33,7 @@ endif()
 if(QT_FEATURE_interfaceframework
         AND QT_FEATURE_media_qtro_simulation_server
         AND QT_FEATURE_remoteobjects
+        AND QT_FEATURE_media_simulation_backend
         AND NOT ANDROID
         AND NOT IOS
         AND NOT WASM

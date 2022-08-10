@@ -32,7 +32,7 @@ qt_feature("system-taglib" PRIVATE
 )
 qt_feature("media_simulation_backend" PRIVATE
     LABEL "Mediaplayer Simulation Backend"
-    CONDITION TARGET Qt::Multimedia AND TARGET Qt::Sql
+    CONDITION TARGET Qt::Multimedia AND TARGET Qt::Sql AND QT_FEATURE_future
 )
 qt_feature("tuner_simulation_backend" PRIVATE
     LABEL "Tuner Simulation Backend"
