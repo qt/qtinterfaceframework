@@ -37,7 +37,15 @@ qt6_ifcodegen_extend_target(tst_org-example-echo-qtro
     TEMPLATE server_qtro
 )
 
-# QT_ANDROID_EXTRA_PLUGINS requires a list of directories, not files!
-set_target_properties(tst_org-example-echo-qtro PROPERTIES
-    QT_ANDROID_EXTRA_PLUGINS "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework"
-)
+if (ANDROID)
+    # QT_ANDROID_EXTRA_PLUGINS requires a list of directories, not files!
+    set_target_properties(tst_org-example-echo-qtro PROPERTIES
+        QT_ANDROID_EXTRA_PLUGINS "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework"
+    )
+
+    set_target_properties(tst_org-example-echo-qtro PROPERTIES
+        QT_ANDROID_EXTRA_LIBS "${CMAKE_CURRENT_BINARY_DIR}/../frontend/libecho_qtro_frontend_${CMAKE_ANDROID_ARCH_ABI}.so"
+    )
+
+    qt6_android_generate_deployment_settings(tst_org-example-echo-qtro)
+endif ()

@@ -35,8 +35,11 @@ add_subdirectory(wrong_plugin)
 add_subdirectory(wrongmetadata_plugin)
 add_subdirectory(wrongmetadata_plugin_static)
 
-# QT_ANDROID_EXTRA_PLUGINS requires a list of directories, not files!
-set_target_properties(tst_servicemanagertest PROPERTIES
-    QT_ANDROID_EXTRA_PLUGINS "${CMAKE_CURRENT_BINARY_DIR}/interfaceframework"
-)
+if (ANDROID)
+    # QT_ANDROID_EXTRA_PLUGINS requires a list of directories, not files!
+    set_target_properties(tst_servicemanagertest PROPERTIES
+        QT_ANDROID_EXTRA_PLUGINS "${CMAKE_CURRENT_BINARY_DIR}/interfaceframework"
+    )
 
+    qt6_android_generate_deployment_settings(tst_servicemanagertest)
+endif()
