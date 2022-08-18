@@ -64,7 +64,7 @@ void readQueryBuffer(char *buffer, unsigned int &numBytesRead,int maxBytesToRead
     }
 
     int numBytesToRead = maxBytesToRead;
-    int bytesRemaining = currentQuery->count()-(*currentOffset);
+    int bytesRemaining = currentQuery->size()-(*currentOffset);
     int i;
     if ( numBytesToRead > bytesRemaining )
         numBytesToRead = bytesRemaining;

@@ -8,9 +8,6 @@ project(QtInterfaceFramework
     LANGUAGES CXX C
 )
 
-# TODO: Fix warnings and remove this
-set(QT_REPO_NOT_WARNINGS_CLEAN TRUE)
-
 # Make sure we only use latest private CMake API, aka no compatibility wrappers.
 set(QT_NO_INTERNAL_COMPATIBILITY_FUNCTIONS TRUE)
 
