@@ -14,6 +14,7 @@ qt_add_qml_module(echo_noanno_qmlplugin
     URI ${ECHO_NOANNO_URI}
     VERSION ${ECHO_NOANNO_VERSION}
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/echo_noanno_qmlplugin/"
+    RESOURCE_PREFIX "/"
     PLUGIN_TARGET echo_noanno_qmlplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE

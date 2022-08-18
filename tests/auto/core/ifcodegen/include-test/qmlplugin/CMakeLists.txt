@@ -14,6 +14,7 @@ qt6_ifcodegen_import_variables(INCLUDE_TEST
 qt_add_qml_module(include_test_qmlplugin
     URI ${INCLUDE_TEST_URI}
     VERSION ${INCLUDE_TEST_VERSION}
+    RESOURCE_PREFIX "/"
     PLUGIN_TARGET include_test_qmlplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE

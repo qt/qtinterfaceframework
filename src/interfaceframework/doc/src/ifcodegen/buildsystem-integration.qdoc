@@ -180,6 +180,7 @@ qt_ifcodegen_extend_target(IfVehicleFunctions
 qt_add_qml_module(IfVehicleFunctions
     URI ${VEHICLEFUNCTIONS_URI}
     VERSION ${VEHICLEFUNCTIONS_VERSION}
+    RESOURCE_PREFIX "/"
     CLASS_NAME QtIfVehicleFunctionsPlugin
     PLUGIN_TARGET qtifvehiclefunctionsplugin
     IMPORTS QtInterfaceFramework/auto
@@ -203,9 +204,10 @@ qt_ifcodegen_import_variables(VEHICLEFUNCTIONS
     MODULE_NAME QtIfVehicleFunctions
 )
 
-qt_internal_add_qml_module(qtifvehiclefunctionsplugin
+qt_add_qml_module(qtifvehiclefunctionsplugin
     URI ${VEHICLEFUNCTIONS_URI}
     VERSION ${VEHICLEFUNCTIONS_VERSION}
+    RESOURCE_PREFIX "/"
     PLUGIN_TARGET qtifvehiclefunctionsplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
