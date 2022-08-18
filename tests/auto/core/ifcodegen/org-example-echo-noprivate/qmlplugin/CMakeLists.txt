@@ -16,6 +16,7 @@ qt_add_qml_module(echo_noprivate_qmlplugin
     URI ${ECHO_NOPRIVATE_URI}
     VERSION ${ECHO_NOPRIVATE_VERSION}
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/echo_noprivate_qmlplugin/"
+    RESOURCE_PREFIX "/"
     PLUGIN_TARGET echo_noprivate_qmlplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE

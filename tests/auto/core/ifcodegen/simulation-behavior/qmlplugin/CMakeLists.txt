@@ -9,6 +9,7 @@ qt_add_qml_module(
     OUTPUT_DIRECTORY "../imports/${SIMU_URI_PATH}"
     URI ${SIMU_URI}
     VERSION ${SIMU_VERSION}
+    RESOURCE_PREFIX "/"
     PLUGIN_TARGET simuplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE

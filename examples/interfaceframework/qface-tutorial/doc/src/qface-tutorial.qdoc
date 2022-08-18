@@ -488,6 +488,7 @@
         OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../imports/${CLUSTER_URI_PATH}"
         URI ${CLUSTER_URI}
         VERSION ${CLUSTER_VERSION}
+        RESOURCE_PREFIX "/"
         IMPORTS QtInterfaceFramework/auto
     )
     \endcode

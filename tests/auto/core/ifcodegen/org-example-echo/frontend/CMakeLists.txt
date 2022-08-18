@@ -19,4 +19,5 @@ qt_add_qml_module(echo_frontend
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../imports/${ECHO_URI_PATH}"
     URI ${ECHO_URI}
     VERSION ${ECHO_VERSION}
+    RESOURCE_PREFIX "/"
 )
