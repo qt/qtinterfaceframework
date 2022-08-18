@@ -87,7 +87,7 @@ icst [+-]?({dec}|0{oct}*|0[xX]{hex}+)
 
 \"(\\.|[^"])*\" {
   QString text = QLatin1String(yytext);
-  text.truncate(text.count() - 1);
+  text.truncate(text.size() - 1);
   yylval = text.mid(1);
 
   return STRING;
@@ -95,7 +95,7 @@ icst [+-]?({dec}|0{oct}*|0[xX]{hex}+)
 
 \'(\\.|[^'])*\' {
   QString text = QLatin1String(yytext);
-  text.truncate(text.count() - 1);
+  text.truncate(text.size() - 1);
   yylval = text.mid(1);
 
   return STRING;

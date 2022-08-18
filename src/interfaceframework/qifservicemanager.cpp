@@ -48,11 +48,11 @@ namespace qtif_helper {
         const QFileInfo fi(fileName);
         //remove the library suffix
         QString baseName = fileName;
-        baseName.chop(fi.suffix().count() + 1);
+        baseName.chop(fi.suffix().size() + 1);
 
         //remove the configuration suffix
         if (baseName.endsWith(debugSuffixLiteral))
-            baseName.chop(debugSuffixLiteral.count());
+            baseName.chop(debugSuffixLiteral.size());
 
         return baseName;
     }

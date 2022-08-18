@@ -78,7 +78,7 @@ QVariant qtif_convertFromJSON(const QVariant &value)
                 QString enumValue = value.toString();
                 const int lastIndex = enumValue.lastIndexOf(QStringLiteral("::"));
                 const QString className = enumValue.left(lastIndex) + QStringLiteral("*");
-                enumValue = enumValue.right(enumValue.count() - lastIndex - 2);
+                enumValue = enumValue.right(enumValue.size() - lastIndex - 2);
                 QMetaType metaType = QMetaType::fromName(className.toLatin1());
                 const QMetaObject *mo = metaType.metaObject();
                 if (Q_UNLIKELY(!mo)) {
