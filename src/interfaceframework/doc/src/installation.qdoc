@@ -61,58 +61,24 @@ summary".
         generate the server part of this IPC.
 \endtable
 
-The following are additional command-line options to tailor the build system according to your
-needs:
-
-\table
-\header
-    \li Command-line Option
-    \li Description
-\row
-    \li --host-tools-only
-    \li Only compiles the tools needed on the host to cross-compile for another target,
-        for example, the Interface Framework Generator.
-\row
-    \li --ifcodegen <no|qt|system>
-    \li \value no
-               Disables the Interface Framework Generator feature completely.
-        \value qt
-               Enables the Interface Framework Generator feature; builds and packages the necessary files.
-        \value system
-               Enables the Interface Framework Generator feature, but uses the Interface Framework Generator-related files that are
-               already available on the system. For example, from the native-interfaceframework package when you
-               cross-compile inside Yocto.
-\endtable
-
-These command-line options can be passed to qmake using the \c QMAKE_EXTRA_ARGS environment variable:
-
-\code
-    QMAKE_EXTRA_ARGS="--host-tools-only" qmake <interfaceframework-src>/interfaceframework.pro
-\endcode
-
-\section2 Build the Required Features Only
-
-By default, all QtInterfaceFramework modules are configured to be built, depending on whether all the required
-dependencies are available for the respective module or not. Similar to other Qt features, you can
-request for every module to be built or skip it explicitly using the \c{--[no-]feature-<modulename>}
-argument, when you invoke \c qmake.
-
-For example, to disable building QtInterfaceFramework Media:
-\code
-    QMAKE_EXTRA_ARGS="--no-feature-ifmedia" qmake <interfaceframework-src>/interfaceframework.pro
-\endcode
-
-Selecting the required module explicitly has the advantage that you can see any errors, at
-configuration time, if not all dependencies are met.
-
 \section1 General Build Process
 
 To build QtInterfaceFramework modules, run the following commands:
 
 \code
-    qmake
-    make
-    make install
+mkdir <builddir>
+  && cd <builddir>
+  && cmake <srcdir> <options>
+  && cmake --build .
+  && cmake --install .
+\endcode
+or
+\code
+mkdir <builddir>
+  && cd <builddir>
+  && <qtbase>/bin/qt-configure-module <srcdir> <options>
+  && cmake --build .
+  && cmake --install .
 \endcode
 
 */
