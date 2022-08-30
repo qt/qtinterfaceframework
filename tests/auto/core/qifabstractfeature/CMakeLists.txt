@@ -1,5 +1,3 @@
-# Generated from qifabstractfeature.pro.
-
 #####################################################################
 ## tst_qifabstractfeature Test:
 #####################################################################
@@ -23,7 +21,3 @@ qt_internal_add_test(tst_qifabstractfeature
         Qt::Qml
     TESTDATA ${test_data}
 )
-
-#### Keys ignored in scope 1:.:.:qifabstractfeature.pro:<TRUE>:
-# QMAKE_PROJECT_NAME = "$$TARGET"
-# TEMPLATE = "app"

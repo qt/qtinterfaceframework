@@ -1,9 +1,7 @@
-# special case begin
 # Define a stub for qt-configure-module
 if (NOT COMMAND qt_config_python3_package_test)
     defstub(qt_config_python3_package_test)
 endif()
-# special case end
 
 #### Inputs
 
@@ -101,7 +99,6 @@ qt_configure_add_summary_entry(
 )
 qt_configure_add_report_entry(
     TYPE WARNING
-# special case begin
     MESSAGE [[
 Cannot build the Interface Framework Generator because its dependencies are not satisfied.
 The Interface Framework Generator provides tooling to generate source code out of IDL files.
@@ -113,7 +110,6 @@ And make sure the qface submodule is initialized or the correct qface version is
 E.g. by running the following command:
     git submodule init && git submodule update
 ]]
-# special case end
     CONDITION QT_FEATURE_interfaceframework AND NOT QT_FEATURE_ifcodegen AND ( NOT INPUT_ifcodegen STREQUAL 'no' )
 )
 qt_configure_add_report_entry(

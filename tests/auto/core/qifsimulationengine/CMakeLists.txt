@@ -1,5 +1,3 @@
-# Generated from qifsimulationengine.pro.
-
 #####################################################################
 ## tst_qifsimulationengine Test:
 #####################################################################
@@ -27,8 +25,3 @@ qt_internal_add_resource(tst_qifsimulationengine "resource"
     FILES
         ${resource_resource_files}
 )
-
-
-#### Keys ignored in scope 1:.:.:qifsimulationengine.pro:<TRUE>:
-# QMAKE_PROJECT_NAME = "$$TARGET"
-# TEMPLATE = "app"

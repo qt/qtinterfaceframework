@@ -1,5 +1,3 @@
-# Generated from auto.pro.
-
 if(TARGET Qt::InterfaceFramework)
     add_subdirectory(core)
 endif()

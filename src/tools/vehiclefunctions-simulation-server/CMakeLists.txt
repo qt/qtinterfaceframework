@@ -1,5 +1,3 @@
-# Generated from vehiclefunctions-simulation-server.pro.
-
 #####################################################################
 ## ifvehiclefunctions-simulation-server app:
 #####################################################################
@@ -31,11 +29,3 @@ qt6_ifcodegen_extend_target(ifvehiclefunctions-simulation-server
     TEMPLATE server_qtro_simulator
     MODULE_NAME QtIfVehicleFunctions
 )
-
-#### Keys ignored in scope 1:.:.:vehiclefunctions-simulation-server.pro:<TRUE>:
-# QML_IMPORT_PATH = "$$OUT_PWD/qml"
-# QT_FOR_CONFIG = "interfaceframework"
-# TEMPLATE = "app"
-
-## Scopes:
-#####################################################################

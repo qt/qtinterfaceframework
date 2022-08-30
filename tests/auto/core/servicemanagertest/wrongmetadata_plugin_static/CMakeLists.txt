@@ -1,5 +1,3 @@
-# Generated from wrongmetadata_plugin_static.pro.
-
 #####################################################################
 ## wrongmetadata_plugin_static Generic Library:
 #####################################################################

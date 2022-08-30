@@ -1,5 +1,3 @@
-# Generated from vehiclefunctions_simulator.pro.
-
 #####################################################################
 ## QtIfVehicleFunctionsSimulatorPlugin Plugin:
 #####################################################################
@@ -34,8 +32,3 @@ qt_ifcodegen_extend_target(VehicleSimulatorPlugin
     TEMPLATE backend_simulator
     MODULE_NAME QtIfVehicleFunctions
 )
-
-#### Keys ignored in scope 1:.:.:vehiclefunctions_simulator.pro:<TRUE>:
-# CMAKE_MODULE_TESTS = "'-'"
-# PLUGIN_EXTENDS = "ifvehiclefunctions"
-# QML_IMPORT_PATH = "$$OUT_PWD/qml"

@@ -1,5 +1,3 @@
-# Generated from core.pro.
-
 add_subdirectory(servicemanagertest)
 add_subdirectory(qifabstractfeature)
 add_subdirectory(qifpendingreply)

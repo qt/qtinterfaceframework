@@ -1,5 +1,3 @@
-# Generated from qifpagingmodel.pro.
-
 #####################################################################
 ## tst_qifpagingmodel Test:
 #####################################################################
@@ -16,8 +14,3 @@ qt_internal_add_test(tst_qifpagingmodel
         Qt::InterfaceFrameworkPrivate
         Qt::Quick
 )
-
-#### Keys ignored in scope 1:.:.:qifpagingmodel.pro:<TRUE>:
-# DISTFILES = "testdata/*"
-# QMAKE_PROJECT_NAME = "$$TARGET"
-# TEMPLATE = "app"

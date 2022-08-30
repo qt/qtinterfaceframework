@@ -1,4 +1,3 @@
-# Generated from server_qtro_test.pro.
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)

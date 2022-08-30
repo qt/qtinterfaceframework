@@ -1,5 +1,3 @@
-# Generated from plugins.pro.
-
 if(TARGET Qt::IfMedia)
     add_subdirectory(ifmedia)
 endif()

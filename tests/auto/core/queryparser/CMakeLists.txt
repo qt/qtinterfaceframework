@@ -1,5 +1,3 @@
-# Generated from queryparser.pro.
-
 #####################################################################
 ## tst_queryparser Test:
 #####################################################################
@@ -22,7 +20,3 @@ qt_internal_add_test(tst_queryparser
         Qt::Qml
     TESTDATA ${test_data}
 )
-
-#### Keys ignored in scope 1:.:.:queryparser.pro:<TRUE>:
-# QMAKE_PROJECT_NAME = "$$TARGET"
-# TEMPLATE = "app"

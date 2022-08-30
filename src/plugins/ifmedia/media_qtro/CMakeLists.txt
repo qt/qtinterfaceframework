@@ -1,5 +1,3 @@
-# Generated from media_qtro.pro.
-
 #####################################################################
 ## MediaQtROPlugin Plugin:
 #####################################################################
@@ -27,7 +25,3 @@ qt6_add_repc_replicas(MediaQtROPlugin
     ../../../tools/media-simulation-server/qiffilterandbrowsemodel.rep
     ../../../tools/media-simulation-server/qifmediadiscoverymodel.rep
 )
-
-#### Keys ignored in scope 1:.:.:media_qtro.pro:<TRUE>:
-# DISTFILES = "media_qtro.json"
-# PLUGIN_EXTENDS = "ifmedia"

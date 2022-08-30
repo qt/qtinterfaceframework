@@ -1,5 +1,3 @@
-# Generated from org-example-echo-noannotation.pro.
-
 add_subdirectory(frontend)
 add_subdirectory(qmlplugin)
 add_subdirectory(backend_simulator)

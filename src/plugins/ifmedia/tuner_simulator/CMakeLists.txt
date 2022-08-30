@@ -1,5 +1,3 @@
-# Generated from tuner_simulator.pro.
-
 #####################################################################
 ## TunerPlugin Plugin:
 #####################################################################
@@ -17,7 +15,3 @@ qt_internal_add_plugin(TunerPlugin
         Qt::InterfaceFramework
         Qt::IfMedia
 )
-
-#### Keys ignored in scope 1:.:.:tuner_simulator.pro:<TRUE>:
-# DISTFILES = "tuner_simulator.json"
-# PLUGIN_EXTENDS = "ifmedia"

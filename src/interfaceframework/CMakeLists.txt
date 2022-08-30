@@ -1,5 +1,3 @@
-# Generated from interfaceframework.pro.
-
 #####################################################################
 ## InterfaceFramework Module:
 #####################################################################
@@ -81,9 +79,6 @@ qt_internal_extend_target(InterfaceFramework CONDITION NOT enable-qlalr
         queryparser/qifqueryparser_p.h
         queryparser/qifqueryparser_flex_p.h
 )
-
-#### Keys ignored in scope 7:.:queryparser:queryparser/queryparser.pri:else:
-# OTHER_FILES = "$$FLEX" "$$QLALR"
 
 #####################################################################
 ## Documentation

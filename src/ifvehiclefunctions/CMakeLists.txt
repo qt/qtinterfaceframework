@@ -1,6 +1,3 @@
-# Generated from ifvehiclefunctions.pro.
-
-# special case begin
 #####################################################################
 ## IfVehicleFunctions Module:
 #####################################################################

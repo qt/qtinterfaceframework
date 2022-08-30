@@ -1,5 +1,3 @@
-# Generated from remoteobjects.pro.
-
 #####################################################################
 ## IfRemoteObjectsHelper Module:
 #####################################################################
@@ -30,8 +28,3 @@ qt6_add_repc_sources(IfRemoteObjectsHelperPrivate
 qt6_add_repc_replicas(IfRemoteObjectsHelperPrivate
     qifpagingmodel.rep
 )
-
-#### Keys ignored in scope 1:.:.:remoteobjects.pro:<TRUE>:
-# CMAKE_MODULE_TESTS = "'-'"
-# MODULE = "ifremoteobjects_helper"
-# targ_headers.CONFIG = "no_check_exist"

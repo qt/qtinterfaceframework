@@ -1,5 +1,3 @@
-# Generated from qifsimulationglobalobject.pro.
-
 #####################################################################
 ## tst_qifsimulationglobalobject Test:
 #####################################################################
@@ -13,7 +11,3 @@ qt_internal_add_test(tst_qifsimulationglobalobject
         Qt::InterfaceFrameworkPrivate
         Qt::Qml
 )
-
-#### Keys ignored in scope 1:.:.:qifsimulationglobalobject.pro:<TRUE>:
-# QMAKE_PROJECT_NAME = "$$TARGET"
-# TEMPLATE = "app"

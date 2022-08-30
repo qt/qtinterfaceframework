@@ -1,5 +1,3 @@
-# Generated from media-simulation-server.pro.
-
 #####################################################################
 ## ifmedia-simulation-server app:
 #####################################################################
@@ -42,7 +40,3 @@ qt_internal_extend_target(ifmedia-simulation-server CONDITION QT_FEATURE_taglib
     LIBRARIES
         WrapTagLib::WrapTagLib
 )
-
-
-#### Keys ignored in scope 1:.:.:media-simulation-server.pro:<TRUE>:
-# TEMPLATE = "app"

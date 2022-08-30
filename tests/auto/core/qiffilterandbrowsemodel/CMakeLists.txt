@@ -1,5 +1,3 @@
-# Generated from qiffilterandbrowsemodel.pro.
-
 #####################################################################
 ## tst_qiffilterandbrowsemodel Test:
 #####################################################################
@@ -19,8 +17,3 @@ qt_add_resources(tst_qiffilterandbrowsemodel "qml"
     PREFIX "/"
     FILES testdata/listview.qml
 )
-
-#### Keys ignored in scope 1:.:.:qiffilterandbrowsemodel.pro:<TRUE>:
-# DISTFILES = "testdata/*"
-# QMAKE_PROJECT_NAME = "$$TARGET"
-# TEMPLATE = "app"

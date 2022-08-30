@@ -1,5 +1,3 @@
-# Generated from ifcodegen.pro.
-
 # Skip building these tests in a top-level build configured with -make tests
 # to avoid configuration errors like
 #  CMake Error: AUTOMOC for target tst_template_full_path: The "moc"

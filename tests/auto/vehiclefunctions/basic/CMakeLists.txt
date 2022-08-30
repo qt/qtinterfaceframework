@@ -1,5 +1,3 @@
-# Generated from basic.pro.
-
 #####################################################################
 ## tst_vehiclefunctions_basic Test:
 #####################################################################
@@ -19,6 +17,3 @@ qt_ifcodegen_extend_target(tst_vehiclefunctions_basic
     IDL_FILES ../../../../src/ifvehiclefunctions/ifvehiclefunctions.qface
     TEMPLATE test
 )
-
-#### Keys ignored in scope 1:.:.:basic.pro:<TRUE>:
-# QMAKE_PROJECT_NAME = "$$TARGET"

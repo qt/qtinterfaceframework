@@ -66,7 +66,6 @@ qt_configure_add_summary_entry(
 )
 qt_configure_add_report_entry(
     TYPE ERROR
-# special case begin
     MESSAGE [[
 The taglib submodule was not initialized
 Please initialize the submodule
@@ -76,25 +75,20 @@ E.g. by running the following command:
 or disable taglib by passing --taglib=no
 ]]
     CONDITION NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/taglib/taglib/INSTALL.md" AND QT_FEATURE_taglib AND NOT QT_FEATURE_system_taglib
-# special case end
 )
 qt_configure_add_report_entry(
     TYPE WARNING
-# special case begin
     MESSAGE [[
 Building taglib was disabled!
 The Mediaplayer Simulation Backend will only provide a stub and can't scan media files
 ]]
-# special case end
     CONDITION INPUT_taglib STREQUAL 'no'
 )
 qt_configure_add_report_entry(
     TYPE WARNING
-# special case begin
     MESSAGE [[
 Building Mediaplayer Simulation Backend was disabled!
 Please make sure the QtMultimedia module is available.
 ]]
-# special case end
     CONDITION NOT QT_FEATURE_media_simulation_backend AND NOT TARGET Qt::Multimedia
 )

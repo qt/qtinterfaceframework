@@ -1,10 +1,8 @@
-# Generated from media_simulator.pro.
-
 #####################################################################
 ## MediaPlugin Plugin:
 #####################################################################
 
-qt_find_package(WrapTagLib PROVIDED_TARGETS WrapTagLib::WrapTagLib) # special case
+qt_find_package(WrapTagLib PROVIDED_TARGETS WrapTagLib::WrapTagLib)
 
 qt_internal_add_plugin(MediaPlugin
     OUTPUT_NAME media_simulator
@@ -34,7 +32,3 @@ qt_internal_extend_target(MediaPlugin CONDITION QT_FEATURE_taglib
     LIBRARIES
         WrapTagLib::WrapTagLib
 )
-
-#### Keys ignored in scope 1:.:.:media_simulator.pro:<TRUE>:
-# DISTFILES = "media_simulator.json"
-# PLUGIN_EXTENDS = "ifmedia"

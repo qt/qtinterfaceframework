@@ -1,5 +1,3 @@
-# Generated from vehiclefunctions_qtro.pro.
-
 #####################################################################
 ## QtIfVehicleFunctionsQtROPlugin Plugin:
 #####################################################################
@@ -20,7 +18,3 @@ qt_ifcodegen_extend_target(VehicleQtROPlugin
     TEMPLATE backend_qtro
     MODULE_NAME QtIfVehicleFunctions
 )
-
-#### Keys ignored in scope 1:.:.:vehiclefunctions_qtro.pro:<TRUE>:
-# CMAKE_MODULE_TESTS = "'-'"
-# PLUGIN_EXTENDS = "ifvehiclefunctions"

@@ -1,5 +1,3 @@
-# Generated from qifpendingreply.pro.
-
 #####################################################################
 ## tst_qifpendingreply Test:
 #####################################################################
@@ -29,8 +27,3 @@ qt_add_resources(tst_qifpendingreply "qml"
     PREFIX "/"
     FILES qml_dependencies.qml
 )
-
-#### Keys ignored in scope 1:.:.:qifpendingreply.pro:<TRUE>:
-# OTHER_FILES = "testdata/*"
-# QMAKE_PROJECT_NAME = "$$TARGET"
-# TEMPLATE = "app"
