@@ -61,20 +61,29 @@ QMAKE_PYTHON3_VERSION = ${Python3_VERSION}
     )
 endif()
 
-#### Keys ignored in scope 5:.:queryparser:queryparser/queryparser.pri:enable-qlalr:
-# QMAKE_EXTRA_COMPILERS = "flex" "qlalr"
-# flex.CONFIG = "no_link"
-# flex.commands = "flex" "-L" "--nounistd" "-o" "${QMAKE_FILE_OUT}" "${QMAKE_FILE_NAME}"
-# flex.dependency_type = "TYPE_C"
-# flex.input = "FLEX"
-# flex.output = "$$PWD/${QMAKE_FILE_BASE}_flex_p.h"
-# qlalr.CONFIG = "no_link"
-# qlalr.commands = "cd" "$$PWD;" "$$[QT_INSTALL_BINS]/qlalr" "--qt" "--no-debug" "--no-lines" "--verbose" "${QMAKE_FILE_NAME}"
-# qlalr.dependency_type = "TYPE_C"
-# qlalr.input = "QLALR"
-# qlalr.output = "$$PWD/${QMAKE_FILE_BASE}_p.h"
+if (FLEX_FOUND AND TARGET ${QT_CMAKE_EXPORT_NAMESPACE}::qlalr AND NOT CROSS_COMILE)
+    message("Generating queryparser using flex and qlalr")
+    FLEX_TARGET(InterfaceFramework
+        queryparser/qifqueryparser.l
+        ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser_flex_p.h
+        COMPILE_FLAGS "-L --nounistd"
+    )
 
-qt_internal_extend_target(InterfaceFramework CONDITION NOT enable-qlalr
+    # qt_process_qlalr doesn't support merged_output and WORKING_DIRECTORY
+    # We just call it manually to update the generated code
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser_p.h
+        COMMAND ${QT_CMAKE_EXPORT_NAMESPACE}::qlalr --no-debug --qt --no-lines ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser.g
+        DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::qlalr
+        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser.g
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/queryparser
+        VERBATIM
+    )
+else ()
+    message("Using pregenerated queryparser files")
+endif ()
+
+qt_internal_extend_target(InterfaceFramework
     SOURCES
         queryparser/qifqueryparser_p.h
         queryparser/qifqueryparser_flex_p.h

@@ -89,7 +89,7 @@ public:
 
 public:
     QIfQueryParser();
-    ~QIfQueryParser();
+    virtual ~QIfQueryParser();
 
     QIfAbstractQueryTerm *parse();
 
@@ -194,7 +194,7 @@ QIfQueryParser::~QIfQueryParser()
     currentQuery = nullptr;
 
     //We need to reset the lexer to reinitialize it when needed
-    yy_init = nullptr;
+    yy_init = 0;
 
     //Get rid of the unused warning
     if (0)
