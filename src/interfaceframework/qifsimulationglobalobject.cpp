@@ -293,7 +293,7 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
             if (QIfPagingModelInterface *model = currentValue.value<QIfPagingModelInterface*>()) {
                 QVariantList list = defVal.toList();
                 for (auto i = list.crbegin(); i != list.crend(); ++i)
-                    QMetaObject::invokeMethod(model, "insert", Q_ARG(int, 0), createArgument(*i));
+                    QMetaObject::invokeMethod(model, "insert", createArgument(int(0)), createArgument(*i));
             } else {
                 object->setProperty(i.key().toLatin1(), defVal);
             }

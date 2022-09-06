@@ -75,7 +75,7 @@ namespace qtif_private {
         template<typename... Ts>
         bool callQmlMethod(const char* function, QVariant &returnValue, Ts... args)
         {
-            return QIfSimulationProxyBase::callQmlMethod(function, Q_RETURN_ARG(QVariant, returnValue), Q_ARG(QVariant, QVariant::fromValue(args))...);
+            return QIfSimulationProxyBase::callQmlMethod(function, QReturnArgument<QVariant>("QVariant", returnValue), QArgument<QVariant>("QVariant", QVariant::fromValue(args))...);
         }
 
     protected:
