@@ -1,0 +1,24 @@
+@config_simulator: { simulationFile: "qrc:/simulation.qml" }
+module Example.If.InstrumentClusterModule 1.0
+
+@config_dbus: { xml: "../demo_server/instrumentcluster.xml", interfaceName: "Example.If.InstrumentCluster", className: "ExampleIfInstrumentClusterInterface" }
+interface InstrumentCluster {
+    readonly int speed;
+    readonly int rpm;
+    readonly real fuel;
+    @config_simulator: { default: 15 }
+    readonly real temperature;
+    readonly SystemType systemType;
+    readonly Warning currentWarning;
+}
+
+enum SystemType {
+    Imperial,
+    Metric
+}
+
+struct Warning {
+    string color
+    string text
+    string icon
+}

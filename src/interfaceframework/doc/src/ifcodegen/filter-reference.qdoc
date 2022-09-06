@@ -24,6 +24,7 @@ Returns the C++ type for the passed symbol.
 E.g. QString for a symbol of type "string".
 
 \target parameter_type(symbol)
+\target parameter_type
 \section2 parameter_type(symbol)
 
 Returns the C++ type for the passed symbol. This returns the same type as return_type(), but already

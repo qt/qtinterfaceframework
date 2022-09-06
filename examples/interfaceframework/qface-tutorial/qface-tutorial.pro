@@ -7,4 +7,7 @@ SUBDIRS += \
     ch4-simulation-behavior \
     ch5-ipc \
 
-!win32:qtHaveModule(dbus): SUBDIRS += ch6-own-backend
+!win32:qtHaveModule(dbus): {
+    SUBDIRS += ch6-own-backend \
+               ch7-own-template
+}

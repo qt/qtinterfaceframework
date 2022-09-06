@@ -1,0 +1,12 @@
+backend_dbus:
+    module:
+        documents:
+            - "{{module.module_name|lower}}dbusplugin.h": "plugin.h.tpl"
+            - "{{module.module_name|lower}}dbusplugin.cpp": "plugin.cpp.tpl"
+            - "{{module.module_name|lower}}.json": "plugin.json.tpl"
+            - "{{srcBase|lower}}.pri": "plugin.pri.tpl"
+            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.tpl'
+    interface:
+        documents:
+            - '{{interface|lower}}dbusbackend.h': 'backend.h.tpl'
+            - '{{interface|lower}}dbusbackend.cpp': 'backend.cpp.tpl'
