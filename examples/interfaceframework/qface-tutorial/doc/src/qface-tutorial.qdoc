@@ -214,7 +214,7 @@
     open the \c instrumentcluster.h from the build folder and notice that the generated
     \c speed property changed -- it no longer has a setter anymore and is now read-only.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/instrumentcluster.h
+    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/frontend/instrumentcluster.h
     \skipto class Q_EXAMPLE
     \printuntil Q_PROPERTY
     \dots
@@ -251,7 +251,7 @@
     In the auto-generated code, this results in an enum which is part of the module class, making it
     possible for the same enum to be used by multiple classes which are part of the same module:
 
-    \quotefile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/instrumentclustermodule.h
+    \quotefile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/frontend/instrumentclustermodule.h
 
     \section2 Add a New Structure
 
