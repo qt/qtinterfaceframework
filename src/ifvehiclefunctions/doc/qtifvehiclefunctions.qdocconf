@@ -1,9 +1,7 @@
 headerdirs  += .. \
-               ../../imports/vehiclefunctions \
                $$BUILDDIR/../ifvehiclefunctions \
 
 sourcedirs  += .. \
-               ../../imports/vehiclefunctions \
                $$BUILDDIR/../ifvehiclefunctions \
 
 exampledirs += snippets
