@@ -1,8 +1,6 @@
 headerdirs  += .. \
-               ../../imports/media
 
 sourcedirs  += .. \
-               ../../imports/media
 
 exampledirs += snippets
 
