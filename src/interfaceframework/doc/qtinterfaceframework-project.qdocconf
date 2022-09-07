@@ -9,15 +9,14 @@ includepaths                  = -I . \
 
 headerdirs                   += . \
                                 .. \
-                                ../../imports/core
 
 sourcedirs                   += . \
                                 .. \
-                                $$BUILDDIR/../../examples \
-                                ../../imports/core
+
 imagedirs                    += images
 exampledirs                  += ../../../examples \
-                                snippets/
+                                snippets/ \
+                                $$BUILDDIR/../../examples \
 
 examples.fileextensions      += *.qface *.yaml
 
@@ -76,3 +75,6 @@ macro.fileLink = "\\l {https://code.qt.io/cgit/qt/interfaceframework.git/tree/\1
 manifestmeta.filters = interfaceframework
 manifestmeta.interfaceframework.names = *
 manifestmeta.interfaceframework.tags  = interfaceframework qtinterfaceframework qtif qif
+
+# Fail the documentation build if there are more warnings than the limit
+warninglimit = 0
