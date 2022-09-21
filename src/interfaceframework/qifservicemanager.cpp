@@ -346,7 +346,7 @@ void QIfServiceManagerPrivate::addBackend(Backend *backend)
             if (interfaces == newInterfaces && b->name == backend->name) {
                 const QString fileName = b->metaData.value(fileNameLiteral).toString();
                 if (fileName == newBackendFile) {
-                    qCDebug(qLcIfServiceManagement, "SKIPPING %s: already in the list", qPrintable(newBackendFile));
+                    qCDebug(qLcIfServiceManagement, "Skipping backend %s: already in the list", qPrintable(newBackendFile));
                     return;
                 }
 
@@ -358,14 +358,14 @@ void QIfServiceManagerPrivate::addBackend(Backend *backend)
                                                     qtif_helper::loadDebug ? "debug" : "release",
                                                     qPrintable(b->debug == qtif_helper::loadDebug ? fileName : newBackendFile));
                     if (b->debug != qtif_helper::loadDebug) {
-                        qCDebug(qLcIfServiceManagement, "REPLACING %s with %s", qPrintable(fileName), qPrintable(newBackendFile));
+                        qCDebug(qLcIfServiceManagement, "Replacing backend %s with %s", qPrintable(fileName), qPrintable(newBackendFile));
                         addBackend = false;
                         m_backends[i] = backend;
                         emit q->dataChanged(q->index(i, 0), q->index(i, 0));
                         delete b;
                         break;
                     } else {
-                        qCDebug(qLcIfServiceManagement, "SKIPPING %s: wrong configuration", qPrintable(newBackendFile));
+                        qCDebug(qLcIfServiceManagement, "Skipping backend %s: wrong configuration", qPrintable(newBackendFile));
                         return;
                     }
                 }
@@ -373,7 +373,8 @@ void QIfServiceManagerPrivate::addBackend(Backend *backend)
         }
     }
     if (addBackend) {
-        qCDebug(qLcIfServiceManagement, "ADDING %s", qPrintable(newBackendFile.isEmpty() ? backend->name : newBackendFile));
+        qCDebug(qLcIfServiceManagement, "Adding %s %s", qPrintable(newBackendFile.isEmpty() ? backend->name : newBackendFile),
+                QIfServiceManagerPrivate::isSimulation(backend->metaData) ? "as simulation backend" : "as production backend");
         q->beginInsertRows(QModelIndex(), m_backends.count(), m_backends.count());
         m_backends.append(backend);
         q->endInsertRows();
