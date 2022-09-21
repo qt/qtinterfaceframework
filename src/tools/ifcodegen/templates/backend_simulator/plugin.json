@@ -14,5 +14,6 @@
 {%   endif %}
       "{{iid}}"{% if not loop.last %},{%endif%}
 {% endfor%}
-    ]
+    ],
+    "simulation" : true
 }
