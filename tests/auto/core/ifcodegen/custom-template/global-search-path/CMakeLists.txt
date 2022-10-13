@@ -13,7 +13,7 @@ find_package(Qt6 COMPONENTS Test)
 
 qt_add_executable(tst_template_global_search_path)
 
-set(QT_IFCODEGEN_TEMPLATE_SEARCH_PATH "../")
+set(QT_IFCODEGEN_TEMPLATE_SEARCH_PATH "../templates")
 
 # Interface Framework Generator:
 qt_ifcodegen_extend_target(tst_template_global_search_path

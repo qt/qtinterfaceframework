@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(tst_template_extra_search_path LANGUAGES CXX)
+project(tst_legacy_template LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -11,16 +11,15 @@ find_package(Qt6 COMPONENTS Core)
 find_package(Qt6 COMPONENTS Gui)
 find_package(Qt6 COMPONENTS Test)
 
-qt_add_executable(tst_template_extra_search_path)
+qt_add_executable(tst_legacy_template)
 
 # Interface Framework Generator:
-qt_ifcodegen_extend_target(tst_template_extra_search_path
+qt_ifcodegen_extend_target(tst_legacy_template
     IDL_FILES ../../org.example.echo.qface
-    TEMPLATE custom-test
-    EXTRA_TEMPLATE_SEARCH_PATH ../templates
+    TEMPLATE ../templates/legacy-custom-test
 )
 
-target_link_libraries(tst_template_extra_search_path PUBLIC
+target_link_libraries(tst_legacy_template PUBLIC
     Qt::Core
     Qt::Gui
     Qt::Test

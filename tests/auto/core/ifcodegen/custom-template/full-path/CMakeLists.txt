@@ -16,7 +16,7 @@ qt_add_executable(tst_template_full_path)
 # Interface Framework Generator:
 qt_ifcodegen_extend_target(tst_template_full_path
     IDL_FILES ../../org.example.echo.qface
-    TEMPLATE ../custom-test
+    TEMPLATE ../templates/custom-test
 )
 
 target_link_libraries(tst_template_full_path PUBLIC
