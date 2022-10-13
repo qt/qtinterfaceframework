@@ -88,6 +88,11 @@ def generate(template_search_paths, tplconfig, moduleConfig, annotations, import
        'srcBase': srcBase
     }
     search_path = [tplconfig]
+    # In case tplconfig is a path, we also want to add the containing folder to the search-path
+    # This makes sure that also templates referenced by path can use common templates or commmon filters
+    if os.path.exists(tplconfig):
+        search_path += [os.path.dirname(tplconfig)]
+
     search_path += template_search_paths
     generator = CustomRuleGenerator(search_path=search_path, destination=dst,
                                     context=ctx, modules=module_names)

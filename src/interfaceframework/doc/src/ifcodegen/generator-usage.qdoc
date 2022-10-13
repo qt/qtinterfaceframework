@@ -168,6 +168,29 @@
     structures. See the \l{QFace - Rule Base Generation}{QFace Rule Base Generation Documentation}
     for more information.
 
+    \section3 Extra Jinja Filters
+
+    Sometimes the Jinja filters provided by ifcodegen are not enough, but it is possible to write your
+    own filters using Python.
+    If you add a python script called \c{filters.py} within your template it will be loaded automatically.
+    You can use the following boiler-plate code as a template:
+
+    \quotefile filters.py
+
+    To share filters also between templates, you can also specify other python scripts which should
+    be loaded in addition. This needs to be done in the Generation YAML file.
+
+    The following snippet generates a plugin.h and loads additional filters from a folder called
+    extra-filter:
+
+    \code
+    frontend:
+        extra_filters: [ "extra-filter/filters.py" ]
+        module:
+            documents:
+                - "{{module.module_name|lower}}plugin.h": "plugin.h.tpl"
+    \endcode
+
     \section2 Annotations YAML
 
     Currently, not all aspects of the interface description can be expressed using the IDL itself.

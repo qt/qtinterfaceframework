@@ -17,6 +17,7 @@ void CustomTest::initTestCase()
 {
     QVERIFY(true);
 {% set foo = module|custom_filter %}
+{% set extra = module|extra_custom_filter %}
     qInfo("Test successfully generated from 'custom template'");
 }
 

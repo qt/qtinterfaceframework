@@ -1,4 +1,5 @@
 custom_test:
+    extra_filters: [ "extra-filter/filters.py" ]
     module:
         documents:
             - "{{srcBase|lower}}.pri": "module.pri.tpl"

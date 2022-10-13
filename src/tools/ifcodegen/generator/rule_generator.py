@@ -2,12 +2,14 @@
 # Copyright (C) 2021 The Qt Company Ltd.
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
+import os
 import click
 import logging.config
 import sys
 import yaml
 from path import Path
 
+from qface.utils import load_filters
 from qface.generator import RuleGenerator
 from qface.idl.domain import Module, Interface, Property, Parameter, Field, Struct
 
@@ -36,7 +38,16 @@ class CustomRuleGenerator(RuleGenerator):
         self.context.update(rules.get('context', {}))
         self.path = rules.get('path', '')
         self.source = rules.get('source', None)
+        self.extra_filters = rules.get('extra_filters', [])
+
+        for filter in self.extra_filters:
+            filter_path = self.get_template(filter).filename
+            if os.path.exists(filter_path):
+                extra_filters = load_filters(Path(filter_path))
+                self.filters = extra_filters
+
         self._process_rule(rules.get('system', None), {'system': system})
+
         for module in system.modules:
             # Only generate files for the modules detected from the first parse run
             if module.name not in self.module_names:
