@@ -366,7 +366,7 @@ function(qt6_ifcodegen_generate)
         message(STATUS "Running ifcodegen for ${IDL_FILES} with template ${TEMPLATE}")
         set(GENERATOR_CMD
                 ${CMAKE_COMMAND} -E env ${CMD_ENV}
-                ${PYTHON_EXECUTABLE}
+                ${PYTHON_EXECUTABLE} -B
                 ${QT_IFCODEGEN_GENERATOR_PATH}/generate.py
                 ${GENERATOR_ARGUMENTS}
                 ${IDL_FILES}
@@ -388,7 +388,11 @@ function(qt6_ifcodegen_generate)
             endif()
             execute_process(COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_DIR}/.stamp-ifcodegen)
         else()
-            message(FATAL_ERROR "Error while running the ifcodegen:\n${GENERATOR_CMD_STR}\n${GENERATOR_LOG}")
+            # FATAL_ERROR doesn't print the message as is. Because of that the command cannot
+            # be copied into a terminal window anymore. To fix this we report the full
+            # command and log output and then exit with a fatal error
+            message("ifcodegen call failed:\n${GENERATOR_CMD_STR}\n${GENERATOR_LOG}")
+            message(FATAL_ERROR "Error while running ifcodegen")
         endif()
     endif()
 
