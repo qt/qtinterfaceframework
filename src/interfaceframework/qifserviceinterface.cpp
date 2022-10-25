@@ -39,6 +39,16 @@ QIfServiceInterface::~QIfServiceInterface()
 {
 }
 
+QString QIfServiceInterface::configurationId() const
+{
+    return QString();
+}
+
+void QIfServiceInterface::updateServiceSettings(const QVariantMap &settings)
+{
+    Q_UNUSED(settings);
+}
+
 /*!
     \fn QStringList QIfServiceInterface::interfaces() const
 

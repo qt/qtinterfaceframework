@@ -89,4 +89,35 @@ QIfFeatureInterface *QIfProxyServiceObject::interfaceInstance(const QString &int
     return d->m_interfaceMap.value(interface);
 }
 
+QString QIfProxyServiceObject::id() const
+{
+    Q_D(const QIfProxyServiceObject);
+    QString id;
+    if (d->m_serviceInterface)
+         id = d->m_serviceInterface->id();
+
+    if (id.isEmpty())
+        id = QIfServiceObject::id();
+    return id;
+}
+
+QString QIfProxyServiceObject::configurationId() const
+{
+    Q_D(const QIfProxyServiceObject);
+    if (d->m_serviceInterface)
+        return d->m_serviceInterface->configurationId();
+
+    return QIfServiceObject::configurationId();
+}
+
+void QIfProxyServiceObject::updateServiceSettings(const QVariantMap &settings)
+{
+    Q_D(const QIfProxyServiceObject);
+    if (d->m_serviceInterface)
+        d->m_serviceInterface->updateServiceSettings(settings);
+
+    //Always also call the base class to keep the property in sync
+    QIfServiceObject::updateServiceSettings(settings);
+}
+
 QT_END_NAMESPACE

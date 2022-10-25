@@ -35,6 +35,9 @@ public:
     virtual QStringList interfaces() const = 0;
     virtual QIfFeatureInterface *interfaceInstance(const QString &interfaceName) const = 0;
 
+    virtual QString configurationId() const;
+    virtual void updateServiceSettings(const QVariantMap &settings);
+
     template <class T> T interfaceInstance(const QString &interfaceName) const {
         T inst = qif_interface_cast<T>(interfaceInstance(interfaceName));
         return inst;

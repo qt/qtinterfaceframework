@@ -54,4 +54,17 @@ QString QIfServiceObject::id() const
     return m_id;
 }
 
+const QVariantMap &QIfServiceObject::serviceSettings() const
+{
+    return m_serviceSettings;
+}
+
+void QIfServiceObject::updateServiceSettings(const QVariantMap &settings)
+{
+    if (m_serviceSettings == settings)
+        return;
+    m_serviceSettings = settings;
+    emit serviceSettingsChanged();
+}
+
 QT_END_NAMESPACE

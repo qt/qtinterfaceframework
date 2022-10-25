@@ -8,6 +8,7 @@
 #include "qtinterfaceframeworkmodule.h"
 #include "qifproxyserviceobject.h"
 #include "qifservicemanager_p.h"
+#include "qifconfiguration_p.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -97,6 +98,12 @@ QIfProxyServiceObject *QIfServiceManagerPrivate::createServiceObject(struct Back
         if (fileName.isEmpty())
             fileName = QStringLiteral("static plugin");
         qCDebug(qLcIfServiceManagement) << "Found: " << backend->proxyServiceObject << "from: " << fileName;
+
+        const QString configurationId = backend->proxyServiceObject->configurationId();
+        if (!configurationId.isEmpty()) {
+            // This will also apply the current serviceSettings to the serviceObject
+            QIfConfigurationManager::instance()->addServiceObject(configurationId, backend->proxyServiceObject);
+        }
         return backend->proxyServiceObject;
     }
 
@@ -263,6 +270,10 @@ void QIfServiceManagerPrivate::unloadAllBackends()
 
     q->beginResetModel();
     for (Backend* backend : qAsConst(m_backends)) {
+        if (backend->proxyServiceObject) {
+            auto configurationId = backend->proxyServiceObject->configurationId();
+            QIfConfigurationManager::instance()->removeServiceObject(configurationId, backend->proxyServiceObject);
+        }
 
         //If the Interface is from a Plugin, the Plugin owns it and it will be deleted when unloading.
         //Otherwise we own the Interface and delete the Pointer.

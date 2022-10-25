@@ -26,6 +26,10 @@ public:
     QStringList interfaces() const override;
     QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
+    QString id() const override;
+    QString configurationId() const override;
+    void updateServiceSettings(const QVariantMap &settings) override;
+
 private:
     Q_DECLARE_PRIVATE(QIfProxyServiceObject)
     QIfProxyServiceObjectPrivate *d_ptr;
