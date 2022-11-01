@@ -9,7 +9,7 @@
 \title QT_IFCODEGEN_TEMPLATE_SEARCH_PATH
 \target cmake-variable-QT_IFCODEGEN_TEMPLATE_SEARCH_PATH
 
-\brief Search path for ifcodegen templates
+\summary {Search path for ifcodegen templates.}
 
 The \l{qt_ifcodegen_extend_target}, \l{qt_ifcodegen_import_variables} and
 \l{qt_ifcodegen_generate} commands accept a \c EXTRA_TEMPLATE_SEARCH_PATH
@@ -29,7 +29,7 @@ search path.
 \title IFCODEGEN_VERBOSE
 \target cmake-variable-IFCODEGEN_VERBOSE
 
-\brief Enable verbose logging for all ifcodegen functions
+\summary {Enable verbose logging for all ifcodegen functions.}
 
 Instead of using the \c VERBOSE argument of \l{qt_ifcodegen_extend_target},
 \l{qt_ifcodegen_import_variables} or \l{qt_ifcodegen_generate}, it is possible
