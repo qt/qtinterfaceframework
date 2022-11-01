@@ -2,8 +2,21 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
 
 /*!
-\page cmake-variable-QT_IFCODEGEN_TEMPLATE_SEARCH_PATH.html
-\ingroup cmake-variables
+\group cmake-variables-qtinterfaceframework
+\title CMake Variables in Qt6 InterfaceFramework
+
+The following CMake variables are defined or influence commands that are part
+of Qt6::InterfaceFramework:
+
+\code
+find_package(Qt6 REQUIRED COMPONENTS InterfaceFramework)
+\endcode
+
+\sa{CMake Variable Reference}
+*/
+
+/*!
+\page cmake-variable-qt-ifcodegen-template-search-path.html
 \ingroup cmake-variables-qtinterfaceframework
 
 \title QT_IFCODEGEN_TEMPLATE_SEARCH_PATH
@@ -22,8 +35,7 @@ search path.
 */
 
 /*!
-\page cmake-variable-IFCODEGEN_VERBOSE.html
-\ingroup cmake-variables
+\page cmake-variable-ifcodegen-verbose.html
 \ingroup cmake-variables-qtinterfaceframework
 
 \title IFCODEGEN_VERBOSE
