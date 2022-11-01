@@ -8,7 +8,7 @@
 \title qt_set_ifcodegen_variable
 \target qt6_set_ifcodegen_variable
 
-\brief Sets the variable to the given \c value within an ifcodegen template.
+\summary {Sets the variable to the given \c value within an ifcodegen template.}
 
 \section1 Synopsis
 
@@ -34,7 +34,7 @@ are exported to the current scope when using
 \title qt_ifcodegen_generate
 \target qt6_ifcodegen_generate
 
-\brief Generates files from a qface IDL file
+\summary {Generates files from a qface IDL file.}
 
 \section1 Synopsis
 
@@ -99,7 +99,7 @@ For more details on the generator's command line arguments, see \l {Use the Gene
 \title qt_ifcodegen_extend_target
 \target qt6_ifcodegen_extend_target
 
-\brief Extends a target with files generated from a qface IDL file
+\summary {Extends a target with files generated from a qface IDL file.}
 
 \section1 Synopsis
 
@@ -149,7 +149,7 @@ For more details on the generator's command line arguments, see \l {Use the Gene
 \title qt_ifcodegen_import_variables
 \target qt6_ifcodegen_import_variables
 
-\brief Generates files from a qface IDL file and provides variables for use within CMake
+\summary {Generates files from a qface IDL file and provides variables for use within CMake.}
 
 \section1 Synopsis
 
