@@ -68,6 +68,7 @@ public:
     QIfServiceObject *m_serviceObject;
     QIfAbstractFeature::DiscoveryMode m_discoveryMode;
     QIfAbstractFeature::DiscoveryResult m_discoveryResult;
+    QString m_configurationId;
     QString m_errorMessage;
     QIfAbstractFeature::Error m_error;
     bool m_qmlCreation;

@@ -3,6 +3,7 @@
 
 #include "qifconfiguration.h"
 #include "qifconfiguration_p.h"
+#include "qifabstractfeature.h"
 
 #include "qifqmlconversion_helper.h"
 
@@ -31,6 +32,28 @@ QIfConfigurationManager *QIfConfigurationManager::instance()
     return &s_manager;
 }
 
+
+QIfAbstractFeature::DiscoveryMode discoveryModeFromString(const QString &modeString)
+{
+    QMetaEnum me = QMetaEnum::fromType<QIfAbstractFeature::DiscoveryMode>();
+    bool ok = false;
+    int value = me.keyToValue(modeString.toUtf8().constData(), &ok);
+    if (ok) {
+        return static_cast<QIfAbstractFeature::DiscoveryMode>(value);
+    } else {
+        QByteArray values;
+        for (int i=0; i<me.keyCount();i++) {
+            if (i == 0)
+                values += me.key(i);
+            else
+                values += QByteArray(", ") + me.key(i);
+        }
+        qCWarning(qLcIfConfig, "Ignoring malformed discoveryMode: '%s'. Possible values are: '%s'", modeString.toUtf8().constData(), values.constData());
+    }
+
+    return QIfAbstractFeature::InvalidAutoDiscovery;
+}
+
 void QIfConfigurationManager::readInitialSettings()
 {
     // read file
@@ -53,7 +76,16 @@ void QIfConfigurationManager::readInitialSettings()
         settingsObject->simulationFile = settings.value("simulationFile").toString();
         settingsObject->simulationDataFileSet = settings.contains("simulationDataFile");
         settingsObject->simulationDataFile = settings.value("simulationDataFile").toString();
+        QVariant discoveryModeVariant = settings.value("discoveryMode");
         settings.endGroup();
+
+        if (discoveryModeVariant.isValid()) {
+            auto discoveryMode = discoveryModeFromString(discoveryModeVariant.toString());
+            if (discoveryMode == QIfAbstractFeature::InvalidAutoDiscovery)
+                return;
+            settingsObject->discoveryMode = discoveryMode;
+            settingsObject->discoveryModeSet = true;
+        }
 
         m_settingsHash.insert(group, settingsObject);
     }
@@ -80,6 +112,17 @@ void QIfConfigurationManager::readInitialSettings()
         so->simulationDataFile = value;
         so->simulationDataFileSet = true;
         so->simulationDataFileEnvOverride = true;
+    });
+
+    parseEnv(qgetenv("QTIF_DISCOVERY_MODE_OVERRIDE"), [this](const QString &group, const QString& value) {
+        auto *so = settingsObject(group, true);
+        auto discoveryMode = discoveryModeFromString(value);
+        if (discoveryMode == QIfAbstractFeature::InvalidAutoDiscovery)
+            return;
+
+        so->discoveryMode = discoveryMode;
+        so->discoveryModeSet = true;
+        so->discoveryModeEnvOverride = true;
     });
 }
 
@@ -118,6 +161,28 @@ void QIfConfigurationManager::removeServiceObject(const QString &group, QIfProxy
     so->serviceObjects.removeAll(serviceObject);
 }
 
+void QIfConfigurationManager::addAbstractFeature(const QString &group, QIfAbstractFeature *feature)
+{
+    Q_ASSERT(feature);
+    QIfSettingsObject *so = settingsObject(group, true);
+    Q_ASSERT(so);
+
+    so->features.append(feature);
+    if (so->discoveryModeSet) {
+        qCDebug(qLcIfConfig) << "Updating discoveryMode of" << feature << "with" << so->discoveryMode;
+        feature->setDiscoveryMode(so->discoveryMode);
+    }
+}
+
+void QIfConfigurationManager::removeAbstractFeature(const QString &group, QIfAbstractFeature *feature)
+{
+    Q_ASSERT(feature);
+    QIfSettingsObject *so = settingsObject(group);
+    Q_ASSERT(so);
+
+    so->features.removeAll(feature);
+}
+
 bool QIfConfigurationManager::setServiceSettings(QIfSettingsObject *so, const QVariantMap &serviceSettings)
 {
     Q_ASSERT(so);
@@ -154,6 +219,25 @@ bool QIfConfigurationManager::setSimulationDataFile(QIfSettingsObject *so, const
     }
     so->simulationDataFile = simulationDataFile;
     so->simulationDataFileSet = true;
+    return true;
+}
+
+bool QIfConfigurationManager::setDiscoveryMode(QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode)
+{
+    Q_ASSERT(so);
+    if (so->simulationFileEnvOverride) {
+        qWarning("Changing the discoveryMode is not possible, because the QTIF_DISCOVERY_MODE_OVERRIDE env variable has been set.");
+        return false;
+    }
+    so->discoveryMode = discoveryMode;
+    so->discoveryModeSet = true;
+
+    for (auto &feature : qAsConst(so->features)) {
+        if (!feature)
+            continue;
+        qCDebug(qLcIfConfig) << "Updating discoveryMode of" << feature << "with" << discoveryMode;
+        feature->setDiscoveryMode(so->discoveryMode);
+    }
     return true;
 }
 
@@ -240,6 +324,15 @@ QString QIfConfiguration::simulationDataFile() const
     return d->m_settingsObject->simulationDataFile;
 }
 
+QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode() const
+{
+    Q_D(const QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(QIfAbstractFeature::DiscoveryMode());
+
+    return d->m_settingsObject->discoveryMode;
+}
+
 bool QIfConfiguration::setName(const QString &name)
 {
     Q_D(QIfConfiguration);
@@ -310,6 +403,23 @@ bool QIfConfiguration::setSimulationDataFile(const QString &simulationDataFile)
 
     if (QIfConfigurationManager::instance()->setSimulationDataFile(d->m_settingsObject, simulationDataFile)) {
         emit simulationDataFileChanged(simulationDataFile);
+        return true;
+    }
+
+    return false;
+}
+
+bool QIfConfiguration::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode)
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    if (d->m_settingsObject->discoveryMode == discoveryMode)
+        return false;
+
+    if (QIfConfigurationManager::instance()->setDiscoveryMode(d->m_settingsObject, discoveryMode)) {
+        emit discoveryModeChanged(discoveryMode);
         return true;
     }
 
@@ -394,6 +504,25 @@ bool QIfConfiguration::isSimulationDataFileSet(const QString &group)
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->simulationDataFileSet : false;
 }
+
+QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->discoveryMode : QIfAbstractFeature::InvalidAutoDiscovery;
+}
+
+bool QIfConfiguration::setDiscoveryMode(const QString &group, QIfAbstractFeature::DiscoveryMode discoveryMode)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->setDiscoveryMode(so, discoveryMode);
+}
+
+bool QIfConfiguration::isDiscoveryModeSet(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->discoveryModeSet : false;
+}
+
 
 QT_END_NAMESPACE
 

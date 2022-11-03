@@ -5,6 +5,7 @@
 
 #include "qifabstractfeaturelistmodel.h"
 #include "qifabstractfeaturelistmodel_p.h"
+#include "qifconfiguration_p.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -64,7 +65,6 @@ const QIfAbstractFeaturePrivate *QIfHelperFeature::ifPrivate() const
 QIfAbstractFeatureListModelPrivate::QIfAbstractFeatureListModelPrivate(const QString &interfaceName, QIfAbstractFeatureListModel *model)
     : QAbstractItemModelPrivate()
     , m_feature(new QIfHelperFeature(interfaceName, model))
-    , m_qmlCreation(false)
 {
 
 }
@@ -165,6 +165,8 @@ QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(const QString &interfac
     connect(d->m_feature, &QIfAbstractFeature::isValidChanged, this, &QIfAbstractFeatureListModel::isValidChanged);
     connect(d->m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfAbstractFeatureListModel::isInitializedChanged);
     connect(d->m_feature, &QIfAbstractFeature::errorChanged, this, &QIfAbstractFeatureListModel::errorChanged);
+    connect(d->m_feature, &QIfAbstractFeature::configurationIdChanged, this, &QIfAbstractFeatureListModel::configurationIdChanged);
+    connect(d->m_feature, &QIfAbstractFeature::preferredBackendsChanged, this, &QIfAbstractFeatureListModel::preferredBackendsChanged);
 }
 
 /*!
@@ -341,6 +343,12 @@ QString QIfAbstractFeatureListModel::errorMessage() const
     return d->m_feature->errorMessage();
 }
 
+QString QIfAbstractFeatureListModel::configurationId() const
+{
+    Q_D(const QIfAbstractFeatureListModel);
+    return d->m_feature->configurationId();
+}
+
 bool QIfAbstractFeatureListModel::setServiceObject(QIfServiceObject *so)
 {
     Q_D(QIfAbstractFeatureListModel);
@@ -351,6 +359,12 @@ void QIfAbstractFeatureListModel::setDiscoveryMode(QIfAbstractFeature::Discovery
 {
     Q_D(QIfAbstractFeatureListModel);
     d->m_feature->setDiscoveryMode(discoveryMode);
+}
+
+void QIfAbstractFeatureListModel::setConfigurationId(const QString &configurationId)
+{
+    Q_D(QIfAbstractFeatureListModel);
+    d->m_feature->setConfigurationId(configurationId);
 }
 
 /*!
@@ -384,6 +398,7 @@ QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(QIfAbstractFeatureListM
     connect(d->m_feature, &QIfAbstractFeature::isValidChanged, this, &QIfAbstractFeatureListModel::isValidChanged);
     connect(d->m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfAbstractFeatureListModel::isInitializedChanged);
     connect(d->m_feature, &QIfAbstractFeature::errorChanged, this, &QIfAbstractFeatureListModel::errorChanged);
+    connect(d->m_feature, &QIfAbstractFeature::configurationIdChanged, this, &QIfAbstractFeatureListModel::configurationIdChanged);
 }
 
 /*!
@@ -473,7 +488,7 @@ void QIfAbstractFeatureListModel::disconnectFromServiceObject(QIfServiceObject *
 void QIfAbstractFeatureListModel::classBegin()
 {
     Q_D(QIfAbstractFeatureListModel);
-    d->m_qmlCreation = true;
+    d->m_feature->ifPrivate()->m_qmlCreation = true;
 }
 
 /*!
@@ -482,7 +497,11 @@ void QIfAbstractFeatureListModel::classBegin()
 void QIfAbstractFeatureListModel::componentComplete()
 {
     Q_D(QIfAbstractFeatureListModel);
-    d->m_qmlCreation = false;
+    d->m_feature->ifPrivate()->m_qmlCreation = false;
+
+    if (!configurationId().isEmpty())
+        QIfConfigurationManager::instance()->addAbstractFeature(configurationId(), d->m_feature);
+
     startAutoDiscovery();
 }
 

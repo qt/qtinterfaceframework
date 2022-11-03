@@ -66,7 +66,6 @@ public:
     Q_DISABLE_COPY(QIfAbstractFeatureListModelPrivate)
 
     QIfHelperFeature *m_feature;
-    bool m_qmlCreation;
 };
 
 QT_END_NAMESPACE

@@ -35,9 +35,13 @@ public:
     QString simulationFile;
     bool simulationFileSet = false;
     bool simulationFileEnvOverride = false;
+    QIfAbstractFeature::DiscoveryMode discoveryMode = QIfAbstractFeature::InvalidAutoDiscovery;
+    bool discoveryModeSet = false;
+    bool discoveryModeEnvOverride = false;
     QVariantMap serviceSettings;
     bool serviceSettingsSet = false;
     QList<QPointer<QIfProxyServiceObject>> serviceObjects;
+    QList<QPointer<QIfAbstractFeature>> features;
 };
 
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfigurationManager
@@ -50,9 +54,12 @@ public:
 
     void addServiceObject(const QString &group, QIfProxyServiceObject *serviceObject);
     void removeServiceObject(const QString &group, QIfProxyServiceObject *serviceObject);
+    void addAbstractFeature(const QString &group, QIfAbstractFeature *feature);
+    void removeAbstractFeature(const QString &group, QIfAbstractFeature *feature);
     bool setServiceSettings(QIfSettingsObject *so, const QVariantMap &serviceSettings);
     bool setSimulationFile(QIfSettingsObject *so, const QString &simulationFile);
     bool setSimulationDataFile(QIfSettingsObject *so, const QString &simulationDataFile);
+    bool setDiscoveryMode(QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode);
 
     void parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func);
 

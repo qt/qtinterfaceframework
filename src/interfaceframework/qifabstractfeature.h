@@ -30,6 +30,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeature : public QObject, public 
     Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
     Q_PROPERTY(bool isInitialized READ isInitialized NOTIFY isInitializedChanged)
     Q_PROPERTY(QString error READ errorMessage NOTIFY errorChanged)
+    Q_PROPERTY(QString configurationId READ configurationId WRITE setConfigurationId NOTIFY configurationIdChanged REVISION(5))
 
 public:
 
@@ -44,7 +45,8 @@ public:
     Q_ENUM(Error)
 
     enum DiscoveryMode {
-        NoAutoDiscovery,
+        InvalidAutoDiscovery = -1,
+        NoAutoDiscovery = 0,
         AutoDiscovery,
         LoadOnlyProductionBackends,
         LoadOnlySimulationBackends
@@ -60,6 +62,7 @@ public:
     Q_ENUM(DiscoveryResult)
 
     explicit QIfAbstractFeature(const QString &interfaceName, QObject *parent = nullptr);
+    ~QIfAbstractFeature() override;
 
     QIfServiceObject *serviceObject() const;
     QIfAbstractFeature::DiscoveryMode discoveryMode() const;
@@ -68,10 +71,12 @@ public:
     bool isInitialized() const;
     QIfAbstractFeature::Error error() const;
     QString errorMessage() const;
+    QString configurationId() const;
 
 public Q_SLOTS:
     bool setServiceObject(QIfServiceObject *so);
     void setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode);
+    Q_REVISION(5) void setConfigurationId(const QString &configurationId);
     QIfAbstractFeature::DiscoveryResult startAutoDiscovery();
 
 Q_SIGNALS:
@@ -81,6 +86,7 @@ Q_SIGNALS:
     void isValidChanged(bool arg);
     void isInitializedChanged(bool isInitialized);
     void errorChanged(QIfAbstractFeature::Error error, const QString &message);
+    Q_REVISION(5) void configurationIdChanged(const QString &configurationId);
 
 protected:
     QIfAbstractFeature(QIfAbstractFeaturePrivate &dd, QObject *parent = nullptr);

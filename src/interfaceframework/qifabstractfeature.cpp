@@ -7,6 +7,7 @@
 #include "qifabstractfeature_p.h"
 #include "qtifglobal_p.h"
 #include "qtinterfaceframeworkmodule.h"
+#include "qifconfiguration_p.h"
 
 #include "qifservicemanager.h"
 #include "qifservicemanager_p.h"
@@ -228,6 +229,13 @@ QIfAbstractFeature::QIfAbstractFeature(const QString &interfaceName, QObject *pa
     d->initialize();
 }
 
+QIfAbstractFeature::~QIfAbstractFeature()
+{
+    Q_D(QIfAbstractFeature);
+    if (!d->m_configurationId.isEmpty())
+        QIfConfigurationManager::instance()->removeAbstractFeature(d->m_configurationId, this);
+}
+
 /*!
     \qmlproperty ServiceObject AbstractFeature::serviceObject
     \brief Sets the service object for the feature.
@@ -329,7 +337,7 @@ bool QIfAbstractFeature::setServiceObject(QIfServiceObject *so)
 void QIfAbstractFeature::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
     Q_D(QIfAbstractFeature);
-    if (d->m_discoveryMode == discoveryMode)
+    if (d->m_discoveryMode == discoveryMode || discoveryMode == QIfAbstractFeature::InvalidAutoDiscovery)
         return;
 
     d->m_discoveryMode = discoveryMode;
@@ -353,6 +361,10 @@ void QIfAbstractFeature::componentComplete()
 {
     Q_D(QIfAbstractFeature);
     d->m_qmlCreation = false;
+
+    if (!d->m_configurationId.isEmpty())
+        QIfConfigurationManager::instance()->addAbstractFeature(d->m_configurationId, this);
+
     startAutoDiscovery();
 }
 
@@ -395,7 +407,7 @@ QIfAbstractFeature::DiscoveryMode QIfAbstractFeature::discoveryMode() const
     \value ProductionBackendLoaded
            A production backend was loaded, as a result of auto discovery.
     \value SimulationBackendLoaded
-           A simulation backend was loaded, as a result of auto discovery.s
+           A simulation backend was loaded, as a result of auto discovery.
 */
 
 /*!
@@ -408,6 +420,30 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::discoveryResult() const
 {
     Q_D(const QIfAbstractFeature);
     return d->m_discoveryResult;
+}
+
+QString QIfAbstractFeature::configurationId() const
+{
+    Q_D(const QIfAbstractFeature);
+    return d->m_configurationId;
+}
+
+
+void QIfAbstractFeature::setConfigurationId(const QString &configurationId)
+{
+    Q_D(QIfAbstractFeature);
+    if (d->m_configurationId == configurationId)
+        return;
+
+    if (!d->m_configurationId.isEmpty())
+        QIfConfigurationManager::instance()->removeAbstractFeature(d->m_configurationId, this);
+
+    d->m_configurationId = configurationId;
+
+    if (!configurationId.isEmpty() && !d->m_qmlCreation)
+        QIfConfigurationManager::instance()->addAbstractFeature(configurationId, this);
+
+    emit configurationIdChanged(configurationId);
 }
 
 /*!
