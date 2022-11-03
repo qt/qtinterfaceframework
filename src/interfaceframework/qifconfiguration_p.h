@@ -29,8 +29,14 @@ Q_DECLARE_LOGGING_CATEGORY(qLcIfConfig)
 
 class QIfSettingsObject {
 public:
-    bool serviceSettingsSet = false;
+    QString simulationDataFile;
+    bool simulationDataFileSet = false;
+    bool simulationDataFileEnvOverride = false;
+    QString simulationFile;
+    bool simulationFileSet = false;
+    bool simulationFileEnvOverride = false;
     QVariantMap serviceSettings;
+    bool serviceSettingsSet = false;
     QList<QPointer<QIfProxyServiceObject>> serviceObjects;
 };
 
@@ -45,6 +51,10 @@ public:
     void addServiceObject(const QString &group, QIfProxyServiceObject *serviceObject);
     void removeServiceObject(const QString &group, QIfProxyServiceObject *serviceObject);
     bool setServiceSettings(QIfSettingsObject *so, const QVariantMap &serviceSettings);
+    bool setSimulationFile(QIfSettingsObject *so, const QString &simulationFile);
+    bool setSimulationDataFile(QIfSettingsObject *so, const QString &simulationDataFile);
+
+    void parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func);
 
     QHash<QString, QIfSettingsObject*> m_settingsHash;
     QHash<QString, QIfConfiguration*> m_configurationHash;

@@ -298,14 +298,14 @@ void tst_QIfSimulationEngine::testOverrideEnvVariables()
     QTest::ignoreMessage(QtWarningMsg, "Ignoring malformed override: File does not exist: 'test.qml'");
     QTest::ignoreMessage(QtWarningMsg, "Ignoring malformed override: 'testEngine=invalidQml='");
 
-    QTest::ignoreMessage(QtWarningMsg, "Detected matching simulation data override: overrideTest=:/simple.json");
+    QTest::ignoreMessage(QtWarningMsg, "Using simulation data override from QIfConfiguration(overrideTest): :/simple.json");
     engine.loadSimulationData(QStringLiteral("invalid.json"));
 
     auto globalObject = engine.rootContext()->contextProperty(QStringLiteral("IfSimulator")).value<QIfSimulationGlobalObject*>();
     QVariant simulationData = globalObject->simulationData();
     QVERIFY(simulationData.isValid());
 
-    QTest::ignoreMessage(QtWarningMsg, "Detected matching simulation override: overrideTest=qrc:/simple.qml");
+    QTest::ignoreMessage(QtWarningMsg, "Using simulation override from QIfConfiguration(overrideTest): qrc:/simple.qml");
     engine.loadSimulation(QStringLiteral("invalid.qml"));
 }
 

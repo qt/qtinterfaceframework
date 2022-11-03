@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 #include "qifsimulationengine.h"
+#include "qifconfiguration.h"
 #include <qifsimulationglobalobject_p.h>
 
 #include <QDir>
@@ -28,51 +29,6 @@ namespace qtif_helper {
             return QString(path).prepend(qrcLiteral);
         return path;
     }
-
-    class QIfSimulationOverrideParser {
-    public:
-        static QIfSimulationOverrideParser* instance() {
-            static QIfSimulationOverrideParser* s_parser = new QIfSimulationOverrideParser();
-            return s_parser;
-        }
-
-        QHash<QString, QString> simulationOverrides;
-        QHash<QString, QString> simulationDataOverrides;
-
-    private:
-        QIfSimulationOverrideParser() {
-            parseEnv(qgetenv("QTIF_SIMULATION_OVERRIDE"), simulationOverrides);
-            parseEnv(qgetenv("QTIF_SIMULATION_DATA_OVERRIDE"), simulationDataOverrides);
-        }
-
-        void parseEnv(const QByteArray &rulesSrc, QHash<QString, QString> &hash) {
-            const QString content = QString::fromLocal8Bit(rulesSrc);
-            const auto lines = content.split(QLatin1Char(';'));
-            for (auto line : lines) {
-                // Remove whitespace at start and end of line:
-                line = line.trimmed();
-
-                int equalPos = line.indexOf(QLatin1Char('='));
-                if (equalPos != -1) {
-                    if (line.lastIndexOf(QLatin1Char('=')) == equalPos) {
-                        const auto key = line.left(equalPos).trimmed();
-                        const auto valueStr = line.mid(equalPos + 1).trimmed();
-
-                        auto fixedStr = valueStr;
-                        if (fixedStr.startsWith(qrcUrlLiteral))
-                            fixedStr = fixedStr.mid(3);
-
-                        if (QFile::exists(fixedStr))
-                            hash.insert(key, valueStr);
-                        else
-                            qCWarning(qLcIfSimulationEngine, "Ignoring malformed override: File does not exist: '%s'", fixedStr.toUtf8().constData());
-                    } else {
-                        qCWarning(qLcIfSimulationEngine, "Ignoring malformed override: '%s'", line.toUtf8().constData());
-                    }
-                }
-            }
-        }
-    };
 }
 
 using namespace qtif_helper;
@@ -293,9 +249,9 @@ QIfSimulationEngine::QIfSimulationEngine(const QString &identifier, QObject *par
 void QIfSimulationEngine::loadSimulationData(const QString &dataFile)
 {
     QString filePath = dataFile;
-    if (!m_identifier.isEmpty() && QIfSimulationOverrideParser::instance()->simulationDataOverrides.contains(m_identifier)) {
-        filePath = QIfSimulationOverrideParser::instance()->simulationDataOverrides.value(m_identifier);
-        qCWarning(qLcIfSimulationEngine, "Detected matching simulation data override: %s=%s", qPrintable(m_identifier), qPrintable(filePath));
+    if (!m_identifier.isEmpty() && QIfConfiguration::isSimulationDataFileSet(m_identifier)) {
+        filePath = QIfConfiguration::simulationDataFile(m_identifier);
+        qCWarning(qLcIfSimulationEngine, "Using simulation data override from QIfConfiguration(%s): %s", qPrintable(m_identifier), qPrintable(filePath));
     }
 
     qCDebug(qLcIfSimulationEngine, "loading SimulationData for engine %s: %s", qPrintable(m_identifier), qPrintable(filePath));
@@ -331,9 +287,9 @@ void QIfSimulationEngine::loadSimulationData(const QString &dataFile)
 void QIfSimulationEngine::loadSimulation(const QUrl &file)
 {
     QUrl filePath = file;
-    if (!m_identifier.isEmpty() && QIfSimulationOverrideParser::instance()->simulationOverrides.contains(m_identifier)) {
-        filePath = toQmlUrl(QIfSimulationOverrideParser::instance()->simulationOverrides.value(m_identifier));
-        qCWarning(qLcIfSimulationEngine, "Detected matching simulation override: %s=%s", qPrintable(m_identifier), qPrintable(filePath.toString()));
+    if (!m_identifier.isEmpty() && QIfConfiguration::isSimulationFileSet(m_identifier)) {
+        filePath = toQmlUrl(QIfConfiguration::simulationFile(m_identifier));
+        qCWarning(qLcIfSimulationEngine, "Using simulation override from QIfConfiguration(%s): %s", qPrintable(m_identifier), qPrintable(filePath.toString()));
     }
 
     qCDebug(qLcIfSimulationEngine, "loading simulation for engine %s: %s", qPrintable(m_identifier), qPrintable(filePath.toString()));

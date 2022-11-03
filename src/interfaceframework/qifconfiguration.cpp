@@ -49,10 +49,38 @@ void QIfConfigurationManager::readInitialSettings()
         settings.beginGroup(group);
         settingsObject->serviceSettingsSet = settings.contains("serviceSettings");
         settingsObject->serviceSettings = settings.value("serviceSettings").toMap();
+        settingsObject->simulationFileSet = settings.contains("simulationFile");
+        settingsObject->simulationFile = settings.value("simulationFile").toString();
+        settingsObject->simulationDataFileSet = settings.contains("simulationDataFile");
+        settingsObject->simulationDataFile = settings.value("simulationDataFile").toString();
         settings.endGroup();
 
         m_settingsHash.insert(group, settingsObject);
     }
+
+    parseEnv(qgetenv("QTIF_SIMULATION_OVERRIDE"), [this](const QString &group, const QString& value) {
+        if (!QFile::exists(value)) {
+            qCWarning(qLcIfConfig, "Ignoring malformed override: File does not exist: '%s'", value.toUtf8().constData());
+            return;
+        }
+
+        auto *so = settingsObject(group, true);
+        so->simulationFile = value;
+        so->simulationFileSet = true;
+        so->simulationFileEnvOverride = true;
+    });
+
+    parseEnv(qgetenv("QTIF_SIMULATION_DATA_OVERRIDE"), [this](const QString &group, const QString& value) {
+        if (!QFile::exists(value)) {
+            qCWarning(qLcIfConfig, "Ignoring malformed override: File does not exist: '%s'", value.toUtf8().constData());
+            return;
+        }
+
+        auto *so = settingsObject(group, true);
+        so->simulationDataFile = value;
+        so->simulationDataFileSet = true;
+        so->simulationDataFileEnvOverride = true;
+    });
 }
 
 QIfSettingsObject *QIfConfigurationManager::settingsObject(const QString &group, bool create)
@@ -105,6 +133,53 @@ bool QIfConfigurationManager::setServiceSettings(QIfSettingsObject *so, const QV
     return true;
 }
 
+bool QIfConfigurationManager::setSimulationFile(QIfSettingsObject *so, const QString &simulationFile)
+{
+    Q_ASSERT(so);
+    if (so->simulationFileEnvOverride) {
+        qWarning("Changing the simulationFile is not possible, because the QTIF_SIMULATION_OVERRIDE env variable has been set.");
+        return false;
+    }
+    so->simulationFile = simulationFile;
+    so->simulationFileSet = true;
+    return true;
+}
+
+bool QIfConfigurationManager::setSimulationDataFile(QIfSettingsObject *so, const QString &simulationDataFile)
+{
+    Q_ASSERT(so);
+    if (so->simulationDataFileEnvOverride) {
+        qWarning("Changing the simulationDataFile is not possible, because the QTIF_SIMULATION_DATA_OVERRIDE env variable has been set.");
+        return false;
+    }
+    so->simulationDataFile = simulationDataFile;
+    so->simulationDataFileSet = true;
+    return true;
+}
+
+void QIfConfigurationManager::parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func)
+{
+    const QString content = QString::fromLocal8Bit(rulesSrc);
+    const auto lines = content.split(QLatin1Char(';'));
+    for (auto line : lines) {
+        // Remove whitespace at start and end of line:
+        line = line.trimmed();
+
+        int equalPos = line.indexOf(QLatin1Char('='));
+        if (equalPos != -1) {
+            if (line.lastIndexOf(QLatin1Char('=')) == equalPos) {
+                const auto key = line.left(equalPos).trimmed();
+                const auto valueStr = line.mid(equalPos + 1).trimmed();
+
+                func(key, valueStr);
+            } else {
+                qCWarning(qLcIfConfig, "Ignoring malformed override: '%s'", line.toUtf8().constData());
+            }
+        }
+    }
+}
+
+
 
 QIfConfigurationPrivate::QIfConfigurationPrivate(QIfConfiguration *parent)
     : q_ptr(parent)
@@ -147,6 +222,24 @@ QVariantMap QIfConfiguration::serviceSettings() const
     return d->m_settingsObject->serviceSettings;
 }
 
+QString QIfConfiguration::simulationFile() const
+{
+    Q_D(const QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(QString());
+
+    return d->m_settingsObject->simulationFile;
+}
+
+QString QIfConfiguration::simulationDataFile() const
+{
+    Q_D(const QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(QString());
+
+    return d->m_settingsObject->simulationDataFile;
+}
+
 bool QIfConfiguration::setName(const QString &name)
 {
     Q_D(QIfConfiguration);
@@ -183,6 +276,40 @@ bool QIfConfiguration::setServiceSettings(const QVariantMap &serviceSettings)
 
     if (QIfConfigurationManager::instance()->setServiceSettings(d->m_settingsObject, serviceSettings)) {
         emit serviceSettingsChanged(serviceSettings);
+        return true;
+    }
+
+    return false;
+}
+
+bool QIfConfiguration::setSimulationFile(const QString &simulationFile)
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    if (d->m_settingsObject->simulationFile == simulationFile)
+        return false;
+
+    if (QIfConfigurationManager::instance()->setSimulationFile(d->m_settingsObject, simulationFile)) {
+        emit simulationFileChanged(simulationFile);
+        return true;
+    }
+
+    return false;
+}
+
+bool QIfConfiguration::setSimulationDataFile(const QString &simulationDataFile)
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    if (d->m_settingsObject->simulationDataFile == simulationDataFile)
+        return false;
+
+    if (QIfConfigurationManager::instance()->setSimulationDataFile(d->m_settingsObject, simulationDataFile)) {
+        emit simulationDataFileChanged(simulationDataFile);
         return true;
     }
 
@@ -228,8 +355,44 @@ bool QIfConfiguration::setServiceSettings(const QString &group, const QVariantMa
 
 bool QIfConfiguration::areServiceSettingsSet(const QString &group)
 {
-    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->serviceSettingsSet : false;
+}
+
+QString QIfConfiguration::simulationFile(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->simulationFile : QString();
+}
+
+bool QIfConfiguration::setSimulationFile(const QString &group, const QString &simulationFile)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->setSimulationFile(so, simulationFile);
+}
+
+bool QIfConfiguration::isSimulationFileSet(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->simulationFileSet : false;
+}
+
+QString QIfConfiguration::simulationDataFile(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->simulationDataFile : QString();
+}
+
+bool QIfConfiguration::setSimulationDataFile(const QString &group, const QString &simulationDataFile)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->setSimulationDataFile(so, simulationDataFile);
+}
+
+bool QIfConfiguration::isSimulationDataFileSet(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->simulationDataFileSet : false;
 }
 
 QT_END_NAMESPACE
