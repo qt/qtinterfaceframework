@@ -446,6 +446,21 @@ void QIfAbstractFeature::setConfigurationId(const QString &configurationId)
     emit configurationIdChanged(configurationId);
 }
 
+QStringList QIfAbstractFeature::preferredBackends() const
+{
+    Q_D(const QIfAbstractFeature);
+    return d->m_preferredBackends;
+}
+
+void QIfAbstractFeature::setPreferredBackends(const QStringList &preferredBackends)
+{
+    Q_D(QIfAbstractFeature);
+    if (d->m_preferredBackends == preferredBackends)
+        return;
+    d->m_preferredBackends = preferredBackends;
+    emit preferredBackendsChanged(preferredBackends);
+}
+
 /*!
     Sets \a error with the \a message.
 
@@ -565,7 +580,7 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::startAutoDiscovery()
     QList<QIfServiceObject*> serviceObjects;
     DiscoveryResult result = NoResult;
     if (d->m_discoveryMode == AutoDiscovery || d->m_discoveryMode == LoadOnlyProductionBackends) {
-        serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeProductionBackends);
+        serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeProductionBackends, d->m_preferredBackends);
         result = ProductionBackendLoaded;
     }
 
@@ -586,7 +601,7 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::startAutoDiscovery()
             qWarning() << "There is no production backend implementing" << d->m_interface << ".";
 
         if (d->m_discoveryMode == AutoDiscovery || d->m_discoveryMode == LoadOnlySimulationBackends) {
-            serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeSimulationBackends);
+            serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeSimulationBackends, d->m_preferredBackends);
             result = SimulationBackendLoaded;
             if (Q_UNLIKELY(serviceObjects.isEmpty()))
                 qWarning() << "There is no simulation backend implementing" << d->m_interface << ".";

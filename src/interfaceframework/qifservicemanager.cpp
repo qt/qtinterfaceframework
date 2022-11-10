@@ -97,6 +97,7 @@ QIfProxyServiceObject *QIfServiceManagerPrivate::createServiceObject(struct Back
         QString fileName = backend->metaData[fileNameLiteral].toString();
         if (fileName.isEmpty())
             fileName = QStringLiteral("static plugin");
+
         qCDebug(qLcIfServiceManagement) << "Found: " << backend->proxyServiceObject << "from: " << fileName;
 
         const QString configurationId = backend->proxyServiceObject->configurationId();
@@ -110,21 +111,59 @@ QIfProxyServiceObject *QIfServiceManagerPrivate::createServiceObject(struct Back
     return nullptr;
 }
 
-QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags) const
+QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends) const
 {
     QList<QIfServiceObject*> list;
-    qCDebug(qLcIfServiceManagement) << "Searching for a backend for:" << interface << "SearchFlags:" << searchFlags;
+    qCDebug(qLcIfServiceManagement) << "Searching for a backend for:" << interface << "SearchFlags:" << searchFlags << "PreferredBackends:" << preferredBackends;
 
+    QList<Backend *> foundBackends;
     for (Backend *backend : m_backends) {
 
         if (backend->metaData[interfacesLiteral].toStringList().contains(interface)) {
             bool isSimulation = QIfServiceManagerPrivate::isSimulation(backend->metaData);
             if ((searchFlags & QIfServiceManager::IncludeSimulationBackends && isSimulation) ||
                 (searchFlags & QIfServiceManager::IncludeProductionBackends && !isSimulation)) {
-                QIfServiceObject *serviceObject = createServiceObject(backend);
-                if (serviceObject)
-                    list.append(serviceObject);
+                foundBackends.append(backend);
             }
+        }
+    }
+
+    // Filter the list ouf matching backends
+    // The wildcards in the disambiguation list are checked in order
+    // Once a wildcard founds matches those are returned.
+    // In case of no match the next wildcard is used.
+    for (const QString &wildCard : qAsConst(preferredBackends)) {
+        qCDebug(qLcIfServiceManagement) << "Dissambiguate found backends with wildcard:" << wildCard;
+        const auto regexp = QRegularExpression(QRegularExpression::wildcardToRegularExpression(wildCard));
+        for (Backend *backend : qAsConst(foundBackends)) {
+            const auto fileInfo = QFileInfo(backend->metaData[fileNameLiteral].toString());
+            QIfServiceObject *serviceObject = nullptr;
+            QString identifier = fileInfo.fileName();
+
+            if (identifier.isEmpty() && backend->proxyServiceObject) {
+                //static plugin
+                identifier = backend->proxyServiceObject->id();
+            }
+
+            if (regexp.match(identifier).hasMatch())
+                serviceObject = createServiceObject(backend);
+
+            if (serviceObject)
+                list.append(serviceObject);
+            else
+                qCDebug(qLcIfServiceManagement) << "Wildcard doesn't contain:" << identifier;
+        }
+
+        if (!list.isEmpty())
+            return list;
+    }
+
+    if (list.isEmpty()) {
+        qCDebug(qLcIfServiceManagement) << "Didn't find any preferred backends. Returning all found.";
+        for (Backend *backend : qAsConst(foundBackends)) {
+            auto serviceObject = createServiceObject(backend);
+            if (serviceObject)
+                list.append(serviceObject);
         }
     }
 
@@ -545,11 +584,11 @@ QIfServiceManager *QIfServiceManager::create(QQmlEngine *, QJSEngine *)
     The \a searchFlags argument can be used to control which type of backends are included in the
     search result.
 */
-QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QString &interface, SearchFlags searchFlags)
+QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QString &interface, SearchFlags searchFlags, const QStringList &preferredBackends)
 {
     Q_D(QIfServiceManager);
     d->searchPlugins();
-    return d->findServiceByInterface(interface, searchFlags);
+    return d->findServiceByInterface(interface, searchFlags, preferredBackends);
 }
 
 /*!

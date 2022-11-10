@@ -38,6 +38,9 @@ public:
     QIfAbstractFeature::DiscoveryMode discoveryMode = QIfAbstractFeature::InvalidAutoDiscovery;
     bool discoveryModeSet = false;
     bool discoveryModeEnvOverride = false;
+    QStringList preferredBackends;
+    bool preferredBackendsSet = false;
+    bool preferredBackendsEnvOverride;
     QVariantMap serviceSettings;
     bool serviceSettingsSet = false;
     QList<QPointer<QIfProxyServiceObject>> serviceObjects;
@@ -60,6 +63,7 @@ public:
     bool setSimulationFile(QIfSettingsObject *so, const QString &simulationFile);
     bool setSimulationDataFile(QIfSettingsObject *so, const QString &simulationDataFile);
     bool setDiscoveryMode(QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode);
+    bool setPreferredBackends(QIfSettingsObject *so, const QStringList &preferredBackends);
 
     void parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func);
 

@@ -32,6 +32,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceInterface
 public:
     virtual ~QIfServiceInterface();
 
+    virtual QString id() const;
     virtual QStringList interfaces() const = 0;
     virtual QIfFeatureInterface *interfaceInstance(const QString &interfaceName) const = 0;
 

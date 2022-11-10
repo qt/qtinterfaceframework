@@ -29,6 +29,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfiguration : public QObject, public QQ
     Q_PROPERTY(QString simulationFile READ simulationFile WRITE setSimulationFile NOTIFY simulationFileChanged)
     Q_PROPERTY(QString simulationDataFile READ simulationDataFile WRITE setSimulationDataFile NOTIFY simulationDataFileChanged)
     Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
+    Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged)
 
 public:
     explicit QIfConfiguration(const QString &name = QString(), QObject *parent = nullptr);
@@ -40,6 +41,7 @@ public:
     QString simulationFile() const;
     QString simulationDataFile() const;
     QIfAbstractFeature::DiscoveryMode discoveryMode() const;
+    QStringList preferredBackends() const;
 
 public Q_SLOTS:
     bool setName(const QString &name);
@@ -47,6 +49,7 @@ public Q_SLOTS:
     bool setSimulationFile(const QString &simulationFile);
     bool setSimulationDataFile(const QString &simulationDataFile);
     bool setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode);
+    bool setPreferredBackends(const QStringList &preferredBackends);
 
 Q_SIGNALS:
     void isValidChanged(bool isValid);
@@ -55,6 +58,7 @@ Q_SIGNALS:
     void simulationFileChanged(const QString &simulationFile);
     void simulationDataFileChanged(const QString &simulationDataFile);
     void discoveryModeChanged(QIfAbstractFeature::DiscoveryMode discoveryMode);
+    void preferredBackendsChanged(const QStringList &preferredBackends);
 
 public: //static methods
     static bool exists(const QString &group);
@@ -74,6 +78,10 @@ public: //static methods
     static QIfAbstractFeature::DiscoveryMode discoveryMode(const QString &group);
     static bool setDiscoveryMode(const QString &group, QIfAbstractFeature::DiscoveryMode discoveryMode);
     static bool isDiscoveryModeSet(const QString &group);
+
+    static QStringList preferredBackends(const QString &group);
+    static bool setPreferredBackends(const QString &group, const QStringList &preferredBackends);
+    static bool arePreferredBackendsSet(const QString &group);
 
 protected:
     QIfConfiguration(QIfConfigurationPrivate &dd, QObject *parent);

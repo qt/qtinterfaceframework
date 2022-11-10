@@ -20,8 +20,19 @@ class MockServiceBackend : public QObject, public QIfServiceInterface
     Q_INTERFACES(QIfServiceInterface)
 
 public:
-    MockServiceBackend(QObject *parent=0) : QObject(parent)
+    MockServiceBackend(QObject *parent = nullptr)
+        : QObject(parent)
     {
+    }
+
+    MockServiceBackend(const QString& id, QObject *parent = nullptr)
+        : QObject(parent)
+        , m_id(id)
+    {
+    }
+
+    QString id() const override {
+        return m_id;
     }
 
     QStringList interfaces() const override {
@@ -41,6 +52,7 @@ public:
 
 private:
     QMap<QString, QIfFeatureInterface *> m_serviceObjects;
+    QString m_id;
 };
 
 class TestInterface : public QIfFeatureInterface
@@ -75,6 +87,7 @@ private Q_SLOTS:
     void testFindServiceObjectsReturnInValidInstance();
     void testFindServiceObjects_data();
     void testFindServiceObjects();
+    void testPreferredBackends();
     void testRegisterWithNoInterfaces();
     void testRegisterNonServiceBackendInterfaceObject();
     void testManagerListModel();
@@ -235,6 +248,29 @@ void ServiceManagerTest::testFindServiceObjects()
     QIfServiceObject *serviceObject = list.at(0);
     QVERIFY(serviceObject->interfaces().contains("TestInterface"));
     QCOMPARE(serviceObject->interfaceInstance("TestInterface"), testObject);
+}
+
+void ServiceManagerTest::testPreferredBackends()
+{
+    MockServiceBackend *mock_backend = new MockServiceBackend("mock", manager);
+    QVERIFY(manager->registerService(mock_backend, QStringList({"Foo"})));
+
+    MockServiceBackend *qtro_backend = new MockServiceBackend("qtro", manager);
+    QVERIFY(manager->registerService(qtro_backend, QStringList({"Foo"})));
+
+    QList<QIfServiceObject*> foundBackends = manager->findServiceByInterface("Foo");
+    QCOMPARE(foundBackends.count(), 2);
+
+    foundBackends = manager->findServiceByInterface("Foo", QIfServiceManager::IncludeAll, QStringList({"mock"}));
+    QCOMPARE(foundBackends.count(), 1);
+    QCOMPARE(foundBackends.at(0)->id(), "mock");
+
+    foundBackends = manager->findServiceByInterface("Foo", QIfServiceManager::IncludeAll, QStringList({"*no_such_backend*", "qtro"}));
+    QCOMPARE(foundBackends.count(), 1);
+    QCOMPARE(foundBackends.at(0)->id(), "qtro");
+
+    foundBackends = manager->findServiceByInterface("Foo", QIfServiceManager::IncludeAll, QStringList({"*no_such_backend*"}));
+    QCOMPARE(foundBackends.count(), 2);
 }
 
 /*

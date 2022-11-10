@@ -76,6 +76,8 @@ void QIfConfigurationManager::readInitialSettings()
         settingsObject->simulationFile = settings.value("simulationFile").toString();
         settingsObject->simulationDataFileSet = settings.contains("simulationDataFile");
         settingsObject->simulationDataFile = settings.value("simulationDataFile").toString();
+        settingsObject->preferredBackendsSet = settings.contains("preferredBackends");
+        settingsObject->preferredBackends = settings.value("preferredBackends").toStringList();
         QVariant discoveryModeVariant = settings.value("discoveryMode");
         settings.endGroup();
 
@@ -124,6 +126,19 @@ void QIfConfigurationManager::readInitialSettings()
         so->discoveryModeSet = true;
         so->discoveryModeEnvOverride = true;
     });
+
+    parseEnv(qgetenv("QTIF_PREFERRED_BACKENDS_OVERRIDE"), [this](const QString &group, const QString& value) {
+        auto *so = settingsObject(group, true);
+        auto preferredBackends = value.split(u',', Qt::SkipEmptyParts);
+        if (preferredBackends.isEmpty()) {
+            qCWarning(qLcIfConfig, "Ignoring malformed override: List is empty or couldn't be parsed: '%s'", value.toUtf8().constData());
+            return;
+        }
+
+        so->preferredBackends = preferredBackends;
+        so->preferredBackendsSet = true;
+        so->preferredBackendsEnvOverride = true;
+    });
 }
 
 QIfSettingsObject *QIfConfigurationManager::settingsObject(const QString &group, bool create)
@@ -171,6 +186,11 @@ void QIfConfigurationManager::addAbstractFeature(const QString &group, QIfAbstra
     if (so->discoveryModeSet) {
         qCDebug(qLcIfConfig) << "Updating discoveryMode of" << feature << "with" << so->discoveryMode;
         feature->setDiscoveryMode(so->discoveryMode);
+    }
+
+    if (so->preferredBackendsSet) {
+        qCDebug(qLcIfConfig) << "Updating preferredBackends of" << feature << "with" << so->preferredBackends;
+        feature->setPreferredBackends(so->preferredBackends);
     }
 }
 
@@ -237,6 +257,25 @@ bool QIfConfigurationManager::setDiscoveryMode(QIfSettingsObject *so, QIfAbstrac
             continue;
         qCDebug(qLcIfConfig) << "Updating discoveryMode of" << feature << "with" << discoveryMode;
         feature->setDiscoveryMode(so->discoveryMode);
+    }
+    return true;
+}
+
+bool QIfConfigurationManager::setPreferredBackends(QIfSettingsObject *so, const QStringList &preferredBackends)
+{
+    Q_ASSERT(so);
+    if (so->preferredBackendsEnvOverride) {
+        qWarning("Changing the preferredBackends is not possible, because the QTIF_PREFERRED_BACKENDS_OVERRIDE env variable has been set.");
+        return false;
+    }
+    so->preferredBackends = preferredBackends;
+    so->preferredBackendsSet = true;
+
+    for (auto &feature : qAsConst(so->features)) {
+        if (!feature)
+            continue;
+        qCDebug(qLcIfConfig) << "Updating preferredBackends of" << feature << "with" << preferredBackends;
+        feature->setPreferredBackends(so->preferredBackends);
     }
     return true;
 }
@@ -333,6 +372,15 @@ QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode() const
     return d->m_settingsObject->discoveryMode;
 }
 
+QStringList QIfConfiguration::preferredBackends() const
+{
+    Q_D(const QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(QStringList());
+
+    return d->m_settingsObject->preferredBackends;
+}
+
 bool QIfConfiguration::setName(const QString &name)
 {
     Q_D(QIfConfiguration);
@@ -420,6 +468,23 @@ bool QIfConfiguration::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discov
 
     if (QIfConfigurationManager::instance()->setDiscoveryMode(d->m_settingsObject, discoveryMode)) {
         emit discoveryModeChanged(discoveryMode);
+        return true;
+    }
+
+    return false;
+}
+
+bool QIfConfiguration::setPreferredBackends(const QStringList &preferredBackends)
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    if (d->m_settingsObject->preferredBackends == preferredBackends)
+        return false;
+
+    if (QIfConfigurationManager::instance()->setPreferredBackends(d->m_settingsObject, preferredBackends)) {
+        emit preferredBackendsChanged(preferredBackends);
         return true;
     }
 
@@ -521,6 +586,24 @@ bool QIfConfiguration::isDiscoveryModeSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->discoveryModeSet : false;
+}
+
+QStringList QIfConfiguration::preferredBackends(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->preferredBackends : QStringList();
+}
+
+bool QIfConfiguration::setPreferredBackends(const QString &group, const QStringList &preferredBackends)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->setPreferredBackends(so, preferredBackends);
+}
+
+bool QIfConfiguration::arePreferredBackendsSet(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->preferredBackendsSet : false;
 }
 
 

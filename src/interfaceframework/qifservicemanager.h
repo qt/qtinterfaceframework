@@ -47,7 +47,7 @@ public:
     static QIfServiceManager *instance();
     static QIfServiceManager *create(QQmlEngine *, QJSEngine *);
 
-    Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags = IncludeAll);
+    Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags = IncludeAll, const QStringList &preferredBackends = QStringList());
     Q_INVOKABLE bool hasInterface(const QString &interface) const;
 
     bool registerService(QObject *serviceBackendInterface, const QStringList &interfaces, QIfServiceManager::BackendType backendType = ProductionBackend);

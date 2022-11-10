@@ -349,6 +349,12 @@ QString QIfAbstractFeatureListModel::configurationId() const
     return d->m_feature->configurationId();
 }
 
+QStringList QIfAbstractFeatureListModel::preferredBackends() const
+{
+    Q_D(const QIfAbstractFeatureListModel);
+    return d->m_feature->preferredBackends();
+}
+
 bool QIfAbstractFeatureListModel::setServiceObject(QIfServiceObject *so)
 {
     Q_D(QIfAbstractFeatureListModel);
@@ -365,6 +371,12 @@ void QIfAbstractFeatureListModel::setConfigurationId(const QString &configuratio
 {
     Q_D(QIfAbstractFeatureListModel);
     d->m_feature->setConfigurationId(configurationId);
+}
+
+void QIfAbstractFeatureListModel::setPreferredBackends(const QStringList &preferredBackends)
+{
+    Q_D(QIfAbstractFeatureListModel);
+    d->m_feature->setPreferredBackends(preferredBackends);
 }
 
 /*!
@@ -399,6 +411,7 @@ QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(QIfAbstractFeatureListM
     connect(d->m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfAbstractFeatureListModel::isInitializedChanged);
     connect(d->m_feature, &QIfAbstractFeature::errorChanged, this, &QIfAbstractFeatureListModel::errorChanged);
     connect(d->m_feature, &QIfAbstractFeature::configurationIdChanged, this, &QIfAbstractFeatureListModel::configurationIdChanged);
+    connect(d->m_feature, &QIfAbstractFeature::preferredBackendsChanged, this, &QIfAbstractFeatureListModel::preferredBackendsChanged);
 }
 
 /*!

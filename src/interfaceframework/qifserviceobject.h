@@ -24,7 +24,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObject : public QObject, public QI
 public:
     explicit QIfServiceObject(QObject *parent = nullptr);
 
-    virtual QString id() const;
+    virtual QString id() const override;
 
     const QVariantMap &serviceSettings() const;
     void updateServiceSettings(const QVariantMap &settings) override;

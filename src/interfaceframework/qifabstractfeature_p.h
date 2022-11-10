@@ -69,6 +69,7 @@ public:
     QIfAbstractFeature::DiscoveryMode m_discoveryMode;
     QIfAbstractFeature::DiscoveryResult m_discoveryResult;
     QString m_configurationId;
+    QStringList m_preferredBackends;
     QString m_errorMessage;
     QIfAbstractFeature::Error m_error;
     bool m_qmlCreation;

@@ -51,6 +51,10 @@ QIfServiceObject::QIfServiceObject(QObject *parent)
 */
 QString QIfServiceObject::id() const
 {
+    QString id = QIfServiceInterface::id();
+    if (!id.isEmpty())
+        return id;
+
     return m_id;
 }
 

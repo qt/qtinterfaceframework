@@ -39,6 +39,11 @@ QIfServiceInterface::~QIfServiceInterface()
 {
 }
 
+QString QIfServiceInterface::id() const
+{
+    return QString();
+}
+
 QString QIfServiceInterface::configurationId() const
 {
     return QString();

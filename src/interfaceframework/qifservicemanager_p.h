@@ -57,7 +57,7 @@ public:
     static bool isSimulation(const QVariantMap &metaData);
 
     QIfProxyServiceObject *createServiceObject(struct Backend *backend) const;
-    QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags) const;
+    QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends) const;
 
     void searchPlugins();
     void registerStaticBackend(QStaticPlugin plugin);

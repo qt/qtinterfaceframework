@@ -31,6 +31,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeature : public QObject, public 
     Q_PROPERTY(bool isInitialized READ isInitialized NOTIFY isInitializedChanged)
     Q_PROPERTY(QString error READ errorMessage NOTIFY errorChanged)
     Q_PROPERTY(QString configurationId READ configurationId WRITE setConfigurationId NOTIFY configurationIdChanged REVISION(5))
+    Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged REVISION(5))
 
 public:
 
@@ -72,11 +73,14 @@ public:
     QIfAbstractFeature::Error error() const;
     QString errorMessage() const;
     QString configurationId() const;
+    QStringList preferredBackends() const;
 
 public Q_SLOTS:
     bool setServiceObject(QIfServiceObject *so);
     void setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode);
     Q_REVISION(5) void setConfigurationId(const QString &configurationId);
+    Q_REVISION(5) void setPreferredBackends(const QStringList &preferredBackends);
+
     QIfAbstractFeature::DiscoveryResult startAutoDiscovery();
 
 Q_SIGNALS:
@@ -87,6 +91,7 @@ Q_SIGNALS:
     void isInitializedChanged(bool isInitialized);
     void errorChanged(QIfAbstractFeature::Error error, const QString &message);
     Q_REVISION(5) void configurationIdChanged(const QString &configurationId);
+    Q_REVISION(5) void preferredBackendsChanged(const QStringList &preferredBackends);
 
 protected:
     QIfAbstractFeature(QIfAbstractFeaturePrivate &dd, QObject *parent = nullptr);
