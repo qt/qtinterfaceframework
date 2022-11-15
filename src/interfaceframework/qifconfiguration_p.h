@@ -41,6 +41,8 @@ public:
     QStringList preferredBackends;
     bool preferredBackendsSet = false;
     bool preferredBackendsEnvOverride;
+    QIfServiceObject *serviceObject = nullptr;
+    bool serviceObjectSet = false;
     QVariantMap serviceSettings;
     bool serviceSettingsSet = false;
     QList<QPointer<QIfProxyServiceObject>> serviceObjects;
@@ -64,6 +66,7 @@ public:
     bool setSimulationDataFile(QIfConfiguration *obj, QIfSettingsObject *so, const QString &simulationDataFile);
     bool setDiscoveryMode(QIfConfiguration *obj, QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode);
     bool setPreferredBackends(QIfConfiguration *obj, QIfSettingsObject *so, const QStringList &preferredBackends);
+    bool setServiceObject(QIfSettingsObject *so, QIfServiceObject *serviceObject);
 
     void parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func);
 

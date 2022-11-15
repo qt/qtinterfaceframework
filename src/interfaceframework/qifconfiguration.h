@@ -31,6 +31,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfiguration : public QObject, public QQ
     Q_PROPERTY(QString simulationDataFile READ simulationDataFile WRITE setSimulationDataFile NOTIFY simulationDataFileChanged)
     Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
     Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged)
+    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged)
 
 public:
     explicit QIfConfiguration(const QString &name = QString(), QObject *parent = nullptr);
@@ -44,6 +45,7 @@ public:
     QString simulationDataFile() const;
     QIfAbstractFeature::DiscoveryMode discoveryMode() const;
     QStringList preferredBackends() const;
+    QIfServiceObject *serviceObject() const;
 
 public Q_SLOTS:
     void setIgnoreOverrideWarnings(bool ignoreOverrideWarnings);
@@ -53,6 +55,7 @@ public Q_SLOTS:
     bool setSimulationDataFile(const QString &simulationDataFile);
     bool setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode);
     bool setPreferredBackends(const QStringList &preferredBackends);
+    bool setServiceObject(QIfServiceObject *serviceObject);
 
 Q_SIGNALS:
     void isValidChanged(bool isValid);
@@ -62,6 +65,7 @@ Q_SIGNALS:
     void simulationDataFileChanged(const QString &simulationDataFile);
     void discoveryModeChanged(QIfAbstractFeature::DiscoveryMode discoveryMode);
     void preferredBackendsChanged(const QStringList &preferredBackends);
+    void serviceObjectChanged(const QIfServiceObject *serviceObject);
     void ignoreOverrideWarningsChanged(bool ignoreOverrideWarnings);
 
 public: //static methods
@@ -86,6 +90,10 @@ public: //static methods
     static QStringList preferredBackends(const QString &group);
     static bool setPreferredBackends(const QString &group, const QStringList &preferredBackends);
     static bool arePreferredBackendsSet(const QString &group);
+
+    static QIfServiceObject *serviceObject(const QString &group);
+    static bool setServiceObject(const QString &group, QIfServiceObject *serviceObject);
+    static bool isServiceObjectSet(const QString &group);
 
 protected:
     QIfConfiguration(QIfConfigurationPrivate &dd, QObject *parent);

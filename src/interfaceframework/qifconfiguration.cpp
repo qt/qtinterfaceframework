@@ -192,6 +192,11 @@ void QIfConfigurationManager::addAbstractFeature(const QString &group, QIfAbstra
         qCDebug(qLcIfConfig) << "Updating preferredBackends of" << feature << "with" << so->preferredBackends;
         feature->setPreferredBackends(so->preferredBackends);
     }
+
+    if (so->serviceObjectSet) {
+        qCDebug(qLcIfConfig) << "Updating serviceObject of" << feature << "with" << so->serviceObject;
+        feature->setServiceObject(so->serviceObject);
+    }
 }
 
 void QIfConfigurationManager::removeAbstractFeature(const QString &group, QIfAbstractFeature *feature)
@@ -280,6 +285,21 @@ bool QIfConfigurationManager::setPreferredBackends(QIfConfiguration *config, QIf
             continue;
         qCDebug(qLcIfConfig) << "Updating preferredBackends of" << feature << "with" << preferredBackends;
         feature->setPreferredBackends(so->preferredBackends);
+    }
+    return true;
+}
+
+bool QIfConfigurationManager::setServiceObject(QIfSettingsObject *so, QIfServiceObject *serviceObject)
+{
+    Q_ASSERT(so);
+    so->serviceObject = serviceObject;
+    so->serviceObjectSet = true;
+
+    for (auto &feature : qAsConst(so->features)) {
+        if (!feature)
+            continue;
+        qCDebug(qLcIfConfig) << "Updating serviceObject of" << feature << "with" << serviceObject;
+        feature->setServiceObject(so->serviceObject);
     }
     return true;
 }
@@ -390,6 +410,15 @@ QStringList QIfConfiguration::preferredBackends() const
     Q_CHECK_SETTINGSOBJECT(QStringList());
 
     return d->m_settingsObject->preferredBackends;
+}
+
+QIfServiceObject *QIfConfiguration::serviceObject() const
+{
+    Q_D(const QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(nullptr);
+
+    return d->m_settingsObject->serviceObject;
 }
 
 void QIfConfiguration::setIgnoreOverrideWarnings(bool ignoreOverrideWarnings)
@@ -513,6 +542,23 @@ bool QIfConfiguration::setPreferredBackends(const QStringList &preferredBackends
     return false;
 }
 
+bool QIfConfiguration::setServiceObject(QIfServiceObject *serviceObject)
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    if (d->m_settingsObject->serviceObject == serviceObject)
+        return false;
+
+    if (QIfConfigurationManager::instance()->setServiceObject(d->m_settingsObject, serviceObject)) {
+        emit serviceObjectChanged(serviceObject);
+        return true;
+    }
+
+    return false;
+}
+
 void QIfConfiguration::classBegin()
 {
 
@@ -626,6 +672,24 @@ bool QIfConfiguration::arePreferredBackendsSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->preferredBackendsSet : false;
+}
+
+QIfServiceObject *QIfConfiguration::serviceObject(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->serviceObject : nullptr;
+}
+
+bool QIfConfiguration::setServiceObject(const QString &group, QIfServiceObject *serviceObject)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->setServiceObject(so, serviceObject);
+}
+
+bool QIfConfiguration::isServiceObjectSet(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->serviceObjectSet : false;
 }
 
 
