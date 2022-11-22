@@ -26,9 +26,14 @@ void qtif_qmlOrCppWarning(const QObject *obj, const char *errorString)
 
 void qtif_qmlOrCppWarning(const QObject *obj, const QString &errorString)
 {
+    if (!obj) {
+        qWarning("%s", qPrintable(errorString));
+        return;
+    }
+
     //If the object is not part of a javascript engine, print a normal warning
     QJSEngine *jsEngine = qjsEngine(obj);
-    if (Q_UNLIKELY(!jsEngine)) {
+    if (!jsEngine) {
         qWarning("%s", qPrintable(errorString));
         return;
     }

@@ -218,11 +218,12 @@ bool QIfConfigurationManager::setServiceSettings(QIfSettingsObject *so, const QV
     return true;
 }
 
-bool QIfConfigurationManager::setSimulationFile(QIfSettingsObject *so, const QString &simulationFile)
+bool QIfConfigurationManager::setSimulationFile(QIfConfiguration *config, QIfSettingsObject *so, const QString &simulationFile)
 {
     Q_ASSERT(so);
     if (so->simulationFileEnvOverride) {
-        qWarning("Changing the simulationFile is not possible, because the QTIF_SIMULATION_OVERRIDE env variable has been set.");
+        if (!config || !config->ignoreOverrideWarnings())
+            qtif_qmlOrCppWarning(config, "Changing the simulationFile is not possible, because the QTIF_SIMULATION_OVERRIDE env variable has been set.");
         return false;
     }
     so->simulationFile = simulationFile;
@@ -230,11 +231,12 @@ bool QIfConfigurationManager::setSimulationFile(QIfSettingsObject *so, const QSt
     return true;
 }
 
-bool QIfConfigurationManager::setSimulationDataFile(QIfSettingsObject *so, const QString &simulationDataFile)
+bool QIfConfigurationManager::setSimulationDataFile(QIfConfiguration *config, QIfSettingsObject *so, const QString &simulationDataFile)
 {
     Q_ASSERT(so);
     if (so->simulationDataFileEnvOverride) {
-        qWarning("Changing the simulationDataFile is not possible, because the QTIF_SIMULATION_DATA_OVERRIDE env variable has been set.");
+        if (!config || !config->ignoreOverrideWarnings())
+            qtif_qmlOrCppWarning(config, "Changing the simulationDataFile is not possible, because the QTIF_SIMULATION_DATA_OVERRIDE env variable has been set.");
         return false;
     }
     so->simulationDataFile = simulationDataFile;
@@ -242,11 +244,12 @@ bool QIfConfigurationManager::setSimulationDataFile(QIfSettingsObject *so, const
     return true;
 }
 
-bool QIfConfigurationManager::setDiscoveryMode(QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode)
+bool QIfConfigurationManager::setDiscoveryMode(QIfConfiguration *config, QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
     Q_ASSERT(so);
     if (so->simulationFileEnvOverride) {
-        qWarning("Changing the discoveryMode is not possible, because the QTIF_DISCOVERY_MODE_OVERRIDE env variable has been set.");
+        if (!config || !config->ignoreOverrideWarnings())
+            qtif_qmlOrCppWarning(config, "Changing the discoveryMode is not possible, because the QTIF_DISCOVERY_MODE_OVERRIDE env variable has been set.");
         return false;
     }
     so->discoveryMode = discoveryMode;
@@ -261,11 +264,12 @@ bool QIfConfigurationManager::setDiscoveryMode(QIfSettingsObject *so, QIfAbstrac
     return true;
 }
 
-bool QIfConfigurationManager::setPreferredBackends(QIfSettingsObject *so, const QStringList &preferredBackends)
+bool QIfConfigurationManager::setPreferredBackends(QIfConfiguration *config, QIfSettingsObject *so, const QStringList &preferredBackends)
 {
     Q_ASSERT(so);
     if (so->preferredBackendsEnvOverride) {
-        qWarning("Changing the preferredBackends is not possible, because the QTIF_PREFERRED_BACKENDS_OVERRIDE env variable has been set.");
+        if (!config || !config->ignoreOverrideWarnings())
+            qtif_qmlOrCppWarning(config, "Changing the preferredBackends is not possible, because the QTIF_PREFERRED_BACKENDS_OVERRIDE env variable has been set.");
         return false;
     }
     so->preferredBackends = preferredBackends;
@@ -306,6 +310,7 @@ void QIfConfigurationManager::parseEnv(const QByteArray &rulesSrc, std::function
 
 QIfConfigurationPrivate::QIfConfigurationPrivate(QIfConfiguration *parent)
     : q_ptr(parent)
+    , m_ignoreOverrideWarnings(false)
     , m_settingsObject(nullptr)
 {
 }
@@ -328,6 +333,12 @@ bool QIfConfiguration::isValid() const
 {
     Q_D(const QIfConfiguration);
     return d->m_settingsObject != nullptr;
+}
+
+bool QIfConfiguration::ignoreOverrideWarnings() const
+{
+    Q_D(const QIfConfiguration);
+    return d->m_ignoreOverrideWarnings;
 }
 
 QString QIfConfiguration::name() const
@@ -381,6 +392,17 @@ QStringList QIfConfiguration::preferredBackends() const
     return d->m_settingsObject->preferredBackends;
 }
 
+void QIfConfiguration::setIgnoreOverrideWarnings(bool ignoreOverrideWarnings)
+{
+    Q_D(QIfConfiguration);
+
+    if (d->m_ignoreOverrideWarnings == ignoreOverrideWarnings)
+        return;
+
+    d->m_ignoreOverrideWarnings = ignoreOverrideWarnings;
+    emit ignoreOverrideWarningsChanged(ignoreOverrideWarnings);
+}
+
 bool QIfConfiguration::setName(const QString &name)
 {
     Q_D(QIfConfiguration);
@@ -432,7 +454,7 @@ bool QIfConfiguration::setSimulationFile(const QString &simulationFile)
     if (d->m_settingsObject->simulationFile == simulationFile)
         return false;
 
-    if (QIfConfigurationManager::instance()->setSimulationFile(d->m_settingsObject, simulationFile)) {
+    if (QIfConfigurationManager::instance()->setSimulationFile(this, d->m_settingsObject, simulationFile)) {
         emit simulationFileChanged(simulationFile);
         return true;
     }
@@ -449,7 +471,7 @@ bool QIfConfiguration::setSimulationDataFile(const QString &simulationDataFile)
     if (d->m_settingsObject->simulationDataFile == simulationDataFile)
         return false;
 
-    if (QIfConfigurationManager::instance()->setSimulationDataFile(d->m_settingsObject, simulationDataFile)) {
+    if (QIfConfigurationManager::instance()->setSimulationDataFile(this, d->m_settingsObject, simulationDataFile)) {
         emit simulationDataFileChanged(simulationDataFile);
         return true;
     }
@@ -466,7 +488,7 @@ bool QIfConfiguration::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discov
     if (d->m_settingsObject->discoveryMode == discoveryMode)
         return false;
 
-    if (QIfConfigurationManager::instance()->setDiscoveryMode(d->m_settingsObject, discoveryMode)) {
+    if (QIfConfigurationManager::instance()->setDiscoveryMode(this, d->m_settingsObject, discoveryMode)) {
         emit discoveryModeChanged(discoveryMode);
         return true;
     }
@@ -483,7 +505,7 @@ bool QIfConfiguration::setPreferredBackends(const QStringList &preferredBackends
     if (d->m_settingsObject->preferredBackends == preferredBackends)
         return false;
 
-    if (QIfConfigurationManager::instance()->setPreferredBackends(d->m_settingsObject, preferredBackends)) {
+    if (QIfConfigurationManager::instance()->setPreferredBackends(this, d->m_settingsObject, preferredBackends)) {
         emit preferredBackendsChanged(preferredBackends);
         return true;
     }
@@ -543,7 +565,7 @@ QString QIfConfiguration::simulationFile(const QString &group)
 bool QIfConfiguration::setSimulationFile(const QString &group, const QString &simulationFile)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
-    return QIfConfigurationManager::instance()->setSimulationFile(so, simulationFile);
+    return QIfConfigurationManager::instance()->setSimulationFile(nullptr, so, simulationFile);
 }
 
 bool QIfConfiguration::isSimulationFileSet(const QString &group)
@@ -561,7 +583,7 @@ QString QIfConfiguration::simulationDataFile(const QString &group)
 bool QIfConfiguration::setSimulationDataFile(const QString &group, const QString &simulationDataFile)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
-    return QIfConfigurationManager::instance()->setSimulationDataFile(so, simulationDataFile);
+    return QIfConfigurationManager::instance()->setSimulationDataFile(nullptr, so, simulationDataFile);
 }
 
 bool QIfConfiguration::isSimulationDataFileSet(const QString &group)
@@ -579,7 +601,7 @@ QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode(const QString 
 bool QIfConfiguration::setDiscoveryMode(const QString &group, QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
-    return QIfConfigurationManager::instance()->setDiscoveryMode(so, discoveryMode);
+    return QIfConfigurationManager::instance()->setDiscoveryMode(nullptr, so, discoveryMode);
 }
 
 bool QIfConfiguration::isDiscoveryModeSet(const QString &group)
@@ -597,7 +619,7 @@ QStringList QIfConfiguration::preferredBackends(const QString &group)
 bool QIfConfiguration::setPreferredBackends(const QString &group, const QStringList &preferredBackends)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
-    return QIfConfigurationManager::instance()->setPreferredBackends(so, preferredBackends);
+    return QIfConfigurationManager::instance()->setPreferredBackends(nullptr, so, preferredBackends);
 }
 
 bool QIfConfiguration::arePreferredBackendsSet(const QString &group)

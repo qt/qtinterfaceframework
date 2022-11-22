@@ -24,6 +24,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfiguration : public QObject, public QQ
     Q_INTERFACES(QQmlParserStatus)
 
     Q_PROPERTY(bool valid READ isValid NOTIFY isValidChanged)
+    Q_PROPERTY(bool ignoreOverrideWarnings READ ignoreOverrideWarnings WRITE setIgnoreOverrideWarnings NOTIFY ignoreOverrideWarningsChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
     Q_PROPERTY(QVariantMap serviceSettings READ serviceSettings WRITE setServiceSettings NOTIFY serviceSettingsChanged)
     Q_PROPERTY(QString simulationFile READ simulationFile WRITE setSimulationFile NOTIFY simulationFileChanged)
@@ -36,6 +37,7 @@ public:
     ~QIfConfiguration() override;
 
     bool isValid() const;
+    bool ignoreOverrideWarnings() const;
     QString name() const;
     QVariantMap serviceSettings() const;
     QString simulationFile() const;
@@ -44,6 +46,7 @@ public:
     QStringList preferredBackends() const;
 
 public Q_SLOTS:
+    void setIgnoreOverrideWarnings(bool ignoreOverrideWarnings);
     bool setName(const QString &name);
     bool setServiceSettings(const QVariantMap &serviceSettings);
     bool setSimulationFile(const QString &simulationFile);
@@ -59,6 +62,7 @@ Q_SIGNALS:
     void simulationDataFileChanged(const QString &simulationDataFile);
     void discoveryModeChanged(QIfAbstractFeature::DiscoveryMode discoveryMode);
     void preferredBackendsChanged(const QStringList &preferredBackends);
+    void ignoreOverrideWarningsChanged(bool ignoreOverrideWarnings);
 
 public: //static methods
     static bool exists(const QString &group);
