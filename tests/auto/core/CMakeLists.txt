@@ -1,5 +1,6 @@
 add_subdirectory(servicemanagertest)
 add_subdirectory(qifabstractfeature)
+add_subdirectory(qifconfiguration)
 add_subdirectory(qifpendingreply)
 add_subdirectory(queryparser)
 add_subdirectory(qifpagingmodel)

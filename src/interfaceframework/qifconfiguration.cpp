@@ -23,7 +23,11 @@ if (!d->m_settingsObject) { \
 
 QIfConfigurationManager::QIfConfigurationManager()
 {
-    readInitialSettings();
+    const QString configFileName = QStringLiteral("qtifconfig.ini");
+
+    const QString configPath
+                = QDir(QLibraryInfo::path(QLibraryInfo::DataPath)).absoluteFilePath(configFileName);
+    readInitialSettings(configPath);
 }
 
 QIfConfigurationManager *QIfConfigurationManager::instance()
@@ -54,14 +58,8 @@ QIfAbstractFeature::DiscoveryMode discoveryModeFromString(const QString &modeStr
     return QIfAbstractFeature::InvalidAutoDiscovery;
 }
 
-void QIfConfigurationManager::readInitialSettings()
+void QIfConfigurationManager::readInitialSettings(const QString &configPath)
 {
-    // read file
-    const QString configFileName = QStringLiteral("qtifconfig.ini");
-
-    const QString configPath
-                = QDir(QLibraryInfo::path(QLibraryInfo::DataPath)).absoluteFilePath(configFileName);
-
     qCDebug(qLcIfConfig) << "Loading initial settings from " << configPath;
 
     QSettings settings(configPath, QSettings::IniFormat);

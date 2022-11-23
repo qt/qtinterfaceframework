@@ -54,7 +54,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfigurationManager
 public:
     static QIfConfigurationManager *instance();
 
-    void readInitialSettings();
+    void readInitialSettings(const QString &configPath);
     QIfSettingsObject *settingsObject(const QString &group, bool create = false);
 
     void addServiceObject(const QString &group, QIfProxyServiceObject *serviceObject);
