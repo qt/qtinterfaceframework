@@ -8,7 +8,6 @@
 #include "qifqmlconversion_helper.h"
 
 #include <QLibraryInfo>
-#include <QSettings>
 #include <QDir>
 
 QT_BEGIN_NAMESPACE
@@ -58,6 +57,18 @@ QIfAbstractFeature::DiscoveryMode discoveryModeFromString(const QString &modeStr
     return QIfAbstractFeature::InvalidAutoDiscovery;
 }
 
+QVariantMap QIfConfigurationManager::readGroup(QSettings *settings, QAnyStringView group)
+{
+    QVariantMap map;
+    settings->beginGroup(group);
+    for (const QString& key : settings->childKeys())
+        map.insert(key, settings->value(key));
+    for (const QString& group : settings->childGroups())
+        map.insert(group, readGroup(settings, group));
+    settings->endGroup();
+    return map;
+}
+
 void QIfConfigurationManager::readInitialSettings(const QString &configPath)
 {
     qCDebug(qLcIfConfig) << "Loading initial settings from " << configPath;
@@ -68,8 +79,6 @@ void QIfConfigurationManager::readInitialSettings(const QString &configPath)
         auto settingsObject = new QIfSettingsObject;
 
         settings.beginGroup(group);
-        settingsObject->serviceSettingsSet = settings.contains("serviceSettings");
-        settingsObject->serviceSettings = settings.value("serviceSettings").toMap();
         settingsObject->simulationFileSet = settings.contains("simulationFile");
         settingsObject->simulationFile = settings.value("simulationFile").toString();
         settingsObject->simulationDataFileSet = settings.contains("simulationDataFile");
@@ -77,6 +86,11 @@ void QIfConfigurationManager::readInitialSettings(const QString &configPath)
         settingsObject->preferredBackendsSet = settings.contains("preferredBackends");
         settingsObject->preferredBackends = settings.value("preferredBackends").toStringList();
         QVariant discoveryModeVariant = settings.value("discoveryMode");
+
+        if (settings.childGroups().contains("serviceSettings")) {
+            settingsObject->serviceSettingsSet = true;
+            settingsObject->serviceSettings = readGroup(&settings, "serviceSettings");
+        }
         settings.endGroup();
 
         if (discoveryModeVariant.isValid()) {

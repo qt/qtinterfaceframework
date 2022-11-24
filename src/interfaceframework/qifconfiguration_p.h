@@ -19,6 +19,7 @@
 #include "qifproxyserviceobject.h"
 
 #include <QtCore/QLoggingCategory>
+#include <QtCore/QSettings>
 
 #include <private/qobject_p.h>
 #include <private/qtifglobal_p.h>
@@ -40,8 +41,8 @@ public:
     bool discoveryModeEnvOverride = false;
     QStringList preferredBackends;
     bool preferredBackendsSet = false;
-    bool preferredBackendsEnvOverride;
-    QIfServiceObject *serviceObject = nullptr;
+    bool preferredBackendsEnvOverride = false;
+    QPointer<QIfServiceObject> serviceObject;
     bool serviceObjectSet = false;
     QVariantMap serviceSettings;
     bool serviceSettingsSet = false;
@@ -68,6 +69,7 @@ public:
     bool setPreferredBackends(QIfConfiguration *obj, QIfSettingsObject *so, const QStringList &preferredBackends);
     bool setServiceObject(QIfSettingsObject *so, QIfServiceObject *serviceObject);
 
+    QVariantMap readGroup(QSettings *settings, QAnyStringView group);
     void parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func);
 
     QHash<QString, QIfSettingsObject*> m_settingsHash;
