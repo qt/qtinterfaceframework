@@ -90,6 +90,7 @@ public:
     QString m_name;
     bool m_ignoreOverrideWarnings;
     QIfSettingsObject *m_settingsObject;
+    bool m_qmlCreation;
 };
 
 QT_END_NAMESPACE

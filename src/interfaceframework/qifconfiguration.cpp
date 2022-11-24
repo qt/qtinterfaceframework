@@ -344,6 +344,7 @@ QIfConfigurationPrivate::QIfConfigurationPrivate(QIfConfiguration *parent)
     : q_ptr(parent)
     , m_ignoreOverrideWarnings(false)
     , m_settingsObject(nullptr)
+    , m_qmlCreation(false)
 {
 }
 
@@ -447,6 +448,18 @@ void QIfConfiguration::setIgnoreOverrideWarnings(bool ignoreOverrideWarnings)
 bool QIfConfiguration::setName(const QString &name)
 {
     Q_D(QIfConfiguration);
+
+    if (name.isEmpty())
+        return false;
+
+    // Skip all checks during QML creation
+    // All values will be stored in a temporary SettingsObject until componentComplete is called
+    if (d->m_qmlCreation) {
+        d->m_name = name;
+        emit nameChanged(name);
+        emit isValidChanged(true);
+        return true;
+    }
 
     if (d->m_settingsObject) {
         qtif_qmlOrCppWarning(this, "The name of the Configuration Object can't be changed once it has been set.");
@@ -573,14 +586,33 @@ bool QIfConfiguration::setServiceObject(QIfServiceObject *serviceObject)
 
 void QIfConfiguration::classBegin()
 {
-
+    Q_D(QIfConfiguration);
+    d->m_qmlCreation = true;
+    // storage for all settings until we can resolve the real settingsobject in compoentComplete
+    d->m_settingsObject = new QIfSettingsObject();
 }
 
 void QIfConfiguration::componentComplete()
 {
-    Q_D(const QIfConfiguration);
+    Q_D(QIfConfiguration);
+
+    d->m_qmlCreation = false;
+
+    QScopedPointer<QIfSettingsObject> tempSettings(d->m_settingsObject);
+    d->m_settingsObject = nullptr;
+    // Resolve the real settingsObject;
+    if (!setName(d->m_name))
+        return;
 
     Q_CHECK_SETTINGSOBJECT(void());
+
+    //Copy all values from the tempObject
+    setServiceSettings(tempSettings->serviceSettings);
+    setSimulationFile(tempSettings->simulationFile);
+    setSimulationDataFile(tempSettings->simulationDataFile);
+    setPreferredBackends(tempSettings->preferredBackends);
+    setDiscoveryMode(tempSettings->discoveryMode);
+    setServiceObject(tempSettings->serviceObject);
 }
 
 QIfConfiguration::QIfConfiguration(QIfConfigurationPrivate &dd, QObject *parent)
