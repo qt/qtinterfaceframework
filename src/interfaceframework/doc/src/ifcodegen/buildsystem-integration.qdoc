@@ -82,7 +82,7 @@ In CMake the following functions and variables are provided by the QtInterfaceFr
 \annotatedlist cmake-variables-qtinterfaceframework
 
 \section3 Commands
-\annotatedlist cmake-macros-qtinterfaceframework
+\annotatedlist cmake-commands-qtinterfaceframework
 
 \section1 QtModule Support
 
