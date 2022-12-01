@@ -11,6 +11,7 @@
 #include "qifserviceobject.h"
 #include "qifpagingmodel.h"
 #include "qiffilterandbrowsemodel.h"
+#include "qifconfiguration.h"
 
 #include <QQmlEngine>
 
@@ -131,5 +132,6 @@ void QtInterfaceFrameworkModule::registerQmlTypes(const QString &uri, int majorV
     qmlRegisterUncreatableType<QIfAbstractZonedFeature>(u, majorVersion, minorVersion, "AbstractZonedFeature", QStringLiteral("AbstractZonedFeature is not accessible directly"));
     qmlRegisterType<QIfPagingModel>(u, majorVersion, minorVersion, "PagingModel");
     qmlRegisterType<QIfFilterAndBrowseModel>(u, majorVersion, minorVersion, "FilterAndBrowseModel");
+    qmlRegisterType<QIfConfiguration>(u, majorVersion, minorVersion, "InterfaceFrameworkConfiguration");
     qmlRegisterSingletonType<QIfServiceManager>(u, majorVersion, minorVersion, "ServiceManager", &QIfServiceManager::create);
 }
