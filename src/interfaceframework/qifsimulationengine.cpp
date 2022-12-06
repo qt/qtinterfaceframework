@@ -27,6 +27,8 @@ namespace qtif_helper {
             return path;
         else if (path.startsWith(resourceLiteral))
             return QString(path).prepend(qrcLiteral);
+        else if (QFile::exists(path)) // If the file exists a normal path was passed (instead of a url)
+            return QUrl::fromLocalFile(path);
         return path;
     }
 }
