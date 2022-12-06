@@ -3,7 +3,7 @@
     "Name": "QFace",
     "QDocModule": "qtinterfaceframework",
     "QtUsage": "Used for qtivi autogeneration of interfaces.",
-    "Files": "qface ../doc/interfaceframework/src/template-syntax.qdoc ../doc/interfaceframework/src/idl-syntax.qdoc",
+    "Files": "qface ../interfaceframework/doc/src/ifcodegen/template-syntax.qdoc ../interfaceframework/doc/src/ifcodegen/idl-syntax.qdoc",
 
     "Description": "QFace is a generator framework based on a modern IDL.",
     "Homepage": "https://pelagicore.github.io/qface",
