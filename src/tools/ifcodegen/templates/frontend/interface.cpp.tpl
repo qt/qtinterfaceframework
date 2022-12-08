@@ -272,6 +272,11 @@ bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &va
 /*! \internal */
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
+{% if interface.tags.config.zoned %}
+    qmlRegisterAnonymousType<QIfAbstractZonedFeature, 254>(uri.toLatin1(), majorVersion);
+{% else %}
+    qmlRegisterAnonymousType<QIfAbstractFeature, 254>(uri.toLatin1(), majorVersion);
+{% endif %}
 {% if 'singleton' in interface.tags %}
     qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{interface}}", {{class|lower}}_singletontype_provider);
 {% else %}

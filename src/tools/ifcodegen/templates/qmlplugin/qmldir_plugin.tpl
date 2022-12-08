@@ -7,3 +7,4 @@ module {{module|qml_type}}
 plugin {{module.module_name|lower}}plugin
 classname {{module.module_name|upperfirst}}QmlPlugin
 typeinfo plugins.qmltypes
+import QtInterfaceFramework

@@ -117,12 +117,15 @@ void {{class}}::registerTypes()
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
     registerTypes();
+    qmlRegisterModule(uri.toLatin1(), majorVersion, minorVersion);
     qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion,
                                         "{{qml_name}}",
                                         {{class|lower}}_singletontype_provider);
 {% for interface in module.interfaces %}
     {{interface}}::registerQmlTypes(uri, majorVersion, minorVersion);
 {% endfor %}
+    qmlRegisterModuleImport("{{qml_name}}", QQmlModuleImportModuleAny,
+                            "QtInterfaceFramework", QQmlModuleImportLatest);
 }
 {% for enum in module.enums %}
 
