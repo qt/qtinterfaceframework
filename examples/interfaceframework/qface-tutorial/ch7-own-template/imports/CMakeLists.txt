@@ -18,9 +18,12 @@ qt_add_qml_module(ic_chapter7_imports
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${CLUSTER_URI_PATH}"
     URI ${CLUSTER_URI}
     VERSION ${CLUSTER_VERSION}
+    CLASS_NAME InstrumentClusterModuleQmlPlugin
+    RESOURCE_PREFIX "/"
     PLUGIN_TARGET ic_chapter7_imports
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
+    IMPORTS QtInterfaceFramework
     SOURCES
         ${CLUSTER_SOURCES}
 )

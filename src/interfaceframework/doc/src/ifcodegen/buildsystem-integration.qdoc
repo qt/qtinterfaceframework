@@ -183,7 +183,7 @@ qt_add_qml_module(IfVehicleFunctions
     RESOURCE_PREFIX "/"
     CLASS_NAME QtIfVehicleFunctionsPlugin
     PLUGIN_TARGET qtifvehiclefunctionsplugin
-    IMPORTS QtInterfaceFramework/auto
+    IMPORTS QtInterfaceFramework
 )
 \endcode
 
