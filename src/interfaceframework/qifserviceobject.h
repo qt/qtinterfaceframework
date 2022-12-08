@@ -18,8 +18,8 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObject : public QObject, public QI
     Q_INTERFACES(QIfServiceInterface)
 
     Q_PROPERTY(QString id READ id CONSTANT)
-    Q_PROPERTY(QString configurationId READ configurationId CONSTANT REVISION(5))
-    Q_PROPERTY(QVariantMap serviceSettings READ serviceSettings WRITE updateServiceSettings NOTIFY serviceSettingsChanged REVISION(5))
+    Q_PROPERTY(QString configurationId READ configurationId CONSTANT REVISION(6, 5))
+    Q_PROPERTY(QVariantMap serviceSettings READ serviceSettings WRITE updateServiceSettings NOTIFY serviceSettingsChanged REVISION(6, 5))
 
 public:
     explicit QIfServiceObject(QObject *parent = nullptr);
@@ -30,7 +30,7 @@ public:
     void updateServiceSettings(const QVariantMap &settings) override;
 
 Q_SIGNALS:
-    Q_REVISION(5) void serviceSettingsChanged();
+    Q_REVISION(6, 5) void serviceSettingsChanged();
 
 private:
     QString m_id;
