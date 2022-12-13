@@ -41,7 +41,6 @@ void QIfMediaDeviceDiscoveryModelPrivate::resetModel(const QList<QIfServiceObjec
 {
     Q_Q(QIfMediaDeviceDiscoveryModel);
     q->beginResetModel();
-    qDeleteAll(m_deviceList);
     m_deviceList.clear();
     m_deviceList = deviceList;
     q->endResetModel();
@@ -282,8 +281,6 @@ void QIfMediaDeviceDiscoveryModel::connectToServiceObject(QIfServiceObject *serv
                             d, &QIfMediaDeviceDiscoveryModelPrivate::onDeviceRemoved);
 
     QIfAbstractFeatureListModel::connectToServiceObject(serviceObject);
-
-    backend->initialize();
 }
 
 /*!
