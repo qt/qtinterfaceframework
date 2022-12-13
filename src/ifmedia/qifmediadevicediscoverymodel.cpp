@@ -102,6 +102,8 @@ QIfMediaDeviceDiscoveryModelBackendInterface *QIfMediaDeviceDiscoveryModelPrivat
 
     The QIfMediaDeviceDiscoveryModel expects a single backend to be available. It is recommended to use it
     with \l {QIfAbstractFeatureListModel::}{discoveryMode} set to \l QIfAbstractFeature::AutoDiscovery.
+
+    Uses \c qtifmedia as configurationId for \l QIfConfiguration based settings.
 */
 
 /*!
@@ -140,6 +142,8 @@ QIfMediaDeviceDiscoveryModelBackendInterface *QIfMediaDeviceDiscoveryModelPrivat
 
     The MediaDeviceDiscoveryModel expects a single backend to be available. It is recommended to use it
     with \l {AbstractFeatureListModel::}{discoveryMode} set to AbstractFeature.AutoDiscovery.
+
+    Uses \c qtifmedia as configurationId for \l InterfaceFrameworkConfiguration based settings.
 */
 
 /*!
@@ -160,6 +164,7 @@ QIfMediaDeviceDiscoveryModelBackendInterface *QIfMediaDeviceDiscoveryModelPrivat
 QIfMediaDeviceDiscoveryModel::QIfMediaDeviceDiscoveryModel(QObject *parent)
     : QIfAbstractFeatureListModel(*new QIfMediaDeviceDiscoveryModelPrivate(QLatin1String(QIfMediaDeviceDiscovery_iid), this), parent)
 {
+    setConfigurationId(QStringLiteral("qtifmedia"));
 }
 
 /*!

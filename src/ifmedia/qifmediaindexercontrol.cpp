@@ -62,6 +62,8 @@ QIfMediaIndexerControlBackendInterface *QIfMediaIndexerControlPrivate::indexerBa
 
     The QIfMediaIndexerControl expects a single backend to be available. It is recommended to use it
     with \l {QIfAbstractFeature::}{discoveryMode} set to \l QIfAbstractFeature::AutoDiscovery.
+
+    Uses \c qtifmedia as configurationId for \l QIfConfiguration based settings.
 */
 
 /*!
@@ -76,6 +78,8 @@ QIfMediaIndexerControlBackendInterface *QIfMediaIndexerControlPrivate::indexerBa
 
     The MediaIndexerControl expects a single backend to be available. It is recommended to use it
     with \l {AbstractFeature::}{discoveryMode} set to AbstractFeature.AutoDiscovery.
+
+    Uses \c qtifmedia as configurationId for \l InterfaceFrameworkConfiguration based settings.
 */
 
 /*!
@@ -99,6 +103,7 @@ QIfMediaIndexerControl::QIfMediaIndexerControl(QObject *parent)
     : QIfAbstractFeature(*new QIfMediaIndexerControlPrivate(QLatin1String(QIfMediaIndexer_iid), this), parent)
 {
     qRegisterMetaType<QIfMediaIndexerControl::State>();
+    setConfigurationId(QStringLiteral("qtifmedia"));
 }
 
 /*!

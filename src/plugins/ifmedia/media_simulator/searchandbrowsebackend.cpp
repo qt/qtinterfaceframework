@@ -43,10 +43,12 @@ QDataStream &operator>>(QDataStream &stream, SearchAndBrowseItem &obj)
     return stream;
 }
 
-SearchAndBrowseBackend::SearchAndBrowseBackend(const QSqlDatabase &database, QObject *parent)
+SearchAndBrowseBackend::SearchAndBrowseBackend(const QVariantMap &serviceSettings, const QSqlDatabase &database, QObject *parent)
     : QIfFilterAndBrowseModelInterface(parent)
     , m_threadPool(new QThreadPool(this))
 {
+    Q_UNUSED(serviceSettings)
+
     m_threadPool->setMaxThreadCount(1);
 
     qRegisterMetaType<SearchAndBrowseItem>();

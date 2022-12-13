@@ -36,7 +36,7 @@ public:
     };
     Q_ENUM(OperationType)
 
-    MediaPlayerBackend(const QSqlDatabase &database, QObject *parent = nullptr);
+    MediaPlayerBackend(const QVariantMap &serviceSettings, const QSqlDatabase &database, QObject *parent = nullptr);
 
     void initialize() override;
     void play() override;

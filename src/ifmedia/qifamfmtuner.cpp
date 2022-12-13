@@ -120,6 +120,8 @@ QIfAmFmTunerBackendInterface *QIfAmFmTunerPrivate::tunerBackend() const
     \brief Provides a interface to control the AM/FM tuner.
 
     The QIfAmFmTuner provides the methods to control a AM/FM tuner.
+
+    Uses \c qtifmedia as configurationId for \l QIfConfiguration based settings.
 */
 
 /*!
@@ -130,6 +132,8 @@ QIfAmFmTunerBackendInterface *QIfAmFmTunerPrivate::tunerBackend() const
     \brief Provides a interface to control the AM/FM tuner.
 
     The AmFmTuner provides the methods to control a AM/FM tuner.
+
+    Uses \c qtifmedia as configurationId for \l InterfaceFrameworkConfiguration based settings.
 */
 
 /*!
@@ -150,6 +154,7 @@ QIfAmFmTunerBackendInterface *QIfAmFmTunerPrivate::tunerBackend() const
 QIfAmFmTuner::QIfAmFmTuner(QObject *parent)
     : QIfAbstractFeature(*new QIfAmFmTunerPrivate(QLatin1String(QIfAmFmTuner_iid), this), parent)
 {
+    setConfigurationId(QStringLiteral("qtifmedia"));
 }
 
 /*!

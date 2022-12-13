@@ -29,12 +29,17 @@ public:
     QStringList interfaces() const override;
     QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
+    QString configurationId() const override;
+    void updateServiceSettings(const QVariantMap &settings) override;
+
 private:
+    void createInstances();
 
     MediaPlayerBackend *m_player;
     SearchAndBrowseBackend *m_browse;
     MediaDiscoveryBackend *m_discovery;
     MediaIndexerBackend *m_indexer;
+    QVariantMap m_serviceSettings;
 };
 
 #endif // MEDIAPLUGIN_H

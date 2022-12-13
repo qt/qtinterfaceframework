@@ -16,7 +16,7 @@
 #include <QThreadPool>
 #include <QtDebug>
 
-MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *parent)
+MediaPlayerBackend::MediaPlayerBackend(const QVariantMap &serviceSettings, const QSqlDatabase &database, QObject *parent)
     : QIfMediaPlayerBackendInterface(parent)
     , m_count(0)
     , m_currentIndex(-1)
@@ -26,6 +26,8 @@ MediaPlayerBackend::MediaPlayerBackend(const QSqlDatabase &database, QObject *pa
     , m_threadPool(new QThreadPool(this))
     , m_player(new QMediaPlayer(this))
 {
+    Q_UNUSED(serviceSettings)
+
     qRegisterMetaType<QIfAudioTrackItem>();
 
     m_player->setAudioOutput(new QAudioOutput(m_player));

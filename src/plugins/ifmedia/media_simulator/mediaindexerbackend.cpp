@@ -28,7 +28,7 @@
 #include <tstring.h>
 #endif
 
-MediaIndexerBackend::MediaIndexerBackend(const QSqlDatabase &database, QObject *parent)
+MediaIndexerBackend::MediaIndexerBackend(const QVariantMap &serviceSettings, const QSqlDatabase &database, QObject *parent)
     : QIfMediaIndexerControlBackendInterface(parent)
     , m_db(database)
     , m_state(QIfMediaIndexerControl::Idle)
@@ -38,10 +38,16 @@ MediaIndexerBackend::MediaIndexerBackend(const QSqlDatabase &database, QObject *
 
     connect(&m_watcher, &QFutureWatcherBase::finished, this, &MediaIndexerBackend::onScanFinished);
 
+    QString customMediaFolder = serviceSettings.value(QStringLiteral("customMediaFolder")).toString();
+    if (qEnvironmentVariableIsSet("QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER")) {
+        qCInfo(media) << "QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER environment variable is set.\n"
+                      << "Overriding service setting: 'customMediaFolder'";
+        customMediaFolder = qgetenv("QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER");
+    }
+
     QStringList mediaFolderList;
-    const QByteArray customMediaFolder = qgetenv("QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER");
     if (!customMediaFolder.isEmpty()) {
-        qCInfo(media) << "QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER environment variable is set to:" << customMediaFolder;
+        qCInfo(media) << "The service setting 'customMediaFolder' is set to:" << customMediaFolder;
         mediaFolderList.append(customMediaFolder);
     } else {
         mediaFolderList = QStandardPaths::standardLocations(QStandardPaths::MusicLocation);

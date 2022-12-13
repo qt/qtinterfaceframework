@@ -51,6 +51,8 @@ public:
     QIfPendingReply<void> move(const QUuid &identifier, int currentIndex, int newIndex) override;
     QIfPendingReply<int> indexOf(const QUuid &identifier, const QVariant &item) override;
 
+    void updateServiceSettings(const QVariantMap &settings);
+
 protected:
     void setupConnections();
     bool connectToNode();
@@ -61,6 +63,7 @@ private:
     QRemoteObjectNode *m_node;
     QUrl m_url;
     QIfRemoteObjectsReplicaHelper *m_helper;
+    QVariantMap m_serviceSettings;
 };
 
 #endif // SEARCHANDBROWSEMODEL_H

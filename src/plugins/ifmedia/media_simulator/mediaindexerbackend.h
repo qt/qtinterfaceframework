@@ -21,7 +21,7 @@ class MediaIndexerBackend : public QIfMediaIndexerControlBackendInterface
 
     struct ScanData;
 public:
-    explicit MediaIndexerBackend(const QSqlDatabase &database, QObject *parent = nullptr);
+    explicit MediaIndexerBackend(const QVariantMap &serviceSettings, const QSqlDatabase &database, QObject *parent = nullptr);
 
     void initialize() override;
     void pause() override;

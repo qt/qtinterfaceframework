@@ -16,7 +16,7 @@ class MediaDiscoveryBackend : public QIfMediaDeviceDiscoveryModelBackendInterfac
     Q_OBJECT
 
 public:
-    MediaDiscoveryBackend(QObject *parent = nullptr);
+    MediaDiscoveryBackend(const QVariantMap &serviceSettings, QObject *parent = nullptr);
 
     void initialize() override;
 
