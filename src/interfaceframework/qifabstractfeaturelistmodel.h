@@ -53,6 +53,8 @@ class QIfAbstractFeatureListModelPrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeatureListModel : public QAbstractListModel, public QQmlParserStatus
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(AbstractFeatureListModel)
+    QML_UNCREATABLE("")
     Q_INTERFACES(QQmlParserStatus)
 
     Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)

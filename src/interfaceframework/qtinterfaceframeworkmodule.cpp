@@ -163,6 +163,7 @@ void QtInterfaceFrameworkModule::registerQmlTypes(const QString &uri, int majorV
     qmlRegisterSingletonType<QtInterfaceFrameworkModule>(u, majorVersion, minorVersion,
                                         "QtInterfaceFrameworkModule",
                                         qtinterfaceframeworkmodule_singletontype_provider);
+    qmlRegisterUncreatableType<QIfAbstractFeatureListModel>(u, majorVersion, minorVersion, "AbstractFeatureListModel", QStringLiteral("AbstractFeatureListModel is not accessible directly"));
     qmlRegisterUncreatableType<QIfAbstractFeature>(u, majorVersion, minorVersion, "AbstractFeature", QStringLiteral("AbstractFeature is not accessible directly"));
     qmlRegisterUncreatableType<QIfAbstractZonedFeature>(u, majorVersion, minorVersion, "AbstractZonedFeature", QStringLiteral("AbstractZonedFeature is not accessible directly"));
     qmlRegisterType<QIfPagingModel>(u, majorVersion, minorVersion, "PagingModel");
