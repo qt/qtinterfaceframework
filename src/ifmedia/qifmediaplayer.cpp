@@ -139,6 +139,8 @@ QIfMediaPlayerBackendInterface *QIfMediaPlayerPrivate::playerBackend() const
 
     By default the autoDiscovery is turned to Automatic for this feature and most likely will connect to
     a local media player instance.
+
+    Uses \c qtifmedia as configurationId for \l QIfConfiguration based settings.
 */
 
 /*!
@@ -153,6 +155,8 @@ QIfMediaPlayerBackendInterface *QIfMediaPlayerPrivate::playerBackend() const
 
     By default the autoDiscovery is turned to Automatic for this feature and most likely will connect to
     a local media player instance.
+
+    Uses \c qtifmedia as configurationId for \l InterfaceFrameworkConfiguration based settings.
 */
 
 /*!
@@ -187,6 +191,7 @@ QIfMediaPlayerBackendInterface *QIfMediaPlayerPrivate::playerBackend() const
 QIfMediaPlayer::QIfMediaPlayer(QObject *parent)
     : QIfAbstractFeature(*new QIfMediaPlayerPrivate(QLatin1String(QIfMediaPlayer_iid), this), parent)
 {
+    setConfigurationId(QStringLiteral("qtifmedia"));
 }
 
 /*!

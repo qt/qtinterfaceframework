@@ -21,15 +21,23 @@
 
 MediaSimulatorPlugin::MediaSimulatorPlugin(QObject *parent)
     : QObject(parent)
-    , m_discovery(new MediaDiscoveryBackend(this))
+    , m_player(nullptr)
+    , m_browse(nullptr)
+    , m_discovery(nullptr)
+    , m_indexer(nullptr)
 {
-    QString dbFile = mediaDatabaseFile();
+}
+
+void MediaSimulatorPlugin::createInstances()
+{
+    QString dbFile = mediaDatabaseFile(m_serviceSettings);
 
     createMediaDatabase(dbFile);
 
-    m_player = new MediaPlayerBackend(createDatabaseConnection(QStringLiteral("player"), dbFile), this);
-    m_browse = new SearchAndBrowseBackend(createDatabaseConnection(QStringLiteral("model"), dbFile), this);
-    m_indexer = new MediaIndexerBackend(createDatabaseConnection(QStringLiteral("indexer"), dbFile), this);
+    m_player = new MediaPlayerBackend(m_serviceSettings, createDatabaseConnection(QStringLiteral("player"), dbFile), this);
+    m_browse = new SearchAndBrowseBackend(m_serviceSettings, createDatabaseConnection(QStringLiteral("model"), dbFile), this);
+    m_indexer = new MediaIndexerBackend(m_serviceSettings, createDatabaseConnection(QStringLiteral("indexer"), dbFile), this);
+    m_discovery = new MediaDiscoveryBackend(m_serviceSettings, this);
 
     auto deviceMap = m_discovery->deviceMap();
     for (auto it = deviceMap.cbegin(); it != deviceMap.cend(); it++) {
@@ -60,6 +68,9 @@ QStringList MediaSimulatorPlugin::interfaces() const
 
 QIfFeatureInterface *MediaSimulatorPlugin::interfaceInstance(const QString &interface) const
 {
+    if (!m_player)
+        const_cast<MediaSimulatorPlugin*>(this)->createInstances();
+
     if (interface == QStringLiteral(QIfMediaPlayer_iid))
         return m_player;
     else if (interface == QStringLiteral(QIfFilterAndBrowseModel_iid))
@@ -70,4 +81,15 @@ QIfFeatureInterface *MediaSimulatorPlugin::interfaceInstance(const QString &inte
         return m_indexer;
 
     return nullptr;
+}
+
+QString MediaSimulatorPlugin::configurationId() const
+{
+    return QStringLiteral("qtifmedia");
+}
+
+void MediaSimulatorPlugin::updateServiceSettings(const QVariantMap &settings)
+{
+    qCDebug(media) << Q_FUNC_INFO << settings;
+    m_serviceSettings = settings;
 }

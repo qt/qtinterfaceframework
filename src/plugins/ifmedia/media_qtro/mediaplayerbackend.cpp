@@ -36,11 +36,6 @@ void MediaPlayerBackend::initialize()
         emit mutedChanged(m_replica->muted());
         emit initializationDone();
     }
-
-    QTimer::singleShot(3000, this, [this](){
-        if (!m_replica->isInitialized())
-            qCCritical(qLcROQIfMediaPlayer) << "QtIfMedia.QIfMediaPlayer wasn't initialized within the timeout period. Please make sure the server is running.";
-    });
 }
 
 void MediaPlayerBackend::play()
@@ -118,34 +113,92 @@ void MediaPlayerBackend::move(int currentIndex, int newIndex)
     m_replica->move(currentIndex, newIndex);
 }
 
+void MediaPlayerBackend::updateServiceSettings(const QVariantMap &settings)
+{
+    if (m_serviceSettings == settings)
+        return;
+
+    m_serviceSettings = settings;
+    connectToNode();
+}
+
 bool MediaPlayerBackend::connectToNode()
 {
+    QUrl url;
+    const auto it = m_serviceSettings.constFind(QStringLiteral("MediaPlayer"));
+
+    if (it != m_serviceSettings.constEnd())
+        url = it->toMap().value(QStringLiteral("connectionUrl")).toUrl();
+    if (url.isEmpty())
+        url = m_serviceSettings.value(QStringLiteral("connectionUrl")).toUrl();
+
     static QString configPath;
-    if (configPath.isEmpty()) {
-        if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
-            configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
-        } else {
-            configPath = QStringLiteral("./server.conf");
-            qCInfo(qLcROQIfMediaPlayer) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
+    if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
+        configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
+
+        QSettings settings(configPath, QSettings::IniFormat);
+        settings.beginGroup(QStringLiteral("qtifmedia"));
+        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        if (!url.isEmpty()) {
+            qCInfo(qLcROQIfMediaPlayer) << "SERVER_CONF_PATH environment variable is set.\n"
+                                        << "Overriding service setting: 'MediaPlayer.connectionUrl'";
+
+            qCInfo(qLcROQIfMediaPlayer) << "Using SERVER_CONF_PATH is deprecated and will be removed"
+                                            "in future Qt versions.";
         }
     }
 
-    QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("qtifmedia"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtifmedia")).toString());
-    if (m_url != registryUrl) {
-        m_url = registryUrl;
+    if (url.isEmpty() && QFile::exists(QStringLiteral("./server.conf"))) {
+        configPath = QStringLiteral("./server.conf");
+
+        QSettings settings(configPath, QSettings::IniFormat);
+        settings.beginGroup(QStringLiteral("qtifmedia"));
+        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        if (!url.isEmpty()) {
+            qCInfo(qLcROQIfMediaPlayer) << "Reading url from ./server.conf.\n"
+                                        << "Overriding service setting: 'MediaPlayer.connectionUrl'";
+
+            qCInfo(qLcROQIfMediaPlayer) << "Using ./server.conf. is deprecated and will be removed"
+                                           "in future Qt versions.";
+        }
+    }
+
+    if (url.isEmpty())
+        url = QStringLiteral("local:qtifmedia");
+
+    if (m_url != url) {
         // QtRO doesn't allow to change the URL without destroying the Node
-        delete m_node;
+        if (m_node) {
+            qCInfo(qLcROQIfMediaPlayer) << "Disconnecting from" << m_url;
+            delete m_node;
+        }
+
+        m_url = url;
+
         m_node = new QRemoteObjectNode(this);
+        qCInfo(qLcROQIfMediaPlayer) << "Connecting to" << m_url;
         if (!m_node->connectToNode(m_url)) {
             qCCritical(qLcROQIfMediaPlayer) << "Connection to" << m_url << "failed!";
             m_replica.reset();
             return false;
         }
-        qCInfo(qLcROQIfMediaPlayer) << "Connecting to" << m_url;
         m_replica.reset(m_node->acquire<QIfMediaPlayerReplica>(QStringLiteral("QtIfMedia.QIfMediaPlayer")));
         setupConnections();
+
+        const int defaultTimeout = 3000;
+        int connectionTimeout = defaultTimeout;
+        if (it != m_serviceSettings.constEnd())
+            connectionTimeout = it->toMap().value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+
+        if (connectionTimeout == defaultTimeout)
+            connectionTimeout = m_serviceSettings.value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+
+        if (connectionTimeout != -1) {
+            QTimer::singleShot(connectionTimeout, this, [this](){
+                if (!m_replica->isInitialized())
+                    qCWarning(qLcROQIfMediaPlayer) << "QtIfMedia.QIfMediaPlayer wasn't initialized within the timeout period. Please make sure the server is running.";
+            });
+        }
     }
     return true;
 }

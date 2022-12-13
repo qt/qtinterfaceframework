@@ -5,6 +5,7 @@
 #include <QGuiApplication>
 #include <QDir>
 #include <QLockFile>
+#include <QIfConfiguration>
 
 #include "database_helper.h"
 
@@ -41,13 +42,14 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    QString dbFile = mediaDatabaseFile();
+    QVariantMap serviceSettings = QIfConfiguration::serviceSettings("ifmedia");
+    QString dbFile = mediaDatabaseFile(serviceSettings);
     createMediaDatabase(dbFile);
 
-    MediaIndexerBackend *indexerBackend = new MediaIndexerBackend(createDatabaseConnection(QStringLiteral("indexer"), dbFile), qApp);
-    MediaPlayerBackend *playerBackend = new MediaPlayerBackend(createDatabaseConnection(QStringLiteral("player"), dbFile), qApp);
-    MediaDiscoveryBackend *discoveryBackend = new MediaDiscoveryBackend(qApp);
-    SearchAndBrowseBackend *searchAndBrowseBackend = new SearchAndBrowseBackend(createDatabaseConnection(QStringLiteral("model"), dbFile), qApp);
+    MediaIndexerBackend *indexerBackend = new MediaIndexerBackend(serviceSettings, createDatabaseConnection(QStringLiteral("indexer"), dbFile), qApp);
+    MediaPlayerBackend *playerBackend = new MediaPlayerBackend(serviceSettings, createDatabaseConnection(QStringLiteral("player"), dbFile), qApp);
+    MediaDiscoveryBackend *discoveryBackend = new MediaDiscoveryBackend(serviceSettings, qApp);
+    SearchAndBrowseBackend *searchAndBrowseBackend = new SearchAndBrowseBackend(serviceSettings, createDatabaseConnection(QStringLiteral("model"), dbFile), qApp);
 
     auto deviceMap = discoveryBackend->deviceMap();
     for (auto it = deviceMap.cbegin(); it != deviceMap.cend(); it++) {

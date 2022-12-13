@@ -81,7 +81,7 @@ the following navigation paths:
 \note On systems where \c taglib is disabled, indexing of files doesn't work and because of that
 the media database can't be created.
 
-The MediaDiscoveryModel provides a simulation of USB thumb drives and can be configured using the the
+The MediaDiscoveryModel provides a simulation of USB thumb drives and can be configured using the
 \c QTIFMEDIA_SIMULATOR_DEVICEFOLDER environment variable, which needs to be set to an absolute path.
 Every sub-folder within that path is recognized as a new USB thumb drive.
 
@@ -93,9 +93,32 @@ the FilterAndBrowseModel connected to the media player's service object to brows
 
 \section1 Configuration
 
-This backend uses environment variables for its configuration. By default it will write its database
-to the application's cache location. There is also a non persistent mode, where the indexed media
-database is not saved, but recreated on every start of the app.
+This backend can be configured using \l QIfConfiguration::serviceSettings.
+By default it will write its database to the application's cache location.
+There is also a non persistent mode, where the indexed media database is not saved, but recreated
+on every start of the app.
+The backend uses \c qtifmedia as its configurationId and accepts the following serviceSettings:
+
+\table
+\header
+    \li Name
+    \li Description
+\row
+    \li useTemporaryDatabase
+    \li The database is written to a temporary location and deleted when the application is stopped.
+\row
+    \li database
+    \li A path to the media database which should be used.
+\row
+    \li customMediaFolder
+    \li The local media directory (default: all media locations of the user - see also QStandardPaths)
+\row
+    \li customDeviceFolder
+    \li The path which will be used by the DiscoveryModel for discovering media devices.
+        (default: /home/<user>/usb-simulation)
+\endtable
+
+In addition the settings can be also provided by using the following environment variables:
 
 \table
 \header
@@ -115,4 +138,58 @@ database is not saved, but recreated on every start of the app.
     \li The path which will be used by the DiscoveryModel for discovering media devices.
         (default: /home/<user>/usb-simulation)
 \endtable
+*/
+
+/*!
+\page qtifmedia-player-qtro-backend.html
+\title QtIfMedia MediaPlayer RemoteObjects Backend
+\ingroup qtifmedia_backend
+\ingroup qtif_backend
+
+\brief Connects to a media player using Qt Remote Objects.
+
+\section1 Supported interfaces
+\list
+    \li \l{org.qt-project.interfaceframework.MediaPlayer/1.0}
+    \li \l{org.qt-project.interfaceframework.MediaIndexer/1.0}
+    \li \l{org.qt-project.interfaceframework.MediaDiscovery/1.0}
+    \li \l{org.qt-project.interfaceframework.FilterAndBrowseModel/1.0}
+\endlist
+
+\section1 Configuration
+
+The backend uses \c qtifmedia as it's configurationId and accepts the following serviceSettings:
+
+\table
+\header
+    \li Name
+    \li Description
+\row
+    \li connectionUrl
+    \li The url the interface tries to connect to using Qt Remote Objects. Defaults to
+        \c local:qtifmedia. Changing this value at runtime will reconnect the backend to the new URL.
+\row
+    \li connectionTimeout
+    \li Defines when a timeout warning should be printed (in milliseconds).
+        To disable the warning set the timeout to -1.
+\endtable
+
+In addition to those global settings, the values can also be provided per backend interface and
+this allows the backend to connect to multiple remote objects instances. Interface specific
+settings need to be prefixed with the interface name. The following example uses a global \c
+connectionTimeout and a specific \c connectionUrl for the player interface, while all other
+interfaces use the default \c connectionUrl:
+
+\badcode
+{
+    connectionTimeout: 1000,
+    MediaPlayer: {
+        connectionUrl: "tcp://127.0.0.1:1234"
+    }
+}
+\endcode
+
+For backward compatibility a \c server.conf file in the current directory of the application (or
+specified by \c SERVER_CONF_PATH), but is marked as deprecated and will be removed
+in future Qt releases.
 */

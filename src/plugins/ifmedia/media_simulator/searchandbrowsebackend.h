@@ -41,7 +41,7 @@ class SearchAndBrowseBackend : public QIfFilterAndBrowseModelInterface
 
     Q_PROPERTY(QStringList availableContentTypes READ availableContentTypes CONSTANT)
 public:
-    explicit SearchAndBrowseBackend(const QSqlDatabase &database, QObject *parent = nullptr);
+    explicit SearchAndBrowseBackend(const QVariantMap &serviceSettings, const QSqlDatabase &database, QObject *parent = nullptr);
 
     QStringList availableContentTypes() const;
 

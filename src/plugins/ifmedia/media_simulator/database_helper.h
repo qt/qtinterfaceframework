@@ -17,20 +17,30 @@
 
 #include "logging.h"
 
-QString mediaDatabaseFile()
+QString mediaDatabaseFile(const QVariantMap &serviceSettings)
 {
     QString dbFile;
-    const QByteArray database = qgetenv("QTIFMEDIA_SIMULATOR_DATABASE");
+    bool useTemporaryDatabase = serviceSettings.value(QStringLiteral("useTemporaryDatabase")).toBool();
+    QString database = serviceSettings.value(QStringLiteral("database")).toString();
     if (qEnvironmentVariableIsSet("QTIFMEDIA_TEMPORARY_DATABASE")) {
+        qCInfo(media) << "QTIFMEDIA_TEMPORARY_DATABASE environment variable is set.\n"
+                      << "Overriding service setting: 'useTemporaryDatabas'";
+        useTemporaryDatabase = true;
+    } else if (qEnvironmentVariableIsSet("QTIFMEDIA_SIMULATOR_DATABASE")) {
+        qCInfo(media) << "QTIFMEDIA_SIMULATOR_DATABASE environment variable is set.\n"
+                      << "Overriding service setting: 'database'";
+        database = QFile::decodeName(qgetenv("QTIFMEDIA_SIMULATOR_DATABASE"));
+    }
+
+    if (useTemporaryDatabase) {
         auto *tempFile = new QTemporaryFile(qApp);
         tempFile->open();
         dbFile = tempFile->fileName();
-        qCInfo(media) << "QTIFMEDIA_TEMPORARY_DATABASE environment variable is set.\n"
-                    << "Using the temporary database: " << tempFile->fileName();
+        qCInfo(media) << "Using the temporary database: " << tempFile->fileName();
     } else if (!database.isEmpty()) {
-        dbFile = QFile::decodeName(database);
+        dbFile = database;
         if (!QFileInfo(dbFile).isAbsolute())
-            qCInfo(media) << "Please set an valid absolute path for QTIFMEDIA_SIMULATOR_DATABASE. Current path:" << dbFile;
+            qCInfo(media) << "Please set an valid absolute path for the service setting 'database'. Current path:" << dbFile;
     } else {
         const QDir cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
         if (!cacheLocation.exists())

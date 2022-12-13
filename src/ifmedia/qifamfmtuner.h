@@ -37,7 +37,6 @@ public:
     };
     Q_ENUM(Band)
 
-
     int frequency() const;
     int minimumFrequency() const;
     int maximumFrequency() const;

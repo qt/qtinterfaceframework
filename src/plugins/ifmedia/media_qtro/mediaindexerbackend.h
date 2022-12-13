@@ -21,6 +21,8 @@ public:
     void pause() override;
     void resume() override;
 
+    void updateServiceSettings(const QVariantMap &settings);
+
 protected:
     void setupConnections();
     bool connectToNode();
@@ -30,6 +32,7 @@ private:
     QRemoteObjectNode *m_node;
     QUrl m_url;
     QIfRemoteObjectsReplicaHelper *m_helper;
+    QVariantMap m_serviceSettings;
 };
 
 #endif // MEDIAINDEXERBACKEND_H

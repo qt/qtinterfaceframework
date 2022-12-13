@@ -17,7 +17,6 @@ ApplicationWindow {
 
     MediaPlayer {
         id: mediaPlayer
-        discoveryMode: AbstractFeature.LoadOnlySimulationBackends
     }
 
     SplitView {
@@ -275,5 +274,15 @@ ApplicationWindow {
                 }
             }
         }
+    }
+
+    InterfaceFrameworkConfiguration {
+        name: "qtifmedia"
+        discoveryMode: AbstractFeature.LoadOnlySimulationBackends
+
+// Enable this to pass settings to the simulation backend
+//        serviceSettings: {
+//            "useTemporaryDatabase": true
+//        }
     }
 }

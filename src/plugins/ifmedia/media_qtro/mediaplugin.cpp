@@ -50,3 +50,16 @@ QIfFeatureInterface *MediaQtROPlugin::interfaceInstance(const QString &interface
 
     return nullptr;
 }
+
+QString MediaQtROPlugin::configurationId() const
+{
+    return QStringLiteral("qtifmedia");
+}
+
+void MediaQtROPlugin::updateServiceSettings(const QVariantMap &settings)
+{
+    m_player->updateServiceSettings(settings);
+    m_indexer->updateServiceSettings(settings);
+    m_searchModel->updateServiceSettings(settings);
+    m_discovery->updateServiceSettings(settings);
+}

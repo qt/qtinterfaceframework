@@ -27,6 +27,8 @@ public Q_SLOTS:
     void onDeviceAdded(const QString &device);
     void onDeviceRemoved(const QString &device);
 
+    void updateServiceSettings(const QVariantMap &settings);
+
 protected:
     void setupConnections();
     bool connectToNode();
@@ -38,6 +40,7 @@ private:
     QHash<QString, QIfServiceObject*> m_deviceMap;
     bool m_initialized;
     QIfRemoteObjectsReplicaHelper *m_helper;
+    QVariantMap m_serviceSettings;
 };
 
 #endif // MEDIADISCOVERYBACKEND_H

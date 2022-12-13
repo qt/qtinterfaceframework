@@ -24,6 +24,9 @@ public:
     QStringList interfaces() const override;
     QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
 
+    QString configurationId() const override;
+    void updateServiceSettings(const QVariantMap &settings) override;
+
 private:
 
     MediaPlayerBackend *m_player;
