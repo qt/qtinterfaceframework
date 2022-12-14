@@ -327,11 +327,23 @@
             \li Interface
             \li The libraryIcon is shown in the Library within Qt Design Studio.
                 \note The icon needs to be copied to the correct folder by a custom qmake rule.
+        \row
+            \li \code
+                configurationId: "vehiclefunctions"
+                \endcode
+            \li Main IDL file
+            \li Module
+            \li Defines the configurationId of the generated plugin, which can be used with
+                \l QIfConfiguration to provide settings to the backend.
+                Can be overwritten by a backend specific \c configurationId annotation.
     \endtable
 
     Annotations that are not logically part of the interface description, but rather the ones used
-    to specify additional information, are put in the accompanying YAML file. Here is a list of
-    annotations used to define the various aspects of generating a backend-simulator:
+    to specify additional information, are put in the accompanying YAML file.
+
+    Here is a list of annotations used to define the various aspects of the generated backends:
+
+    \section3 backend_simulator
 
     \table 100%
         \header
@@ -339,6 +351,26 @@
             \li Where
             \li Object type
             \li Purpose
+        \row
+            \li
+            \code
+            config_simulator:
+                serviceObjectId: "vehiclefunctions_simulation"
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Defines the id of the generated plugin. See \l QIfServiceObject::id for more information.
+                Defaults to \c module.name + "_simulation"
+        \row
+            \li
+            \code
+            config_simulator:
+                configurationId: "vehiclefunctions"
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Defines the configurationId of the generated plugin, which can be used with
+                \l QIfConfiguration to provide settings to the backend.
         \row
             \li
             \target config_simulator_simulationFile
@@ -433,6 +465,36 @@
             \li Property
             \li Defines the possible values for the property; the generated code in the simulator
                 backend validates the value.
+    \endtable
+
+    \section3 backend_qtro
+
+    \table 100%
+        \header
+            \li Tag
+            \li Where
+            \li Object type
+            \li Purpose
+        \row
+            \li
+            \code
+            config_qtro:
+                serviceObjectId: "vehiclefunctions_qtro"
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Defines the id of the generated plugin. See \l QIfServiceObject::id for more information.
+                Defaults to \c module.name + "_qtro"
+        \row
+            \li
+            \code
+            config_qtro:
+                configurationId: "vehiclefunctions"
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Defines the configurationId of the generated plugin, which can be used with
+                \l QIfConfiguration to provide settings to the backend.
     \endtable
 
 
@@ -687,4 +749,47 @@
             \li Interface-specific QML simulation files.
     \endtable
 
+    \section1 Backend specific configuration option
+
+    Some of the generated backends can be provided with service settings using the
+    \l QIfConfiguration class. The following table describes the available settings per template
+
+    \section2 Backend Simulator
+
+    The generated code doesn't have any service setting itself, but it forwards the serviceSettings
+    to the QML simulation. A handwritten QML simulation can use the serviceSettings property
+    of the BackendInterface object to change the behavior when such a setting is set.
+
+    \section2 QtRemoteObjects Backend
+
+    \table
+    \header
+        \li Name
+        \li Description
+    \row
+        \li connectionUrl
+        \li The url the interface tries to connect to using Qt Remote Objects. Defaults to
+            \c {local + {{module.module_name|lower}}}.
+            Changing this value at runtime will reconnect the backed to the new URL.
+    \row
+        \li connectionTimeout
+        \li Defines when a timeout warning should be printed (in milliseconds).
+            To disable the warning set the timeout to -1.
+    \endtable
+
+    In addition to those global settings, the values can also be provided per backend interface and
+    this allows the backend to connect to multiple remote objects instances. Interface specific
+    settings need to be prefixed with the interface name. The following example uses a global \c
+    connectionTimeout and a specific \c connectionUrl for the InstrumentCluster interface, while
+    all other interfaces use the default
+    \c connectionUrl:
+
+    \badcode
+    {
+        connectionTimeout: 1000,
+        InstrumentCluster: {
+            connectionUrl: "tcp://127.0.0.1:1234"
+        }
+    }
+    \endcode
 */

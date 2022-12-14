@@ -11,8 +11,11 @@
 #ifndef {{oncedefine}}
 #define {{oncedefine}}
 
-#include <QVector>
 #include <QtInterfaceFramework/QIfServiceInterface>
+
+{% for interface in module.interfaces %}
+#include "{{interface|lower}}robackend.h"
+{% endfor %}
 
 {{ module|begin_namespace }}
 
@@ -23,15 +26,19 @@ class {{class}} : public QObject, QIfServiceInterface
     Q_INTERFACES(QIfServiceInterface)
 
 public:
-    typedef QVector<QIfFeatureInterface *> (InterfaceBuilder)({{class}} *);
-
     explicit {{class}}(QObject *parent = nullptr);
 
     QStringList interfaces() const override;
     QIfFeatureInterface* interfaceInstance(const QString& interface) const override;
 
+    QString id() const override;
+    QString configurationId() const override;
+    void updateServiceSettings(const QVariantMap &settings) override;
+
 private:
-    QVector<QIfFeatureInterface *> m_interfaces;
+{% for interface in module.interfaces %}
+    {{interface}}RoBackend *m_{{interface|lower}}Backend;
+{% endfor %}
 };
 
 {{ module|end_namespace }}
