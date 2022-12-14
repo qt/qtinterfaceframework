@@ -35,8 +35,10 @@ endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}robackend.h
     ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}robackend.cpp
 {% endfor %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}roplugin.h
     ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}roplugin.cpp
 )
 
