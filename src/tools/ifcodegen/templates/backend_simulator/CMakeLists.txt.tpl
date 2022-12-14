@@ -6,8 +6,10 @@
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backend.h
     ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backend.cpp
 {% endfor %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}simulatorplugin.h
     ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}simulatorplugin.cpp
 )
 

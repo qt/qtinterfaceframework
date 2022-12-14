@@ -6,6 +6,7 @@
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
+    ${CMAKE_CURRENT_LIST_DIR}/tst_{{interface|lower}}.h
     ${CMAKE_CURRENT_LIST_DIR}/tst_{{interface|lower}}.cpp
 {% endfor %}
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
