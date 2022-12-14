@@ -9,6 +9,7 @@ if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelperPrivat
 endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/core.h
     ${CMAKE_CURRENT_LIST_DIR}/core.cpp
 )
 
