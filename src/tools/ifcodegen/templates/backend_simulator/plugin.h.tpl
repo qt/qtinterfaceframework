@@ -12,8 +12,11 @@
 #ifndef {{oncedefine}}
 #define {{oncedefine}}
 
-#include <QVector>
 #include <QtInterfaceFramework/QIfServiceInterface>
+
+{% for interface in module.interfaces %}
+#include "{{interface|lower}}backend.h"
+{% endfor %}
 
 QT_FORWARD_DECLARE_CLASS(QIfSimulationEngine)
 
@@ -33,8 +36,14 @@ public:
     QStringList interfaces() const override;
     QIfFeatureInterface* interfaceInstance(const QString& interface) const override;
 
+    QString id() const override;
+    QString configurationId() const override;
+    void updateServiceSettings(const QVariantMap &settings) override;
+
 private:
-    QVector<QIfFeatureInterface *> m_interfaces;
+{% for interface in module.interfaces %}
+    {{interface}}Backend *m_{{interface|lower}}Backend;
+{% endfor %}
     QIfSimulationEngine *m_simulationEngine;
 };
 

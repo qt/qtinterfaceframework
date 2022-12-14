@@ -89,6 +89,7 @@ class {{class}} : public {{class}}Interface
 {% if interface_zoned %}
     Q_PROPERTY(QQmlPropertyMap *zones READ zones CONSTANT)
 {% endif %}
+    Q_PROPERTY(QVariantMap serviceSettings READ serviceSettings NOTIFY serviceSettingsChanged FINAL)
 public:
     explicit {{class}}(QObject *parent = nullptr);
     explicit {{class}}(QIfSimulationEngine *engine, QObject *parent = nullptr);
@@ -99,6 +100,8 @@ public:
 {%   endif %}
 
     Q_INVOKABLE void initialize() override;
+    QVariantMap serviceSettings();
+    void updateServiceSettings(const QVariantMap &settings);
 {% if interface_zoned %}
     void addZone(const QString &zone);
     {{zone_class}}* zoneAt(const QString &zone);
@@ -133,6 +136,9 @@ public Q_SLOTS:
     {{qtif.operation(operation, zoned = interface_zoned)}} override;
 {% endfor %}
 
+Q_SIGNALS:
+    void serviceSettingsChanged(const QVariantMap &settings);
+
 protected:
 {% for property in interface.properties %}
 {#{%   if not property.tags.config_simulator or not property.tags.config_simulator.zoned %}#}
@@ -146,6 +152,7 @@ protected:
 {% if interface_zoned %}
     QQmlPropertyMap *m_zones;
 {% endif %}
+    QVariantMap m_serviceSettings;
 };
 
 {{ module|end_namespace }}

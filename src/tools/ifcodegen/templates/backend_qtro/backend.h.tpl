@@ -78,6 +78,7 @@ public:
     ~{{class}}();
 
     void initialize() override;
+    void updateServiceSettings(const QVariantMap &settings);
 
 public Q_SLOTS:
 {% for property in interface.properties %}
@@ -112,6 +113,7 @@ protected:
     QString m_remoteObjectsLookupName;
     QHash<quint64, QIfPendingReplyBase> m_pendingReplies;
     QIfRemoteObjectsReplicaHelper *m_helper;
+    QVariantMap m_serviceSettings;
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
     QIfPagingModelInterface *m_{{property}};

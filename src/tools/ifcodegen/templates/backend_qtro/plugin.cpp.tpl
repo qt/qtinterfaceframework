@@ -9,10 +9,6 @@
 
 #include "{{class|lower}}.h"
 
-{% for interface in module.interfaces %}
-#include "{{interface|lower}}robackend.h"
-{% endfor %}
-
 #include <QStringList>
 
 {{ module|begin_namespace }}
@@ -21,7 +17,7 @@
     : QObject(parent)
 {
 {% for interface in module.interfaces %}
-    m_interfaces << new {{interface}}RoBackend(QStringLiteral("{{interface.qualified_name}}"), this);
+    m_{{interface|lower}}Backend = new {{interface}}RoBackend(QStringLiteral("{{interface.qualified_name}}"), this);
 {% endfor %}
 }
 
@@ -35,10 +31,48 @@ QStringList {{class}}::interfaces() const
     return list;
 }
 
+/*! \internal */
 QIfFeatureInterface *{{class}}::interfaceInstance(const QString &interface) const
 {
-     int index = interfaces().indexOf(interface);
-     return index < 0 ? nullptr : m_interfaces.at(index);
+{% for interface in module.interfaces %}
+{%   if loop.first %}
+    if (interface == QStringLiteral({{module.module_name|upperfirst}}_{{interface}}_iid))
+{%   else %}
+    else if (interface == QStringLiteral({{module.module_name|upperfirst}}_{{interface}}_iid))
+{%   endif %}
+        return m_{{interface|lower}}Backend;
+{% endfor %}
+
+    return nullptr;
+}
+
+QString {{class}}::id() const
+{
+{% if module.tags.config_qtro and module.tags.config_qtro.serviceObjectId %}
+{%   set serviceObjectId = module.tags.config_qtro.serviceObjectId %}
+{% else %}
+{%   set serviceObjectId = "{0}_qtro".format(module.name) %}
+{% endif %}
+    return QStringLiteral("{{serviceObjectId}}");
+}
+
+QString {{class}}::configurationId() const
+{
+{% if module.tags.config_qtro and module.tags.config_qtro.configurationId %}
+{%   set configurationId = module.tags.config_qtro.configurationId %}
+{% elif module.tags.config.configurationId %}
+{%   set configurationId = module.tags.config.configurationId %}
+{% else %}
+{%   set configurationId = module.name %}
+{% endif %}
+    return QStringLiteral("{{configurationId}}");
+}
+
+void {{class}}::updateServiceSettings(const QVariantMap &settings)
+{
+{% for interface in module.interfaces %}
+    m_{{interface|lower}}Backend->updateServiceSettings(settings);
+{% endfor %}
 }
 
 {{ module|end_namespace }}

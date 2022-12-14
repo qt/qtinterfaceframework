@@ -59,7 +59,7 @@ Q_SIGNALS:
 {% endfor %}
 };
 
-#define {{module.module_name|upperfirst}}_{{interface}}_iid ("{{interface.tags.config.id | default(interface.qualified_name)}}")
+#define {{module.module_name|upperfirst}}_{{interface}}_iid "{{interface.tags.config.id | default(interface.qualified_name)}}"
 
 {{ module|end_namespace }}
 

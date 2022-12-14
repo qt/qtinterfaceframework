@@ -259,6 +259,14 @@ bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &va
 {%   endif %}
 {% endif %}
 {
+{% if interface.tags.config.configurationId %}
+{%   set configurationId = interface.tags.config.configurationId %}
+{% elif module.tags.config.configurationId %}
+{%   set configurationId = module.tags.config.configurationId %}
+{% else %}
+{%   set configurationId = module.name %}
+{% endif %}
+    setConfigurationId(QStringLiteral("{{configurationId}}"));
 }
 
 /*! \internal */

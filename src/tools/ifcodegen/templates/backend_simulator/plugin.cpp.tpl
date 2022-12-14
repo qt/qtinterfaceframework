@@ -10,10 +10,6 @@
 
 #include "{{class|lower}}.h"
 
-{% for interface in module.interfaces %}
-#include "{{interface|lower}}backend.h"
-{% endfor %}
-
 #include <QStringList>
 #include <QtInterfaceFramework/QIfSimulationEngine>
 
@@ -34,15 +30,17 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
     , m_simulationEngine(new QIfSimulationEngine(QStringLiteral("{{module.name|lower}}"), this))
 {
 {% if module.tags.config.interfaceBuilder %}
-    m_interfaces = {{module.tags.config.interfaceBuilder}}(this);
-    Q_ASSERT(m_interfaces.size() == interfaces().size());
+    QVector<QIfFeatureInterface *> interfacesList = {{module.tags.config.interfaceBuilder}}(this);
+    Q_ASSERT(interfacesList.size() == interfaces().size());
+{%   for interface in module.interfaces %}
+    m_{{interface|lower}}Backend = static_cast<{{interface}}Backend*>(interfacesList.at({{loop.index0}}));
+{%   endfor %}
 {% else %}
 {%   for interface in module.interfaces %}
-    auto {{interface}}Instance = new {{interface}}Backend(m_simulationEngine, this);
+    m_{{interface|lower}}Backend = new {{interface}}Backend(m_simulationEngine, this);
     //Register the types for the SimulationEngine
     {{module.module_name|upperfirst}}::registerQmlTypes(QStringLiteral("{{module|qml_type}}.simulation"), {{module.majorVersion}}, {{module.minorVersion}});
-    m_simulationEngine->registerSimulationInstance({{interface}}Instance, "{{module|qml_type}}.simulation", {{module.majorVersion}}, {{module.minorVersion}}, "{{interface}}Backend");
-    m_interfaces << {{interface}}Instance;
+    m_simulationEngine->registerSimulationInstance(m_{{interface|lower}}Backend, "{{module|qml_type}}.simulation", {{module.majorVersion}}, {{module.minorVersion}}, "{{interface}}Backend");
 {%   endfor %}
 {% if module.tags.config_simulator and module.tags.config_simulator.simulationFile %}
 {%   set simulationFile = module.tags.config_simulator.simulationFile %}
@@ -59,7 +57,7 @@ QStringList {{class}}::interfaces() const
 {
     QStringList list;
 {% for iface in module.interfaces %}
-{%   if loop.first %}    list{% endif %} << {{module.module_name|upperfirst}}_{{iface}}_iid{% if loop.last %};{% endif %}
+{%   if loop.first %}    list{% endif %} << QStringLiteral({{module.module_name|upperfirst}}_{{iface}}_iid){% if loop.last %};{% endif %}
 {% endfor %}
 
     return list;
@@ -68,8 +66,45 @@ QStringList {{class}}::interfaces() const
 /*! \internal */
 QIfFeatureInterface *{{class}}::interfaceInstance(const QString &interface) const
 {
-     int index = interfaces().indexOf(interface);
-     return index < 0 ? nullptr : m_interfaces.at(index);
+{% for interface in module.interfaces %}
+{%   if loop.first %}
+    if (interface == QStringLiteral({{module.module_name|upperfirst}}_{{interface}}_iid))
+{%   else %}
+    else if (interface == QStringLiteral({{module.module_name|upperfirst}}_{{interface}}_iid))
+{%   endif %}
+        return m_{{interface|lower}}Backend;
+{% endfor %}
+
+    return nullptr;
+}
+
+QString {{class}}::id() const
+{
+{% if module.tags.config_simulator and module.tags.config_simulator.serviceObjectId %}
+{%   set serviceObjectId = module.tags.config_simulator.serviceObjectId %}
+{% else %}
+{%   set serviceObjectId = "{0}_simulation".format(module.name) %}
+{% endif %}
+    return QStringLiteral("{{serviceObjectId}}");
+}
+
+QString {{class}}::configurationId() const
+{
+{% if module.tags.config_simulator and module.tags.config_simulator.configurationId %}
+{%   set configurationId = module.tags.config_simulator.configurationId %}
+{% elif module.tags.config.configurationId %}
+{%   set configurationId = module.tags.config.configurationId %}
+{% else %}
+{%   set configurationId = module.name %}
+{% endif %}
+    return QStringLiteral("{{configurationId}}");
+}
+
+void {{class}}::updateServiceSettings(const QVariantMap &settings)
+{
+{% for interface in module.interfaces %}
+    m_{{interface|lower}}Backend->updateServiceSettings(settings);
+{% endfor %}
 }
 
 {{ module|end_namespace }}

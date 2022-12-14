@@ -143,6 +143,19 @@ void {{class}}::initialize()
     Q_EMIT initializationDone();
 }
 
+QVariantMap {{class}}::serviceSettings()
+{
+    return m_serviceSettings;
+}
+
+void {{class}}::updateServiceSettings(const QVariantMap &settings)
+{
+    if (m_serviceSettings != settings) {
+        m_serviceSettings = settings;
+        emit serviceSettingsChanged(settings);
+    }
+}
+
 {% if interface_zoned %}
 void {{class}}::addZone(const QString &zone)
 {
