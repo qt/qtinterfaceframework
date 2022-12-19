@@ -6,12 +6,6 @@
 #}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned  %}
-{% set testModels = false %}
-{% for property in interface.properties if not once %}
-{%   if property.type.is_model %}
-{%     set testModels = true %}
-{%   endif %}
-{% endfor %}
 #include <QtTest>
 
 QT_FORWARD_DECLARE_CLASS(QIfServiceManager);
@@ -25,7 +19,7 @@ class {{interface}}Test : public QObject
 public:
     {{interface}}Test();
 
-private Q_SLOTS:
+public Q_SLOTS:
     void init();
 
     void testInitBackend();
@@ -36,9 +30,7 @@ private Q_SLOTS:
     void testChangeFromFrontend();
     void testMethods();
     void testSignals();
-{% if testModels %}
     void testModels();
-{% endif %}
 
 private:
     QIfServiceManager *manager;
