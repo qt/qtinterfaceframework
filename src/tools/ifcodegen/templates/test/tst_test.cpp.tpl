@@ -484,6 +484,8 @@ void {{interface}}Test::testModels()
 {%      endif %}
 {%   endfor %}
 }
+{% else %}
+void {{interface}}Test::testModels() {}
 {% endif %}
 
 {{ module|end_namespace }}
