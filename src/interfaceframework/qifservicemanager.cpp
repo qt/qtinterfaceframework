@@ -564,7 +564,7 @@ QIfServiceManager *QIfServiceManager::create(QQmlEngine *, QJSEngine *)
 }
 
 /*!
-    \qmlmethod list<ServiceObject> ServiceManager::findServiceByInterface(interface, searchFlags)
+    \qmlmethod list<ServiceObject> ServiceManager::findServiceByInterface(interface, searchFlags, preferredBackends)
 
     Returns a list of backends implementing the specified \a interface.
 
@@ -577,12 +577,22 @@ QIfServiceManager *QIfServiceManager::create(QQmlEngine *, QJSEngine *)
            Include simulation backends in the search result. See also \l {QIfServiceManager::}{SimulationBackend}
     \value IncludeAll
            Include both production and simulation backends in the search result.
+
+    The \a preferredBackends argument is used to select a backend when multiple backends implement
+    the specified interface.
+    The wildcards are applied in order to the found backends. If the wildcard matches some backends
+    those backends will be loaded, otherwise the next wildcard is used.
 */
 /*!
     Returns a list of backends implementing the specified \a interface.
 
     The \a searchFlags argument can be used to control which type of backends are included in the
     search result.
+
+    The \a preferredBackends argument is used to select a backend when multiple backends implement
+    the specified interface.
+    The wildcards are applied in order to the found backends. If the wildcard matches some backends
+    those backends will be loaded, otherwise the next wildcard is used.
 */
 QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QString &interface, SearchFlags searchFlags, const QStringList &preferredBackends)
 {

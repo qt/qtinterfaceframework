@@ -348,6 +348,208 @@ QIfConfigurationPrivate::QIfConfigurationPrivate(QIfConfiguration *parent)
 {
 }
 
+
+/*!
+    \class QIfConfiguration
+    \inmodule QtInterfaceFramework
+    \since 6.5
+    \brief QIfConfiguration provides settings for QIfAbstractFeature, QIfServiceObject and
+    QIfSimulationEngine.
+
+    QIfConfiguration provides settings for \l QIfAbstractFeature, \l QIfServiceObject and
+    \l QIfSimulationEngine.
+    All settings configured with QIfConfiguration are applied to all objects with a matching
+    \c configurationId. For \l QIfSimulationEngine the identifier acts as \c configurationId.
+
+    Once a new instance of any of the supported classes is created, and its \c configurationId matches
+    with a configuration which has been created before, all settings within the configuration are
+    also applied to the new instance.
+
+    \note Reading values from QIfConfiguration does NOT read the current values of all instances
+    matching the \c configurationId. It only returns the value stored in the configuration, which can
+    be different, as it is still possible to change values directly without involving QIfConfiguration.
+    It acts as a WRITE ONLY interface towards all matching instances.
+
+    The following snippet shows how a configuration can be created:
+
+    \code
+    // Create a class based on QIfAbstractFeature and set it's configuration id to "group1"
+    auto feature1 = new AbstractFeatureBasedClass;
+    feature1.setConfigurationId("group1");
+
+    // Create another one, but with configuration id "group2"
+    auto feature2 = new AbstractFeatureBasedClass;
+    feature2.setConfigurationId("group2");
+
+    // The discoveryMode of all feature based instances in "group1" should be LoadOnlyProductionBackends
+    QIfConfiguration::setDiscoveryMode("group1", QIfAbstractFeature::LoadOnlyProductionBackends);
+
+    qDebug() << feature1.discoveryMode() << feature2.discoveryMode();
+    \endcode
+
+    The configuration is only applied to 'feature1' and NOT to 'feature2', because the latter is
+    NOT in 'group1' and 'group2' doesn't have any configured value (yet).
+
+    By adding an additional configuration the feature2 can be changed as well:
+
+    \code
+    QIfConfiguration config("group2");
+    config.setDiscoeryMode(QIfAbstractFeature::LoadOnlyProductionBackends);
+
+    qDebug() << feature1.discoveryMode() << feature2.discoveryMode();
+    \endcode
+
+    Now 'feature1' and 'feature2' have the same discoveryMode. Using an instance of QIfConfiguration
+    is an alternative way instead of using the static functions.
+
+    \note Destroying a QIfConfiguration doesn't reset the configured values.
+
+    \section1 QML integration
+
+    A configuration can be created from QML by instantiating the \l InterfaceFrameworkConfiguration
+    element and assigning a name to it. Without a name the configuration is not valid and the
+    assigned values will have no effect.
+
+    \section1 Settings file
+
+    In addition to creating configurations at runtime, it is also possible to provide the initial
+    configuration values in a configuration file.
+
+    If it exists, the following file is parsed at startup:
+
+    [QLibraryInfo::DataPath]/qtifconfig.ini
+
+    The configuration file uses the INI format and is applicable for all types which can also be
+    saved as a string. This excludes the \l serviceObject setting for example. See
+    \l{Settings Overview} for a list of all settings and how they can be set/overwritten.
+
+    Following an example, which configures group1 and group2:
+
+    \badcode
+    [group1]
+    preferredBackends=backend1,backend2
+    serviceSettings/key1=value1
+    serviceSettings/key2=value2
+    [group2]
+    discoveryMode=LoadOnlySimulationBackends
+    \endcode
+
+    For the \l serviceSettings setting, multiple values cannot be assigned in one statement. Instead
+    every key-value pair needs to be assigned separately. The key follows the \c serviceSettings keyword
+    followed by a slash as separator.
+    In a similar fashion, nested key-value pairs can be created:
+
+    \badcode
+    [group1]
+    serviceSettings/key1/nested1=value1
+    serviceSettings/key1/nested2=value2
+    \endcode
+
+    \section1 Environment Overrides
+
+    For testing scenarios it is sometimes useful to overwrite certain settings. This can be done
+    by using one of the \c OVERRIDE environment variables. Once an override has been set, the value
+    cannot be changed at runtime anymore and a warning will be shown when trying to change it.
+    See the \l{ignoreOverrideWarnings} property on how this can be turned off.
+
+    All \c OVERRIDE environment variables always have to be in the following form:
+
+    \badcode
+    OVERRIDE=<CONFIGURATIONID>=<VALUE>[;<CONFIGURATIONID>=<VALUE>]
+    \endcode
+
+    See \l{Settings Overview} for a list of all settings and how they can be set/overwritten.
+
+    \section1 Settings Overview
+
+    \table
+        \header
+            \li Setting
+            \li Affected Classes
+            \li Supports Initial Values
+            \li Override Environment Variable
+        \row
+            \li \l serviceSettings
+            \li \l QIfServiceObject
+            \li yes
+            \li -
+        \row
+            \li \l simulationFile
+            \li \l QIfSimulationEngine
+            \li yes
+            \li QTIF_SIMULATION_OVERRIDE
+        \row
+            \li \l simulationDataFile
+            \li \l QIfSimulationEngine
+            \li yes
+            \li QTIF_SIMULATION_DATA_OVERRIDE
+        \row
+            \li \l discoveryMode
+            \li \l QIfAbstractFeature \l QIfAbstractFeatureListModel
+            \li yes
+            \li QTIF_DISCOVERY_MODE_OVERRIDE
+        \row
+            \li \l preferredBackends
+            \li \l QIfAbstractFeature \l QIfAbstractFeatureListModel
+            \li yes
+            \li QTIF_PREFERRED_BACKENDS_OVERRIDE
+        \row
+            \li \l serviceObject
+            \li \l QIfAbstractFeature \l QIfAbstractFeatureListModel
+            \li no
+            \li -
+    \endtable
+*/
+
+/*!
+    \qmltype InterfaceFrameworkConfiguration
+    \instantiates QIfConfiguration
+    \inqmlmodule QtInterfaceFramework
+    \since 6.5
+
+    \brief InterfaceFrameworkConfiguration is the QML version of \l QIfConfiguration.
+
+    InterfaceFrameworkConfiguration provides settings for \l QIfAbstractFeature,
+    \l QIfServiceObject and \l QIfSimulationEngine.
+    All settings configured with InterfaceFrameworkConfiguration are applied to all objects with a
+    matching \c configurationId. For \l QIfSimulationEngine the identifier acts as \c configurationId.
+
+    Once a new instance of any of the supported classes is created, and its \c configurationId matches
+    with a configuration which has been created before, all settings within the configuration are
+    also applied to the new instance.
+
+    \note Reading values from InterfaceFrameworkConfiguration does NOT read the current values of
+    all instances matching the \c configurationId. It only returns the value stored in the
+    configuration, which can be different, as it is still possible to change values directly without
+    involving InterfaceFrameworkConfiguration.
+    It acts as a WRITE ONLY interface towards all matching instances.
+
+    The following snippet shows how a configuration can be created:
+
+    \code
+    Item {
+        AbstractFeatureBasedItem {
+            id: feature
+            configurationId: "group1"
+        }
+
+        InterfaceFrameworkConfiguration {
+            name: "group1"
+            discoveryMode: AbstractFeature.LoadOnlyProductionBackends
+        }
+
+        Component.onCompleted: {
+            console.log("DiscoveryMode:", feature.discoveryMode)
+        }
+    }
+    \endcode
+
+    See \l{QIfConfiguration} for more information how to provide initial settings and overrides.
+*/
+
+/*!
+    Constructs a QIfConfiguration instance with a \a name and a \a parent
+*/
 QIfConfiguration::QIfConfiguration(const QString &name, QObject *parent)
     : QObject(*new QIfConfigurationPrivate(this), parent)
 {
@@ -362,24 +564,92 @@ QIfConfiguration::~QIfConfiguration()
         QIfConfigurationManager::instance()->m_configurationHash.remove(d->m_name);
 }
 
+/*!
+    \qmlproperty boolean InterfaceFrameworkConfiguration::valid
+
+    Returns \c true when the configuration instance is valid.
+
+    A configuration is only valid if it was created with a name.
+*/
+/*!
+    \property QIfConfiguration::valid
+
+    Returns \c true when the configuration instance is valid.
+
+    A configuration is only valid if it was created with a name.
+*/
 bool QIfConfiguration::isValid() const
 {
     Q_D(const QIfConfiguration);
     return d->m_settingsObject != nullptr;
 }
 
+/*!
+    \qmlproperty boolean InterfaceFrameworkConfiguration::ignoreOverrideWarnings
+
+    When enabled, all override warnings will be ignored and not logged.
+
+    \sa {Environment Overrides}
+*/
+/*!
+    \property QIfConfiguration::ignoreOverrideWarnings
+
+    When enabled, all override warnings will be ignored and not logged.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::ignoreOverrideWarnings() const
 {
     Q_D(const QIfConfiguration);
     return d->m_ignoreOverrideWarnings;
 }
 
+/*!
+    \qmlproperty string InterfaceFrameworkConfiguration::name
+
+    Holds the name of the configuration. The name is used to find objects with a matching
+    configurationId in order to apply settings to them.
+
+    \note Once a name has been set, it cannot be changed afterwards.
+*/
+/*!
+    \property QIfConfiguration::name
+
+    Holds the name of the configuration. The name is used to find objects with a matching
+    configurationId in order to apply settings to them.
+
+    \note Once a name has been set, it cannot be changed afterwards.
+*/
 QString QIfConfiguration::name() const
 {
     Q_D(const QIfConfiguration);
     return d->m_name;
 }
 
+/*!
+    \qmlproperty object InterfaceFrameworkConfiguration::serviceSettings
+
+    Holds the serviceSettings of the configuration. The serviceSettings are applied to all
+    QIfServiceObject instances with a matching configurationId.
+    The serviceSettings are applied when a new matching QIfServiceObject instance is created and
+    they are also applied to all existing QIfServiceObject instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa ServiceObject::serviceSettings
+*/
+/*!
+    \property QIfConfiguration::serviceSettings
+
+    Holds the serviceSettings of the configuration. The serviceSettings are applied to all
+    QIfServiceObject instances with a matching configurationId.
+    The serviceSettings are applied when a new matching QIfServiceObject instance is created and
+    they are also applied to all existing QIfServiceObject instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfServiceObject::serviceSettings
+*/
 QVariantMap QIfConfiguration::serviceSettings() const
 {
     Q_D(const QIfConfiguration);
@@ -389,6 +659,32 @@ QVariantMap QIfConfiguration::serviceSettings() const
     return d->m_settingsObject->serviceSettings;
 }
 
+/*!
+    \qmlproperty string InterfaceFrameworkConfiguration::simulationFile
+
+    Holds the simulationFile of the configuration. The simulationFile is set as override for all
+    matching QIfSimulationEngine instances.
+
+    If the matching QIfSimulationeEngine is already running, updating the value doesn't have any
+    effect and the simulation will continue to run as it is.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfSimulationEngine::loadSimulation()
+*/
+/*!
+    \property QIfConfiguration::simulationFile
+
+    Holds the simulationFile of the configuration. The simulationFile is set as override for all
+    matching QIfSimulationEngine instances.
+
+    If the matching QIfSimulationeEngine is already running, updating the value doesn't have any
+    effect and the simulation will continue to run as it is.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfSimulationEngine::loadSimulation()
+*/
 QString QIfConfiguration::simulationFile() const
 {
     Q_D(const QIfConfiguration);
@@ -398,6 +694,32 @@ QString QIfConfiguration::simulationFile() const
     return d->m_settingsObject->simulationFile;
 }
 
+/*!
+    \qmlproperty string InterfaceFrameworkConfiguration::simulationDataFile
+
+    Holds the simulationDataFile of the configuration. The simulationDataFile is set as override
+    for all matching QIfSimulationEngine instances.
+
+    If the matching QIfSimulationeEngine is already running, updating the value doesn't have any
+    effect and the simulation will continue to run as it is.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfSimulationEngine::loadSimulationData()
+*/
+/*!
+    \property QIfConfiguration::simulationDataFile
+
+    Holds the simulationDataFile of the configuration. The simulationDataFile is set as override
+    for all matching QIfSimulationEngine instances.
+
+    If the matching QIfSimulationeEngine is already running, updating the value doesn't have any
+    effect and the simulation will continue to run as it is.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfSimulationEngine::loadSimulationData()
+*/
 QString QIfConfiguration::simulationDataFile() const
 {
     Q_D(const QIfConfiguration);
@@ -407,6 +729,30 @@ QString QIfConfiguration::simulationDataFile() const
     return d->m_settingsObject->simulationDataFile;
 }
 
+/*!
+    \qmlproperty enumeration InterfaceFrameworkConfiguration::discoveryMode
+
+    Holds the discoveryMode of the configuration. The discoveryMode is applied to all
+    AbstractFeature or AbstractFeatureListModel instances with a matching configurationId.
+    The discoveryMode is applied when a new matching instance is created and
+    they are also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa AbstractFeature::discoveryMode AbstractFeatureListModel::discoveryMode
+*/
+/*!
+    \property QIfConfiguration::discoveryMode
+
+    Holds the discoveryMode of the configuration. The discoveryMode is applied to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+    The discoveryMode is applied when a new matching instance is created and
+    they are also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfAbstractFeature::discoveryMode QIfAbstractFeatureListModel::discoveryMode
+*/
 QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode() const
 {
     Q_D(const QIfConfiguration);
@@ -416,6 +762,30 @@ QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode() const
     return d->m_settingsObject->discoveryMode;
 }
 
+/*!
+    \qmlproperty list<string> InterfaceFrameworkConfiguration::preferredBackends
+
+    Holds the preferredBackends of the configuration. The preferredBackends are applied to all
+    AbstractFeature or AbstractFeatureListModel instances with a matching configurationId.
+    The preferredBackends are applied when a new matching instance is created and
+    it is also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa AbstractFeature::preferredBackends AbstractFeatureListModel::preferredBackends
+*/
+/*!
+    \property QIfConfiguration::preferredBackends
+
+    Holds the preferredBackends of the configuration. The preferredBackends are applied to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+    The preferredBackends are applied when a new matching instance is created and
+    it is also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfAbstractFeature::preferredBackends QIfAbstractFeatureListModel::preferredBackends
+*/
 QStringList QIfConfiguration::preferredBackends() const
 {
     Q_D(const QIfConfiguration);
@@ -425,6 +795,30 @@ QStringList QIfConfiguration::preferredBackends() const
     return d->m_settingsObject->preferredBackends;
 }
 
+/*!
+    \qmlproperty ServiceObject InterfaceFrameworkConfiguration::serviceObject
+
+    Holds the serviceObject of the configuration. The serviceObject is applied to all
+    AbstractFeature or AbstractFeatureListModel instances with a matching configurationId.
+    The serviceObject is applied when a new matching instance is created and
+    it is also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa AbstractFeature::serviceObject AbstractFeatureListModel::serviceObject
+*/
+/*!
+    \property QIfConfiguration::serviceObject
+
+    Holds the serviceObject of the configuration. The serviceObject is applied to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+    The serviceObject is applied when a new matching instance is created and
+    it is also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfAbstractFeature::serviceObject QIfAbstractFeatureListModel::serviceObject
+*/
 QIfServiceObject *QIfConfiguration::serviceObject() const
 {
     Q_D(const QIfConfiguration);
@@ -445,6 +839,16 @@ void QIfConfiguration::setIgnoreOverrideWarnings(bool ignoreOverrideWarnings)
     emit ignoreOverrideWarningsChanged(ignoreOverrideWarnings);
 }
 
+/*!
+    Sets the \a name of the configuration.
+
+    The name is used to find objects with a matching
+    configurationId in order to apply all settings of this configuration to them.
+
+    Returns \c false if setting the name failed e.g. when a instance with this name already exists or
+    when the instance already has a name set. The name of an instance can't be changed once it has
+    been set. Returns \c true otherwise.
+*/
 bool QIfConfiguration::setName(const QString &name)
 {
     Q_D(QIfConfiguration);
@@ -482,6 +886,15 @@ bool QIfConfiguration::setName(const QString &name)
     return true;
 }
 
+/*!
+    Sets the \a serviceSettings of this configuration and applies it to all QIfServiceObject instances
+    with a matching configurationId.
+
+    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setServiceSettings(const QVariantMap &serviceSettings)
 {
     Q_D(QIfConfiguration);
@@ -499,6 +912,15 @@ bool QIfConfiguration::setServiceSettings(const QVariantMap &serviceSettings)
     return false;
 }
 
+/*!
+    Sets the \a simulationFile of this configuration and applies it to all QIfSimulationEngine instances
+    with a matching configurationId.
+
+    Returns \c false if setting the simulationFile failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setSimulationFile(const QString &simulationFile)
 {
     Q_D(QIfConfiguration);
@@ -516,6 +938,15 @@ bool QIfConfiguration::setSimulationFile(const QString &simulationFile)
     return false;
 }
 
+/*!
+    Sets the \a simulationDataFile of this configuration and applies it to all QIfSimulationEngine instances
+    with a matching configurationId.
+
+    Returns \c false if setting the simulationDataFile failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setSimulationDataFile(const QString &simulationDataFile)
 {
     Q_D(QIfConfiguration);
@@ -533,6 +964,15 @@ bool QIfConfiguration::setSimulationDataFile(const QString &simulationDataFile)
     return false;
 }
 
+/*!
+    Sets the \a discoveryMode of this configuration and applies it to all QIfAbstractFeature or
+    QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the discoveryMode failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
     Q_D(QIfConfiguration);
@@ -550,6 +990,15 @@ bool QIfConfiguration::setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discov
     return false;
 }
 
+/*!
+    Sets the \a preferredBackends of this configuration and applies it to all QIfAbstractFeature or
+    QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the preferredBackends failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setPreferredBackends(const QStringList &preferredBackends)
 {
     Q_D(QIfConfiguration);
@@ -567,6 +1016,15 @@ bool QIfConfiguration::setPreferredBackends(const QStringList &preferredBackends
     return false;
 }
 
+/*!
+    Sets the \a serviceObject of this configuration and applies it to all QIfAbstractFeature or
+    QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setServiceObject(QIfServiceObject *serviceObject)
 {
     Q_D(QIfConfiguration);
@@ -622,114 +1080,263 @@ QIfConfiguration::QIfConfiguration(QIfConfigurationPrivate &dd, QObject *parent)
 
 // static member
 
+/*!
+    Returns \c true if the configuration \a group exists.
+
+    A configuration is created once a single value has been set in it.
+*/
 bool QIfConfiguration::exists(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so != nullptr;
 }
 
+/*!
+    Returns the current service settings of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfServiceObject instances with a matching configurationId.
+*/
 QVariantMap QIfConfiguration::serviceSettings(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->serviceSettings : QVariantMap();
 }
 
+/*!
+    Sets the \a serviceSettings of the configuration \a group and applies it to all QIfServiceObject
+    instances with a matching configurationId.
+
+    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setServiceSettings(const QString &group, const QVariantMap &serviceSettings)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
     return QIfConfigurationManager::instance()->setServiceSettings(so, serviceSettings);
 }
 
+/*!
+    Returns \c true when service settings have been set in the configuration named \a group and
+    false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \sa {Settings file}
+*/
 bool QIfConfiguration::areServiceSettingsSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->serviceSettingsSet : false;
 }
 
+/*!
+    Returns the current simulation file of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfSimulationEngine instances with a matching configurationId.
+*/
 QString QIfConfiguration::simulationFile(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->simulationFile : QString();
 }
 
+/*!
+    Sets the \a simulationFile of the configuration \a group and applies it to all
+    QIfSimulationEngine instances with a matching configurationId.
+
+    Returns \c false if setting the simulationDataFile failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setSimulationFile(const QString &group, const QString &simulationFile)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
     return QIfConfigurationManager::instance()->setSimulationFile(nullptr, so, simulationFile);
 }
 
+/*!
+    Returns \c true when the simulation file have been set in the configuration named \a group and
+    false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \sa {Settings file}
+*/
 bool QIfConfiguration::isSimulationFileSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->simulationFileSet : false;
 }
 
+/*!
+    Returns the current simulation data file of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfSimulationEngine instances with a matching configurationId.
+*/
 QString QIfConfiguration::simulationDataFile(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->simulationDataFile : QString();
 }
 
+/*!
+    Sets the \a simulationDataFile of the configuration \a group and applies it to all
+    QIfSimulationEngine instances with a matching configurationId.
+
+    Returns \c false if setting the simulationDataFile failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setSimulationDataFile(const QString &group, const QString &simulationDataFile)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
     return QIfConfigurationManager::instance()->setSimulationDataFile(nullptr, so, simulationDataFile);
 }
 
+/*!
+    Returns \c true when the simulation data file have been set in the configuration named \a group and
+    false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \sa {Settings file}
+*/
 bool QIfConfiguration::isSimulationDataFileSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->simulationDataFileSet : false;
 }
 
+/*!
+    Returns the current discovery mode of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+*/
 QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->discoveryMode : QIfAbstractFeature::InvalidAutoDiscovery;
 }
 
+/*!
+    Sets the \a discoveryMode of the configuration \a group and applies it to all QIfAbstractFeature or
+    QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setDiscoveryMode(const QString &group, QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
     return QIfConfigurationManager::instance()->setDiscoveryMode(nullptr, so, discoveryMode);
 }
 
+/*!
+    Returns \c true when the discovery mode have been set in the configuration named \a group and
+    false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \sa {Settings file}
+*/
 bool QIfConfiguration::isDiscoveryModeSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->discoveryModeSet : false;
 }
 
+/*!
+    Returns the current preferred backends of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+*/
 QStringList QIfConfiguration::preferredBackends(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->preferredBackends : QStringList();
 }
 
+/*!
+    Sets the \a preferredBackends of the configuration \a group and applies it to all QIfAbstractFeature or
+    QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setPreferredBackends(const QString &group, const QStringList &preferredBackends)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
     return QIfConfigurationManager::instance()->setPreferredBackends(nullptr, so, preferredBackends);
 }
 
+/*!
+    Returns \c true when the preferred backends have been set in the configuration named \a group and
+    false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \sa {Settings file}
+*/
 bool QIfConfiguration::arePreferredBackendsSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->preferredBackendsSet : false;
 }
 
+/*!
+    Returns the current service object of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+*/
 QIfServiceObject *QIfConfiguration::serviceObject(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->serviceObject : nullptr;
 }
 
+/*!
+    Sets the \a serviceObject of the configuration \a group and applies it to all QIfAbstractFeature or
+    QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setServiceObject(const QString &group, QIfServiceObject *serviceObject)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
     return QIfConfigurationManager::instance()->setServiceObject(so, serviceObject);
 }
 
+/*!
+    Returns \c true when the service object have been set in the configuration named \a group and
+    false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \sa {Settings file}
+*/
 bool QIfConfiguration::isServiceObjectSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);

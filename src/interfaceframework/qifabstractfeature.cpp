@@ -159,6 +159,9 @@ void QIfAbstractFeaturePrivate::onInitializationDone()
 /*!
     \enum QIfAbstractFeature::DiscoveryMode
 
+    \value InvalidAutoDiscovery
+           An invalid value. This value is used when the enum is created from a string value
+           (e.g. when parsed from a ini file) and it failed to parse the string.
     \value NoAutoDiscovery
            No auto discovery is done and the ServiceObject needs to be set manually.
     \value AutoDiscovery
@@ -422,12 +425,36 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::discoveryResult() const
     return d->m_discoveryResult;
 }
 
+/*!
+    \qmlproperty string AbstractFeature::configurationId
+    \brief Holds the id to determine which configuration this feature belongs to.
+
+    Once the id has been set, it is possible to change certain values using the
+    \l InterfaceFrameworkConfiguration API.
+
+    \note Values set in the matching \l InterfaceFrameworkConfiguration can override the initial values
+    set during the component creation.
+
+    \sa InterfaceFrameworkConfiguration
+*/
+
+/*!
+    \property QIfAbstractFeature::configurationId
+    \brief Holds the id to determine which configuration this feature belongs to.
+
+    Once the id has been set, it is possible to change certain values using the
+    \l QIfConfiguration API.
+
+    \note Values set in the matching \l QIfConfiguration can override the initial values
+    set during the component creation.
+
+    \sa QIfConfiguration
+*/
 QString QIfAbstractFeature::configurationId() const
 {
     Q_D(const QIfAbstractFeature);
     return d->m_configurationId;
 }
-
 
 void QIfAbstractFeature::setConfigurationId(const QString &configurationId)
 {
@@ -446,6 +473,41 @@ void QIfAbstractFeature::setConfigurationId(const QString &configurationId)
     emit configurationIdChanged(configurationId);
 }
 
+/*!
+    \qmlproperty list<string> AbstractFeature::preferredBackends
+    \brief Holds a list of wildcards to load the preferred backend during auto discovery.
+
+    The auto discovery mechanism will automatically search for backends which provide a matching
+    interface for this feature implementation. See \l startAutoDiscovery() for more information.
+
+    In case multiple backends implement the same interface, the list of wildcards can be used
+    to determine the correct one to load.
+
+    The wildcards are applied in order to the found backends. If the wildcard matches some backends
+    those backends will be loaded, otherwise the next wildcard is used.
+
+    For example: Given an AbstractFeature with two backends, backend_mqtt.so and backend_qtro.so,
+    the property can be set to \c "*_mqtt*" to always select the backend_mqtt.so backend when
+    available.
+*/
+
+/*!
+    \property QIfAbstractFeature::preferredBackends
+    \brief Holds a list of wildcards to load the preferred backend during auto discovery.
+
+    The auto discovery mechanism will automatically search for backends which provide a matching
+    interface for this feature implementation. See \l startAutoDiscovery() for more information.
+
+    In case multiple backends implement the same interface, the list of wildcards can be used
+    to determine the correct one to load.
+
+    The wildcards are applied in order to the found backends. If the wildcard matches some backends
+    those backends will be loaded, otherwise the next wildcard is used.
+
+    For example: Given an AbstractFeature with two backends, backend_mqtt.so and backend_qtro.so,
+    the property can be set to \c "*_mqtt*" to always select the backend_mqtt.so backend when
+    available.
+*/
 QStringList QIfAbstractFeature::preferredBackends() const
 {
     Q_D(const QIfAbstractFeature);
