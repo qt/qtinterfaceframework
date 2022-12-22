@@ -77,4 +77,4 @@ manifestmeta.interfaceframework.names = *
 manifestmeta.interfaceframework.tags  = interfaceframework qtinterfaceframework qtif qif
 
 # Fail the documentation build if there are more warnings than the limit
-#warninglimit = 0
+warninglimit = 0
