@@ -181,7 +181,7 @@ QIfDefaultPropertyOverrider::QIfDefaultPropertyOverrider(QIfAbstractFeature *car
 
 QIfDefaultPropertyOverrider::~QIfDefaultPropertyOverrider()
 {
-    for (auto &c : qAsConst(m_carriers))
+    for (auto &c : std::as_const(m_carriers))
         setCarrierOverride(false, c);
 }
 

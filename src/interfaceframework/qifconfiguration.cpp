@@ -226,7 +226,7 @@ bool QIfConfigurationManager::setServiceSettings(QIfSettingsObject *so, const QV
     so->serviceSettings = serviceSettings;
     so->serviceSettingsSet = true;
 
-    for (auto &serviceObject : qAsConst(so->serviceObjects)) {
+    for (auto &serviceObject : std::as_const(so->serviceObjects)) {
         if (!serviceObject)
             continue;
         qCDebug(qLcIfConfig) << "Updating Service Settings of" << serviceObject << "with" << serviceSettings;
@@ -272,7 +272,7 @@ bool QIfConfigurationManager::setDiscoveryMode(QIfConfiguration *config, QIfSett
     so->discoveryMode = discoveryMode;
     so->discoveryModeSet = true;
 
-    for (auto &feature : qAsConst(so->features)) {
+    for (auto &feature : std::as_const(so->features)) {
         if (!feature)
             continue;
         qCDebug(qLcIfConfig) << "Updating discoveryMode of" << feature << "with" << discoveryMode;
@@ -292,7 +292,7 @@ bool QIfConfigurationManager::setPreferredBackends(QIfConfiguration *config, QIf
     so->preferredBackends = preferredBackends;
     so->preferredBackendsSet = true;
 
-    for (auto &feature : qAsConst(so->features)) {
+    for (auto &feature : std::as_const(so->features)) {
         if (!feature)
             continue;
         qCDebug(qLcIfConfig) << "Updating preferredBackends of" << feature << "with" << preferredBackends;
@@ -307,7 +307,7 @@ bool QIfConfigurationManager::setServiceObject(QIfSettingsObject *so, QIfService
     so->serviceObject = serviceObject;
     so->serviceObjectSet = true;
 
-    for (auto &feature : qAsConst(so->features)) {
+    for (auto &feature : std::as_const(so->features)) {
         if (!feature)
             continue;
         qCDebug(qLcIfConfig) << "Updating serviceObject of" << feature << "with" << serviceObject;

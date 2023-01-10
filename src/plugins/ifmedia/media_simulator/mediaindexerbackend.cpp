@@ -58,7 +58,7 @@ MediaIndexerBackend::MediaIndexerBackend(const QSqlDatabase &database, QObject *
     scanNext();
 
     //We want to have the indexer running also when the Indexing interface is not used.
-    for (const QString &folder : qAsConst(mediaFolderList))
+    for (const QString &folder : std::as_const(mediaFolderList))
         addMediaFolder(folder);
 }
 
@@ -195,7 +195,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
     int totalFileCount = files.size();
     qCInfo(media) << "total files: " << totalFileCount;
     int currentFileIndex = 0;
-    for (const QString &fileName : qAsConst(files)) {
+    for (const QString &fileName : std::as_const(files)) {
         qCInfo(media) << "Processing file:" << fileName;
 
         if (qApp->closingDown())

@@ -176,7 +176,7 @@ public:
             QMetaProperty mp = mo.property(mpi);
 
             QList<QIfStandardItem> resultList;
-            for (const QIfStandardItem &item : qAsConst(list)) {
+            for (const QIfStandardItem &item : std::as_const(list)) {
                 QVariant value = mp.readOnGadget(&item);
                 if (value.canConvert(filterTerm->value().metaType()))
                     value.convert(filterTerm->value().metaType());
