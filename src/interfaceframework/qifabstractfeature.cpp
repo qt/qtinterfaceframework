@@ -586,7 +586,7 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::startAutoDiscovery()
 
     //Check whether we can use the found production backends
     bool serviceObjectSet = false;
-    for (QIfServiceObject *object : qAsConst(serviceObjects)) {
+    for (QIfServiceObject *object : std::as_const(serviceObjects)) {
         qCDebug(qLcIfServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
         if (setServiceObject(object)) {
             serviceObjectSet = true;
@@ -606,7 +606,7 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::startAutoDiscovery()
             if (Q_UNLIKELY(serviceObjects.isEmpty()))
                 qWarning() << "There is no simulation backend implementing" << d->m_interface << ".";
 
-            for (QIfServiceObject* object : qAsConst(serviceObjects)) {
+            for (QIfServiceObject* object : std::as_const(serviceObjects)) {
                 qCDebug(qLcIfServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
                 if (setServiceObject(object)) {
                     serviceObjectSet = true;

@@ -50,7 +50,7 @@ public:
     {
 {% if interface.tags.config.zoned %}
         m_zones << "TestZone1" << "TestZone2";
-        for (const QString &z : qAsConst(m_zones)) {
+        for (const QString &z : std::as_const(m_zones)) {
 {%   for property in interface.properties %}
             m_zone{{property|upperfirst}}[z] = {{property|default_type_value}};
 {%   endfor %}
@@ -73,7 +73,7 @@ public:
 
 {% if interface.tags.config.zoned %}
         QStringList zones = availableZones();
-        for (const QString &zone : qAsConst(zones)) {
+        for (const QString &zone : std::as_const(zones)) {
 {%   for property in interface.properties %}
             Q_EMIT {{property}}Changed(m_zone{{property|upperfirst}}[zone], zone);
 {%   endfor %}

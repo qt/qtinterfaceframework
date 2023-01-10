@@ -169,7 +169,7 @@ void {{class}}::syncZones()
         if (self->error() == QRemoteObjectPendingCallWatcher::NoError) {
             if (!m_synced) {
                 m_zones = zoneReply.returnValue();
-                for (const QString& zone : qAsConst(m_zones)) {
+                for (const QString& zone : std::as_const(m_zones)) {
                     if (m_zoneMap.contains(zone))
                         continue;
                     auto zoneObject = new {{zone_class}}(zone, this);

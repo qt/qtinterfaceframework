@@ -132,10 +132,10 @@ QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const
     // The wildcards in the disambiguation list are checked in order
     // Once a wildcard founds matches those are returned.
     // In case of no match the next wildcard is used.
-    for (const QString &wildCard : qAsConst(preferredBackends)) {
+    for (const QString &wildCard : std::as_const(preferredBackends)) {
         qCDebug(qLcIfServiceManagement) << "Dissambiguate found backends with wildcard:" << wildCard;
         const auto regexp = QRegularExpression(QRegularExpression::wildcardToRegularExpression(wildCard));
-        for (Backend *backend : qAsConst(foundBackends)) {
+        for (Backend *backend : std::as_const(foundBackends)) {
             const auto fileInfo = QFileInfo(backend->metaData[fileNameLiteral].toString());
             QIfServiceObject *serviceObject = nullptr;
             QString identifier = fileInfo.fileName();
@@ -160,7 +160,7 @@ QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const
 
     if (list.isEmpty()) {
         qCDebug(qLcIfServiceManagement) << "Didn't find any preferred backends. Returning all found.";
-        for (Backend *backend : qAsConst(foundBackends)) {
+        for (Backend *backend : std::as_const(foundBackends)) {
             auto serviceObject = createServiceObject(backend);
             if (serviceObject)
                 list.append(serviceObject);
@@ -308,7 +308,7 @@ void QIfServiceManagerPrivate::unloadAllBackends()
     Q_Q(QIfServiceManager);
 
     q->beginResetModel();
-    for (Backend* backend : qAsConst(m_backends)) {
+    for (Backend* backend : std::as_const(m_backends)) {
         if (backend->proxyServiceObject) {
             auto configurationId = backend->proxyServiceObject->configurationId();
             QIfConfigurationManager::instance()->removeServiceObject(configurationId, backend->proxyServiceObject);
