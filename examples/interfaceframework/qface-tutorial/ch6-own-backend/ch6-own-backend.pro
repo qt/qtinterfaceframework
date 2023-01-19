@@ -3,7 +3,6 @@ SUBDIRS += \
     instrument-cluster \
     frontend \
     backend_simulator \
-    backend_qtro \
     backend_dbus \
     imports \
     demo_server \
