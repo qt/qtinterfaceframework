@@ -6,7 +6,7 @@ endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/ch1-basics")
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core InterfaceFramework Gui Qml Quick)
 
 qt_add_executable(ic_ch1
     main.cpp
