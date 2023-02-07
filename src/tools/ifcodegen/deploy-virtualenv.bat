@@ -49,7 +49,7 @@ FOR /f "usebackq" %%i in ("%SCRIPT%\deploy-virtualenv-files.txt") DO (
     )
 )
 
-FOR %%F in ("%ORIG_PREFIX%\python*.dll") DO (
+FOR %%F in ("%ORIG_PREFIX%\python*") DO (
     copy "%%F" "%VIRTUALENV%\Scripts\" /Y >NUL 2>&1
 )
 
