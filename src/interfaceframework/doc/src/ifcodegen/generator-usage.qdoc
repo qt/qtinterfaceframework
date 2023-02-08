@@ -228,6 +228,7 @@
             \li \code
                 @config: {namespace: "module"}
                 \endcode
+            \target config_namespace
             \li Main IDL file
             \li Module
             \li Defines the C++ namespace the generated code should use. Available options are:
@@ -761,6 +762,7 @@
     of the BackendInterface object to change the behavior when such a setting is set.
 
     \section2 QtRemoteObjects Backend
+    \target backend_qtro_configuration
 
     \table
     \header
