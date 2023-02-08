@@ -92,6 +92,7 @@ Every new device discovered is automatically indexed and all \c .mp3 files can b
 the FilterAndBrowseModel connected to the media player's service object to browse the library.
 
 \section1 Configuration
+\target qtifmedia_simulation_configuration
 
 This backend can be configured using \l QIfConfiguration::serviceSettings.
 By default it will write its database to the application's cache location.
