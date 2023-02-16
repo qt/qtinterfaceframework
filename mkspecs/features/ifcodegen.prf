@@ -79,20 +79,29 @@ exists($$VIRTUALENV_PATH) {
         ENV += VIRTUAL_ENV=$$system_path($$VIRTUALENV_PATH)
     }
 } else {
-    !isEmpty(QMAKE_PYTHON3_LOCATION) {
-        PYTHON = $$QMAKE_PYTHON3_LOCATION
-        !exists($$PYTHON) {
-            PYTHON = $$[QT_HOST_BINS]/python3
+    exists($$IF_GENERATOR_PATH/generate.py) {
+        !isEmpty(QMAKE_PYTHON3_LOCATION) {
+            PYTHON = $$QMAKE_PYTHON3_LOCATION
+            !exists($$PYTHON) {
+                PYTHON = $$[QT_HOST_BINS]/python3
+                equals(QMAKE_HOST.os, Windows): PYTHON = $${PYTHON}.exe
+                warning("The Python binary in QMAKE_PYTHON3_LOCATION variable doesn't exist, falling back to use QT_HOST_BINS")
+            }
+        } else {
+            PYTHON = python3
             equals(QMAKE_HOST.os, Windows): PYTHON = $${PYTHON}.exe
-            warning("The Python binary in QMAKE_PYTHON3_LOCATION variable doesn't exist, falling back to use QT_HOST_BINS")
         }
-    } else {
-        PYTHON = python3
-        equals(QMAKE_HOST.os, Windows): PYTHON = $${PYTHON}.exe
+    } else { # compiled ifcodegen
+        IF_GENERATOR = $$IF_GENERATOR_PATH
+        equals(QMAKE_HOST.os, Windows): IF_GENERATOR = $${IF_GENERATOR_PATH}.exe
+        IF_GENERATOR_BUILD_DEPENDENCY = $$IF_GENERATOR
     }
 }
 
-IF_GENERATOR = $$system_quote($$PYTHON) $$IF_GENERATOR_PATH/generate.py
+isEmpty(IF_GENERATOR) {
+    IF_GENERATOR = $$system_quote($$PYTHON) $$IF_GENERATOR_PATH/generate.py
+    IF_GENERATOR_BUILD_DEPENDENCY = $$IF_GENERATOR_PATH/generate.py
+}
 
 # Add the builtin templates as default search path
 IF_TEMPLATE_SEARCH_PATH = $$IF_TEMPLATE_PATH
@@ -150,7 +159,7 @@ ifcodegen_sources.target = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 ifcodegen_sources.commands += $(DEL_FILE) $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen)) &&
 ifcodegen_sources.commands += $$SLEEP && $$ENV $$system_path($$IF_GENERATOR) $$IF_GENERATOR_OPTIONS $$system_quote($$system_path($$IFCODEGEN_ABS_PWD/$${IFCODEGEN_FILE})) $$system_quote($$system_path($$IFCODEGEN_OUTPUT_DIR)) &&
 ifcodegen_sources.commands += $$TOUCH $$system_quote($$system_path($$OUT_PWD/.stamp-ifcodegen))
-ifcodegen_sources.depends = $$IF_GENERATOR_PATH/generate.py
+ifcodegen_sources.depends = $$IF_GENERATOR_BUILD_DEPENDENCY
 ifcodegen_sources.depends += $$IFCODEGEN_ABS_PWD/$${IFCODEGEN_FILE}
 ifcodegen_sources.depends += $$files($$IF_TEMPLATE_PATH/common/*)
 
@@ -186,7 +195,7 @@ exists($$IFCODEGEN_YAML) {
     IFCODEGEN_HEADERS_OUTPUT_TARGET = $${IFCODEGEN_HEADERS_OUTPUT_DIR}/$$lower($${IFCODEGEN_MODULE_NAME})module.h
     ifcodegen_headers.target = $$relative_path($$IFCODEGEN_HEADERS_OUTPUT_TARGET, $$OUT_PWD)
     ifcodegen_headers.commands = $${QMAKE_COPY_FILE} $${IFCODEGEN_OUTPUT_DIR}/*.h $${IFCODEGEN_HEADERS_OUTPUT_DIR}
-    ifcodegen_headers.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD) $$IF_GENERATOR_PATH/generate.py
+    ifcodegen_headers.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD) $$IF_GENERATOR_BUILD_DEPENDENCY
 }
 
 # Reevaluate the Makefile after the generation has finished

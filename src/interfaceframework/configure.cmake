@@ -9,8 +9,6 @@ endif()
 set(INPUT_qface "undefined" CACHE STRING "")
 set_property(CACHE INPUT_qface PROPERTY STRINGS undefined no qt system)
 
-
-
 #### Libraries
 
 qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
@@ -52,6 +50,13 @@ qt_feature("ifcodegen" PUBLIC
     LABEL "Interface Framework Generator"
     CONDITION QT_FEATURE_interfaceframework AND (QT_FEATURE_python3 AND ( ( QT_FEATURE_python3_virtualenv AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/qface/setup.py" ) OR ( QT_FEATURE_system_qface ) )) OR QT_FEATURE_host_ifcodegen
 )
+qt_feature("compiled-ifcodegen" PUBLIC
+    LABEL "Compiled Interface Framework Generator"
+    CONDITION QT_FEATURE_ifcodegen
+    AUTODETECT OFF
+    ENABLE INPUT_compiled_ifcodegen STREQUAL 'yes'
+    DISABLE INPUT_compiled_ifcodegen STREQUAL 'no'
+)
 qt_feature("host-tools-only" PRIVATE
     LABEL "Only build the host tools"
     AUTODETECT OFF
@@ -74,6 +79,8 @@ qt_configure_add_summary_section(NAME "Interface Framework Generator")
 qt_configure_add_summary_entry(TYPE "message" ARGS "Generator" MESSAGE "yes" CONDITION QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen)
 qt_configure_add_summary_entry(TYPE "message" ARGS "Generator" MESSAGE "host" CONDITION QT_FEATURE_host_ifcodegen)
 qt_configure_add_summary_entry(TYPE "message" ARGS "Generator" MESSAGE "no" CONDITION NOT QT_FEATURE_ifcodegen)
+qt_configure_add_summary_entry(TYPE "message" ARGS "Compiled Generator" MESSAGE "yes" CONDITION QT_FEATURE_compiled_ifcodegen)
+qt_configure_add_summary_entry(TYPE "message" ARGS "Compiled Generator" MESSAGE "no" CONDITION NOT QT_FEATURE_compiled_ifcodegen)
 
 # We don't use the detected python3 and it's libraries when cross-compiling
 # Don't display them to not cause any confusion

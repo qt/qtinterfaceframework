@@ -38,6 +38,13 @@ instructions:
       condition: property
       property: features
       contains_value: UseConfigure
+  - type: AppendToEnvironmentVariable
+    variableName: NON_QTBASE_CONFIGURE_ARGS
+    variableValue: " -compiled-ifcodegen"
+    enable_if:
+      condition: property
+      property: features
+      contains_value: Packaging
   - type: Group
     instructions:
       - !include "{{qt/qtbase}}/coin_module_build_template_v2.yaml"
