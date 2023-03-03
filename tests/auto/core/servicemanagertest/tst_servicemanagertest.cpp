@@ -135,6 +135,7 @@ void ServiceManagerTest::ignoreDynamicPluginWarnings()
 
 void ServiceManagerTest::initTestCase()
 {
+    QStringList defaultLibraryPath = QCoreApplication::libraryPaths();
     // Make sure the dynamic plugins can't be found in the beginning
     QCoreApplication::setLibraryPaths(QStringList());
     ignoreStaticPluginWarnings();
@@ -151,8 +152,13 @@ void ServiceManagerTest::initTestCase()
     services = manager->findServiceByInterface("simple_plugin_static");
     QCOMPARE(services.count(), 0);
 
+#ifdef Q_OS_ANDROID
+    // On android we need to keep the default path as libraries can only be loaded from there
+    QCoreApplication::setLibraryPaths(defaultLibraryPath);
+#else
     // Change the library path to the current directory to be able to test loading dynamic plugins
     QCoreApplication::setLibraryPaths({QDir::currentPath()});
+#endif
     ignoreDynamicPluginWarnings();
 
     // This needs to trigger a search for new plugins in the library path, as it is supposed to
@@ -344,7 +350,7 @@ void ServiceManagerTest::pluginLoaderTest()
     QCOMPARE(services.count(), 1);
 
     QVERIFY(manager->hasInterface("wrong_plugin"));
-    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("ServiceManager::serviceObjects - failed to cast to interface from '.*wrong_plugin.*'"));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("ServiceManager::serviceObjects - failed to cast to interface from '.*wrong.*'"));
     QList<QIfServiceObject *> wServices = manager->findServiceByInterface("wrong_plugin");
     QCOMPARE(wServices.count(), 0);
 
@@ -352,9 +358,6 @@ void ServiceManagerTest::pluginLoaderTest()
     manager->unloadAllBackends();
     QCOMPARE(manager->rowCount(), 0);
 }
-
-Q_IMPORT_PLUGIN(SimpleStaticPlugin)
-Q_IMPORT_PLUGIN(WrongMetadataStaticPlugin)
 
 QTEST_MAIN(ServiceManagerTest)
 

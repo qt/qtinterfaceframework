@@ -47,10 +47,11 @@
 {% for inc in struct|struct_includes %}
 {{inc}}
 {% endfor %}
-#include <QObject>
-#include <QDataStream>
-#include <QDebug>
-#include <QIfStandardItem>
+#include <QtCore/QObject>
+#include <QtCore/QDataStream>
+#include <QtCore/QDebug>
+#include <QtQml/QQmlEngine>
+#include <QtInterfaceFramework/QIfStandardItem>
 
 QT_BEGIN_NAMESPACE
 

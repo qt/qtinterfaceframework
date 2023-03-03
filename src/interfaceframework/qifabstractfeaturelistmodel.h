@@ -42,7 +42,7 @@
 #ifndef QIFABSTRACTFEATURELISTMODEL_H
 #define QIFABSTRACTFEATURELISTMODEL_H
 
-#include <QAbstractListModel>
+#include <QtCore/QAbstractListModel>
 #include <QtInterfaceFramework/QIfServiceObject>
 #include <QtInterfaceFramework/QIfAbstractFeature>
 

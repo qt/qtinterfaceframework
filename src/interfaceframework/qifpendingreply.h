@@ -42,12 +42,12 @@
 #ifndef QIFPENDINGREPLY_H
 #define QIFPENDINGREPLY_H
 
-#include <QJSValue>
-#include <QObject>
-#include <QSharedPointer>
-#include <QVariant>
-#include <QDebug>
-#include <QMetaEnum>
+#include <QtQml/QJSValue>
+#include <QtCore/QObject>
+#include <QtCore/QSharedPointer>
+#include <QtCore/QVariant>
+#include <QtCore/QDebug>
+#include <QtCore/QMetaEnum>
 
 #include <QtInterfaceFramework/qtifglobal.h>
 

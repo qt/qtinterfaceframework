@@ -42,11 +42,11 @@
 #ifndef QIFSEARCHMODELINTERFACE_H
 #define QIFSEARCHMODELINTERFACE_H
 
-#include <QMetaObject>
-#include <QMetaProperty>
-#include <QObject>
-#include <QSet>
-#include <QUuid>
+#include <QtCore/QMetaObject>
+#include <QtCore/QMetaProperty>
+#include <QtCore/QObject>
+#include <QtCore/QSet>
+#include <QtCore/QUuid>
 #include <QtInterfaceFramework/QIfAbstractQueryTerm>
 #include <QtInterfaceFramework/QtInterfaceFrameworkModule>
 #include <QtInterfaceFramework/QIfPagingModelInterface>

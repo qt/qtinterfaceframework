@@ -24,6 +24,7 @@
     "qtmultimedia" => ""
 );
 
+@ignore_headers = ( "moc_predefs.h" );
 %inject_headers = (
     "$basedir/src/helper/remoteobjects" => [ "rep_qifpagingmodel_source.h", "rep_qifpagingmodel_replica.h" ]
 )

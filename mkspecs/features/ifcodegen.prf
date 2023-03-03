@@ -44,8 +44,7 @@ IF_TEMPLATE_PATH = $$[QT_INSTALL_DATA]/ifcodegen-templates
 
 # Try to use the internal virtualenv when building interfaceframework
 # Because of the two stage build of COIN, it might not exist, but the installed version should still be there
-QT_FOR_CONFIG *= interfaceframework-private
-!isEmpty(QTIF_BUILD_ROOT):!qtConfig(system-ifcodegen):exists($$INTERNAL_VIRTUALENV_PATH) {
+!isEmpty(QTIF_BUILD_ROOT):exists($$INTERNAL_VIRTUALENV_PATH) {
     VIRTUALENV_PATH = $$INTERNAL_VIRTUALENV_PATH
     IF_GENERATOR_PATH = $$QTIF_ROOT/src/tools/ifcodegen
     IF_TEMPLATE_PATH = $$IF_GENERATOR_PATH/templates
@@ -53,25 +52,44 @@ QT_FOR_CONFIG *= interfaceframework-private
     else: ENV += IFGENERATOR_CONFIG="$$system_path($$QTIF_BUILD_ROOT/src/tools/ifcodegen/.config)"
 }
 
-qtConfig(system-qface) {
-    isEmpty(QMAKE_PYTHON3_LOCATION): error("Couldn't find the QMAKE_PYTHON3_LOCATION variable, Please reconfigure interfaceframework")
-    PYTHON = $$QMAKE_PYTHON3_LOCATION
-    !exists($$PYTHON) {
-        PYTHON = $$[QT_HOST_BINS]/python3
-        equals(QMAKE_HOST.os, Windows): PYTHON = $${PYTHON}.exe
-        warning("The Python binary in QMAKE_PYTHON3_LOCATION variable doesn't exist, falling back to use QT_HOST_BINS")
-    }
-} else {
+# Don't rely on the feature system as those are for the target Qt, but we need to know
+# the installed components in the host Qt.
+# Because this prf is installed, the ifcodegen itself should be installed as well and
+# we just need to know whether a virtualenv needs to be used or system-python
+exists($$VIRTUALENV_PATH) {
     equals(QMAKE_HOST.os, Windows) {
         PYTHON = $$VIRTUALENV_PATH/Scripts/python.exe
+        _LIB_FOLDER = $$files($$VIRTUALENV_PATH/lib/python*)
+        SITE_PACKAGES = $${_LIB_FOLDER}/site-packages
+
         # No space between the path and && otherwise python3 adds the space to the path
+        ENV += set PYTHONHOME=$$system_path($$VIRTUALENV_PATH)&&
+        ENV += set PYTHONPATH=$$system_path($$SITE_PACKAGES)&&
         ENV += set VIRTUAL_ENV=%PYTHONHOME%&&
     } else {
         PYTHON = $$VIRTUALENV_PATH/bin/python
+        _LIB_FOLDER = $$files($$VIRTUALENV_PATH/lib/python*)
+        SITE_PACKAGES = $${_LIB_FOLDER}/site-packages
+
         ENV += LD_LIBRARY_PATH="$$system_path($$VIRTUALENV_PATH/bin)"
+        ENV += PYTHONHOME=$$system_path($$VIRTUALENV_PATH)
+        ENV += PYTHONPATH=$$system_path($$SITE_PACKAGES)
         ENV += VIRTUAL_ENV=$$system_path($$VIRTUALENV_PATH)
     }
+} else {
+    !isEmpty(QMAKE_PYTHON3_LOCATION) {
+        PYTHON = $$QMAKE_PYTHON3_LOCATION
+        !exists($$PYTHON) {
+            PYTHON = $$[QT_HOST_BINS]/python3
+            equals(QMAKE_HOST.os, Windows): PYTHON = $${PYTHON}.exe
+            warning("The Python binary in QMAKE_PYTHON3_LOCATION variable doesn't exist, falling back to use QT_HOST_BINS")
+        }
+    } else {
+        PYTHON = python3
+        equals(QMAKE_HOST.os, Windows): PYTHON = $${PYTHON}.exe
+    }
 }
+
 IF_GENERATOR = $$system_quote($$PYTHON) $$IF_GENERATOR_PATH/generate.py
 
 # Add the builtin templates as default search path
@@ -182,6 +200,7 @@ Makefile.depends = $$relative_path(.stamp-ifcodegen, $$OUT_PWD)
 # This file is created during the qmake run and updated once the virtualenv is ready
 # and will then cause a rerun of qmake
 # When using qface from the system, we don't need to wait for the virtualenv to be setup
+QT_FOR_CONFIG *= interfaceframework-private
 !qtConfig(system-qface):!isEmpty(QTIF_BUILD_ROOT):!exists($$VIRTUALENV_PATH): {
     Makefile.depends = $$shadowed($$IF_GENERATOR_PATH)/forceRebuild
 } else {
