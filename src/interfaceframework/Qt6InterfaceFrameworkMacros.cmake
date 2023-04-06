@@ -121,7 +121,7 @@ function(internal_ifcodegen_import)
     endif()
     include(${OUTPUT_DIR}/${IFCODEGEN_BASE_NAME}.cmake)
 
-    set(HEADERS ${${ARG_PREFIX}_SOURCES})
+    set(HEADERS ${${VAR_PREFIX}_SOURCES})
     list(FILTER HEADERS INCLUDE REGEX ".+\\.h$")
     if(CMAKE_VERSION GREATER_EQUAL 3.20)
         cmake_policy(PUSH)
