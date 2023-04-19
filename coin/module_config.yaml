@@ -1,9 +1,14 @@
 version: 2
 tags: ["documentation"]
 accept_configuration:
-  condition: property
-  property: features
-  not_contains_value: Disable
+  condition: and
+  conditions:
+    - condition: property
+      property: host.arch
+      not_equals_value: AARCH64
+    - condition: property
+      property: features
+      not_contains_value: Disable
 
 instructions:
   Build:
