@@ -330,13 +330,16 @@
                 \note The icon needs to be copied to the correct folder by a custom qmake rule.
         \row
             \li \code
-                configurationId: "vehiclefunctions"
+                @config: { configurationId: "vehiclefunctions"}
                 \endcode
             \li Main IDL file
-            \li Module
-            \li Defines the configurationId of the generated plugin, which can be used with
-                \l QIfConfiguration to provide settings to the backend.
-                Can be overwritten by a backend specific \c configurationId annotation.
+            \li Module, Interface
+            \li Defines the configurationId of this interface. The configurationId can be used to
+                specify a configuration for the interface from a central location using
+                \l QIfConfiguration. When defined for a module, it sets the configurationId for all
+                interfaces inside that module, but it can be overridden per interface by defining it
+                there as well.
+                Defaults to \c module.name
     \endtable
 
     Annotations that are not logically part of the interface description, but rather the ones used
@@ -372,6 +375,7 @@
             \li Module
             \li Defines the configurationId of the generated plugin, which can be used with
                 \l QIfConfiguration to provide settings to the backend.
+                Defaults to \c module.name
         \row
             \li
             \target config_simulator_simulationFile
@@ -496,6 +500,7 @@
             \li Module
             \li Defines the configurationId of the generated plugin, which can be used with
                 \l QIfConfiguration to provide settings to the backend.
+                Defaults to \c module.name
     \endtable
 
 
@@ -772,7 +777,7 @@
         \li connectionUrl
         \li The url the interface tries to connect to using Qt Remote Objects. Defaults to
             \c {local + {{module.module_name|lower}}}.
-            Changing this value at runtime will reconnect the backed to the new URL.
+            Changing this value at runtime will reconnect the backend to the new URL.
     \row
         \li connectionTimeout
         \li Defines when a timeout warning should be printed (in milliseconds).
@@ -780,17 +785,22 @@
     \endtable
 
     In addition to those global settings, the values can also be provided per backend interface and
-    this allows the backend to connect to multiple remote objects instances. Interface specific
-    settings need to be prefixed with the interface name. The following example uses a global \c
+    this allows the backend to connect to multiple remote object instances. Interface specific
+    settings need to be prefixed with the interface name. The following example creates a
+    Configuration, which is applied to all Items that are part of the \c cluster group.
+    The service settings applied to the currently connected backend use a global \c
     connectionTimeout and a specific \c connectionUrl for the InstrumentCluster interface, while
     all other interfaces use the default
     \c connectionUrl:
 
     \badcode
-    {
-        connectionTimeout: 1000,
-        InstrumentCluster: {
-            connectionUrl: "tcp://127.0.0.1:1234"
+    InterfaceFrameworkConfiguration {
+        name: "cluster"
+        serviceSettings: {
+            "connectionTimeout": 1000,
+            "InstrumentCluster": {
+                "connectionUrl": "tcp://127.0.0.1:1234"
+            }
         }
     }
     \endcode
