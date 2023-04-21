@@ -544,6 +544,21 @@ QIfConfigurationPrivate::QIfConfigurationPrivate(QIfConfiguration *parent)
     }
     \endcode
 
+    It is also possible to provide settings to the current backend of an interface using the
+    \c serviceSettings property. In the following example, the \c connectionUrl of a QtRO backend
+    is set for all backends inside the \c cluster group.
+
+    \code
+    Item {
+        InterfaceFrameworkConfiguration {
+            name: "cluster"
+            serviceSettings: {
+                connectionUrl: "tcp://127.0.0.1:1234"
+            }
+        }
+    }
+    \endcode
+
     See \l{QIfConfiguration} for more information how to provide initial settings and overrides.
 */
 
