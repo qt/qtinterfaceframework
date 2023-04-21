@@ -88,6 +88,9 @@ bool MediaDiscoveryBackend::connectToNode()
 
             qCInfo(qLcROQIfMediaDiscovery) << "Using SERVER_CONF_PATH is deprecated and will be removed"
                                             "in future Qt versions.";
+            qCInfo(qLcROQIfMediaDiscovery) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 
@@ -103,6 +106,9 @@ bool MediaDiscoveryBackend::connectToNode()
 
             qCInfo(qLcROQIfMediaDiscovery) << "Using ./server.conf. is deprecated and will be removed"
                                             "in future Qt versions.";
+            qCInfo(qLcROQIfMediaDiscovery) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 

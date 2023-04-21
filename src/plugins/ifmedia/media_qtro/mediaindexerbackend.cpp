@@ -70,6 +70,9 @@ bool MediaIndexerBackend::connectToNode()
 
             qCInfo(qLcROQIfMediaIndexer) << "Using SERVER_CONF_PATH is deprecated and will be removed"
                                             "in future Qt versions.";
+            qCInfo(qLcROQIfMediaIndexer) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 
@@ -85,6 +88,9 @@ bool MediaIndexerBackend::connectToNode()
 
             qCInfo(qLcROQIfMediaIndexer) << "Using ./server.conf. is deprecated and will be removed"
                                             "in future Qt versions.";
+            qCInfo(qLcROQIfMediaIndexer) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 

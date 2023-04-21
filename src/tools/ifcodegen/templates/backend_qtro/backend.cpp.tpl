@@ -271,6 +271,9 @@ bool {{class}}::connectToNode()
 
             qCInfo(qLcRO{{interface}}) << "Using SERVER_CONF_PATH is deprecated and will be removed"
                                           "in future Qt versions.";
+            qCInfo(qLcRO{{interface}}) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 
@@ -285,7 +288,10 @@ bool {{class}}::connectToNode()
                                        << "Overriding service setting: '{{interface}}.connectionUrl'";
 
             qCInfo(qLcRO{{interface}}) << "Using ./server.conf. is deprecated and will be removed"
-                                            "in future Qt versions.";
+                                          "in future Qt versions.";
+            qCInfo(qLcRO{{interface}}) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 

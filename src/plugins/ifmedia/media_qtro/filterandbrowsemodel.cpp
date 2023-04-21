@@ -191,6 +191,9 @@ bool FilterAndBrowseModel::connectToNode()
 
             qCInfo(qLcROQIfFilterAndBrowseModel) << "Using SERVER_CONF_PATH is deprecated and will be removed"
                                             "in future Qt versions.";
+            qCInfo(qLcROQIfFilterAndBrowseModel) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 
@@ -206,6 +209,9 @@ bool FilterAndBrowseModel::connectToNode()
 
             qCInfo(qLcROQIfFilterAndBrowseModel) << "Using ./server.conf. is deprecated and will be removed"
                                             "in future Qt versions.";
+            qCInfo(qLcROQIfFilterAndBrowseModel) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 

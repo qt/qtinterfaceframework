@@ -145,6 +145,9 @@ bool MediaPlayerBackend::connectToNode()
 
             qCInfo(qLcROQIfMediaPlayer) << "Using SERVER_CONF_PATH is deprecated and will be removed"
                                             "in future Qt versions.";
+            qCInfo(qLcROQIfMediaPlayer) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 
@@ -160,6 +163,9 @@ bool MediaPlayerBackend::connectToNode()
 
             qCInfo(qLcROQIfMediaPlayer) << "Using ./server.conf. is deprecated and will be removed"
                                            "in future Qt versions.";
+            qCInfo(qLcROQIfMediaPlayer) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 
