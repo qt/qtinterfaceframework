@@ -73,14 +73,6 @@ if(QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen AND QT_FEATURE_compile
                        COMMENT "Installing qface development version into ${VIRTUALENV_NAME}"
                        )
 
-    # This is a workaround until the provisioning script is fixed and provides the dependencywalker
-    # also on this location
-    if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
-        set(DEPENDENCY_WALKDER "C:/Utils/dependencywalker/*")
-        file(GLOB FILES ${DEPENDENCY_WALKDER})
-        file(COPY ${FILES} DESTINATION "C:/Users/qt/AppData/Local/Nuitka/Nuitka/Cache/downloads/depends/x86_64")
-    endif()
-
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
                               ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
                        COMMAND ${VIRTUALENV_ACTIVATE_COMMAND}
