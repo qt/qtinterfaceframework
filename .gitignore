@@ -1,4 +1,5 @@
 *Makefile
+*.txt.user
 *.pro.user
 *.moc
 *_wrapper.sh

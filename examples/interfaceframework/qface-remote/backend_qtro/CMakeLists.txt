@@ -11,7 +11,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-remote/i
 find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
 
 #! [2]
-qt_add_plugin(remote_backend_qtro)
+qt_add_plugin(remote_backend_qtro PLUGIN_TYPE interfaceframework)
 #! [2]
 #! [0]
 set_target_properties(remote_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)

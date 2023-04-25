@@ -8,7 +8,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-addressb
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
 
-qt_add_plugin(addressbook_backend_simulator)
+qt_add_plugin(addressbook_backend_simulator PLUGIN_TYPE interfaceframework)
 set_target_properties(addressbook_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:

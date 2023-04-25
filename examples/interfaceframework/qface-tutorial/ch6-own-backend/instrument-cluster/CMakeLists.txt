@@ -12,12 +12,14 @@ qt_add_executable(ic_chapter6
     main.cpp
 )
 
-set_target_properties(ic_chapter6 PROPERTIES OUTPUT_NAME "chapter6-own-backend")
 set_target_properties(ic_chapter6 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 set_target_properties(ic_chapter6 PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
+    QT_QML_IMPORT_PATH "${CMAKE_CURRENT_BINARY_DIR}/../imports"
 )
+set_property(TARGET ic_chapter6 APPEND PROPERTY QT_ANDROID_EXTRA_PLUGINS
+    "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework")
 
 target_link_libraries(ic_chapter6 PUBLIC
     Qt::Core

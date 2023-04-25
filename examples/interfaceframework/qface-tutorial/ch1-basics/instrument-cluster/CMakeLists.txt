@@ -12,7 +12,6 @@ qt_add_executable(ic_ch1
     main.cpp
 )
 
-set_target_properties(ic_ch1 PROPERTIES OUTPUT_NAME "ch1-basics")
 set_target_properties(ic_ch1 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 set_target_properties(ic_ch1 PROPERTIES
     WIN32_EXECUTABLE TRUE

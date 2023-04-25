@@ -10,7 +10,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial
 
 find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui InterfaceFramework)
 
-qt_add_plugin(ic_chapter6_dbus)
+qt_add_plugin(ic_chapter6_dbus PLUGIN_TYPE interfaceframework)
 set_target_properties(ic_chapter6_dbus PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 set_source_files_properties(../demo_server/instrumentcluster.xml PROPERTIES INCLUDE dbus_conversion.h)

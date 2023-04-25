@@ -9,7 +9,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-climate/
 find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
 
 #! [2]
-qt_add_plugin(climate_backend_simulator)
+qt_add_plugin(climate_backend_simulator PLUGIN_TYPE interfaceframework)
 #! [2]
 #! [0]
 set_target_properties(climate_backend_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)

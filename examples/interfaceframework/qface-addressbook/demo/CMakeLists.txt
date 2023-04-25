@@ -17,6 +17,8 @@ set_target_properties(qface-addressbook PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
 )
+set_property(TARGET qface-addressbook APPEND PROPERTY QT_ANDROID_EXTRA_PLUGINS
+    "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework")
 
 target_compile_definitions(qface-addressbook PUBLIC
     QT_DEPRECATED_WARNINGS
