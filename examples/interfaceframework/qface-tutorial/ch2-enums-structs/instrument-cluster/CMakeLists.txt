@@ -12,7 +12,6 @@ qt_add_executable(ic_ch2
     main.cpp
 )
 
-set_target_properties(ic_ch2 PROPERTIES OUTPUT_NAME "ch2-enums-structs")
 set_target_properties(ic_ch2 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 set_target_properties(ic_ch2 PROPERTIES
     WIN32_EXECUTABLE TRUE

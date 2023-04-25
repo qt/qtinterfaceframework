@@ -10,7 +10,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
 
-qt_add_plugin(ic_chapter5_qtro)
+qt_add_plugin(ic_chapter5_qtro PLUGIN_TYPE interfaceframework)
 set_target_properties(ic_chapter5_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:

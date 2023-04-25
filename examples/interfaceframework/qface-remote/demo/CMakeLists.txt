@@ -20,6 +20,8 @@ set_target_properties(qface-remote PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE FALSE
 )
+set_property(TARGET qface-remote APPEND PROPERTY QT_ANDROID_EXTRA_PLUGINS
+    "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework")
 
 target_compile_definitions(qface-remote PUBLIC
     QT_DEPRECATED_WARNINGS
