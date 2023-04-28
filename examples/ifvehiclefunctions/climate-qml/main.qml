@@ -12,8 +12,8 @@ import QtInterfaceFramework.VehicleFunctions
 
 ApplicationWindow {
     title: "Climate Control"
-    width: 384
-    height: 324
+    width: Math.min(allControls.width + 20, Screen.desktopAvailableWidth)
+    height: Math.min(allControls.height + 20, Screen.desktopAvailableHeight)
     visible: true
 
     //![1]
@@ -23,216 +23,220 @@ ApplicationWindow {
     }
     //![1]
 
-    ColumnLayout {
+    ScrollView {
         anchors.fill: parent
         anchors.margins: 10
+        ColumnLayout {
+            id: allControls
 
-        //![2]
-        GroupBox {
-            title: "Air Flow Direction"
+            //![2]
+            GroupBox {
+                title: "Air Flow Direction"
+
+                ColumnLayout {
+                    CheckBox {
+                        text: "Windshield"
+                        checked: climateControl.airflowDirections & ClimateControl.Windshield
+                        onClicked: {
+                            if (checked)
+                                climateControl.airflowDirections |= ClimateControl.Windshield
+                            else
+                                climateControl.airflowDirections &= ~ClimateControl.Windshield
+                        }
+                    }
+
+                    CheckBox {
+                        text: "Dashboard"
+                        checked: climateControl.airflowDirections & ClimateControl.Dashboard
+                        onClicked: {
+                            if (checked)
+                                climateControl.airflowDirections |= ClimateControl.Dashboard
+                            else
+                                climateControl.airflowDirections &= ~ClimateControl.Dashboard
+                        }
+                    }
+
+                    CheckBox {
+                        text: "Floor"
+                        checked: climateControl.airflowDirections & ClimateControl.Floor
+                        onClicked: {
+                            if (checked)
+                                climateControl.airflowDirections |= ClimateControl.Floor
+                            else
+                                climateControl.airflowDirections &= ~ClimateControl.Floor
+                        }
+                    }
+                }
+            }
+
+            CheckBox {
+                text: "Air Condition"
+                checked: climateControl.airConditioningEnabled
+                onClicked: {
+                        climateControl.airConditioningEnabled = checked
+                }
+            }
+
+            CheckBox {
+                text: "Heater"
+                checked: climateControl.heaterEnabled
+                onClicked: {
+                        climateControl.heaterEnabled = checked
+                }
+            }
+
+            CheckBox {
+                text: "Air Recirculation"
+                checked: climateControl.recirculationMode === ClimateControl.RecirculationOn
+                onClicked: {
+                    if (checked)
+                        climateControl.recirculationMode = ClimateControl.RecirculationOn
+                    else
+                        climateControl.recirculationMode = ClimateControl.RecirculationOff
+                }
+            }
 
             ColumnLayout {
-                anchors.fill: parent
-                CheckBox {
-                    text: "Windshield"
-                    checked: climateControl.airflowDirections & ClimateControl.Windshield
-                    onClicked: {
-                        if (checked)
-                            climateControl.airflowDirections |= ClimateControl.Windshield
-                        else
-                            climateControl.airflowDirections &= ~ClimateControl.Windshield
+                RowLayout {
+
+                    Label {
+                        text: "Fan Speed"
                     }
-                }
 
-                CheckBox {
-                    text: "Dashboard"
-                    checked: climateControl.airflowDirections & ClimateControl.Dashboard
-                    onClicked: {
-                        if (checked)
-                            climateControl.airflowDirections |= ClimateControl.Dashboard
-                        else
-                            climateControl.airflowDirections &= ~ClimateControl.Dashboard
-                    }
-                }
-
-                CheckBox {
-                    text: "Floor"
-                    checked: climateControl.airflowDirections & ClimateControl.Floor
-                    onClicked: {
-                        if (checked)
-                            climateControl.airflowDirections |= ClimateControl.Floor
-                        else
-                            climateControl.airflowDirections &= ~ClimateControl.Floor
-                    }
-                }
-            }
-        }
-
-        CheckBox {
-            text: "Air Condition"
-            checked: climateControl.airConditioningEnabled
-            onClicked: {
-                    climateControl.airConditioningEnabled = checked
-            }
-        }
-
-        CheckBox {
-            text: "Heater"
-            checked: climateControl.heaterEnabled
-            onClicked: {
-                    climateControl.heaterEnabled = checked
-            }
-        }
-
-        CheckBox {
-            text: "Air Recirculation"
-            checked: climateControl.recirculationMode === ClimateControl.RecirculationOn
-            onClicked: {
-                if (checked)
-                    climateControl.recirculationMode = ClimateControl.RecirculationOn
-                else
-                    climateControl.recirculationMode = ClimateControl.RecirculationOff
-            }
-        }
-
-        ColumnLayout {
-            RowLayout {
-
-                Label {
-                    text: "Fan Speed"
-                }
-
-                SpinBox {
-                    value: climateControl.fanSpeedLevel
-                    onValueChanged: {
-                        climateControl.fanSpeedLevel = value
-                    }
-                }
-            }
-
-
-            RowLayout {
-
-                Label {
-                    text: "Steering Wheel Heater"
-                }
-
-                SpinBox {
-                    value: climateControl.steeringWheelHeater
-                    onValueChanged: {
-                        climateControl.steeringWheelHeater = value
-                    }
-                }
-            }
-        }
-        //![2]
-        Row {
-            //![3]
-            GroupBox {
-                title: "Front Left Zone"
-
-                ColumnLayout {
-                    RowLayout {
-
-                        Label {
-                            text: "Temperature"
+                    SpinBox {
+                        value: climateControl.fanSpeedLevel
+                        onValueModified: {
+                            climateControl.fanSpeedLevel = value
                         }
+                    }
+                }
 
-                        SpinBox {
-                            value: climateControl.zoneAt.FrontLeft.targetTemperature
-                            onValueChanged: {
-                                climateControl.zoneAt.FrontLeft.targetTemperature = value
+
+                RowLayout {
+
+                    Label {
+                        text: "Steering Wheel Heater"
+                    }
+
+                    SpinBox {
+                        value: climateControl.steeringWheelHeater
+                        onValueModified: {
+                            climateControl.steeringWheelHeater = value
+                        }
+                    }
+                }
+            }
+            //![2]
+            Grid {
+                columns: zoneBox.width * 3 <= Screen.desktopAvailableWidth ? 3 : 1
+                //![3]
+                GroupBox {
+                    id: zoneBox
+                    title: "Front Left Zone"
+
+                    ColumnLayout {
+                        RowLayout {
+
+                            Label {
+                                text: "Temperature"
+                            }
+
+                            SpinBox {
+                                value: climateControl.zoneAt.FrontLeft.targetTemperature
+                                onValueModified: {
+                                    climateControl.zoneAt.FrontLeft.targetTemperature = value
+                                }
                             }
                         }
-                    }
 
 
-                    RowLayout {
+                        RowLayout {
 
-                        Label {
-                            text: "Seat Heater"
-                        }
+                            Label {
+                                text: "Seat Heater"
+                            }
 
-                        SpinBox {
-                            value: climateControl.zoneAt.FrontLeft.seatHeater
-                            onValueChanged: {
-                                climateControl.zoneAt.FrontLeft.seatHeater = value
+                            SpinBox {
+                                value: climateControl.zoneAt.FrontLeft.seatHeater
+                                onValueModified: {
+                                    climateControl.zoneAt.FrontLeft.seatHeater = value
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            GroupBox {
-                title: "Front Right Zone"
+                GroupBox {
+                    title: "Front Right Zone"
 
-                ColumnLayout {
-                    RowLayout {
+                    ColumnLayout {
+                        RowLayout {
 
-                        Label {
-                            text: "Temperature"
-                        }
+                            Label {
+                                text: "Temperature"
+                            }
 
-                        SpinBox {
-                            value: climateControl.zoneAt.FrontRight.targetTemperature
-                            onValueChanged: {
-                                climateControl.zoneAt.FrontRight.targetTemperature = value
+                            SpinBox {
+                                value: climateControl.zoneAt.FrontRight.targetTemperature
+                                onValueModified: {
+                                    climateControl.zoneAt.FrontRight.targetTemperature = value
+                                }
                             }
                         }
-                    }
 
 
-                    RowLayout {
+                        RowLayout {
 
-                        Label {
-                            text: "Seat Heater"
-                        }
-
-                        SpinBox {
-                            value: climateControl.zoneAt.FrontRight.seatHeater
-                            onValueChanged: {
-                                climateControl.zoneAt.FrontRight.seatHeater = value
+                            Label {
+                                text: "Seat Heater"
                             }
-                        }
-                    }
-                }
-            }
 
-            GroupBox {
-                title: "Rear Zone"
-
-                ColumnLayout {
-                    RowLayout {
-
-                        Label {
-                            text: "Temperature"
-                        }
-
-                        SpinBox {
-                            value: climateControl.zoneAt.Rear.targetTemperature
-                            onValueChanged: {
-                                climateControl.zoneAt.Rear.targetTemperature = value
-                            }
-                        }
-                    }
-
-
-                    RowLayout {
-
-                        Label {
-                            text: "Seat Heater"
-                        }
-
-                        SpinBox {
-                            value: climateControl.zoneAt.Rear.seatHeater
-                            onValueChanged: {
-                                climateControl.zoneAt.Rear.seatHeater = value
+                            SpinBox {
+                                value: climateControl.zoneAt.FrontRight.seatHeater
+                                onValueModified: {
+                                    climateControl.zoneAt.FrontRight.seatHeater = value
+                                }
                             }
                         }
                     }
                 }
+
+                GroupBox {
+                    title: "Rear Zone"
+
+                    ColumnLayout {
+                        RowLayout {
+
+                            Label {
+                                text: "Temperature"
+                            }
+
+                            SpinBox {
+                                value: climateControl.zoneAt.Rear.targetTemperature
+                                onValueModified: {
+                                    climateControl.zoneAt.Rear.targetTemperature = value
+                                }
+                            }
+                        }
+
+
+                        RowLayout {
+
+                            Label {
+                                text: "Seat Heater"
+                            }
+
+                            SpinBox {
+                                value: climateControl.zoneAt.Rear.seatHeater
+                                onValueModified: {
+                                    climateControl.zoneAt.Rear.seatHeater = value
+                                }
+                            }
+                        }
+                    }
+                }
+                //![3]
             }
-            //![3]
         }
     }
 
