@@ -13,48 +13,52 @@ import QtInterfaceFramework.VehicleFunctions
 ApplicationWindow {
     title: "Window Control"
     visible: true
-    width: mainLayout.width
-    height: mainLayout.height
+    width: Math.min(mainLayout.width + 20, Screen.desktopAvailableWidth)
+    height: Math.min(mainLayout.height + 20, Screen.desktopAvailableHeight)
 
     WindowControl {
         id: windowControl
         discoveryMode: WindowControl.LoadOnlySimulationBackends
     }
 
-    ColumnLayout {
-        id: mainLayout
-        WindowItem {
-            title: "Roof"
-            Layout.alignment: Qt.AlignHCenter
-            zone: windowControl.zoneAt.Roof
-        }
+    ScrollView {
+        anchors.fill: parent
+        anchors.margins: 10
+        ColumnLayout {
+            id: mainLayout
+            WindowItem {
+                title: "Roof"
+                Layout.alignment: Qt.AlignHCenter
+                zone: windowControl.zoneAt.Roof
+            }
 
-        Grid {
-            id: grid
-            columns: 2
-            rows: 2
-            WindowItem {
-                title: "Front Left Zone"
-                zone: windowControl.zoneAt.FrontLeft
+            Grid {
+                id: grid
+                columns: firstItem.width * 2 <= Screen.desktopAvailableWidth ? 2 : 1
+                WindowItem {
+                    id: firstItem
+                    title: "Front Left Zone"
+                    zone: windowControl.zoneAt.FrontLeft
+                }
+                WindowItem {
+                    title: "Front Right Zone"
+                    zone: windowControl.zoneAt.FrontRight
+                }
+                WindowItem {
+                    title: "Rear Left Zone"
+                    zone: windowControl.zoneAt.RearLeft
+                }
+                WindowItem {
+                    title: "Rear Right Zone"
+                    zone: windowControl.zoneAt.RearRight
+                }
             }
-            WindowItem {
-                title: "Front Right Zone"
-                zone: windowControl.zoneAt.FrontRight
-            }
-            WindowItem {
-                title: "Rear Left Zone"
-                zone: windowControl.zoneAt.RearLeft
-            }
-            WindowItem {
-                title: "Rear Right Zone"
-                zone: windowControl.zoneAt.RearRight
-            }
-        }
 
-        WindowItem {
-            title: "Rear"
-            Layout.alignment: Qt.AlignHCenter
-            zone: windowControl.zoneAt.Rear
+            WindowItem {
+                title: "Rear"
+                Layout.alignment: Qt.AlignHCenter
+                zone: windowControl.zoneAt.Rear
+            }
         }
     }
 
