@@ -142,7 +142,8 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         QSqlQuery query(m_db);
 
         QStringList idsToRemove;
-        bool ret = query.exec(QStringLiteral("SELECT track.id, queue.qindex, track.file FROM track LEFT JOIN queue ON queue.track_index=track.id"));
+        bool ret = query.exec(QStringLiteral("SELECT track.id, queue.qindex, track.file FROM track "
+                                             "LEFT JOIN queue ON queue.track_index=track.id"));
         if (ret) {
             while (query.next()) {
                 if (!QFile::exists(query.value(2).toString())) {
@@ -168,7 +169,9 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         QSqlQuery query(m_db);
 
         QStringList idsToRemove;
-        bool ret = query.exec(QStringLiteral("SELECT track.id, queue.qindex FROM track LEFT JOIN queue ON queue.track_index=track.id WHERE file LIKE '%1%'").arg(scanData.folder));
+        bool ret = query.exec(QStringLiteral("SELECT track.id, queue.qindex FROM track "
+                                             "LEFT JOIN queue ON queue.track_index=track.id "
+                                             "WHERE file LIKE '%1%'").arg(scanData.folder));
         if (ret) {
             while (query.next()) {
                 idsToRemove.append(query.value(0).toString());

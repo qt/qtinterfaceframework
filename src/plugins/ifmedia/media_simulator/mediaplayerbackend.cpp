@@ -135,7 +135,10 @@ void MediaPlayerBackend::setPosition(qint64 position)
 
 void MediaPlayerBackend::fetchData(const QUuid &identifier, int start, int count)
 {
-    QString queryString = QStringLiteral("SELECT track.id, artistName, albumName, trackName, genre, number, file, coverArtUrl FROM track JOIN queue ON queue.track_index=track.id ORDER BY queue.qindex LIMIT %4, %5")
+    QString queryString = QStringLiteral("SELECT track.id, artistName, albumName, trackName, genre, number, file, coverArtUrl "
+                                         "FROM track JOIN queue ON queue.track_index=track.id "
+                                         "ORDER BY queue.qindex "
+                                         "LIMIT %4, %5")
             .arg(start)
             .arg(count);
 

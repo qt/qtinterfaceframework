@@ -64,7 +64,10 @@ void createMediaDatabase(const QString &dbFile)
 {
     QSqlDatabase db = createDatabaseConnection(QStringLiteral("main"), dbFile);
     QSqlQuery createQueue(db);
-    createQueue.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS \"queue\" (\"id\" INTEGER PRIMARY KEY, \"qindex\" INTEGER, \"track_index\" INTEGER)"));
+    createQueue.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS queue "
+                                    "(id INTEGER PRIMARY KEY, "
+                                    "qindex INTEGER, "
+                                    "track_index INTEGER)"));
     if (createQueue.lastError().isValid())
         qFatal("Couldn't create Database Tables: %s", qPrintable(createQueue.lastError().text()));
 
