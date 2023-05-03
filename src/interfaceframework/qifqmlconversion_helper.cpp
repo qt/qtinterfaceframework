@@ -12,9 +12,11 @@
 
 QT_BEGIN_NAMESPACE
 
+using namespace Qt::StringLiterals;
+
 namespace qtif_helper {
-    static const QString valueLiteral = QStringLiteral("value");
-    static const QString typeLiteral = QStringLiteral("type");
+    static const QString valueLiteral = u"value"_s;
+    static const QString typeLiteral = u"type"_s;
 }
 
 using namespace qtif_helper;
@@ -79,10 +81,10 @@ QVariant qtif_convertFromJSON(const QVariant &value)
             const QString type = map.value(typeLiteral).toString();
             const QVariant value = map.value(valueLiteral);
 
-            if (type == QStringLiteral("enum")) {
+            if (type == u"enum"_s) {
                 QString enumValue = value.toString();
-                const int lastIndex = enumValue.lastIndexOf(QStringLiteral("::"));
-                const QString className = enumValue.left(lastIndex) + QStringLiteral("*");
+                const int lastIndex = enumValue.lastIndexOf(u"::"_s);
+                const QString className = enumValue.left(lastIndex) + u"*"_s;
                 enumValue = enumValue.right(enumValue.size() - lastIndex - 2);
                 QMetaType metaType = QMetaType::fromName(className.toLatin1());
                 const QMetaObject *mo = metaType.metaObject();
@@ -98,7 +100,7 @@ QVariant qtif_convertFromJSON(const QVariant &value)
                     bool ok = false;
                     int value = me.keysToValue(enumValue.toLatin1(), &ok);
                     if (ok) {
-                        return QVariant(QMetaType::fromName((QLatin1String(me.scope()) + QStringLiteral("::") + QLatin1String(me.enumName())).toLatin1()), &value);
+                        return QVariant(QMetaType::fromName((QLatin1String(me.scope()) + u"::"_s + QLatin1String(me.enumName())).toLatin1()), &value);
                     }
                 }
                 qWarning() << "Couldn't parse the enum definition" << map;

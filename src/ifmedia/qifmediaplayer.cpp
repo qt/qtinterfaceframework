@@ -13,6 +13,8 @@
 #include <QDataStream>
 #include <QMetaEnum>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfMediaPlayerPrivate::QIfMediaPlayerPrivate(const QString &interface, QIfMediaPlayer *parent)
@@ -191,7 +193,7 @@ QIfMediaPlayerBackendInterface *QIfMediaPlayerPrivate::playerBackend() const
 QIfMediaPlayer::QIfMediaPlayer(QObject *parent)
     : QIfAbstractFeature(*new QIfMediaPlayerPrivate(QLatin1String(QIfMediaPlayer_iid), this), parent)
 {
-    setConfigurationId(QStringLiteral("qtifmedia"));
+    setConfigurationId(u"qtifmedia"_s);
 }
 
 /*!

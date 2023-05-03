@@ -10,6 +10,8 @@
 #include <QtIfMedia/QIfMediaDevice>
 #include <QtDebug>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfMediaDeviceDiscoveryModelPrivate::QIfMediaDeviceDiscoveryModelPrivate(const QString &interface, QIfMediaDeviceDiscoveryModel *parent)
@@ -164,7 +166,7 @@ QIfMediaDeviceDiscoveryModelBackendInterface *QIfMediaDeviceDiscoveryModelPrivat
 QIfMediaDeviceDiscoveryModel::QIfMediaDeviceDiscoveryModel(QObject *parent)
     : QIfAbstractFeatureListModel(*new QIfMediaDeviceDiscoveryModelPrivate(QLatin1String(QIfMediaDeviceDiscovery_iid), this), parent)
 {
-    setConfigurationId(QStringLiteral("qtifmedia"));
+    setConfigurationId(u"qtifmedia"_s);
 }
 
 /*!

@@ -5,8 +5,10 @@
 #include "qifmediaplayerqtroadapter.h"
 #include "qifqmlconversion_helper.h"
 
+using namespace Qt::StringLiterals;
+
 QIfMediaPlayerQtRoAdapter::QIfMediaPlayerQtRoAdapter(MediaPlayerBackend *parent)
-    : QIfMediaPlayerQtRoAdapter(QStringLiteral("QtIfMedia.QIfMediaPlayer"), parent)
+    : QIfMediaPlayerQtRoAdapter(u"QtIfMedia.QIfMediaPlayer"_s, parent)
 {
 }
 

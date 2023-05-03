@@ -15,6 +15,8 @@
 #include <QtQml>
 #include <QCoreApplication>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 #define QTIF_ADD_STATIC_METATYPE2(MetaTypeName, MetaTypeId, AliasingType, RealName) \
@@ -460,7 +462,7 @@ void QIfPendingReplyWatcher::setSuccess(const QVariant &value)
 
 
     const QMetaObject *mo = metaType.metaObject();
-    const QString enumName = QString::fromLocal8Bit(metaType.name()).split(QStringLiteral("::")).last();
+    const QString enumName = QString::fromLocal8Bit(metaType.name()).split(u"::"_s).last();
     if (mo) {
         QMetaEnum mEnum = mo->enumerator(mo->indexOfEnumerator(enumName.toLocal8Bit().constData()));
         if (mEnum.isValid()) {
@@ -474,7 +476,7 @@ void QIfPendingReplyWatcher::setSuccess(const QVariant &value)
 
     //Check that the type names match only if it's not a enum, as it will be converted automatically in this case.
     if (!isEnumOrFlag && var.metaType() != metaType) {
-        qtif_qmlOrCppWarning(this, QString(QStringLiteral("Expected: %1 but got %2")).arg(QLatin1String(metaType.name()), QLatin1String(var.metaType().name())));
+        qtif_qmlOrCppWarning(this, QString(u"Expected: %1 but got %2"_s).arg(QLatin1String(metaType.name()), QLatin1String(var.metaType().name())));
         return;
     }
 

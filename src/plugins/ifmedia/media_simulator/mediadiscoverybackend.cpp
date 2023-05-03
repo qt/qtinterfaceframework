@@ -11,12 +11,14 @@
 #include <QTimer>
 #include <QtDebug>
 
+using namespace Qt::StringLiterals;
+
 MediaDiscoveryBackend::MediaDiscoveryBackend(const QVariantMap &serviceSettings, QObject *parent)
     : QIfMediaDeviceDiscoveryModelBackendInterface(parent)
 {
     m_deviceFolder = QDir::homePath() + "/usb-simulation";
 
-    QString customDeviceFolder = serviceSettings.value(QStringLiteral("customDeviceFolder")).toString();
+    QString customDeviceFolder = serviceSettings.value(u"customDeviceFolder"_s).toString();
     if (qEnvironmentVariableIsSet("QTIFMEDIA_SIMULATOR_DEVICEFOLDER")) {
         qCInfo(media) << "QTIFMEDIA_SIMULATOR_DEVICEFOLDER environment variable is set.\n"
                       << "Overriding service setting: 'customDeviceFolder'";

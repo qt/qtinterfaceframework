@@ -5,10 +5,12 @@
 #include "qiffilterandbrowsemodelqtroadapter.h"
 #include "qifqmlconversion_helper.h"
 
+using namespace Qt::StringLiterals;
+
 Q_LOGGING_CATEGORY(qLcROQIfFilterAndBrowseModel, "qt.if.qiffilterandbrowsemodel.remoteobjects", QtInfoMsg)
 
 QIfFilterAndBrowseModelQtRoAdapter::QIfFilterAndBrowseModelQtRoAdapter(QIfFilterAndBrowseModelInterface *parent)
-    : QIfFilterAndBrowseModelQtRoAdapter(QStringLiteral("QIfFilterAndBrowseModel"), parent)
+    : QIfFilterAndBrowseModelQtRoAdapter(u"QIfFilterAndBrowseModel"_s, parent)
 {
 }
 

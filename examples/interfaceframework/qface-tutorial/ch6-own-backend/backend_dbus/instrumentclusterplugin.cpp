@@ -18,7 +18,7 @@ QStringList InstrumentClusterPlugin::interfaces() const
 
 QIfFeatureInterface *InstrumentClusterPlugin::interfaceInstance(const QString &interface) const
 {
-    if (interface == InstrumentClusterModule_InstrumentCluster_iid)
+    if (interface == QStringLiteral(InstrumentClusterModule_InstrumentCluster_iid))
         return m_backend;
 
     return nullptr;

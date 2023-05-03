@@ -241,12 +241,12 @@ template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<QtPrivate::IsQEn
     } else {
         QMetaEnum me = QMetaEnum::fromType<T>();
         if (me.isValid() && me.isFlag())
-            n = QLatin1String(me.scope()) + QStringLiteral("::") + QLatin1String(me.name());
+            n = QLatin1String(me.scope()) + QLatin1String("::") + QLatin1String(me.name());
         else
             n = QLatin1String(QMetaType(qMetaTypeId<T>()).name());
     }
 
-    const QString t_name = QStringLiteral("QIfPendingReply<") + n + QStringLiteral(">");
+    const QString t_name = QLatin1String("QIfPendingReply<") + n + QLatin1String(">");
     qRegisterMetaType<QIfPendingReplyBase>(qPrintable(t_name));
 }
 
@@ -255,7 +255,7 @@ template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<!QtPrivate::IsQE
 {
     qRegisterMetaType<T>();
     const char* n = name ? name : QMetaType(qMetaTypeId<T>()).name();
-    const QString t_name = QStringLiteral("QIfPendingReply<") + QLatin1String(n) + QStringLiteral(">");
+    const QString t_name = QLatin1String("QIfPendingReply<") + QLatin1String(n) + QLatin1String(">");
     qRegisterMetaType<QIfPendingReplyBase>(qPrintable(t_name));
 }
 

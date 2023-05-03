@@ -11,6 +11,8 @@
 #include <QRemoteObjectNode>
 #include "rep_qiffilterandbrowsemodel_replica.h"
 
+using namespace Qt::StringLiterals;
+
 class SearchAndBrowseItem : public QIfPlayableItem
 {
     Q_GADGET
@@ -35,7 +37,7 @@ class FilterAndBrowseModel : public QIfFilterAndBrowseModelInterface
 {
     Q_OBJECT
 public:
-    explicit FilterAndBrowseModel(QObject *parent = nullptr, const QString& remoteObjectsLookupName = QStringLiteral("QIfFilterAndBrowseModel"));
+    explicit FilterAndBrowseModel(QObject *parent = nullptr, const QString& remoteObjectsLookupName = u"QIfFilterAndBrowseModel"_s);
 
     void initialize() override;
     void registerInstance(const QUuid &identifier) override;

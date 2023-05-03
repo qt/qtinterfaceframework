@@ -9,8 +9,10 @@
 #include <QIfMediaDevice>
 #include <QRemoteObjectRegistryHost>
 
+using namespace Qt::StringLiterals;
+
 QIfMediaDiscoveryModelQtRoAdapter::QIfMediaDiscoveryModelQtRoAdapter(MediaDiscoveryBackend *parent)
-    : QIfMediaDiscoveryModelQtRoAdapter(QStringLiteral("QtIfMedia.QIfMediaDiscoveryModel"), parent)
+    : QIfMediaDiscoveryModelQtRoAdapter(u"QtIfMedia.QIfMediaDiscoveryModel"_s, parent)
 {
 }
 
@@ -73,7 +75,7 @@ void QIfMediaDiscoveryModelQtRoAdapter::createDeviceAdapter(QIfMediaDevice *devi
     QIfFilterAndBrowseModelInterface *searchAndBrowseBackend = qif_interface_cast<QIfFilterAndBrowseModelInterface *>(device->interfaceInstance(QStringLiteral(QIfFilterAndBrowseModel_iid)));
 
     searchAndBrowseBackend->initialize();
-    auto instance = new QIfFilterAndBrowseModelQtRoAdapter(QStringLiteral("QIfFilterAndBrowseModel_") + device->name(), searchAndBrowseBackend);
+    auto instance = new QIfFilterAndBrowseModelQtRoAdapter(u"QIfFilterAndBrowseModel_"_s + device->name(), searchAndBrowseBackend);
     Core::instance()->host()->enableRemoting<QIfFilterAndBrowseModelAddressWrapper>(instance);
 
     m_hostMap.insert(device->name(), instance);

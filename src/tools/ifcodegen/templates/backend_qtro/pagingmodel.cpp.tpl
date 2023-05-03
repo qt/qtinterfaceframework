@@ -10,6 +10,8 @@
 {% set class = '{0}RoModelBackend'.format(property|upperfirst) %}
 {% endif %}
 
+using namespace Qt::StringLiterals;
+
 Q_LOGGING_CATEGORY(qLcRO{{interface}}{{property|upper_first}}, "{{module|qml_type|lower}}.{{interface|lower}}backend.{{property|lower}}.remoteobjects", QtInfoMsg)
 
 {{class}}::{{class}}(const QString &remoteObjectsLookupName, QObject* parent)
@@ -64,14 +66,14 @@ bool {{class}}::connectToNode()
         if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
             configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
         } else {
-            configPath = QStringLiteral("./server.conf");
+            configPath = u"./server.conf"_s;
             qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
         }
     }
 
     QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("{{module.module_name|lower}}"));
-    QUrl registryUrl = QUrl(settings.value(QStringLiteral("Registry"), QIfRemoteObjectsHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"))).toString());
+    settings.beginGroup(u"{{module.module_name|lower}}"_s);
+    QUrl registryUrl = QUrl(settings.value(u"Registry"_s, QIfRemoteObjectsHelper::buildDefaultUrl(u"{{module.module_name|lower}}"_s)).toString());
     if (m_url != registryUrl) {
         m_url = registryUrl;
         // QtRO doesn't allow to change the URL without destroying the Node

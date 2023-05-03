@@ -9,6 +9,8 @@
 #include <QSettings>
 #include <QIODevice>
 
+using namespace Qt::StringLiterals;
+
 Q_LOGGING_CATEGORY(qLcROQIfFilterAndBrowseModel, "interfaceframework.media.qiffilterandbrowsebackend.remoteobjects", QtInfoMsg)
 
 QDataStream &operator<<(QDataStream &stream, const SearchAndBrowseItem &obj)
@@ -94,7 +96,7 @@ QIfPendingReply<QString> FilterAndBrowseModel::goBack(const QUuid &identifier)
 
     //Pass an empty std::function to only handle errors.
     ifReply.then(std::function<void(QString)>(), [this]() {
-        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("remote call of method goBack failed"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, u"remote call of method goBack failed"_s);
     });
     return ifReply;
 }
@@ -106,7 +108,7 @@ QIfPendingReply<QString> FilterAndBrowseModel::goForward(const QUuid &identifier
     //Pass an empty std::function to only handle errors.
     auto ifReply = m_helper->toQIfPendingReply<QString>(reply);
     ifReply.then(std::function<void(QString)>(), [this]() {
-        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("remote call of method goForward failed"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, u"remote call of method goForward failed"_s);
     });
     return ifReply;
 }
@@ -118,7 +120,7 @@ QIfPendingReply<void> FilterAndBrowseModel::insert(const QUuid &identifier, int 
     //Pass an empty std::function to only handle errors.
     auto ifReply = m_helper->toQIfPendingReply<void>(reply);
     ifReply.then(std::function<void()>(), [this]() {
-        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("remote call of method insert failed"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, u"remote call of method insert failed"_s);
     });
     return ifReply;
 }
@@ -130,7 +132,7 @@ QIfPendingReply<void> FilterAndBrowseModel::remove(const QUuid &identifier, int 
     //Pass an empty std::function to only handle errors.
     auto ifReply = m_helper->toQIfPendingReply<void>(reply);
     ifReply.then(std::function<void()>(), [this]() {
-        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("remote call of method remove failed"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, u"remote call of method remove failed"_s);
     });
     return ifReply;
 }
@@ -142,7 +144,7 @@ QIfPendingReply<void> FilterAndBrowseModel::move(const QUuid &identifier, int cu
     //Pass an empty std::function to only handle errors.
     auto ifReply = m_helper->toQIfPendingReply<void>(reply);
     ifReply.then(std::function<void()>(), [this]() {
-        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("remote call of method move failed"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, u"remote call of method move failed"_s);
     });
     return ifReply;
 }
@@ -154,7 +156,7 @@ QIfPendingReply<int> FilterAndBrowseModel::indexOf(const QUuid &identifier, cons
     //Pass an empty std::function to only handle errors.
     auto ifReply = m_helper->toQIfPendingReply<int>(reply);
     ifReply.then(std::function<void(int)>(), [this]() {
-        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("remote call of method indexOf failed"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, u"remote call of method indexOf failed"_s);
     });
     return ifReply;
 }
@@ -171,20 +173,20 @@ void FilterAndBrowseModel::updateServiceSettings(const QVariantMap &settings)
 bool FilterAndBrowseModel::connectToNode()
 {
     QUrl url;
-    const auto it = m_serviceSettings.constFind(QStringLiteral("FilterAndBrowseModel"));
+    const auto it = m_serviceSettings.constFind(u"FilterAndBrowseModel"_s);
 
     if (it != m_serviceSettings.constEnd())
-        url = it->toMap().value(QStringLiteral("connectionUrl")).toUrl();
+        url = it->toMap().value(u"connectionUrl"_s).toUrl();
     if (url.isEmpty())
-        url = m_serviceSettings.value(QStringLiteral("connectionUrl")).toUrl();
+        url = m_serviceSettings.value(u"connectionUrl"_s).toUrl();
 
     static QString configPath;
     if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
         configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
 
         QSettings settings(configPath, QSettings::IniFormat);
-        settings.beginGroup(QStringLiteral("qtifmedia"));
-        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        settings.beginGroup(u"qtifmedia"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
         if (!url.isEmpty()) {
             qCInfo(qLcROQIfFilterAndBrowseModel) << "SERVER_CONF_PATH environment variable is set.\n"
                                          << "Overriding service setting: 'FilterAndBrowseModel.connectionUrl'";
@@ -197,12 +199,12 @@ bool FilterAndBrowseModel::connectToNode()
         }
     }
 
-    if (url.isEmpty() && QFile::exists(QStringLiteral("./server.conf"))) {
-        configPath = QStringLiteral("./server.conf");
+    if (url.isEmpty() && QFile::exists(u"./server.conf"_s)) {
+        configPath = u"./server.conf"_s;
 
         QSettings settings(configPath, QSettings::IniFormat);
-        settings.beginGroup(QStringLiteral("qtifmedia"));
-        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        settings.beginGroup(u"qtifmedia"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
         if (!url.isEmpty()) {
             qCInfo(qLcROQIfFilterAndBrowseModel) << "Reading url from ./server.conf.\n"
                                          << "Overriding service setting: 'FilterAndBrowseModel.connectionUrl'";
@@ -216,7 +218,7 @@ bool FilterAndBrowseModel::connectToNode()
     }
 
     if (url.isEmpty())
-        url = QStringLiteral("local:qtifmedia");
+        url = u"local:qtifmedia"_s;
 
     if (m_url != url) {
         // QtRO doesn't allow to change the URL without destroying the Node
@@ -240,10 +242,10 @@ bool FilterAndBrowseModel::connectToNode()
         const int defaultTimeout = 3000;
         int connectionTimeout = defaultTimeout;
         if (it != m_serviceSettings.constEnd())
-            connectionTimeout = it->toMap().value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+            connectionTimeout = it->toMap().value(u"connectionTimeout"_s, defaultTimeout).toInt();
 
         if (connectionTimeout == defaultTimeout)
-            connectionTimeout = m_serviceSettings.value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+            connectionTimeout = m_serviceSettings.value(u"connectionTimeout"_s, defaultTimeout).toInt();
 
         if (connectionTimeout != -1) {
             QTimer::singleShot(connectionTimeout, this, [this](){

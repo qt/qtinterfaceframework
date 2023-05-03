@@ -8,7 +8,9 @@
 #include <QDir>
 #include <QtDebug>
 
-static const QString fileLiteral = QStringLiteral("file");
+using namespace Qt::StringLiterals;
+
+static const QString fileLiteral = u"file"_s;
 
 UsbBrowseBackend::UsbBrowseBackend(const QString &path, QObject *parent)
     : QIfFilterAndBrowseModelInterface(parent)

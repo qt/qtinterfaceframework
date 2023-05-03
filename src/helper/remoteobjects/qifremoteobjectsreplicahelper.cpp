@@ -4,6 +4,8 @@
 
 #include "qifremoteobjectsreplicahelper.h"
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfRemoteObjectsReplicaHelper::QIfRemoteObjectsReplicaHelper(const QLoggingCategory &category, QObject *parent)
@@ -41,11 +43,11 @@ void QIfRemoteObjectsReplicaHelper::onReplicaStateChanged(QRemoteObjectReplica::
     if (newState == QRemoteObjectReplica::Suspect) {
         qCWarning(m_category) << "QRemoteObjectReplica error, connection to the source lost";
         emit errorChanged(QIfAbstractFeature::Unknown,
-                          QStringLiteral("QRemoteObjectReplica error, connection to the source lost"));
+                          u"QRemoteObjectReplica error, connection to the source lost"_s);
     } else if (newState == QRemoteObjectReplica::SignatureMismatch) {
         qCWarning(m_category) << "QRemoteObjectReplica error, signature mismatch";
         emit errorChanged(QIfAbstractFeature::Unknown,
-                          QStringLiteral("QRemoteObjectReplica error, signature mismatch"));
+                          u"QRemoteObjectReplica error, signature mismatch"_s);
     } else if (newState == QRemoteObjectReplica::Valid) {
         emit errorChanged(QIfAbstractFeature::NoError);
     }
@@ -55,7 +57,7 @@ void QIfRemoteObjectsReplicaHelper::onNodeError(QRemoteObjectNode::ErrorCode cod
 {
     qCWarning(m_category) << "QRemoteObjectNode error, code: " << code;
     QMetaEnum metaEnum = QMetaEnum::fromType<QRemoteObjectNode::ErrorCode>();
-    emit errorChanged(QIfAbstractFeature::Unknown, QStringLiteral("QRemoteObjectNode error, code: ") + QLatin1String(metaEnum.valueToKey(code)));
+    emit errorChanged(QIfAbstractFeature::Unknown, u"QRemoteObjectNode error, code: "_s + QLatin1String(metaEnum.valueToKey(code)));
 }
 
 QT_END_NAMESPACE

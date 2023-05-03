@@ -11,6 +11,8 @@
 
 #include <private/qmetaobjectbuilder_p.h>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(qLcIfSimulationEngine, "qt.if.simulationengine")
@@ -85,7 +87,7 @@ void QIfSimulationProxyBase::componentComplete()
 QMetaObject QIfSimulationProxyBase::buildObject(const QMetaObject *metaObject, QHash<int, int> &methodMap, QIfSimulationProxyBase::StaticMetacallFunction metaCallFunction)
 {
     QMetaObjectBuilder builder;
-    const QString name = QString(QStringLiteral("QIfSimulationProxy_%1")).arg(QLatin1String(metaObject->className()));
+    const QString name = QString(u"QIfSimulationProxy_%1"_s).arg(QLatin1String(metaObject->className()));
     builder.setClassName(qPrintable(name));
     builder.setSuperClass(&QObject::staticMetaObject);
     builder.setStaticMetacallFunction(metaCallFunction);

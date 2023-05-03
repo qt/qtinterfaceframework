@@ -17,6 +17,8 @@
 #include <QSettings>
 #include <QRemoteObjectNode>
 
+using namespace Qt::StringLiterals;
+
 MediaQtROPlugin::MediaQtROPlugin(QObject *parent)
     : QObject(parent)
     , m_player(new MediaPlayerBackend(this))
@@ -53,7 +55,7 @@ QIfFeatureInterface *MediaQtROPlugin::interfaceInstance(const QString &interface
 
 QString MediaQtROPlugin::configurationId() const
 {
-    return QStringLiteral("qtifmedia");
+    return u"qtifmedia"_s;
 }
 
 void MediaQtROPlugin::updateServiceSettings(const QVariantMap &settings)

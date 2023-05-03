@@ -13,6 +13,8 @@
 
 #include <qifqmlconversion_helper.h>
 
+using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 class {{class}}Private : public QSharedData
@@ -124,8 +126,8 @@ void {{class}}::fromJSON(const QVariant &variant)
     if (value.metaType() == QMetaType::fromType<QVariantMap>()) {
         QVariantMap map = value.toMap();
 {% for field in struct.fields %}
-        if (map.contains(QStringLiteral("{{field}}")))
-            d->m_{{field}} = map.value(QStringLiteral("{{field}}")).value<{{field|return_type}}>();
+        if (map.contains(u"{{field}}"_s))
+            d->m_{{field}} = map.value(u"{{field}}"_s).value<{{field|return_type}}>();
 {% endfor %}
     } else if (value.metaType() == QMetaType::fromType<QVariantList>()) {
         QVariantList values = value.toList();

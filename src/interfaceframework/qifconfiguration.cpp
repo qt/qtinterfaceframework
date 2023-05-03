@@ -10,6 +10,8 @@
 #include <QLibraryInfo>
 #include <QDir>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(qLcIfConfig, "qt.if.configuration");
@@ -22,7 +24,7 @@ if (!d->m_settingsObject) { \
 
 QIfConfigurationManager::QIfConfigurationManager()
 {
-    const QString configFileName = QStringLiteral("qtifconfig.ini");
+    const QString configFileName = u"qtifconfig.ini"_s;
 
     const QString configPath
                 = QDir(QLibraryInfo::path(QLibraryInfo::DataPath)).absoluteFilePath(configFileName);

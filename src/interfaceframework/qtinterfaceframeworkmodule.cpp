@@ -15,6 +15,8 @@
 
 #include <QQmlEngine>
 
+using namespace Qt::StringLiterals;
+
 /*! \internal */
 QObject* qtinterfaceframeworkmodule_singletontype_provider(QQmlEngine*, QJSEngine*)
 {
@@ -128,9 +130,9 @@ void QtInterfaceFrameworkModule::registerQmlTypes(const QString &uri, int majorV
     qmlRegisterSingletonType<QtInterfaceFrameworkModule>(u, majorVersion, minorVersion,
                                         "QtInterfaceFrameworkModule",
                                         qtinterfaceframeworkmodule_singletontype_provider);
-    qmlRegisterUncreatableType<QIfAbstractFeatureListModel>(u, majorVersion, minorVersion, "AbstractFeatureListModel", QStringLiteral("AbstractFeatureListModel is not accessible directly"));
-    qmlRegisterUncreatableType<QIfAbstractFeature>(u, majorVersion, minorVersion, "AbstractFeature", QStringLiteral("AbstractFeature is not accessible directly"));
-    qmlRegisterUncreatableType<QIfAbstractZonedFeature>(u, majorVersion, minorVersion, "AbstractZonedFeature", QStringLiteral("AbstractZonedFeature is not accessible directly"));
+    qmlRegisterUncreatableType<QIfAbstractFeatureListModel>(u, majorVersion, minorVersion, "AbstractFeatureListModel", u"AbstractFeatureListModel is not accessible directly"_s);
+    qmlRegisterUncreatableType<QIfAbstractFeature>(u, majorVersion, minorVersion, "AbstractFeature", u"AbstractFeature is not accessible directly"_s);
+    qmlRegisterUncreatableType<QIfAbstractZonedFeature>(u, majorVersion, minorVersion, "AbstractZonedFeature", u"AbstractZonedFeature is not accessible directly"_s);
     qmlRegisterType<QIfPagingModel>(u, majorVersion, minorVersion, "PagingModel");
     qmlRegisterType<QIfFilterAndBrowseModel>(u, majorVersion, minorVersion, "FilterAndBrowseModel");
     qmlRegisterType<QIfConfiguration>(u, majorVersion, minorVersion, "InterfaceFrameworkConfiguration");

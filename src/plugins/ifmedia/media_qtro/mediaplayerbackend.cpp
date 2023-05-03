@@ -8,6 +8,8 @@
 #include <QTimer>
 #include <QSettings>
 
+using namespace Qt::StringLiterals;
+
 Q_LOGGING_CATEGORY(qLcROQIfMediaPlayer, "interfaceframework.media.qifmediaplayerbackend.remoteobjects", QtDebugMsg)
 
 MediaPlayerBackend::MediaPlayerBackend(QObject *parent)
@@ -125,20 +127,20 @@ void MediaPlayerBackend::updateServiceSettings(const QVariantMap &settings)
 bool MediaPlayerBackend::connectToNode()
 {
     QUrl url;
-    const auto it = m_serviceSettings.constFind(QStringLiteral("MediaPlayer"));
+    const auto it = m_serviceSettings.constFind(u"MediaPlayer"_s);
 
     if (it != m_serviceSettings.constEnd())
-        url = it->toMap().value(QStringLiteral("connectionUrl")).toUrl();
+        url = it->toMap().value(u"connectionUrl"_s).toUrl();
     if (url.isEmpty())
-        url = m_serviceSettings.value(QStringLiteral("connectionUrl")).toUrl();
+        url = m_serviceSettings.value(u"connectionUrl"_s).toUrl();
 
     static QString configPath;
     if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
         configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
 
         QSettings settings(configPath, QSettings::IniFormat);
-        settings.beginGroup(QStringLiteral("qtifmedia"));
-        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        settings.beginGroup(u"qtifmedia"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
         if (!url.isEmpty()) {
             qCInfo(qLcROQIfMediaPlayer) << "SERVER_CONF_PATH environment variable is set.\n"
                                         << "Overriding service setting: 'MediaPlayer.connectionUrl'";
@@ -151,12 +153,12 @@ bool MediaPlayerBackend::connectToNode()
         }
     }
 
-    if (url.isEmpty() && QFile::exists(QStringLiteral("./server.conf"))) {
-        configPath = QStringLiteral("./server.conf");
+    if (url.isEmpty() && QFile::exists(u"./server.conf"_s)) {
+        configPath = u"./server.conf"_s;
 
         QSettings settings(configPath, QSettings::IniFormat);
-        settings.beginGroup(QStringLiteral("qtifmedia"));
-        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        settings.beginGroup(u"qtifmedia"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
         if (!url.isEmpty()) {
             qCInfo(qLcROQIfMediaPlayer) << "Reading url from ./server.conf.\n"
                                         << "Overriding service setting: 'MediaPlayer.connectionUrl'";
@@ -170,7 +172,7 @@ bool MediaPlayerBackend::connectToNode()
     }
 
     if (url.isEmpty())
-        url = QStringLiteral("local:qtifmedia");
+        url = u"local:qtifmedia"_s;
 
     if (m_url != url) {
         // QtRO doesn't allow to change the URL without destroying the Node
@@ -188,16 +190,16 @@ bool MediaPlayerBackend::connectToNode()
             m_replica.reset();
             return false;
         }
-        m_replica.reset(m_node->acquire<QIfMediaPlayerReplica>(QStringLiteral("QtIfMedia.QIfMediaPlayer")));
+        m_replica.reset(m_node->acquire<QIfMediaPlayerReplica>(u"QtIfMedia.QIfMediaPlayer"_s));
         setupConnections();
 
         const int defaultTimeout = 3000;
         int connectionTimeout = defaultTimeout;
         if (it != m_serviceSettings.constEnd())
-            connectionTimeout = it->toMap().value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+            connectionTimeout = it->toMap().value(u"connectionTimeout"_s, defaultTimeout).toInt();
 
         if (connectionTimeout == defaultTimeout)
-            connectionTimeout = m_serviceSettings.value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+            connectionTimeout = m_serviceSettings.value(u"connectionTimeout"_s, defaultTimeout).toInt();
 
         if (connectionTimeout != -1) {
             QTimer::singleShot(connectionTimeout, this, [this](){

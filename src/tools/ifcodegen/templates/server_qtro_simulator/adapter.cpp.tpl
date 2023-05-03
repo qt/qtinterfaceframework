@@ -21,10 +21,12 @@ Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lo
 * the value is send with the pendingResultAvailable value
 */
 
+using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 {{class}}::{{class}}({{interface}}Backend *parent)
-    : {{class}}(QStringLiteral("{{interface.qualified_name}}"), parent)
+    : {{class}}(u"{{interface.qualified_name}}"_s, parent)
 {
 }
 
@@ -56,7 +58,7 @@ void {{class}}::enableRemoting(QRemoteObjectHostBase *node)
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {%     if vars.update({ 'models': True}) %}{% endif %}
-    auto {{property|lowerfirst}}Adapter = new QIfPagingModelQtRoAdapter(QStringLiteral("{{interface.qualified_name}}.{{property}}"), m_backend->{{property|getter_name}}());
+    auto {{property|lowerfirst}}Adapter = new QIfPagingModelQtRoAdapter(u"{{interface.qualified_name}}.{{property}}"_s, m_backend->{{property|getter_name}}());
     node->enableRemoting<QIfPagingModelAddressWrapper>({{property|lowerfirst}}Adapter);
     m_modelAdapters.insert(node, {{property|lowerfirst}}Adapter);
 {%   endif %}
@@ -67,7 +69,7 @@ void {{class}}::enableRemoting(QRemoteObjectHostBase *node)
     for (const QString &zone : zones) {
 {%   for property in interface.properties %}
 {%     if property.type.is_model %}
-        auto {{property|lowerfirst}}Adapter = new QIfPagingModelQtRoAdapter(QStringLiteral("{{interface.qualified_name}}.{{property}}.") + zone, m_backend->zoneAt(zone)->{{property|getter_name}}());
+        auto {{property|lowerfirst}}Adapter = new QIfPagingModelQtRoAdapter(u"{{interface.qualified_name}}.{{property}}."_s + zone, m_backend->zoneAt(zone)->{{property|getter_name}}());
         node->enableRemoting<QIfPagingModelAddressWrapper>({{property|lowerfirst}}Adapter);
         m_modelAdapters.insert(node, {{property|lowerfirst}}Adapter);
 {%     endif %}

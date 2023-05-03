@@ -8,12 +8,14 @@
 #include "processingservice.h"
 #include "core.h"
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
     ProcessingService service;
-    Core::instance()->host()->enableRemoting(&service,QStringLiteral("Example.If.RemoteModule.ProcessingService"));
+    Core::instance()->host()->enableRemoting(&service,u"Example.If.RemoteModule.ProcessingService"_s);
 
     return app.exec();
 }

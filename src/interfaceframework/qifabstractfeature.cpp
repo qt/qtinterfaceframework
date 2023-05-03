@@ -16,6 +16,8 @@
 #include <QDebug>
 #include <QMetaEnum>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfAbstractFeaturePrivate::QIfAbstractFeaturePrivate(const QString &interfaceName, QIfAbstractFeature *parent)
@@ -534,7 +536,7 @@ void QIfAbstractFeature::setError(QIfAbstractFeature::Error error, const QString
 {
     Q_D(QIfAbstractFeature);
     d->m_error = error;
-    d->m_errorMessage = errorText() + QStringLiteral(" ") + message;
+    d->m_errorMessage = errorText() + u" "_s + message;
     if (d->m_error == QIfAbstractFeature::NoError)
         d->m_errorMessage.clear();
     emit errorChanged(d->m_error, d->m_errorMessage);

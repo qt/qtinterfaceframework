@@ -21,6 +21,8 @@
 #include <{{interface|lower}}.h>
 #include <{{interface|lower}}backendinterface.h>
 
+using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 {% for property in interface.properties %}

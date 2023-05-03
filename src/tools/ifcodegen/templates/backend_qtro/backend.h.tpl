@@ -28,6 +28,8 @@
 {%   endif %}
 {% endfor %}
 
+using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 {% if interface_zoned %}
@@ -73,7 +75,7 @@ class {{class}} : public {{interface}}BackendInterface
     Q_OBJECT
 
 public:
-    explicit {{class}}(const QString &remoteObjectsLookupName = QStringLiteral("{{interface.qualified_name}}"),
+    explicit {{class}}(const QString &remoteObjectsLookupName = u"{{interface.qualified_name}}"_s,
                        QObject *parent = nullptr);
     ~{{class}}();
 

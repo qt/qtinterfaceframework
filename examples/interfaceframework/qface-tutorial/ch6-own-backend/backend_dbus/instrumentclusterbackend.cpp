@@ -7,6 +7,8 @@
 
 #include <QDBusConnection>
 
+using namespace Qt::StringLiterals;
+
 InstrumentClusterBackend::InstrumentClusterBackend(QObject *parent)
     : InstrumentClusterBackendInterface(parent)
     , m_client(nullptr)
@@ -33,7 +35,7 @@ void InstrumentClusterBackend::initialize()
 void InstrumentClusterBackend::setupConnection()
 {
     qInfo() << "Connecting to the Server";
-    m_client = new ExampleIfInstrumentClusterInterface("Example.If.InstrumentCluster", "/", QDBusConnection::sessionBus());
+    m_client = new ExampleIfInstrumentClusterInterface(u"Example.If.InstrumentCluster"_s, u"/"_s, QDBusConnection::sessionBus());
     connect(m_client, &ExampleIfInstrumentClusterInterface::speedChanged,
             this, &InstrumentClusterBackend::onSpeedChanged);
     connect(m_client, &ExampleIfInstrumentClusterInterface::rpmChanged,
@@ -56,15 +58,15 @@ void InstrumentClusterBackend::setupConnection()
 
 void InstrumentClusterBackend::fetchSpeed()
 {
-    m_fetchList.append("speed");
-    auto reply = m_client->asyncCall("speed");
+    m_fetchList.append(u"speed"_s);
+    auto reply = m_client->asyncCall(u"speed"_s);
     auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<int> reply = *watcher;
         if (reply.isError()) {
             qCritical() << reply.error();
         } else {
-            m_fetchList.removeAll("speed");
+            m_fetchList.removeAll(u"speed"_s);
             this->onSpeedChanged(reply.value());
             watcher->deleteLater();
             this->checkInitDone();
@@ -74,15 +76,15 @@ void InstrumentClusterBackend::fetchSpeed()
 
 void InstrumentClusterBackend::fetchRpm()
 {
-    m_fetchList.append("rpm");
-    auto reply = m_client->asyncCall("rpm");
+    m_fetchList.append(u"rpm"_s);
+    auto reply = m_client->asyncCall(u"rpm"_s);
     auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<int> reply = *watcher;
         if (reply.isError()) {
             qCritical() << reply.error();
         } else {
-            m_fetchList.removeAll("rpm");
+            m_fetchList.removeAll(u"rpm"_s);
             this->onRpmChanged(reply.value());
             watcher->deleteLater();
             this->checkInitDone();
@@ -92,15 +94,15 @@ void InstrumentClusterBackend::fetchRpm()
 
 void InstrumentClusterBackend::fetchFuel()
 {
-    m_fetchList.append("fuel");
-    auto reply = m_client->asyncCall("fuel");
+    m_fetchList.append(u"fuel"_s);
+    auto reply = m_client->asyncCall(u"fuel"_s);
     auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<qreal> reply = *watcher;
         if (reply.isError()) {
             qCritical() << reply.error();
         } else {
-            m_fetchList.removeAll("fuel");
+            m_fetchList.removeAll(u"fuel"_s);
             this->onFuelChanged(reply.value());
             watcher->deleteLater();
             this->checkInitDone();
@@ -110,15 +112,15 @@ void InstrumentClusterBackend::fetchFuel()
 
 void InstrumentClusterBackend::fetchTemperature()
 {
-    m_fetchList.append("temperature");
-    auto reply = m_client->asyncCall("temperature");
+    m_fetchList.append(u"temperature"_s);
+    auto reply = m_client->asyncCall(u"temperature"_s);
     auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<qreal> reply = *watcher;
         if (reply.isError()) {
             qCritical() << reply.error();
         } else {
-            m_fetchList.removeAll("temperature");
+            m_fetchList.removeAll(u"temperature"_s);
             this->temperatureChanged(reply.value());
             watcher->deleteLater();
             this->checkInitDone();
@@ -128,15 +130,15 @@ void InstrumentClusterBackend::fetchTemperature()
 
 void InstrumentClusterBackend::fetchSystemType()
 {
-    m_fetchList.append("systemType");
-    auto reply = m_client->asyncCall("systemType");
+    m_fetchList.append(u"systemType"_s);
+    auto reply = m_client->asyncCall(u"systemType"_s);
     auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<InstrumentClusterModule::SystemType> reply = *watcher;
         if (reply.isError()) {
             qCritical() << reply.error();
         } else {
-            m_fetchList.removeAll("systemType");
+            m_fetchList.removeAll(u"systemType"_s);
             this->onSystemTypeChanged(reply.value());
             watcher->deleteLater();
             this->checkInitDone();
@@ -146,15 +148,15 @@ void InstrumentClusterBackend::fetchSystemType()
 
 void InstrumentClusterBackend::fetchCurrentWarning()
 {
-    m_fetchList.append("currentWarning");
-    auto reply = m_client->asyncCall("currentWarning");
+    m_fetchList.append(u"currentWarning"_s);
+    auto reply = m_client->asyncCall(u"currentWarning"_s);
     auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<Warning> reply = *watcher;
         if (reply.isError()) {
             qCritical() << reply.error();
         } else {
-            m_fetchList.removeAll("currentWarning");
+            m_fetchList.removeAll(u"currentWarning"_s);
             this->onCurrentWarningChanged(reply.value());
             watcher->deleteLater();
             this->checkInitDone();

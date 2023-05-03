@@ -3,15 +3,18 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "processingservice.h"
+
+using namespace Qt::StringLiterals;
+
 //! [0]
 ProcessingService::ProcessingService()
 {
-    setLastMessage(QStringLiteral("Service online."));
+    setLastMessage(u"Service online."_s);
 }
 
 QVariant ProcessingService::process(const QString & data)
 {
-    setLastMessage(QStringLiteral("Processed data \'%1\'").arg(data));
+    setLastMessage(u"Processed data \'%1\'"_s.arg(data));
     return data.length();
 }
 //! [0]

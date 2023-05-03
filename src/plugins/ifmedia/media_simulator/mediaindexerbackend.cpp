@@ -28,6 +28,8 @@
 #include <tstring.h>
 #endif
 
+using namespace Qt::StringLiterals;
+
 MediaIndexerBackend::MediaIndexerBackend(const QVariantMap &serviceSettings, const QSqlDatabase &database, QObject *parent)
     : QIfMediaIndexerControlBackendInterface(parent)
     , m_db(database)
@@ -38,7 +40,7 @@ MediaIndexerBackend::MediaIndexerBackend(const QVariantMap &serviceSettings, con
 
     connect(&m_watcher, &QFutureWatcherBase::finished, this, &MediaIndexerBackend::onScanFinished);
 
-    QString customMediaFolder = serviceSettings.value(QStringLiteral("customMediaFolder")).toString();
+    QString customMediaFolder = serviceSettings.value(u"customMediaFolder"_s).toString();
     if (qEnvironmentVariableIsSet("QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER")) {
         qCInfo(media) << "QTIFMEDIA_SIMULATOR_LOCALMEDIAFOLDER environment variable is set.\n"
                       << "Overriding service setting: 'customMediaFolder'";
@@ -123,13 +125,13 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
     setState(QIfMediaIndexerControl::Active);
 
     auto removeDataFunc = [this](QSqlQuery &query, const QStringList &ids) {
-        const QString idsToRemove = ids.join(QStringLiteral(", "));
-        if (!query.exec(QStringLiteral("DELETE from queue WHERE track_index IN (%1)").arg(idsToRemove))) {
+        const QString idsToRemove = ids.join(u", "_s);
+        if (!query.exec(u"DELETE from queue WHERE track_index IN (%1)"_s.arg(idsToRemove))) {
             setState(QIfMediaIndexerControl::Error);
             sqlError(this, query.lastQuery(), query.lastError().text());
             return false;
         }
-        if (!query.exec(QStringLiteral("DELETE from track WHERE id IN (%1)").arg(idsToRemove))) {
+        if (!query.exec(u"DELETE from track WHERE id IN (%1)"_s.arg(idsToRemove))) {
             setState(QIfMediaIndexerControl::Error);
             sqlError(this, query.lastQuery(), query.lastError().text());
             return false;
@@ -142,8 +144,8 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         QSqlQuery query(m_db);
 
         QStringList idsToRemove;
-        bool ret = query.exec(QStringLiteral("SELECT track.id, queue.qindex, track.file FROM track "
-                                             "LEFT JOIN queue ON queue.track_index=track.id"));
+        bool ret = query.exec(u"SELECT track.id, queue.qindex, track.file FROM track "
+                                             "LEFT JOIN queue ON queue.track_index=track.id"_s);
         if (ret) {
             while (query.next()) {
                 if (!QFile::exists(query.value(2).toString())) {
@@ -169,9 +171,9 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         QSqlQuery query(m_db);
 
         QStringList idsToRemove;
-        bool ret = query.exec(QStringLiteral("SELECT track.id, queue.qindex FROM track "
-                                             "LEFT JOIN queue ON queue.track_index=track.id "
-                                             "WHERE file LIKE '%1%'").arg(scanData.folder));
+        bool ret = query.exec(u"SELECT track.id, queue.qindex FROM track "
+                              "LEFT JOIN queue ON queue.track_index=track.id "
+                              "WHERE file LIKE '%1%'"_s.arg(scanData.folder));
         if (ret) {
             while (query.next()) {
                 idsToRemove.append(query.value(0).toString());
@@ -193,7 +195,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
 
     qCInfo(media) << "Scanning path: " << scanData.folder;
 
-    QStringList mediaFiles{QStringLiteral("*.mp3")};
+    QStringList mediaFiles{u"*.mp3"_s};
 
     QVector<QString> files;
     QDirIterator it(scanData.folder, mediaFiles, QDir::Files, QDirIterator::Subdirectories);
@@ -210,7 +212,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         if (qApp->closingDown())
             return false;
 
-        QString defaultCoverArtUrl = fileName + QStringLiteral(".png");
+        QString defaultCoverArtUrl = fileName + u".png"_s;
         QString coverArtUrl;
 #ifndef QTIF_NO_TAGLIB
         TagLib::FileRef f(TagLib::FileName(QFile::encodeName(fileName)));
@@ -248,13 +250,13 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
         query.prepare("INSERT OR IGNORE INTO track (trackName, albumName, artistName, genre, number, file, coverArtUrl) "
                       "VALUES (:trackName, :albumName, :artistName, :genre, :number, :file, :coverArtUrl)");
 
-        query.bindValue(QStringLiteral(":trackName"), trackName);
-        query.bindValue(QStringLiteral(":albumName"), albumName);
-        query.bindValue(QStringLiteral(":artistName"), artistName);
-        query.bindValue(QStringLiteral(":genre"), genre);
-        query.bindValue(QStringLiteral(":number"), number);
-        query.bindValue(QStringLiteral(":file"), fileName);
-        query.bindValue(QStringLiteral(":coverArtUrl"), coverArtUrl);
+        query.bindValue(u":trackName"_s, trackName);
+        query.bindValue(u":albumName"_s, albumName);
+        query.bindValue(u":artistName"_s, artistName);
+        query.bindValue(u":genre"_s, genre);
+        query.bindValue(u":number"_s, number);
+        query.bindValue(u":file"_s, fileName);
+        query.bindValue(u":coverArtUrl"_s, coverArtUrl);
 
         bool ret = query.exec();
 

@@ -15,12 +15,14 @@
 #include <QLoggingCategory>
 #include <QRegularExpression>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 namespace qtif_helper {
-    static const QString qrcUrlLiteral = QStringLiteral("qrc:");
-    static const QString qrcLiteral = QStringLiteral("qrc");
-    static const QString resourceLiteral = QStringLiteral(":/");
+    static const QString qrcUrlLiteral = u"qrc:"_s;
+    static const QString qrcLiteral = u"qrc"_s;
+    static const QString resourceLiteral = u":/"_s;
 
     QUrl toQmlUrl(const QString &path) {
         if (path.startsWith(qrcUrlLiteral))
@@ -224,7 +226,7 @@ QIfSimulationEngine::QIfSimulationEngine(const QString &identifier, QObject *par
     , m_globalObject(new QIfSimulationGlobalObject)
     , m_identifier(identifier)
 {
-    rootContext()->setContextProperty(QStringLiteral("IfSimulator"), m_globalObject);
+    rootContext()->setContextProperty(u"IfSimulator"_s, m_globalObject);
     setOutputWarningsToStandardError(false);
 
     connect(this, &QQmlApplicationEngine::warnings, this, [](const QList<QQmlError> &warnings) {

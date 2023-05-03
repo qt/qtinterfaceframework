@@ -7,6 +7,8 @@
 
 #include <QtDebug>
 
+using namespace Qt::StringLiterals;
+
 AmFmTunerBackend::AmFmTunerBackend(QObject *parent)
     : QIfAmFmTunerBackendInterface(parent)
     , m_band(QIfAmFmTuner::FMBand)
@@ -16,15 +18,15 @@ AmFmTunerBackend::AmFmTunerBackend(QObject *parent)
 
     QVector<QIfAmFmTunerStation> fm_stations;
     QIfAmFmTunerStation radioQt;
-    radioQt.setId(QStringLiteral("0"));
-    radioQt.setStationName(QStringLiteral("Radio Qt"));
+    radioQt.setId(u"0"_s);
+    radioQt.setStationName(u"Radio Qt"_s);
     radioQt.setFrequency(87500000);
     radioQt.setBand(QIfAmFmTuner::FMBand);
     fm_stations.append(radioQt);
 
     QIfAmFmTunerStation qtRocksNonStop;
-    qtRocksNonStop.setId(QStringLiteral("1"));
-    qtRocksNonStop.setStationName(QStringLiteral("Qt Rocks non-stop"));
+    qtRocksNonStop.setId(u"1"_s);
+    qtRocksNonStop.setStationName(u"Qt Rocks non-stop"_s);
     qtRocksNonStop.setFrequency(102500000);
     qtRocksNonStop.setBand(QIfAmFmTuner::FMBand);
     fm_stations.append(qtRocksNonStop);

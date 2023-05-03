@@ -4,8 +4,10 @@
 
 #include "qifmediaindexerqtroadapter.h"
 
+using namespace Qt::StringLiterals;
+
 QIfMediaIndexerQtRoAdapter::QIfMediaIndexerQtRoAdapter(MediaIndexerBackend *parent)
-    : QIfMediaIndexerQtRoAdapter(QStringLiteral("QtIfMedia.QIfMediaIndexer"), parent)
+    : QIfMediaIndexerQtRoAdapter(u"QtIfMedia.QIfMediaIndexer"_s, parent)
 {
 }
 

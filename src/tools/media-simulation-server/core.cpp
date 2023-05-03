@@ -6,6 +6,8 @@
 #include <QCoreApplication>
 #include <QSettings>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 Core* Core::s_instance(nullptr);
@@ -23,14 +25,14 @@ Core::~Core()
 
 void Core::init()
 {
-    QString configPath(QStringLiteral("./server.conf"));
+    QString configPath(u"./server.conf"_s);
     if (qEnvironmentVariableIsSet("SERVER_CONF_PATH"))
         configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
     else
         qDebug() << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
     QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(QStringLiteral("qtifmedia"));
-    QUrl url = QUrl(settings.value(QStringLiteral("Registry"), QStringLiteral("local:qtifmedia")).toString());
+    settings.beginGroup(u"qtifmedia"_s);
+    QUrl url = QUrl(settings.value(u"Registry"_s, u"local:qtifmedia"_s).toString());
     m_host = new QRemoteObjectRegistryHost(url);
     qDebug() << "registry at: " << m_host->registryUrl().toString();
     connect(m_host, &QRemoteObjectNode::error, this, &Core::reportError);

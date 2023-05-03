@@ -17,11 +17,13 @@
 
 #include "logging.h"
 
+using namespace Qt::StringLiterals;
+
 QString mediaDatabaseFile(const QVariantMap &serviceSettings)
 {
     QString dbFile;
-    bool useTemporaryDatabase = serviceSettings.value(QStringLiteral("useTemporaryDatabase")).toBool();
-    QString database = serviceSettings.value(QStringLiteral("database")).toString();
+    bool useTemporaryDatabase = serviceSettings.value(u"useTemporaryDatabase"_s).toBool();
+    QString database = serviceSettings.value(u"database"_s).toString();
     if (qEnvironmentVariableIsSet("QTIFMEDIA_TEMPORARY_DATABASE")) {
         qCInfo(media) << "QTIFMEDIA_TEMPORARY_DATABASE environment variable is set.\n"
                       << "Overriding service setting: 'useTemporaryDatabas'";
@@ -44,8 +46,8 @@ QString mediaDatabaseFile(const QVariantMap &serviceSettings)
     } else {
         const QDir cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
         if (!cacheLocation.exists())
-            cacheLocation.mkpath(QStringLiteral("."));
-        dbFile = cacheLocation.absoluteFilePath(QStringLiteral("ifmedia.db"));
+            cacheLocation.mkpath(u"."_s);
+        dbFile = cacheLocation.absoluteFilePath(u"ifmedia.db"_s);
         qCInfo(media) << "Used media database:" << dbFile;
     }
     return dbFile;
@@ -53,7 +55,7 @@ QString mediaDatabaseFile(const QVariantMap &serviceSettings)
 
 QSqlDatabase createDatabaseConnection(const QString &connectionName, const QString &dbFile)
 {
-    QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connectionName);
+    QSqlDatabase db = QSqlDatabase::addDatabase(u"QSQLITE"_s, connectionName);
     db.setDatabaseName(dbFile);
     if (!db.open())
         qFatal("Couldn't couldn't open database: %s", qPrintable(db.lastError().text()));
@@ -62,12 +64,12 @@ QSqlDatabase createDatabaseConnection(const QString &connectionName, const QStri
 
 void createMediaDatabase(const QString &dbFile)
 {
-    QSqlDatabase db = createDatabaseConnection(QStringLiteral("main"), dbFile);
+    QSqlDatabase db = createDatabaseConnection(u"main"_s, dbFile);
     QSqlQuery createQueue(db);
-    createQueue.exec(QStringLiteral("CREATE TABLE IF NOT EXISTS queue "
-                                    "(id INTEGER PRIMARY KEY, "
-                                    "qindex INTEGER, "
-                                    "track_index INTEGER)"));
+    createQueue.exec(u"CREATE TABLE IF NOT EXISTS queue "
+                     "(id INTEGER PRIMARY KEY, "
+                     "qindex INTEGER, "
+                     "track_index INTEGER)"_s);
     if (createQueue.lastError().isValid())
         qFatal("Couldn't create Database Tables: %s", qPrintable(createQueue.lastError().text()));
 

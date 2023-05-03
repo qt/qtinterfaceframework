@@ -18,6 +18,8 @@
 #include <QModelIndex>
 #include <QStringList>
 
+using namespace Qt::StringLiterals;
+
 #define QIF_PLUGIN_DIRECTORY "interfaceframework"
 
 QT_BEGIN_NAMESPACE
@@ -30,16 +32,16 @@ namespace qtif_helper {
 #else
     static const bool loadDebug = false;
 #endif
-    static const QString interfacesLiteral = QStringLiteral("interfaces");
-    static const QString fileNameLiteral = QStringLiteral("fileName");
-    static const QString metaDataLiteral = QStringLiteral("MetaData");
-    static const QString classNameLiteral = QStringLiteral("className");
-    static const QString simulationLiteral = QStringLiteral("simulation");
-    static const QString debugLiteral = QStringLiteral("debug");
+    static const QString interfacesLiteral = u"interfaces"_s;
+    static const QString fileNameLiteral = u"fileName"_s;
+    static const QString metaDataLiteral = u"MetaData"_s;
+    static const QString classNameLiteral = u"className"_s;
+    static const QString simulationLiteral = u"simulation"_s;
+    static const QString debugLiteral = u"debug"_s;
 #ifdef Q_OS_WIN
-    static const QString debugSuffixLiteral = QStringLiteral("d");
+    static const QString debugSuffixLiteral = u"d"_s;
 #else
-    static const QString debugSuffixLiteral = QStringLiteral("_debug");
+    static const QString debugSuffixLiteral = u"_debug"_s;
 #endif
 
     QString backendBaseName(const QString &fileName)
@@ -96,7 +98,7 @@ QIfProxyServiceObject *QIfServiceManagerPrivate::createServiceObject(struct Back
     if (backend->proxyServiceObject) {
         QString fileName = backend->metaData[fileNameLiteral].toString();
         if (fileName.isEmpty())
-            fileName = QStringLiteral("static plugin");
+            fileName = u"static plugin"_s;
 
         qCDebug(qLcIfServiceManagement) << "Found: " << backend->proxyServiceObject << "from: " << fileName;
 

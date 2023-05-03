@@ -15,13 +15,15 @@
 
 #include "QtIfRemoteObjectsHelper/rep_qifpagingmodel_replica.h"
 
+ using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 class {{class}} : public QIfPagingModelInterface
 {
     Q_OBJECT
 public:
-    explicit {{class}}(const QString &remoteObjectsLookupName = QStringLiteral("{{interface.qualified_name}}.{{property}}"), QObject *parent = nullptr);
+    explicit {{class}}(const QString &remoteObjectsLookupName = u"{{interface.qualified_name}}.{{property}}"_s, QObject *parent = nullptr);
     ~{{class}}();
 
     void initialize() override;

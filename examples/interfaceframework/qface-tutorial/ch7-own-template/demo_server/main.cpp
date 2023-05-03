@@ -9,6 +9,8 @@
 #include "instrumentcluster.h"
 #include "instrumentcluster_adaptor.h"
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -19,8 +21,8 @@ int main(int argc, char *argv[])
 
     InstrumentClusterAdaptor adaptor(&cluster);
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject("/", &cluster);
-    connection.registerService("Example.If.InstrumentCluster");
+    connection.registerObject(u"/"_s, &cluster);
+    connection.registerService(u"Example.If.InstrumentCluster"_s);
 
     return app.exec();
 }

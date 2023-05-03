@@ -13,6 +13,8 @@
 #include <QStringList>
 #include <QtInterfaceFramework/QIfSimulationEngine>
 
+using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 {% if module.tags.config.interfaceBuilder %}
@@ -27,7 +29,7 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
 /*! \internal */
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
-    , m_simulationEngine(new QIfSimulationEngine(QStringLiteral("{{module.name|lower}}"), this))
+    , m_simulationEngine(new QIfSimulationEngine(u"{{module.name|lower}}"_s, this))
 {
 {% if module.tags.config.interfaceBuilder %}
     QVector<QIfFeatureInterface *> interfacesList = {{module.tags.config.interfaceBuilder}}(this);
@@ -39,7 +41,7 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
 {%   for interface in module.interfaces %}
     m_{{interface|lower}}Backend = new {{interface}}Backend(m_simulationEngine, this);
     //Register the types for the SimulationEngine
-    {{module.module_name|upperfirst}}::registerQmlTypes(QStringLiteral("{{module|qml_type}}.simulation"), {{module.majorVersion}}, {{module.minorVersion}});
+    {{module.module_name|upperfirst}}::registerQmlTypes(u"{{module|qml_type}}.simulation"_s, {{module.majorVersion}}, {{module.minorVersion}});
     m_simulationEngine->registerSimulationInstance(m_{{interface|lower}}Backend, "{{module|qml_type}}.simulation", {{module.majorVersion}}, {{module.minorVersion}}, "{{interface}}Backend");
 {%   endfor %}
 {% if module.tags.config_simulator and module.tags.config_simulator.simulationFile %}
@@ -47,8 +49,8 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
 {% else %}
 {%   set simulationFile = "qrc:///simulation/" + module.module_name|lower + '_simulation.qml' %}
 {% endif %}
-    m_simulationEngine->loadSimulationData(QStringLiteral(":/simulation/{{module.module_name|lower}}_simulation_data.json"));
-    m_simulationEngine->loadSimulation(QUrl(QStringLiteral("{{simulationFile}}")));
+    m_simulationEngine->loadSimulationData(u":/simulation/{{module.module_name|lower}}_simulation_data.json"_s);
+    m_simulationEngine->loadSimulation(QUrl(u"{{simulationFile}}"_s));
 {% endif %}
 }
 
@@ -85,7 +87,7 @@ QString {{class}}::id() const
 {% else %}
 {%   set serviceObjectId = "{0}_simulation".format(module.name) %}
 {% endif %}
-    return QStringLiteral("{{serviceObjectId}}");
+    return u"{{serviceObjectId}}"_s;
 }
 
 QString {{class}}::configurationId() const
@@ -97,7 +99,7 @@ QString {{class}}::configurationId() const
 {% else %}
 {%   set configurationId = module.name %}
 {% endif %}
-    return QStringLiteral("{{configurationId}}");
+    return u"{{configurationId}}"_s;
 }
 
 void {{class}}::updateServiceSettings(const QVariantMap &settings)

@@ -11,13 +11,15 @@
 
 #include <QStringList>
 
+using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
 {
 {% for interface in module.interfaces %}
-    m_{{interface|lower}}Backend = new {{interface}}RoBackend(QStringLiteral("{{interface.qualified_name}}"), this);
+    m_{{interface|lower}}Backend = new {{interface}}RoBackend(u"{{interface.qualified_name}}"_s, this);
 {% endfor %}
 }
 
@@ -25,7 +27,7 @@ QStringList {{class}}::interfaces() const
 {
     QStringList list;
 {% for iface in module.interfaces %}
-{%   if loop.first %}    list{% endif %} << {{module.module_name|upperfirst}}_{{iface}}_iid{% if loop.last %};{% endif %}
+{%   if loop.first %}    list{% endif %} << QStringLiteral({{module.module_name|upperfirst}}_{{iface}}_iid){% if loop.last %};{% endif %}
 {% endfor %}
 
     return list;
@@ -53,7 +55,7 @@ QString {{class}}::id() const
 {% else %}
 {%   set serviceObjectId = "{0}_qtro".format(module.name) %}
 {% endif %}
-    return QStringLiteral("{{serviceObjectId}}");
+    return u"{{serviceObjectId}}"_s;
 }
 
 QString {{class}}::configurationId() const
@@ -65,7 +67,7 @@ QString {{class}}::configurationId() const
 {% else %}
 {%   set configurationId = module.name %}
 {% endif %}
-    return QStringLiteral("{{configurationId}}");
+    return u"{{configurationId}}"_s;
 }
 
 void {{class}}::updateServiceSettings(const QVariantMap &settings)

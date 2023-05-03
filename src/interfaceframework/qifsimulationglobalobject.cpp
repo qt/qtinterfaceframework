@@ -7,14 +7,16 @@
 #include <QtDebug>
 #include <QJsonDocument>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 namespace qtif_helper {
-    static const QString unsupportedLiteral = QStringLiteral("unsupported");
-    static const QString minLiteral = QStringLiteral("minimum");
-    static const QString maxLiteral = QStringLiteral("maximum");
-    static const QString rangeLiteral = QStringLiteral("range");
-    static const QString domainLiteral = QStringLiteral("domain");
+    static const QString unsupportedLiteral = u"unsupported"_s;
+    static const QString minLiteral = u"minimum"_s;
+    static const QString maxLiteral = u"maximum"_s;
+    static const QString rangeLiteral = u"range"_s;
+    static const QString domainLiteral = u"domain"_s;
 }
 
 using namespace qtif_helper;
@@ -171,12 +173,12 @@ using namespace qtif_helper;
 
         if (value.type() == QVariant::Map) {
             QVariantMap map = value.toMap();
-            if (map.contains(QStringLiteral("name")))
-                d->m_name = map.value(QStringLiteral("name")).value<QString>();
-            if (map.contains(QStringLiteral("age")))
-                d->m_age = map.value(QStringLiteral("age")).value<int>();
-            if (map.contains(QStringLiteral("isMarried")))
-                d->m_isMarried = map.value(QStringLiteral("isMarried")).value<bool>();
+            if (map.contains(u"name"_s))
+                d->m_name = map.value(u"name"_s).value<QString>();
+            if (map.contains(u"age"_s))
+                d->m_age = map.value(u"age"_s).value<int>();
+            if (map.contains(u"isMarried"_s))
+                d->m_isMarried = map.value(u"isMarried"_s).value<bool>();
         } else if (value.type() == QVariant::List) {
             QVariantList values = value.toList();
             d->m_name = values.value(0).value<QString>();
@@ -303,7 +305,7 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
         QQmlPropertyMap *map = currentValue.value<QQmlPropertyMap*>();
         if (!map)
             continue;
-        const QStringList zones = data.value(QStringLiteral("zones")).toStringList();
+        const QStringList zones = data.value(u"zones"_s).toStringList();
         for (const QString &zone : zones) {
             const QVariant defVal = defaultValue(i.value().toMap(), zone);
             if (defVal.isValid()) {
@@ -326,7 +328,7 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
 */
 QVariant QIfSimulationGlobalObject::defaultValue(const QVariantMap &data, const QString &zone)
 {
-    return parseDomainValue(data, QStringLiteral("default"), zone);
+    return parseDomainValue(data, u"default"_s, zone);
 }
 
 /*!
@@ -359,11 +361,11 @@ QString QIfSimulationGlobalObject::constraint(const QVariantMap &data, const QSt
     if (unsupportedDomain.isValid())
         return unsupportedLiteral;
     if (minDomain.isValid() && maxDomain.isValid())
-        return QStringLiteral("[") + minDomain.toString() + QStringLiteral("-") + maxDomain.toString() + QStringLiteral("]") ;
+        return u"["_s + minDomain.toString() + u"-"_s + maxDomain.toString() + u"]"_s ;
     if (minDomain.isValid())
-        return QStringLiteral(">= ") + minDomain.toString();
+        return u">= "_s + minDomain.toString();
     if (maxDomain.isValid())
-        return QStringLiteral("<= ") + maxDomain.toString();
+        return u"<= "_s + maxDomain.toString();
     if (domainDomain.isValid())
         return QString::fromUtf8(QJsonDocument::fromVariant(domainDomain).toJson(QJsonDocument::Compact));
 
@@ -445,7 +447,7 @@ QVariant QIfSimulationGlobalObject::parseDomainValue(const QVariantMap &data, co
         const QVariantMap domainMap = domainData.toMap();
         QString z = zone;
         if (zone.isEmpty())
-            z = QStringLiteral("=");
+            z = u"="_s;
 
         if (domainMap.contains(z))
             return qtif_convertFromJSON(domainMap.value(z));

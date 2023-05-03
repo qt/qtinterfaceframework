@@ -8,6 +8,8 @@
 
 #include <QtDebug>
 
+using namespace Qt::StringLiterals;
+
 SearchAndBrowseBackend::SearchAndBrowseBackend(AmFmTunerBackend *tunerBackend, QObject *parent)
     : QIfFilterAndBrowseModelInterface(parent)
     , m_tunerBackend(tunerBackend)
@@ -18,8 +20,8 @@ SearchAndBrowseBackend::SearchAndBrowseBackend(AmFmTunerBackend *tunerBackend, Q
 void SearchAndBrowseBackend::initialize()
 {
     QStringList contentTypes;
-    contentTypes << QStringLiteral("stations");
-    contentTypes << QStringLiteral("presets");
+    contentTypes << u"stations"_s;
+    contentTypes << u"presets"_s;
     emit availableContentTypesChanged(contentTypes);
     emit initializationDone();
 }

@@ -24,6 +24,8 @@
 
 #include "core.h"
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char *argv[])
 {
 #ifdef Q_OS_MACOS
@@ -36,20 +38,20 @@ int main(int argc, char *argv[])
 #endif
 
     // single instance guard
-    QLockFile lockFile(QStringLiteral("%1/%2.lock").arg(QDir::tempPath(), app.applicationName()));
+    QLockFile lockFile(u"%1/%2.lock"_s.arg(QDir::tempPath(), app.applicationName()));
     if (!lockFile.tryLock(100)) {
         qCritical("%s already running, aborting...", qPrintable(app.applicationName()));
         return EXIT_FAILURE;
     }
 
-    QVariantMap serviceSettings = QIfConfiguration::serviceSettings("ifmedia");
+    QVariantMap serviceSettings = QIfConfiguration::serviceSettings(u"ifmedia"_s);
     QString dbFile = mediaDatabaseFile(serviceSettings);
     createMediaDatabase(dbFile);
 
-    MediaIndexerBackend *indexerBackend = new MediaIndexerBackend(serviceSettings, createDatabaseConnection(QStringLiteral("indexer"), dbFile), qApp);
-    MediaPlayerBackend *playerBackend = new MediaPlayerBackend(serviceSettings, createDatabaseConnection(QStringLiteral("player"), dbFile), qApp);
+    MediaIndexerBackend *indexerBackend = new MediaIndexerBackend(serviceSettings, createDatabaseConnection(u"indexer"_s, dbFile), qApp);
+    MediaPlayerBackend *playerBackend = new MediaPlayerBackend(serviceSettings, createDatabaseConnection(u"player"_s, dbFile), qApp);
     MediaDiscoveryBackend *discoveryBackend = new MediaDiscoveryBackend(serviceSettings, qApp);
-    SearchAndBrowseBackend *searchAndBrowseBackend = new SearchAndBrowseBackend(serviceSettings, createDatabaseConnection(QStringLiteral("model"), dbFile), qApp);
+    SearchAndBrowseBackend *searchAndBrowseBackend = new SearchAndBrowseBackend(serviceSettings, createDatabaseConnection(u"model"_s, dbFile), qApp);
 
     auto deviceMap = discoveryBackend->deviceMap();
     for (auto it = deviceMap.cbegin(); it != deviceMap.cend(); it++) {

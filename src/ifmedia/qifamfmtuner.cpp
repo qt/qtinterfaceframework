@@ -8,6 +8,8 @@
 #include <QtInterfaceFramework/QIfServiceObject>
 #include <QtDebug>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfAmFmTunerPrivate::QIfAmFmTunerPrivate(const QString &interface, QIfAmFmTuner *parent)
@@ -154,7 +156,7 @@ QIfAmFmTunerBackendInterface *QIfAmFmTunerPrivate::tunerBackend() const
 QIfAmFmTuner::QIfAmFmTuner(QObject *parent)
     : QIfAbstractFeature(*new QIfAmFmTunerPrivate(QLatin1String(QIfAmFmTuner_iid), this), parent)
 {
-    setConfigurationId(QStringLiteral("qtifmedia"));
+    setConfigurationId(u"qtifmedia"_s);
 }
 
 /*!

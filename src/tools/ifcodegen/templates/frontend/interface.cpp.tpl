@@ -16,6 +16,8 @@
 #include <QIfServiceObject>
 #include <QIfProxyServiceObject>
 
+using namespace Qt::StringLiterals;
+
 {{ module|begin_namespace }}
 
 /*!
@@ -266,7 +268,7 @@ bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &va
 {% else %}
 {%   set configurationId = module.name %}
 {% endif %}
-    setConfigurationId(QStringLiteral("{{configurationId}}"));
+    setConfigurationId(u"{{configurationId}}"_s);
 }
 
 /*! \internal */

@@ -29,9 +29,9 @@ QStringList TunerSimulatorPlugin::interfaces() const
 
 QIfFeatureInterface *TunerSimulatorPlugin::interfaceInstance(const QString &interface) const
 {
-    if (interface == QLatin1String(QIfAmFmTuner_iid))
+    if (interface == QStringLiteral(QIfAmFmTuner_iid))
         return m_amfmtuner;
-    else if (interface == QLatin1String(QIfFilterAndBrowseModel_iid))
+    else if (interface == QStringLiteral(QIfFilterAndBrowseModel_iid))
         return m_searchbackend;
 
     return nullptr;

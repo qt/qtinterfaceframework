@@ -9,6 +9,8 @@
 
 #include <QDBusConnection>
 
+using namespace Qt::StringLiterals;
+
 {{class}}::{{class}}(QObject *parent)
     : {{interface}}BackendInterface(parent)
     , m_client(nullptr)
@@ -36,7 +38,7 @@ void {{class}}::initialize()
 void {{class}}::setupConnection()
 {
     qInfo() << "Connecting to the Server";
-    m_client = new {{interface.tags.config_dbus.className}}("{{interface.tags.config_dbus.interfaceName}}", "/", QDBusConnection::sessionBus());
+    m_client = new {{interface.tags.config_dbus.className}}(u"{{interface.tags.config_dbus.interfaceName}}"_s, u"/"_s, QDBusConnection::sessionBus());
 {% for property in interface.properties %}
     connect(m_client, &{{interface.tags.config_dbus.className}}::{{property}}Changed,
             this, &{{class}}::on{{property|upperfirst}}Changed);
@@ -49,15 +51,15 @@ void {{class}}::setupConnection()
 {% for property in interface.properties %}
 void {{class}}::fetch{{property|upperfirst}}()
 {
-    m_fetchList.append("{{property}}");
-    auto reply = m_client->asyncCall("{{property}}");
+    m_fetchList.append(u"{{property}}"_s);
+    auto reply = m_client->asyncCall(u"{{property}}"_s);
     auto watcher = new QDBusPendingCallWatcher(reply, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this, [this](QDBusPendingCallWatcher *watcher) {
         QDBusPendingReply<{{property|return_type}}> reply = *watcher;
         if (reply.isError()) {
             qCritical() << reply.error();
         } else {
-            m_fetchList.removeAll("{{property}}");
+            m_fetchList.removeAll(u"{{property}}"_s);
             this->on{{property|upperfirst}}Changed(reply.value());
             watcher->deleteLater();
             this->checkInitDone();

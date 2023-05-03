@@ -10,6 +10,8 @@
 #include <QMetaEnum>
 #include <QtDebug>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfConjunctionTermPrivate::QIfConjunctionTermPrivate()
@@ -410,19 +412,19 @@ QDataStream &operator<<(QDataStream &out, QIfAbstractQueryTerm *var)
 {
     if (var->type() == QIfAbstractQueryTerm::FilterTerm) {
         auto *term = static_cast<QIfFilterTerm*>(var);
-        out << QStringLiteral("filter");
+        out << u"filter"_s;
         out << term->operatorType();
         out << term->value();
         out << term->propertyName();
         out << term->isNegated();
     } else if (var->type() == QIfAbstractQueryTerm::ScopeTerm) {
         auto *term = static_cast<QIfScopeTerm*>(var);
-        out << QStringLiteral("scope");
+        out << u"scope"_s;
         out << term->isNegated();
         out << term->term();
     } else {
         auto *term = static_cast<QIfConjunctionTerm*>(var);
-        out << QStringLiteral("conjunction");
+        out << u"conjunction"_s;
         out << term->conjunction();
         const auto subTerms = term->terms();
         out << subTerms.count();
@@ -437,20 +439,20 @@ QDataStream &operator>>(QDataStream &in, QIfAbstractQueryTerm **var)
     QString type;
     QIfAbstractQueryTerm *aTerm=nullptr;
     in >> type;
-    if (type == QStringLiteral("filter")) {
+    if (type == u"filter"_s) {
         auto term = new QIfFilterTerm();
         aTerm = term;
         in >> term->d_ptr->m_operator;
         in >> term->d_ptr->m_value;
         in >> term->d_ptr->m_property;
         in >> term->d_ptr->m_negated;
-    } else if (type == QStringLiteral("scope")) {
+    } else if (type == u"scope"_s) {
         auto term = new QIfScopeTerm();
         aTerm = term;
         in >> term->d_ptr->m_negated;
         in >> &term->d_ptr->m_term;
     } else {
-        Q_ASSERT(type == QStringLiteral("conjunction"));
+        Q_ASSERT(type == u"conjunction"_s);
         auto term = new QIfConjunctionTerm();
         aTerm = term;
         qsizetype count = 0;

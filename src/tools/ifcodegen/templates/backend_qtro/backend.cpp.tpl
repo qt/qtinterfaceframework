@@ -16,6 +16,8 @@
 #include <QTimer>
 #include "{{module.module_name|lower}}.h"
 
+using namespace Qt::StringLiterals;
+
 Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lower}}backend.remoteobjects", QtInfoMsg)
 
 {{ module|begin_namespace }}
@@ -33,7 +35,7 @@ Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lo
     , m_zone(zone)
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-    , m_{{property}}(new Zoned{{property|upperfirst}}RoModelBackend(QStringLiteral("{{interface.qualified_name}}.{{property}}.") + m_zone, this))
+    , m_{{property}}(new Zoned{{property|upperfirst}}RoModelBackend(u"{{interface.qualified_name}}.{{property}}."_s + m_zone, this))
 {%   else %}
     , m_{{ property }}({{property|default_type_value}})
 {%   endif %}
@@ -53,7 +55,7 @@ void {{zone_class}}::sync()
 
 {% for property in interface.properties %}
 {%   if not property.type.is_model %}
-    m_propertiesToSync.append(QStringLiteral("{{property}}"));
+    m_propertiesToSync.append(u"{{property}}"_s);
 {%   endif %}
 {% endfor %}
 
@@ -64,7 +66,7 @@ void {{zone_class}}::sync()
     connect({{property}}Watcher, &QRemoteObjectPendingCallWatcher::finished, this, [this](QRemoteObjectPendingCallWatcher *self) mutable {
         if (self->error() == QRemoteObjectPendingCallWatcher::NoError) {
             m_{{property}} = self->returnValue().value<{{property|return_type}}>();
-            m_propertiesToSync.removeAll(QStringLiteral("{{property}}"));
+            m_propertiesToSync.removeAll(u"{{property}}"_s);
             checkSync();
         }
         self->deleteLater();
@@ -103,9 +105,9 @@ void {{zone_class}}::emitCurrentState()
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {%     if interface_zoned %}
-    , m_{{property}}(new Zoned{{property|upperfirst}}RoModelBackend(QStringLiteral("{{interface.qualified_name}}.{{property}}"), this))
+    , m_{{property}}(new Zoned{{property|upperfirst}}RoModelBackend(u"{{interface.qualified_name}}.{{property}}"_s, this))
 {%     else %}
-    , m_{{property}}(new {{property|upperfirst}}RoModelBackend(QStringLiteral("{{interface.qualified_name}}.{{property}}"), this))
+    , m_{{property}}(new {{property|upperfirst}}RoModelBackend(u"{{interface.qualified_name}}.{{property}}"_s, this))
 {%     endif %}
 {%   endif %}
 {% endfor %}
@@ -241,7 +243,7 @@ QStringList {{class}}::availableZones() const
 
     //Pass an empty std::function to only handle errors.
     ifReply.then(std::function<void({{operation|return_type}})>(), [this]() {
-        Q_EMIT errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("{{class}}, remote call of method {{operation}} failed"));
+        Q_EMIT errorChanged(QIfAbstractFeature::InvalidOperation, u"{{class}}, remote call of method {{operation}} failed"_s);
     });
     return ifReply;
 }
@@ -251,20 +253,20 @@ QStringList {{class}}::availableZones() const
 bool {{class}}::connectToNode()
 {
     QUrl url;
-    const auto it = m_serviceSettings.constFind(QStringLiteral("{{interface}}"));
+    const auto it = m_serviceSettings.constFind(u"{{interface}}"_s);
 
     if (it != m_serviceSettings.constEnd())
-        url = it->toMap().value(QStringLiteral("connectionUrl")).toUrl();
+        url = it->toMap().value(u"connectionUrl"_s).toUrl();
     if (url.isEmpty())
-        url = m_serviceSettings.value(QStringLiteral("connectionUrl")).toUrl();
+        url = m_serviceSettings.value(u"connectionUrl"_s).toUrl();
 
     static QString configPath;
     if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
         configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
 
         QSettings settings(configPath, QSettings::IniFormat);
-        settings.beginGroup(QStringLiteral("{{module.module_name|lower}}"));
-        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        settings.beginGroup(u"{{module.module_name|lower}}"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
         if (!url.isEmpty()) {
             qCInfo(qLcRO{{interface}}) << "SERVER_CONF_PATH environment variable is set.\n"
                                        << "Overriding service setting: '{{interface}}.connectionUrl'";
@@ -277,12 +279,12 @@ bool {{class}}::connectToNode()
         }
     }
 
-    if (url.isEmpty() && QFile::exists(QStringLiteral("./server.conf"))) {
-        configPath = QStringLiteral("./server.conf");
+    if (url.isEmpty() && QFile::exists(u"./server.conf"_s)) {
+        configPath = u"./server.conf"_s;
 
         QSettings settings(configPath, QSettings::IniFormat);
-        settings.beginGroup(QStringLiteral("{{module.module_name|lower}}"));
-        url = QUrl(settings.value(QStringLiteral("Registry")).toString());
+        settings.beginGroup(u"{{module.module_name|lower}}"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
         if (!url.isEmpty()) {
             qCInfo(qLcRO{{interface}}) << "Reading url from ./server.conf.\n"
                                        << "Overriding service setting: '{{interface}}.connectionUrl'";
@@ -296,7 +298,7 @@ bool {{class}}::connectToNode()
     }
 
     if (url.isEmpty())
-        url = QIfRemoteObjectsHelper::buildDefaultUrl(QStringLiteral("{{module.module_name|lower}}"));
+        url = QIfRemoteObjectsHelper::buildDefaultUrl(u"{{module.module_name|lower}}"_s);
 
     if (m_url != url) {
         // QtRO doesn't allow to change the URL without destroying the Node
@@ -323,10 +325,10 @@ bool {{class}}::connectToNode()
         const int defaultTimeout = 3000;
         int connectionTimeout = defaultTimeout;
         if (it != m_serviceSettings.constEnd())
-            connectionTimeout = it->toMap().value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+            connectionTimeout = it->toMap().value(u"connectionTimeout"_s, defaultTimeout).toInt();
 
         if (connectionTimeout == defaultTimeout)
-            connectionTimeout = m_serviceSettings.value(QStringLiteral("connectionTimeout"), defaultTimeout).toInt();
+            connectionTimeout = m_serviceSettings.value(u"connectionTimeout"_s, defaultTimeout).toInt();
 
         if (connectionTimeout != -1) {
             QTimer::singleShot(connectionTimeout, this, [this](){

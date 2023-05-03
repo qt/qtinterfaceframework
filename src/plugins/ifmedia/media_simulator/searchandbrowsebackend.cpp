@@ -13,9 +13,11 @@
 #include <QSqlQuery>
 #include <QtDebug>
 
-static const QString artistLiteral = QStringLiteral("artist");
-static const QString albumLiteral = QStringLiteral("album");
-static const QString trackLiteral = QStringLiteral("track");
+using namespace Qt::StringLiterals;
+
+static const QString artistLiteral = u"artist"_s;
+static const QString albumLiteral = u"album"_s;
+static const QString trackLiteral = u"track"_s;
 
 QDataStream &operator<<(QDataStream &stream, const SearchAndBrowseItem &obj)
 {
@@ -93,7 +95,7 @@ void SearchAndBrowseBackend::setContentType(const QUuid &identifier, const QStri
     bool canGoBack = types.count() >= 2;
 
     if (!m_contentTypes.contains(current_type)) {
-        emit errorChanged(QIfAbstractFeature::InvalidOperation, QStringLiteral("The provided content type is not supported"));
+        emit errorChanged(QIfAbstractFeature::InvalidOperation, u"The provided content type is not supported"_s);
         return;
     }
 
@@ -142,36 +144,36 @@ void SearchAndBrowseBackend::fetchData(const QUuid &identifier, int start, int c
             continue;
 
         QString filter = QString::fromUtf8(QByteArray::fromBase64(parts.at(1).toUtf8(), QByteArray::Base64UrlEncoding));
-        where_clauses.append(QStringLiteral("%1 = \"%2\"").arg(mapIdentifiers(parts.at(0), QStringLiteral("name")), filter));
+        where_clauses.append(u"%1 = \"%2\""_s.arg(mapIdentifiers(parts.at(0), u"name"_s), filter));
     }
     QString current_type = types.last();
 
     QString order;
     if (!state.orderTerms.isEmpty())
-        order = QStringLiteral("ORDER BY %1").arg(createSortOrder(current_type, state.orderTerms));
+        order = u"ORDER BY %1"_s.arg(createSortOrder(current_type, state.orderTerms));
 
     QString columns;
     QString groupBy;
     if (current_type == artistLiteral) {
-        columns = QStringLiteral("artistName, coverArtUrl");
-        groupBy = QStringLiteral("artistName");
+        columns = u"artistName, coverArtUrl"_s;
+        groupBy = u"artistName"_s;
     } else if (current_type == albumLiteral) {
-        columns = QStringLiteral("artistName, albumName, coverArtUrl");
-        groupBy = QStringLiteral("artistName, albumName");
+        columns = u"artistName, albumName, coverArtUrl"_s;
+        groupBy = u"artistName, albumName"_s;
     } else {
-        columns = QStringLiteral("artistName, albumName, trackName, genre, number, file, id, coverArtUrl");
+        columns = u"artistName, albumName, trackName, genre, number, file, id, coverArtUrl"_s;
     }
 
     QString filterClause = createWhereClause(current_type, state.queryTerm);
     if (!filterClause.isEmpty())
         where_clauses.append(filterClause);
 
-    QString whereClause = where_clauses.join(QStringLiteral(" AND "));
+    QString whereClause = where_clauses.join(u" AND "_s);
 
-    QString countQuery = QStringLiteral("SELECT count() FROM (SELECT %1 FROM track %2 %3)")
+    QString countQuery = u"SELECT count() FROM (SELECT %1 FROM track %2 %3)"_s
             .arg(columns,
-                 whereClause.isEmpty() ? QString() : QStringLiteral("WHERE ") + whereClause,
-                 groupBy.isEmpty() ? QString() : QStringLiteral("GROUP BY ") + groupBy);
+                 whereClause.isEmpty() ? QString() : u"WHERE "_s + whereClause,
+                 groupBy.isEmpty() ? QString() : u"GROUP BY "_s + groupBy);
 
     // QtConcurrent::run doesn't allow ignoring the return value
     auto future = QtConcurrent::run(m_threadPool, [this, countQuery, identifier]() {
@@ -185,11 +187,11 @@ void SearchAndBrowseBackend::fetchData(const QUuid &identifier, int start, int c
         }
     });
 
-    QString queryString = QStringLiteral("SELECT %1 FROM track %2 %3 %4 LIMIT %5, %6")
+    QString queryString = u"SELECT %1 FROM track %2 %3 %4 LIMIT %5, %6"_s
             .arg(columns,
-            whereClause.isEmpty() ? QString() : QStringLiteral("WHERE ") + whereClause,
+            whereClause.isEmpty() ? QString() : u"WHERE "_s + whereClause,
             order,
-            groupBy.isEmpty() ? QString() : QStringLiteral("GROUP BY ") + groupBy,
+            groupBy.isEmpty() ? QString() : u"GROUP BY "_s + groupBy,
             QString::number(start),
             QString::number(count));
 
@@ -282,13 +284,13 @@ QString SearchAndBrowseBackend::createSortOrder(const QString &type, const QList
     int i = 0;
     for (const QIfOrderTerm & term : orderTerms) {
         if (i)
-            order.append(QStringLiteral(","));
+            order.append(u","_s);
 
         order.append(mapIdentifiers(type, term.propertyName()));
         if (term.isAscending())
-            order.append(QStringLiteral("ASC"));
+            order.append(u"ASC"_s);
         else
-            order.append(QStringLiteral("DESC"));
+            order.append(u"DESC"_s);
 
         i++;
     }
@@ -298,13 +300,13 @@ QString SearchAndBrowseBackend::createSortOrder(const QString &type, const QList
 
 QString SearchAndBrowseBackend::mapIdentifiers(const QString &type, const QString &identifer)
 {
-    if (identifer == QLatin1String("name")) {
+    if (identifer == u"name"_s) {
         if (type == artistLiteral)
-            return QStringLiteral("artistName");
+            return u"artistName"_s;
         else if (type == albumLiteral)
-            return QStringLiteral("albumName");
+            return u"albumName"_s;
         else if (type == trackLiteral)
-            return QStringLiteral("trackName");
+            return u"trackName"_s;
     }
 
     return identifer;
@@ -318,7 +320,7 @@ QString SearchAndBrowseBackend::createWhereClause(const QString &type, QIfAbstra
     switch (term->type()) {
     case QIfAbstractQueryTerm::ScopeTerm: {
         auto *scope = static_cast<QIfScopeTerm*>(term);
-        return QStringLiteral("%1 (%2)").arg(scope->isNegated() ? QStringLiteral("NOT") : QString(), createWhereClause(type, scope->term()));
+        return u"%1 (%2)"_s.arg(scope->isNegated() ? u"NOT"_s : QString(), createWhereClause(type, scope->term()));
     }
     case QIfAbstractQueryTerm::ConjunctionTerm: {
         auto *conjunctionTerm = static_cast<QIfConjunctionTerm*>(term);
@@ -341,28 +343,28 @@ QString SearchAndBrowseBackend::createWhereClause(const QString &type, QIfAbstra
         bool negated = filter->isNegated();
         QString value;
         if (filter->value().typeId() == QMetaType::QString)
-            value = QStringLiteral("'%1'").arg(filter->value().toString().replace('*', '%'));
+            value = u"'%1'"_s.arg(filter->value().toString().replace('*', '%'));
         else
             value = filter->value().toString();
 
         switch (filter->operatorType()){
-            case QIfFilterTerm::Equals: operatorString = QStringLiteral("="); break;
-            case QIfFilterTerm::EqualsCaseInsensitive: operatorString = QStringLiteral("LIKE"); break;
-            case QIfFilterTerm::Unequals: operatorString = QStringLiteral("="); negated = !negated; break;
-            case QIfFilterTerm::GreaterThan: operatorString = QStringLiteral(">"); break;
-            case QIfFilterTerm::GreaterEquals: operatorString = QStringLiteral(">="); break;
-            case QIfFilterTerm::LowerThan: operatorString = QStringLiteral("<"); break;
-            case QIfFilterTerm::LowerEquals: operatorString = QStringLiteral("<="); break;
+            case QIfFilterTerm::Equals: operatorString = u"="_s; break;
+            case QIfFilterTerm::EqualsCaseInsensitive: operatorString = u"LIKE"_s; break;
+            case QIfFilterTerm::Unequals: operatorString = u"="_s; negated = !negated; break;
+            case QIfFilterTerm::GreaterThan: operatorString = u">"_s; break;
+            case QIfFilterTerm::GreaterEquals: operatorString = u">="_s; break;
+            case QIfFilterTerm::LowerThan: operatorString = u"<"_s; break;
+            case QIfFilterTerm::LowerEquals: operatorString = u"<="_s; break;
         }
 
         QStringList clause;
         if (negated)
-            clause.append(QStringLiteral("NOT"));
+            clause.append(u"NOT"_s);
         clause.append(mapIdentifiers(type, filter->propertyName()));
         clause.append(operatorString);
         clause.append(value);
 
-        return clause.join(QStringLiteral(" "));
+        return clause.join(u" "_s);
     }
     }
 
@@ -395,7 +397,7 @@ QIfPendingReply<QString> SearchAndBrowseBackend::goForward(const QUuid &identifi
     QStringList types = state.contentType.split('/');
 
     QString current_type = types.last();
-    QString new_type = state.contentType + QStringLiteral("?%1").arg(QLatin1String(itemId.toUtf8().toBase64(QByteArray::Base64UrlEncoding)));
+    QString new_type = state.contentType + u"?%1"_s.arg(QLatin1String(itemId.toUtf8().toBase64(QByteArray::Base64UrlEncoding)));
 
     if (current_type == artistLiteral)
         new_type += QLatin1String("/album");

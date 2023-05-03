@@ -13,6 +13,8 @@
 #include <QDebug>
 #include <QMetaObject>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfFilterAndBrowseModelPrivate::QIfFilterAndBrowseModelPrivate(const QString &interface, QIfFilterAndBrowseModel *model)
@@ -48,7 +50,7 @@ void QIfFilterAndBrowseModelPrivate::parseQuery()
     }
 
     if (!m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsFiltering) && !m_capabilities.testFlag(QtInterfaceFrameworkModule::SupportsSorting)) {
-        qtif_qmlOrCppWarning(q_ptr, QStringLiteral("The backend doesn't support filtering or sorting. Changing the query will have no effect"));
+        qtif_qmlOrCppWarning(q_ptr, u"The backend doesn't support filtering or sorting. Changing the query will have no effect"_s);
         return;
     }
 

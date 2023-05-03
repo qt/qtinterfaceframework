@@ -11,6 +11,8 @@
 #include <QDataStream>
 #include <QMetaEnum>
 
+using namespace Qt::StringLiterals;
+
 QT_BEGIN_NAMESPACE
 
 QIfMediaIndexerControlPrivate::QIfMediaIndexerControlPrivate(const QString &interface, QIfMediaIndexerControl *parent)
@@ -103,7 +105,7 @@ QIfMediaIndexerControl::QIfMediaIndexerControl(QObject *parent)
     : QIfAbstractFeature(*new QIfMediaIndexerControlPrivate(QLatin1String(QIfMediaIndexer_iid), this), parent)
 {
     qRegisterMetaType<QIfMediaIndexerControl::State>();
-    setConfigurationId(QStringLiteral("qtifmedia"));
+    setConfigurationId(u"qtifmedia"_s);
 }
 
 /*!

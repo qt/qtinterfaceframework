@@ -8,13 +8,15 @@
 
 #include "instrumentclustermodule.h"
 
+using namespace Qt::StringLiterals;
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
     InstrumentClusterModule::registerQmlTypes();
-    engine.load(QUrl(QStringLiteral("qrc:///Cluster.qml")));
+    engine.load(QUrl(u"qrc:///Cluster.qml"_s));
 
     return app.exec();
 }

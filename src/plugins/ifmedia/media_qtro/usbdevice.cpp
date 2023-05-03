@@ -5,11 +5,13 @@
 #include "filterandbrowsemodel.h"
 #include "usbdevice.h"
 
+using namespace Qt::StringLiterals;
+
 USBDevice::USBDevice(const QString &name, QObject *parent)
     : QIfMediaUsbDevice(parent)
     , m_name(name)
 {
-    m_browseModel = new FilterAndBrowseModel(this, QStringLiteral("QIfFilterAndBrowseModel_") + name);
+    m_browseModel = new FilterAndBrowseModel(this, u"QIfFilterAndBrowseModel_"_s + name);
 }
 
 QString USBDevice::name() const

@@ -17,6 +17,8 @@
 #include "core.h"
 #include <QtInterfaceFramework/QIfSimulationEngine>
 
+using namespace Qt::StringLiterals;
+
 {% set ns = module|namespace %}
 {% if ns|length %}
 using namespace {{ns}};
@@ -60,29 +62,29 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.addHelpOption();
 
-    QCommandLineOption guiOption("gui", "Gui mode. Starts using a QGuiApplication and allows "
-                                        "instantiating visual elements in the simulation code");
+    QCommandLineOption guiOption(u"gui"_s, u"Gui mode. Starts using a QGuiApplication and allows "
+                                           "instantiating visual elements in the simulation code"_s);
     parser.addOption(guiOption);
-    QCommandLineOption headlessOption("headless", "Headless mode. Starts using a QCoreApplication "
-                                                  "and does NOT allow instantiating visual elements "
-                                                  "in the simulation code");
+    QCommandLineOption headlessOption(u"headless"_s, u"Headless mode. Starts using a QCoreApplication "
+                                                      "and does NOT allow instantiating visual elements "
+                                                      "in the simulation code"_s);
     parser.addOption(headlessOption);
 
     parser.process(qApp->arguments());
 
     // single instance guard
-    QLockFile lockFile(QStringLiteral("%1/%2.lock").arg(QDir::tempPath(), qApp->applicationName()));
+    QLockFile lockFile(u"%1/%2.lock"_s.arg(QDir::tempPath(), qApp->applicationName()));
     if (!lockFile.tryLock(100)) {
         qCritical("%s already running, aborting...", qPrintable(qApp->applicationName()));
         return EXIT_FAILURE;
     }
 
-    auto simulationEngine = new QIfSimulationEngine(QStringLiteral("{{module.name|lower}}"));
+    auto simulationEngine = new QIfSimulationEngine(u"{{module.name|lower}}"_s);
 
 {% for interface in module.interfaces %}
     auto {{interface|lowerfirst}}Instance = new {{interface}}Backend(simulationEngine);
     //Register the types for the SimulationEngine
-    {{module.module_name|upperfirst}}::registerQmlTypes(QStringLiteral("{{module|qml_type}}.simulation"), {{module.majorVersion}}, {{module.minorVersion}});
+    {{module.module_name|upperfirst}}::registerQmlTypes(u"{{module|qml_type}}.simulation"_s, {{module.majorVersion}}, {{module.minorVersion}});
     simulationEngine->registerSimulationInstance({{interface|lowerfirst}}Instance, "{{module|qml_type}}.simulation", {{module.majorVersion}}, {{module.minorVersion}}, "{{interface}}Backend");
 {% endfor %}
 {% if module.tags.config_simulator and module.tags.config_simulator.simulationFile %}
@@ -90,8 +92,8 @@ int main(int argc, char *argv[])
 {% else %}
 {%   set simulationFile = "qrc:///simulation/" + module.module_name|lower + '_simulation.qml' %}
 {% endif %}
-    simulationEngine->loadSimulationData(QStringLiteral(":/simulation/{{module.module_name|lower}}_simulation_data.json"));
-    simulationEngine->loadSimulation(QUrl(QStringLiteral("{{simulationFile}}")));
+    simulationEngine->loadSimulationData(u":/simulation/{{module.module_name|lower}}_simulation_data.json"_s);
+    simulationEngine->loadSimulation(QUrl(u"{{simulationFile}}"_s));
 
     //initialize all our backends
 {% for interface in module.interfaces %}

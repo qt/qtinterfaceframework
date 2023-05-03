@@ -19,6 +19,8 @@
 #include <QStringList>
 #include <QtDebug>
 
+using namespace Qt::StringLiterals;
+
 MediaSimulatorPlugin::MediaSimulatorPlugin(QObject *parent)
     : QObject(parent)
     , m_player(nullptr)
@@ -34,9 +36,9 @@ void MediaSimulatorPlugin::createInstances()
 
     createMediaDatabase(dbFile);
 
-    m_player = new MediaPlayerBackend(m_serviceSettings, createDatabaseConnection(QStringLiteral("player"), dbFile), this);
-    m_browse = new SearchAndBrowseBackend(m_serviceSettings, createDatabaseConnection(QStringLiteral("model"), dbFile), this);
-    m_indexer = new MediaIndexerBackend(m_serviceSettings, createDatabaseConnection(QStringLiteral("indexer"), dbFile), this);
+    m_player = new MediaPlayerBackend(m_serviceSettings, createDatabaseConnection(u"player"_s, dbFile), this);
+    m_browse = new SearchAndBrowseBackend(m_serviceSettings, createDatabaseConnection(u"model"_s, dbFile), this);
+    m_indexer = new MediaIndexerBackend(m_serviceSettings, createDatabaseConnection(u"indexer"_s, dbFile), this);
     m_discovery = new MediaDiscoveryBackend(m_serviceSettings, this);
 
     auto deviceMap = m_discovery->deviceMap();
@@ -85,7 +87,7 @@ QIfFeatureInterface *MediaSimulatorPlugin::interfaceInstance(const QString &inte
 
 QString MediaSimulatorPlugin::configurationId() const
 {
-    return QStringLiteral("qtifmedia");
+    return u"qtifmedia"_s;
 }
 
 void MediaSimulatorPlugin::updateServiceSettings(const QVariantMap &settings)
