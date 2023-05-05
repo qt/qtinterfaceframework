@@ -30,7 +30,7 @@ class Q_QTIFMEDIA_EXPORT QIfPlayQueuePrivate : public QAbstractItemModelPrivate
 {
 public:
     QIfPlayQueuePrivate(QIfMediaPlayer *player, QIfPlayQueue *model);
-    ~QIfPlayQueuePrivate();
+    ~QIfPlayQueuePrivate() override;
 
     void initialize();
     void onInitializationDone();

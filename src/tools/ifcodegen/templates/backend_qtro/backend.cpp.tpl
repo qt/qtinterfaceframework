@@ -84,7 +84,7 @@ void {{zone_class}}::checkSync()
 void {{zone_class}}::emitCurrentState()
 {
 {% for property in interface.properties %}
-    m_parent->{{property}}Changed(m_{{property}}, m_zone);
+    emit m_parent->{{property}}Changed(m_{{property}}, m_zone);
 {% endfor %}
 }
 

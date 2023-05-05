@@ -77,7 +77,7 @@ class {{class}} : public {{interface}}BackendInterface
 public:
     explicit {{class}}(const QString &remoteObjectsLookupName = u"{{interface.qualified_name}}"_s,
                        QObject *parent = nullptr);
-    ~{{class}}();
+    ~{{class}}() override;
 
     void initialize() override;
     void updateServiceSettings(const QVariantMap &settings);

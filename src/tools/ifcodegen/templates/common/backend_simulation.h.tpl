@@ -93,7 +93,7 @@ class {{class}} : public {{class}}Interface
 public:
     explicit {{class}}(QObject *parent = nullptr);
     explicit {{class}}(QIfSimulationEngine *engine, QObject *parent = nullptr);
-    ~{{class}}();
+    ~{{class}}() override;
 
 {%   if interface_zoned %}
     Q_INVOKABLE QStringList availableZones() const override;

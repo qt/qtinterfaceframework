@@ -326,7 +326,7 @@ void QIfConfigurationManager::parseEnv(const QByteArray &rulesSrc, std::function
         // Remove whitespace at start and end of line:
         line = line.trimmed();
 
-        int equalPos = line.indexOf(QLatin1Char('='));
+        int equalPos = int(line.indexOf(QLatin1Char('=')));
         if (equalPos != -1) {
             if (line.lastIndexOf(QLatin1Char('=')) == equalPos) {
                 const auto key = line.left(equalPos).trimmed();

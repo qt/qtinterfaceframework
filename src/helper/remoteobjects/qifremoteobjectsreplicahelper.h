@@ -32,11 +32,7 @@ public:
         auto watcher = new QRemoteObjectPendingCallWatcher(reply);
         connect(watcher, &QRemoteObjectPendingCallWatcher::finished, watcher, [this, ifReply] (QRemoteObjectPendingCallWatcher *self) mutable {
             if (self->error() == QRemoteObjectPendingCallWatcher::NoError) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 1)
                 QVariant value = self->returnValue();
-#else
-                QVariant value = self->returnValue().value<QVariant>();
-#endif
                 if (value.canConvert<QIfRemoteObjectsPendingResult>()) {
                     auto result = value.value<QIfRemoteObjectsPendingResult>();
                     if (result.failed()) {

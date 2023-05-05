@@ -30,7 +30,7 @@ public:
     QIfTunerStation();
     QIfTunerStation(const QIfTunerStation &);
     QIfTunerStation &operator=(const QIfTunerStation &);
-    ~QIfTunerStation();
+    ~QIfTunerStation() override;
 
     virtual QString stationName() const;
     virtual void setStationName(const QString &stationName);
@@ -65,7 +65,7 @@ public:
     QIfAmFmTunerStation();
     QIfAmFmTunerStation(const QIfAmFmTunerStation &);
     QIfAmFmTunerStation &operator=(const QIfAmFmTunerStation &);
-    virtual ~QIfAmFmTunerStation();
+    ~QIfAmFmTunerStation() override;
 
     virtual QIfAmFmTuner::Band band() const;
     virtual void setBand(QIfAmFmTuner::Band band);

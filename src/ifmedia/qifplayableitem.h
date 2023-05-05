@@ -26,7 +26,7 @@ public:
     explicit QIfPlayableItem();
     explicit QIfPlayableItem(const QIfPlayableItem &);
     QIfPlayableItem &operator=(const QIfPlayableItem &);
-    ~QIfPlayableItem();
+    ~QIfPlayableItem() override;
 
     virtual QUrl url() const;
     virtual void setUrl(const QUrl &url);
@@ -58,7 +58,7 @@ public:
     QIfAudioTrackItem();
     QIfAudioTrackItem(const QIfAudioTrackItem &);
     QIfAudioTrackItem &operator=(const QIfAudioTrackItem &);
-    ~QIfAudioTrackItem();
+    ~QIfAudioTrackItem() override;
 
     virtual QString title() const;
     virtual void setTitle(const QString &title);

@@ -69,10 +69,10 @@ void SearchAndBrowseBackend::fetchData(const QUuid &identifier, int start, int c
     else
         return;
 
-    emit countChanged(identifier, stations.length());
+    emit countChanged(identifier, int(stations.length()));
     QVariantList requestedStations;
 
-    int size = qMin(count, stations.length());
+    int size = qMin(count, int(stations.length()));
     for (int i = start; i < size; i++)
         requestedStations.append(QVariant::fromValue(stations.at(i)));
 
@@ -163,6 +163,6 @@ QIfPendingReply<int> SearchAndBrowseBackend::indexOf(const QUuid &identifier, co
         return QIfPendingReply<int>::createFailedReply();
 
     QIfPendingReply<int> reply;
-    reply.setSuccess(stations.indexOf(*station));
+    reply.setSuccess(int(stations.indexOf(*station)));
     return reply;
 }

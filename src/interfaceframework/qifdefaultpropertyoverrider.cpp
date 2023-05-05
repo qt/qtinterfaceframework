@@ -244,7 +244,7 @@ void QIfDefaultPropertyOverrider::setCarrierOverride(bool override, QIfAbstractF
 
 int QIfDefaultPropertyOverrider::numCarriers() const
 {
-    return (int) m_carriers.size();
+    return int(m_carriers.size());
 }
 
 QVariant QIfDefaultPropertyOverrider::property(int propertyIndex) const
@@ -466,7 +466,7 @@ bool QIfDefaultPropertyOverrider::setOverridenValue(int index, const QVariant &v
 
 int QIfDefaultPropertyOverrider::propertyCount() const
 {
-    return (int) m_properties.size();
+    return int(m_properties.size());
 }
 
 const QIfDefaultPropertyOverrider::PropertyOverride &QIfDefaultPropertyOverrider::propertyForIndex(int index) const
@@ -493,7 +493,7 @@ int QIfDefaultPropertyOverrider::indexOfProperty(const QByteArray &property) con
 {
     for (uint i = 0; i < m_properties.size(); i++) {
         if (m_properties.at(i) == property) {
-            return i;
+            return int(i);
         }
     }
     return -1;

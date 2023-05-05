@@ -270,7 +270,7 @@ QVariantMap QIfSimulationGlobalObject::findData(const QVariantMap &data, const Q
         if (data.contains(key))
             return data.value(key).toMap();
 
-        int index = key.indexOf(QLatin1Char('.'));
+        qsizetype index = key.indexOf(QLatin1Char('.'));
         if (index == -1)
             break;
         key = key.right(key.size() - index - 1);

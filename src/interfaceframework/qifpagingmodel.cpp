@@ -90,25 +90,25 @@ void QIfPagingModelPrivate::onDataFetched(const QUuid &identifier, const QList<Q
     m_moreAvailable = moreAvailable;
 
     if (m_loadingType == QIfPagingModel::FetchMore) {
-        q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + items.count() -1);
+        q->beginInsertRows(QModelIndex(), int(m_itemList.count()), int(m_itemList.count() + items.count() -1));
         m_itemList += items;
-        m_fetchedDataCount = m_itemList.count();
+        m_fetchedDataCount = int(m_itemList.count());
         q->endInsertRows();
     } else {
-        const int newSize = start + items.count();
+        const int newSize = start + int(items.count());
         if (m_itemList.count() <  newSize || m_availableChunks.count() < newSize / m_chunkSize) {
             qWarning() << "countChanged signal needs to be emitted before the dataFetched signal";
             return;
         }
 
-        m_fetchedDataCount = start + items.count();
+        m_fetchedDataCount = start + int(items.count());
 
         for (int i = 0; i < items.count(); i++)
             m_itemList.replace(start + i, items.at(i));
 
         m_availableChunks.setBit(start / m_chunkSize);
 
-        emit q->dataChanged(q->index(start), q->index(start + items.count() -1));
+        emit q->dataChanged(q->index(start), q->index(start + int(items.count()) -1));
     }
 }
 
@@ -118,7 +118,7 @@ void QIfPagingModelPrivate::onCountChanged(const QUuid &identifier, int new_leng
         return;
 
     Q_Q(QIfPagingModel);
-    q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + new_length -1);
+    q->beginInsertRows(QModelIndex(), int(m_itemList.count()), int(m_itemList.count() + new_length -1));
     for (int i = 0; i < new_length; i++)
         m_itemList.append(QVariant());
     q->endInsertRows();
@@ -147,13 +147,13 @@ void QIfPagingModelPrivate::onDataChanged(const QUuid &identifier, const QList<Q
 
     //delta > 0 insert rows
     //delta < 0 remove rows
-    int delta = data.count() - count;
+    int delta = int(data.count()) - count;
     //find data overlap for updates
-    int updateCount = qMin(data.count(), count);
+    int updateCount = qMin(int(data.count()), count);
     int updateCountEnd = updateCount > 0 ? updateCount + 1 : 0;
     //range which is either added or removed
     int insertRemoveStart = start + updateCountEnd;
-    int insertRemoveCount = qMax(data.count(), count) - updateCount;
+    int insertRemoveCount = qMax(int(data.count()), count) - updateCount;
 
     if (updateCount > 0) {
         for (int i = start, j=0; j < updateCount; i++, j++)
@@ -580,7 +580,7 @@ int QIfPagingModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return d->m_itemList.count();
+    return int(d->m_itemList.count());
 }
 
 /*!

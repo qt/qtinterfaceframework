@@ -24,9 +24,9 @@ public:
     QIfMediaDiscoveryModelQtRoAdapter(const QString& remoteObjectsLookupName, MediaDiscoveryBackend *parent);
 
     QString remoteObjectsLookupName() const;
+    QStringList devices() const override;
 
 public Q_SLOTS:
-    QStringList devices() const override;
     void onDeviceAdded(QIfServiceObject *device);
     void onDeviceRemoved(QIfServiceObject *device);
 

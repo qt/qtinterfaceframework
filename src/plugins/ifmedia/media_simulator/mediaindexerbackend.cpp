@@ -203,7 +203,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
 
     while (it.hasNext())
         files.append(it.next());
-    int totalFileCount = files.size();
+    qsizetype totalFileCount = files.size();
     qCInfo(media) << "total files: " << totalFileCount;
     int currentFileIndex = 0;
     for (const QString &fileName : std::as_const(files)) {
@@ -238,7 +238,7 @@ bool MediaIndexerBackend::scanWorker(const ScanData &scanData)
                 QImage coverQImg;
                 coverArtUrl = defaultCoverArtUrl;
 
-                coverQImg.loadFromData((const uchar *)coverImage->picture().data(), coverImage->picture().size());
+                coverQImg.loadFromData(reinterpret_cast<const uchar *>(coverImage->picture().data()), int(coverImage->picture().size()));
                 coverQImg.save(coverArtUrl, "PNG");
             } else {
                 coverArtUrl = defaultCoverArtUrl;

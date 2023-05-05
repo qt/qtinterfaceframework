@@ -29,7 +29,7 @@ class Q_QTIFMEDIA_EXPORT QIfPlayQueue : public QAbstractListModel
     //TODO fix naming
     Q_PROPERTY(QIfPlayQueue::LoadingType loadingType READ loadingType WRITE setLoadingType NOTIFY loadingTypeChanged)
 public:
-    ~QIfPlayQueue();
+    ~QIfPlayQueue() override;
 
     enum Roles {
         NameRole = Qt::DisplayRole,

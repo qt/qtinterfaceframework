@@ -39,7 +39,7 @@ class {{exportsymbol}} {{class}} : public {{base_class}}
 
 public:
     explicit {{class}}(QObject *parent = nullptr);
-    ~{{class}}();
+    ~{{class}}() override;
 
 {% for property in interface.properties %}
 {%   if not property.readonly and not property.const and not property.type.is_model %}

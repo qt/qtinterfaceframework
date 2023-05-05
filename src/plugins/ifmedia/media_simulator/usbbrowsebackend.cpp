@@ -73,7 +73,7 @@ void UsbBrowseBackend::fetchData(const QUuid &identifier, int start, int count)
     QDir dir(folder);
     QFileInfoList infoList = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot | QDir::NoSymLinks);
 
-    emit countChanged(identifier, infoList.count());
+    emit countChanged(identifier, int(infoList.count()));
 
     for (int i = start; i < infoList.count() && i < count; i++) {
         SearchAndBrowseItem item;

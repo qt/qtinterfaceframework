@@ -51,7 +51,7 @@ public:
 {% else %}
     explicit {{class}}(QObject *parent = nullptr);
 {% endif %}
-    ~{{class}}();
+    ~{{class}}() override;
 
     static void registerQmlTypes(const QString& uri, int majorVersion={{interface.module.majorVersion}}, int minorVersion={{interface.module.minorVersion}});
 

@@ -97,7 +97,7 @@ namespace qtif_private {
             Q_ASSERT_X(m_instance, "QIfSimulationProxy()", "QIfSimulationProxy::registerInstance needs to be called first");
         }
 
-        ~QIfSimulationProxy()
+        ~QIfSimulationProxy() override
         {
             proxies.removeAll(this);
         }

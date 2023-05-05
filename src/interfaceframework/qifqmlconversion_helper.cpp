@@ -83,7 +83,7 @@ QVariant qtif_convertFromJSON(const QVariant &value)
 
             if (type == u"enum"_s) {
                 QString enumValue = value.toString();
-                const int lastIndex = enumValue.lastIndexOf(u"::"_s);
+                const int lastIndex = int(enumValue.lastIndexOf(u"::"_s));
                 const QString className = enumValue.left(lastIndex) + u"*"_s;
                 enumValue = enumValue.right(enumValue.size() - lastIndex - 2);
                 QMetaType metaType = QMetaType::fromName(className.toLatin1());

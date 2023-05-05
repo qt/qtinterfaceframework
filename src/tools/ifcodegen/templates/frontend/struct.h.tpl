@@ -46,7 +46,7 @@ public:
     {{class}}(const {{class}} &rhs);
     {{class}} &operator=(const {{class}} &);
     {{class}}({{struct.fields|map('parameter_type')|join(', ')}});
-    ~{{class}}();
+    ~{{class}}() override;
 
     QString type() const override;
 

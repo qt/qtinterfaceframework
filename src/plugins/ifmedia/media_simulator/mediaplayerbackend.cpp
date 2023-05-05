@@ -45,7 +45,7 @@ MediaPlayerBackend::MediaPlayerBackend(const QVariantMap &serviceSettings, const
             this, &MediaPlayerBackend::onMediaStatusChanged);
     connect(m_player->audioOutput(), &QAudioOutput::volumeChanged,
             this, [this](float volume) {
-                emit this->volumeChanged(volume);
+                emit this->volumeChanged(int(volume));
             });
     connect(m_player->audioOutput(), &QAudioOutput::mutedChanged,
             this, &MediaPlayerBackend::mutedChanged);
@@ -61,7 +61,7 @@ void MediaPlayerBackend::initialize()
     emit canReportCountChanged(true);
     emit durationChanged(0);
     emit positionChanged(0);
-    emit volumeChanged(m_player->audioOutput()->volume());
+    emit volumeChanged(int(m_player->audioOutput()->volume()));
     emit mutedChanged(m_player->audioOutput()->isMuted());
     emit initializationDone();
 }
@@ -271,7 +271,7 @@ int MediaPlayerBackend::currentIndex() const
 
 int MediaPlayerBackend::volume() const
 {
-    return m_player->audioOutput()->volume();
+    return int(m_player->audioOutput()->volume());
 }
 
 bool MediaPlayerBackend::isMuted() const
@@ -418,14 +418,14 @@ void MediaPlayerBackend::setCurrentIndex(int index)
                       this, MediaPlayerBackend::SetIndex,
                       queries, QUuid(), m_currentIndex, 0);
     // QtConcurrent::run doesn't allow ignoring the return value
-    Q_UNUSED(future);
+    Q_UNUSED(future)
 }
 
 void MediaPlayerBackend::setVolume(int volume)
 {
     qCDebug(media) << Q_FUNC_INFO << volume;
-    if (volume != m_player->audioOutput()->volume()) {
-        m_player->audioOutput()->setVolume(volume);
+    if (volume != int(m_player->audioOutput()->volume())) {
+        m_player->audioOutput()->setVolume(float(volume));
         emit volumeChanged(volume);
     }
 }

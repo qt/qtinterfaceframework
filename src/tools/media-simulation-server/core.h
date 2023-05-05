@@ -17,7 +17,7 @@ private:
     Core(QObject *parent=nullptr);
 
 public:
-    virtual ~Core();
+    ~Core() override;
     void init();
     static Core* instance();
     QRemoteObjectRegistryHost* host() const;

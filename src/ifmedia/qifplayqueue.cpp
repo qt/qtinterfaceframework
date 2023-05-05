@@ -80,9 +80,9 @@ void QIfPlayQueuePrivate::onDataFetched(const QUuid &identifier, const QList<QVa
     m_moreAvailable = moreAvailable;
 
     if (m_loadingType == QIfPlayQueue::FetchMore) {
-        q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + items.count() -1);
+        q->beginInsertRows(QModelIndex(), int(m_itemList.count()), int(m_itemList.count() + items.count() -1));
         m_itemList += items;
-        m_fetchedDataCount = m_itemList.count();
+        m_fetchedDataCount = int(m_itemList.count());
         q->endInsertRows();
     } else {
         if (m_itemList.count() < start + items.count()) {
@@ -90,11 +90,11 @@ void QIfPlayQueuePrivate::onDataFetched(const QUuid &identifier, const QList<QVa
             return;
         }
 
-        m_fetchedDataCount = start + items.count();
+        m_fetchedDataCount = start + int(items.count());
 
         for (int i = 0; i < items.count(); i++)
             m_itemList.replace(start + i, items.at(i));
-        emit q->dataChanged(q->index(start), q->index(start + items.count() -1));
+        emit q->dataChanged(q->index(start), q->index(start + int(items.count()) -1));
     }
 }
 
@@ -104,7 +104,7 @@ void QIfPlayQueuePrivate::onCountChanged(int new_length)
         return;
 
     Q_Q(QIfPlayQueue);
-    q->beginInsertRows(QModelIndex(), m_itemList.count(), m_itemList.count() + new_length -1);
+    q->beginInsertRows(QModelIndex(), int(m_itemList.count()), int(m_itemList.count() + new_length -1));
     for (int i = 0; i < new_length; i++)
         m_itemList.append(QVariant());
     q->endInsertRows();
@@ -128,13 +128,13 @@ void QIfPlayQueuePrivate::onDataChanged(const QList<QVariant> &data, int start, 
 
     //delta > 0 insert rows
     //delta < 0 remove rows
-    int delta = data.count() - count;
+    int delta = int(data.count()) - count;
     //find data overlap for updates
-    int updateCount = qMin(data.count(), count);
+    int updateCount = qMin(int(data.count()), count);
     int updateCountEnd = updateCount > 0 ? updateCount + 1 : 0;
     //range which is either added or removed
     int insertRemoveStart = start + updateCountEnd;
-    int insertRemoveCount = qMax(data.count(), count) - updateCount;
+    int insertRemoveCount = qMax(int(data.count()), count) - updateCount;
 
     if (updateCount > 0) {
         for (int i = start, j=0; j < updateCount; i++, j++)
@@ -437,7 +437,7 @@ int QIfPlayQueue::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return d->m_itemList.count();
+    return int(d->m_itemList.count());
 }
 
 /*!

@@ -146,7 +146,6 @@ QIfZonedFeatureInterface::QIfZonedFeatureInterface(QObject *parent)
 
 /*!
     \fn void QIfZonedFeatureInterface::availableZonesChanged(const QStringList &zones)
-    \since 5.13
 
     Emitted when the available zones changed.
 

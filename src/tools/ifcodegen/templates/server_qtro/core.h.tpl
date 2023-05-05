@@ -21,7 +21,7 @@ private:
     {{class}}(QObject *parent=nullptr);
 
 public:
-    virtual ~{{class}}();
+    ~{{class}}() override;
     void init();
     static {{class}}* instance();
     QRemoteObjectRegistryHost* host() const;

@@ -57,7 +57,7 @@ void QIfMediaDeviceDiscoveryModelPrivate::onDeviceAdded(QIfServiceObject *device
     }
 
     Q_Q(QIfMediaDeviceDiscoveryModel);
-    q->beginInsertRows(QModelIndex(), m_deviceList.count(), m_deviceList.count());
+    q->beginInsertRows(QModelIndex(), int(m_deviceList.count()), int(m_deviceList.count()));
     m_deviceList += device;
     q->endInsertRows();
 
@@ -73,7 +73,7 @@ void QIfMediaDeviceDiscoveryModelPrivate::onDeviceRemoved(QIfServiceObject *devi
     }
 
     Q_Q(QIfMediaDeviceDiscoveryModel);
-    int index = m_deviceList.indexOf(device);
+    int index = int(m_deviceList.indexOf(device));
     if (index == -1) {
         qWarning() << "Failed to remove the Device. Couldn't find" << device << "in the list of available devices";
         return;
@@ -183,7 +183,7 @@ int QIfMediaDeviceDiscoveryModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return d->m_deviceList.count();
+    return int(d->m_deviceList.count());
 }
 
 /*!

@@ -343,22 +343,14 @@ void QIfServiceManagerPrivate::addBackend(Backend *backend)
     const QString newBackendFile = backend->metaData.value(fileNameLiteral).toString();
     const QString newBackendFileBase = qtif_helper::backendBaseName(newBackendFile);
     const QStringList ifaceList = backend->metaData.value(interfacesLiteral).toStringList();
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
     const QSet<QString> newInterfaces = QSet<QString>(ifaceList.begin(), ifaceList.end());
-#else
-    const QSet<QString> newInterfaces = ifaceList.toSet();
-#endif
 
     bool addBackend = true;
     if (!newBackendFile.isEmpty()) {
         for (int i = 0; i < m_backends.count(); i++) {
             Backend *b = m_backends[i];
             const QStringList curIfaceList = backend->metaData.value(interfacesLiteral).toStringList();
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
             const QSet<QString> interfaces = QSet<QString>(curIfaceList.begin(), curIfaceList.end());
-#else
-            const QSet<QString> interfaces = curIfaceList.toSet();
-#endif
             if (interfaces == newInterfaces && b->name == backend->name) {
                 const QString fileName = b->metaData.value(fileNameLiteral).toString();
                 if (fileName == newBackendFile) {
@@ -391,7 +383,7 @@ void QIfServiceManagerPrivate::addBackend(Backend *backend)
     if (addBackend) {
         qCDebug(qLcIfServiceManagement, "Adding %s %s", qPrintable(newBackendFile.isEmpty() ? backend->name : newBackendFile),
                 QIfServiceManagerPrivate::isSimulation(backend->metaData) ? "as simulation backend" : "as production backend");
-        q->beginInsertRows(QModelIndex(), m_backends.count(), m_backends.count());
+        q->beginInsertRows(QModelIndex(), int(m_backends.count()), int(m_backends.count()));
         m_backends.append(backend);
         q->endInsertRows();
     }
@@ -653,7 +645,7 @@ bool QIfServiceManager::hasInterface(const QString &interface) const
 int QIfServiceManager::rowCount(const QModelIndex &parent) const
 {
     Q_D(const QIfServiceManager);
-    return parent.isValid() ? 0 : d->m_backends.count();
+    return parent.isValid() ? 0 : int(d->m_backends.count());
 }
 
 /*!

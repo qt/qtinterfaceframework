@@ -24,7 +24,7 @@ class {{class}} : public QIfPagingModelInterface
     Q_OBJECT
 public:
     explicit {{class}}(const QString &remoteObjectsLookupName = u"{{interface.qualified_name}}.{{property}}"_s, QObject *parent = nullptr);
-    ~{{class}}();
+    ~{{class}}() override;
 
     void initialize() override;
     void registerInstance(const QUuid &identifier) override;

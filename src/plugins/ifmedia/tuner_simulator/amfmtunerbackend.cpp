@@ -144,7 +144,7 @@ void AmFmTunerBackend::seekDown()
         int index = stationIndexFromFrequency(m_bandHash[m_band].m_frequency);
         index--;
         if (index < 0)
-            index = stations.count() - 1;
+            index = int(stations.count()) - 1;
 
         setCurrentStation(stations.at(index));
     }
