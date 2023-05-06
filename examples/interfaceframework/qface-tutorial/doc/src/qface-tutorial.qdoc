@@ -350,7 +350,7 @@
     "simulation" one. For more information, see \l{Dynamic Backend System}.
 
     Enabling the Interface Framework Generator is also done in the same way as we did earlier: by using the same
-    \c IFCODEGEN_SOURCE variable, but defining \c IFCODEGEN_TEMPLATE to "backend_simulator", to use the
+    \c IFCODEGEN_SOURCES variable, but defining \c IFCODEGEN_TEMPLATE to "backend_simulator", to use the
     correct generation template. In addition, we need to add 'plugin' to the \c CONFIG variable,
     to make this library a Qt plugin which can be easily loaded at runtime.
 
@@ -390,7 +390,7 @@
     \endcode
 
     This message indicates that QtInterfaceFramework is still unable to find the simulation plugin we just created.
-    Here, you need to know a little bit more about Qt's Plugin System, especially how it it finds
+    Here, you need to know a little bit more about Qt's Plugin System, especially how it finds
     plugins.
 
     Qt searches for it's plugins in multiple directories, the first one is the plugin folder,
