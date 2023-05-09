@@ -543,13 +543,16 @@
     We start by defining default values for our properties, using annotations in our QFace file.
     An annotation is a special kind of comment which adds extra data to an interface, method,
     property, and so on. For this use case we use the \c config_simulator annotation. For more
-    information, see \l{annotations-yaml}{Annotations}.
+    information, see \l{annotations_reference}{Annotations}. A reference of all supported annotations
+    can be found \l{annotations-yaml}{here}.
 
     Currently, in our Instrument Cluster, the temperature defaults to 0. Let's change this to a
-    temperature in spring, 15 degrees Celsius, with the following YAML fragment:
+    temperature in spring, 15 degrees Celsius, with the following YAML fragment, which needs to be
+    added above the property definition in the qface file.
 
     \quotefromfile interfaceframework/qface-tutorial/ch4-simulation-behavior/instrument-cluster.qface
-    \printuntil }
+    \skipuntil interface
+    \printuntil temperature
 
     Compile the plugin again for this temperature change to be reflected in our Instrument Cluster.
     Let's see how this actually works: when starting the Interface Framework Generator, the config_simulator
