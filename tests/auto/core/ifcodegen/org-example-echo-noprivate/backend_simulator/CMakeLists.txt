@@ -6,6 +6,9 @@ set(CMAKE_AUTOUIC ON)
 
 qt_add_plugin(echo_noprivate_simulator)
 set_target_properties(echo_noprivate_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
+target_sources(echo_noprivate_simulator PRIVATE
+    backend_simulator.cpp
+)
 
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(echo_noprivate_simulator

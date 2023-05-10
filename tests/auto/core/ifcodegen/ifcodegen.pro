@@ -8,10 +8,6 @@ SUBDIRS = org-example-echo \
           include-test \
           custom-template \
 
-qtConfig(remoteobjects) {
-    SUBDIRS += org-example-echo-qtro
-}
-
 OTHER_FILES = org.example.echo.qface \
               org.example.echo.yaml \
               org.example.echo.noannotation.qface \

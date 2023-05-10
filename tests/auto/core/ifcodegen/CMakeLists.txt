@@ -16,8 +16,8 @@ add_subdirectory(org-example-echo-noprivate)
 add_subdirectory(org-example-echo-noanno)
 add_subdirectory(include-test)
 add_subdirectory(simulation-behavior)
-if(QT_FEATURE_remoteobjects)
-    add_subdirectory(org-example-echo-qtro)
+if(NOT ANDROID AND NOT IOS)
+    add_subdirectory(backends)
 endif()
 
 # Only do this when using standalone tests, as we require all qmake module files to be in place

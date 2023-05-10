@@ -5,6 +5,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 qt_add_executable(org-example-echo-qtro-simulation-server)
+set_target_properties(org-example-echo-qtro-simulation-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
 # Interface Framework Generator:
 qt6_ifcodegen_extend_target(org-example-echo-qtro-simulation-server
@@ -14,4 +15,5 @@ qt6_ifcodegen_extend_target(org-example-echo-qtro-simulation-server
 
 target_link_libraries(org-example-echo-qtro-simulation-server PUBLIC
     echo_qtro_frontend
+    cmdlistener
 )

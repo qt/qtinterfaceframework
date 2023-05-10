@@ -1,7 +1,6 @@
 /**
  * module
  */
-@config: { interfaceBuilder: "echoInterfaceBuilder" }
 @config_simulator: { defaultServerMode: "gui" }
 module org.example.echomodule 1.0
 

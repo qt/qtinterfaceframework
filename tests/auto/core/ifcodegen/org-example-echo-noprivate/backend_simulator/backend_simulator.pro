@@ -14,3 +14,6 @@ QT += core interfaceframework
 IFCODEGEN_TEMPLATE = backend_simulator
 IFCODEGEN_SOURCES = ../../org.example.echo.qface
 IFCODEGEN_ANNOTATIONS += ../../no-private.yaml
+
+SOURCES += backend_simulator.cpp
+

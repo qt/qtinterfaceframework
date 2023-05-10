@@ -1,22 +1,29 @@
-// Copyright (C) 2021 The Qt Company Ltd.
+// Copyright (C) 2023 The Qt Company Ltd.
 // Copyright (C) 2019 Luxoft Sweden AB
 // Copyright (C) 2018 Pelagicore AG
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef ECHOQTROTEST_H
-#define ECHOQTROTEST_H
+#ifndef BACKENDSTEST_H
+#define BACKENDSTEST_H
 
 #include <QtTest>
+#include <QLocalServer>
+#include <QLocalSocket>
 
 QT_FORWARD_DECLARE_CLASS(QIfServiceManager);
 
-class EchoQtroTest : public QObject
+class BackendsTest : public QObject
 {
     Q_OBJECT
 public:
-    EchoQtroTest();
+    BackendsTest();
 
+    void sendCmd(const QByteArray &input);
+    void startServer();
 private slots:
+    void initTestCase();
+    void initTestCase_data();
+    void init();
     void cleanup();
     void testInit();
     void testZonedInit();
@@ -31,6 +38,13 @@ private slots:
     void testAsyncSlotResults();
     void testSignals();
     void testModel();
+
+private:
+    QProcess *m_serverProcess;
+    QLocalServer *m_localServer;
+    QLocalSocket *m_localSocket;
+    bool m_isSimulationBackend;
+    QString m_serverExecutable;
 };
 
-#endif // ECHOQTROTEST_H
+#endif // BACKENDSTEST_H
