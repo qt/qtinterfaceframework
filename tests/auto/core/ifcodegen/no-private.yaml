@@ -1,4 +1,4 @@
 org.example.echomodule:
     config:
         disablePrivateIF: true
-        interfaceBuilder: false
+        interfaceBuilder: "echoInterfaceBuilder"
