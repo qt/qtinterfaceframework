@@ -11,56 +11,59 @@ import {{module|qml_type}}.simulation
 
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 
-QtObject {
-    property var settings: IfSimulator.findData(IfSimulator.simulationData, "{{interface}}")
-    property bool defaultInitialized: false
-    property LoggingCategory qLc{{interface|upperfirst}}: LoggingCategory {
-        name: "{{module|qml_type|lower}}.simulation.{{interface|lower}}backend"
-    }
-    property var backend: {{interface|upperfirst}}Backend {
+{{interface|upperfirst}}Backend {
+    id: backend
 
-        function initialize() {
-            console.log(qLc{{interface|upperfirst}}, "INITIALIZE")
-            if (!defaultInitialized) {
-                IfSimulator.initializeDefault(settings, backend)
-                defaultInitialized = true
-            }
-            Base.initialize()
+    property QtObject d: QtObject {
+        id: d
+        property var settings: IfSimulator.findData(IfSimulator.simulationData, "{{interface}}")
+        property bool defaultInitialized: false
+        property LoggingCategory qLc{{interface|upperfirst}}: LoggingCategory {
+            name: "{{module|qml_type|lower}}.simulation.{{interface|lower}}backend"
         }
+    }
+
+    function initialize() {
+        console.log(d.qLc{{interface|upperfirst}}, "INITIALIZE")
+        if (!d.defaultInitialized) {
+            IfSimulator.initializeDefault(d.settings, backend)
+            d.defaultInitialized = true
+        }
+        Base.initialize()
+    }
 
 {% if interface_zoned %}
-        function availableZones() {
-            return settings.zones;
-        }
+    function availableZones() {
+        return d.settings.zones;
+    }
 {% endif %}
 {% for property in interface.properties %}
 
 {% if interface_zoned %}
-        function {{property|setter_name}}({{property}}, zone) {
-            if ("{{property}}" in settings && !IfSimulator.checkSettings(settings["{{property}}"], {{property}}, zone)) {
-                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
-                return;
-            }
-
-            if (zone) {
-                console.log(qLc{{interface|upperfirst}}, "SIMULATION {{ property }} for zone: " + zone + " changed to: " + {{property}});
-                backend.zones[zone].{{property}} = {{property}}
-            } else {
-                console.log(qLc{{interface|upperfirst}}, "SIMULATION {{ property }} changed to: " + {{property}});
-                backend.{{property}} = {{property}}
-            }
+    function {{property|setter_name}}({{property}}, zone) {
+        if ("{{property}}" in d.settings && !IfSimulator.checkSettings(d.settings["{{property}}"], {{property}}, zone)) {
+            console.error(d.qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
+            return;
         }
-{% else %}
-        function {{property|setter_name}}({{property}}) {
-            if ("{{property}}" in settings && !IfSimulator.checkSettings(settings["{{property}}"], {{property}})) {
-                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
-                return;
-            }
 
-            console.log(qLc{{interface|upperfirst}}, "SIMULATION {{ property }} changed to: " + {{property}});
+        if (zone) {
+            console.log(d.qLc{{interface|upperfirst}}, "SIMULATION {{ property }} for zone: " + zone + " changed to: " + {{property}});
+            backend.zones[zone].{{property}} = {{property}}
+        } else {
+            console.log(d.qLc{{interface|upperfirst}}, "SIMULATION {{ property }} changed to: " + {{property}});
             backend.{{property}} = {{property}}
         }
+    }
+{% else %}
+    function {{property|setter_name}}({{property}}) {
+        if ("{{property}}" in d.settings && !IfSimulator.checkSettings(d.settings["{{property}}"], {{property}})) {
+            console.error(d.qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
+            return;
+        }
+
+        console.log(d.qLc{{interface|upperfirst}}, "SIMULATION {{ property }} changed to: " + {{property}});
+        backend.{{property}} = {{property}}
+    }
 {% endif %}
 {% endfor %}
-    }
 }
