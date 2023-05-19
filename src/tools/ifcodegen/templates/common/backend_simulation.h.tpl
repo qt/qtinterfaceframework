@@ -104,7 +104,7 @@ public:
     void updateServiceSettings(const QVariantMap &settings);
 {% if interface_zoned %}
     void addZone(const QString &zone);
-    {{zone_class}}* zoneAt(const QString &zone);
+    Q_INVOKABLE {{zone_class}}* zoneAt(const QString &zone);
 {% endif %}
 
 {% for property in interface.properties %}
