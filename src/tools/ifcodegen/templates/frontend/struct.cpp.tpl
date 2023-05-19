@@ -172,8 +172,13 @@ QDataStream &operator>>(QDataStream &stream, {{class}} &obj)
 
 QDebug &operator<<(QDebug &dbg, const {{class}} &obj)
 {
-    Q_UNUSED(obj);
-    dbg << "{{class}}";
+    QDebugStateSaver saver(dbg);
+    dbg.nospace() << "{{class}}"
+        << '('
+{% for field in struct.fields %}
+        << obj.{{field}}(){% if not loop.last %} << ", "{% endif %}
+{% endfor +%}
+        << ')';
     return dbg;
 }
 
