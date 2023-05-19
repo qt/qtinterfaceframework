@@ -245,6 +245,7 @@ private Q_SLOTS:
     void testFunctionCalls();
     void testFunctionOverride_data();
     void testFunctionOverride();
+    void testFunctionWithInheritance();
     void testCallingBaseFunction_data();
     void testCallingBaseFunction();
     void testRecursionPrevention();
@@ -754,6 +755,39 @@ void tst_QIfSimulationEngine::testFunctionOverride()
     //If provided check the returnValue as well
     if (returnValue.isValid())
         QCOMPARE(retValue, returnValue);
+}
+
+void tst_QIfSimulationEngine::testFunctionWithInheritance()
+{
+    QIfSimulationEngine engine;
+
+    SimpleAPI testObject;
+    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+
+    engine.loadSimulation(QUrl("qrc:/FunctionTestMain.qml"));
+
+    QSignalSpy spy(&testObject, SIGNAL(simpleFunctionCalled()));
+
+    QCOMPARE(testObject.m_callCounter, 0);
+
+    //call the testfunction implemented in FunctionTest.qml
+    QVariantList expectedValues;
+    QVariant retValue = callTestFunction(&testObject, "simpleFunction", expectedValues, QVariant(), QVariant(), QVariant());
+
+    //verify the implementation was NOT called but the signal was emitted from QML
+    QCOMPARE(testObject.m_callCounter, 0);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.at(0), expectedValues);
+
+    QSignalSpy spy2(&testObject, SIGNAL(functionWithArgumentsCalled(int, QString)));
+
+    //call the testfunction implemented in FunctionTestMain.qml
+    retValue = callTestFunction(&testObject, "functionWithArguments", expectedValues, QVariant(), QVariant(100), QVariant("Test"));
+
+    //verify the implementation was NOT called but the signal was emitted from QML
+    QCOMPARE(testObject.m_callCounter, 0);
+    QCOMPARE(spy2.count(), 1);
+    QCOMPARE(spy2.at(0), expectedValues);
 }
 
 void tst_QIfSimulationEngine::testCallingBaseFunction_data()

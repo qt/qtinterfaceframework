@@ -17,6 +17,8 @@ set(resource_resource_files
     "invalid-data.json"
     "simple.json"
     "simple.qml"
+    "FunctionTest.qml"
+    "FunctionTestMain.qml"
 )
 
 qt_internal_add_resource(tst_qifsimulationengine "resource"

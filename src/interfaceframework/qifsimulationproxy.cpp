@@ -181,8 +181,13 @@ bool QIfSimulationProxyBase::callQmlMethod(const char *function, QGenericReturnA
 
     // Only invoke the functions declared in QML.
     // Once a function/property is added to a type a new MetaObject gets created which contains
-    // _QML_ in the name.
-    if (QString::fromLatin1(mo->className()).contains(QLatin1String("_QML_"))) {
+    // _QML in the name.
+    // _QML_ For a C++ type registered to QML
+    // _QMLTYPE_ For a QML type derived from a C++ type
+
+    // qDebug() << "METAOBJECT" << mo->className();
+
+    while (mo && !functionExecuted && QString::fromLatin1(mo->className()).contains(QLatin1String("_QML"))) {
         for (int i=mo->methodOffset(); i<mo->methodCount(); i++) {
             //qDebug() << "CHECKING FOR: " << function << mo->method(i).name();
             if (mo->method(i).name() != function)
@@ -191,6 +196,7 @@ bool QIfSimulationProxyBase::callQmlMethod(const char *function, QGenericReturnA
             functionExecuted = QMetaObject::invokeMethod(this, function, ret, val0, val1, val2, val3, val4, val5, val6, val7, val8, val9);
             break;
         }
+        mo = mo->superClass();
     }
     return functionExecuted;
 }
