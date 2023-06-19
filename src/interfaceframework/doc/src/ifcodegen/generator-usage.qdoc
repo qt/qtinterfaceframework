@@ -397,7 +397,8 @@
             \endcode
             \li Accompanying YAML file
             \li Module
-            \li Defines the default mode used by the server generated from the \l {server_qtro_simulator}
+            \li Defines the default mode used by the server generated from the
+                \l{QtRemoteObjects Simulation Server}{server_qtro_simulator}
                 template. Valid options are "gui" or "headless" (default).
         \row
             \li
