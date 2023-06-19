@@ -118,7 +118,7 @@ Returns the text of the passed comment without the leading/trailing comment toke
 
 Returns the correct type for the symbol, to be used inside the qmltype templates.
 
-\target add_namespace_prefix(symbol, module)
+\target add_namespace_prefix
 \section2 add_namespace_prefix(symbol, module)
 
 Appends the string retrieved from \l namespace_prefix to the provided symbol.
@@ -127,7 +127,7 @@ The namespace is read from the annotation of the module the symbol is part of. I
 is a string, the additional module argument can be provided where the namespace annotation is read
 from.
 
-\target namespace_prefix(symbol)
+\target namespace_prefix
 \section2 namespace_prefix(symbol)
 
 Reads the namespace from the annotation of the module the symbol is part of and transforms this in

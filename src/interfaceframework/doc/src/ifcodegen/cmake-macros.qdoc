@@ -22,7 +22,7 @@ find_package(Qt6 REQUIRED COMPONENTS InterfaceFramework)
 \title qt_set_ifcodegen_variable
 \target qt6_set_ifcodegen_variable
 
-\summary {Sets the variable to the given \c value within an ifcodegen template.}
+\summary {Sets the variable to the given value within an ifcodegen template.}
 
 \include cmake-find-package-interfaceframework.qdocinc
 
