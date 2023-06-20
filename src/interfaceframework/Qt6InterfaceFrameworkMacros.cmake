@@ -347,7 +347,11 @@ function(qt6_ifcodegen_generate)
 
     if (RUN_GENERATOR)
         if(NOT IS_DIRECTORY ${QT_IFCODEGEN_GENERATOR_PATH}) # Compiled ifcodegen
-            set (IFCODEGEN_CMD ${QT_IFCODEGEN_GENERATOR_PATH})
+            if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+                set (IFCODEGEN_CMD ${QT_IFCODEGEN_GENERATOR_PATH})
+            else()
+                set (IFCODEGEN_CMD ${CMAKE_COMMAND} -E env LC_ALL=en_US.UTF-8 ${QT_IFCODEGEN_GENERATOR_PATH})
+            endif()
         elseif (QT_IFCODEGEN_VIRTUALENV_PATH) # virtualenv
             if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
                 set(PYTHON_EXECUTABLE ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/python.exe)
