@@ -264,7 +264,7 @@ bool QIfConfigurationManager::setSimulationDataFile(QIfConfiguration *config, QI
 bool QIfConfigurationManager::setDiscoveryMode(QIfConfiguration *config, QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode)
 {
     Q_ASSERT(so);
-    if (so->simulationFileEnvOverride) {
+    if (so->discoveryModeEnvOverride) {
         if (!config || !config->ignoreOverrideWarnings())
             qtif_qmlOrCppWarning(config, "Changing the discoveryMode is not possible, because the QTIF_DISCOVERY_MODE_OVERRIDE env variable has been set.");
         return false;
