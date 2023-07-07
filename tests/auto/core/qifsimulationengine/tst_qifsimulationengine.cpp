@@ -174,6 +174,8 @@ signals:
     void simpleFunctionCalled();
     void functionWithArgumentsCalled(int intArgument, const QString &stringArgument);
     void functionWithReturnValueCalled(int intArgument);
+    void somethingHappened(const QString &string = QString());
+    void otherSignal(const QString &string);
 
 public:
     int m_callCounter = 0;
@@ -240,6 +242,7 @@ private Q_SLOTS:
     void testPropertyWriteDerived_data();
     void testPropertyWriteDerived();
     void testAnimations();
+    void testSignals();
 
     void testFunctionCalls_data();
     void testFunctionCalls();
@@ -639,6 +642,43 @@ void tst_QIfSimulationEngine::testAnimations()
 
     //we expect at least 2 animation steps (intermediate step and final step)
     QVERIFY2(spy.count() >= 2, qPrintable(QStringLiteral("Emitted signals: ") + QString::number(spy.count())));
+}
+
+void tst_QIfSimulationEngine::testSignals()
+{
+    QIfSimulationEngine engine;
+
+    SimpleAPI testObject;
+    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+
+    QByteArray qml ("import QtQuick; \n\
+                    import TestAPI; \n\
+                    Item { \n\
+                            SimpleAPI { \n\
+                                onTestPropertyChanged: { \n\
+                                    somethingHappened('test') \n\
+                                    otherSignal('test') \n\
+                                } \n\
+                            } \n\
+                    }");
+
+    QQmlComponent component(&engine);
+    component.setData(qml, QUrl());
+    QScopedPointer<QObject> obj(component.create());
+    QVERIFY2(obj, qPrintable(component.errorString()));
+
+    QSignalSpy somethingHappenedSpy(&testObject, SIGNAL(somethingHappened(QString)));
+    QSignalSpy otherSignalSpy(&testObject, SIGNAL(otherSignal(QString)));
+
+    QVERIFY(somethingHappenedSpy.isValid());
+    QVERIFY(otherSignalSpy.isValid());
+    testObject.setTestProperty(123);
+    QCOMPARE(somethingHappenedSpy.count(), 1);
+    QCOMPARE(somethingHappenedSpy.at(0).count(), 1);
+    QCOMPARE(somethingHappenedSpy.at(0).at(0).toString(), QString("test"));
+    QCOMPARE(otherSignalSpy.count(), 1);
+    QCOMPARE(otherSignalSpy.at(0).count(), 1);
+    QCOMPARE(otherSignalSpy.at(0).at(0).toString(), QString("test"));
 }
 
 void tst_QIfSimulationEngine::testFunctionCalls_data()

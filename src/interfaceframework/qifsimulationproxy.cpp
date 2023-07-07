@@ -62,15 +62,52 @@ int QIfSimulationProxyBase::qt_metacall(QMetaObject::Call call, int methodId, vo
     }
 
     if (call == QMetaObject::InvokeMetaMethod) {
-        // When a forwarded signal from the registered instance gets in. Directly call the signal here as well
-        if (sender() == m_instance) {
+        // The qt_metacall is only used for the dynamic calling of methods and signatures
+        // e.g. a signal or method called from QML
+        // But it is also called by QObject::activate when a signal is emitted. In case the signal
+        // is connected, the slot is called directly and qt_metacall is NOT called.
+        // QObject::activate will call qt_metacall for all signatures for the signal which are not
+        // connected.
+        // If qt_metacall gets called and the call is from our proxied instance, the signal name
+        // matches and the signal arguments match as well (either completely or just partially)
+        // The call got forwarded from the QObject::activate of the proxied instance. In this
+        // case we don't forward the call again to the proxied instance, but handle it ourself.
+        auto tryHandleCall = [=]()
+        {
+            if (sender() != m_instance)
+                return false;
+
+            QMetaMethod senderSignal = sender()->metaObject()->method(senderSignalIndex());
+            QMetaMethod receiverMethod = m_staticMetaObject->method(methodId);
+
+            if (senderSignal.name() != receiverMethod.name())
+                return false;
+
+            if (senderSignal.parameterCount() < receiverMethod.parameterCount())
+                return false;
+
+            for (int pI = 0; pI < receiverMethod.parameterCount(); pI++) {
+                if (senderSignal.parameterMetaType(pI) != receiverMethod.parameterMetaType(pI))
+                    return false;
+            }
+
+//            qDebug() << "HANDLE CALL" << methodId << m_staticMetaObject->method(methodId).name() << sender() << m_instance;
             // The static MetaObject uses local ids, so we need to subtract the offset
             QMetaObject::activate(this, m_staticMetaObject, methodId - m_staticMetaObject->methodOffset(), a);
+            return true;
+        };
+
+        if (tryHandleCall()) {
             return 0;
+        } else {
+            // Forward the signal to the proxied instance.
+
+            // As we don't derive from the MetaObject of m_instance, we need to use the methodMap to
+            // translate our methodId to the methodId for m_instance
+//            qDebug() << "FORWARD CALL" << methodId << m_staticMetaObject->method(methodId).name() << sender() << m_instance;
+            int ret = m_instance->qt_metacall(call, m_methodMap.key(methodId), a);
+            return ret;
         }
-        // As we don't derive from the MetaObject of m_instance, we need to use the methodMap to
-        // translate our methodId to the methodId for m_instance
-        return m_instance->qt_metacall(call, m_methodMap.key(methodId), a);
     }
     return m_instance->qt_metacall(call, methodId, a);
 }
