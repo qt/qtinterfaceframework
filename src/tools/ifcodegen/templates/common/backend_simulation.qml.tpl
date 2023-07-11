@@ -42,7 +42,7 @@ import {{module|qml_type}}.simulation
 {% if interface_zoned %}
     function {{property|setter_name}}({{property}}, zone) {
         if ("{{property}}" in d.settings && !IfSimulator.checkSettings(d.settings["{{property}}"], {{property}}, zone)) {
-            console.error(d.qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
+            console.error(d.qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(d.settings["{{property}}"], zone));
             return;
         }
 
@@ -57,7 +57,7 @@ import {{module|qml_type}}.simulation
 {% else %}
     function {{property|setter_name}}({{property}}) {
         if ("{{property}}" in d.settings && !IfSimulator.checkSettings(d.settings["{{property}}"], {{property}})) {
-            console.error(d.qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
+            console.error(d.qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(d.settings["{{property}}"]));
             return;
         }
 
