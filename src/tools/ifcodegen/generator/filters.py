@@ -304,7 +304,7 @@ def simulationData(module):
             iData = interface.tags['config_simulator']
         for property in interface.properties:
             if 'config_simulator' in property.tags:
-                for p in ['range', 'domain', 'minimum', 'maximum', 'default']:
+                for p in ['range', 'domain', 'minimum', 'maximum', 'default', 'unsupported']:
                     if (property.tags['config_simulator'] is not None
                             and p in property.tags['config_simulator']):
                         if property.name not in iData:
@@ -316,12 +316,21 @@ def simulationData(module):
                         if isinstance(res, dict) and zones:
                             for zone in zones:
                                 if zone in res:
-                                    iData[property.name][p][zone] = symbolToJson(res[zone], property.type)
+                                    if p == 'unsupported':
+                                        iData[property.name][p][zone] = res[zone];
+                                    else:
+                                        iData[property.name][p][zone] = symbolToJson(res[zone], property.type)
                             # Also check the entry for the general zone (=)
                             if "=" in res:
-                                iData[property.name][p]["="] = symbolToJson(res["="], property.type)
+                                if p == 'unsupported':
+                                    iData[property.name][p]["="] = res["="];
+                                else:
+                                    iData[property.name][p]["="] = symbolToJson(res["="], property.type)
                         else:
-                            iData[property.name][p] = symbolToJson(res, property.type)
+                            if p == 'unsupported':
+                                iData[property.name][p] = res
+                            else:
+                                iData[property.name][p] = symbolToJson(res, property.type)
         data[interface.name] = iData
     return json.dumps(data, indent='  ')
 

@@ -471,6 +471,16 @@
             \li Property
             \li Defines the possible values for the property; the generated code in the simulator
                 backend validates the value.
+        \row
+            \li \code
+            config_simulator:
+            unsupported: yes
+            \endcode
+            \li Accompanying YAML file
+            \li Property
+            \li Defines whether the property is \c supported; the generated code in the simulator
+                backend validates the value and reports a warning when you try to change an
+                \c unsupported property.
     \endtable
 
     \section3 backend_qtro
