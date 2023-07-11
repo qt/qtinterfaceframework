@@ -38,7 +38,7 @@ QtObject {
 {% if interface_zoned %}
         function {{property|setter_name}}({{property}}, zone) {
             if ("{{property}}" in settings && !IfSimulator.checkSettings(settings["{{property}}"], {{property}}, zone)) {
-                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"]));
+                console.error(qLc{{interface|upperfirst}}, "SIMULATION changing {{property}} is not possible: provided: " + {{property}} + " constraint: " + IfSimulator.constraint(settings["{{property}}"], zone));
                 return;
             }
 
