@@ -20,6 +20,7 @@ public:
 
     void sendCmd(const QByteArray &input);
     void startServer();
+    void ignoreMessage(QtMsgType type, const char *message);
 private slots:
     void initTestCase();
     void initTestCase_data();
@@ -38,11 +39,13 @@ private slots:
     void testAsyncSlotResults();
     void testSignals();
     void testModel();
+    void testSimulationData();
 
 private:
     QProcess *m_serverProcess;
     QLocalServer *m_localServer;
     QLocalSocket *m_localSocket;
+    bool m_isSimulation;
     bool m_isSimulationBackend;
     QString m_serverExecutable;
 };

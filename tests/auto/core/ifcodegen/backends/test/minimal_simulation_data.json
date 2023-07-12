@@ -1,7 +1,41 @@
 {
-"EchoZoned": {
+  "Echo": {
+    "floatValue1": {
+      "minimum": 2.0
+    },
+    "floatValue2": {
+      "maximum": 300.0
+    }
+  },
+  "EchoZoned": {
     "zones": [
       "FrontLeft"
-    ]
-}
+    ],
+    "intValue": {
+      "range": {
+        "FrontLeft": [
+          10,
+          33
+        ],
+        "Rear": [
+          0,
+          11
+        ]
+      }
+    },
+    "stringValue": {
+      "domain": [
+        "hello test",
+        "test string",
+        "three"
+      ]
+    },
+    "rangedValue": {
+      "minimum": 10.0,
+      "maximum": 15.0
+    },
+    "unsupportedValue": {
+      "unsupported": true
+    }
+  }
 }
