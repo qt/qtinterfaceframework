@@ -164,10 +164,10 @@ using namespace qtif_helper;
         QVariant value = qtif_convertFromJSON(variant);
         // First try to convert the values to a Map or a List
         // This is needed as it could also store a QStringList or a Hash
-        if (value.canConvert(QVariant::Map))
-            value.convert(QVariant::Map);
-        if (value.canConvert(QVariant::List))
-            value.convert(QVariant::List);
+        if (value.canConvert(QMetaType::fromType<QVariantMap>()))
+            value.convert(QMetaType::fromType<QVariantMap>());
+        if (value.canConvert(QMetaType::fromType<QVariantList>()))
+            value.convert(QMetaType::fromType<QVariantList>());
 
         if (value.type() == QVariant::Map) {
             QVariantMap map = value.toMap();
@@ -351,7 +351,7 @@ QString QIfSimulationGlobalObject::constraint(const QVariantMap &data, const QSt
             minDomain = range.at(0);
             maxDomain = range.at(1);
         } else {
-            qWarning("Domain 'range' needs to be list of exactly two values");
+            qtif_qmlOrCppWarning(this, "Domain 'range' needs to be list of exactly two values");
         }
     }
     const QVariant domainDomain = parseDomainValue(data, domainLiteral, zone);
@@ -389,39 +389,52 @@ bool QIfSimulationGlobalObject::checkSettings(const QVariantMap &data, const QVa
     const QVariant rangeDomain = parseDomainValue(data, rangeLiteral, zone);
     if (rangeDomain.isValid()) {
         QVariantList range = rangeDomain.toList();
+        if (range.isEmpty())
+            return true;
+
         if (range.count() == 2) {
             minDomain = range.at(0);
             maxDomain = range.at(1);
         } else {
-            qWarning("Domain 'range' needs to be list of exactly two values");
+            qtif_qmlOrCppWarning(this, "Domain 'range' needs to be list of exactly two values");
+            return false;
         }
     }
     const QVariant domainDomain = parseDomainValue(data, domainLiteral, zone);
-    bool valueToDouble = value.canConvert(QMetaType::fromType<double>());
-    bool minDomainToDouble = minDomain.canConvert(QMetaType::fromType<double>());
-    bool maxDomainToDouble = maxDomain.canConvert(QMetaType::fromType<double>());
+    bool doubleValueOk = false;
+    double doubleValue = value.toDouble(&doubleValueOk);
+    bool minDomainDoubleOk = false;
+    double minDomainDouble = minDomain.toDouble(&minDomainDoubleOk);
+    bool maxDomainDoubleOk = false;
+    double maxDomainDouble = maxDomain.toDouble(&maxDomainDoubleOk);
 
-    if (unsupportedDomain.isValid()) {
+    if (unsupportedDomain.isValid() && unsupportedDomain.canConvert<bool>()) {
         return !unsupportedDomain.toBool();
-    } else if (minDomain.isValid() && maxDomain.isValid()) {
-        if (!valueToDouble || !minDomainToDouble || !maxDomainToDouble) {
-            qWarning() << "Can't compare values: " << value << minDomain << maxDomain;
+    } else if (minDomain.isValid() && minDomain.canConvert<double>() && maxDomain.isValid() && maxDomain.canConvert<double>()) {
+        if (!doubleValueOk || !minDomainDoubleOk || !maxDomainDoubleOk) {
+            QString errorString;
+            QDebug(&errorString) << "Can't compare values:" << value << "minimum:" << minDomain << "maximum:" << maxDomain;
+            qtif_qmlOrCppWarning(this, errorString.trimmed());
             return false;
         }
-        return !(value.toDouble() < minDomain.toDouble() || value.toDouble() > maxDomain.toDouble());
-    } else if (minDomain.isValid()) {
-        if (!valueToDouble || !minDomainToDouble) {
-            qWarning() << "Can't compare values: " << value << minDomain;
+        return !(doubleValue < minDomainDouble || doubleValue > maxDomainDouble);
+    } else if (minDomain.isValid() && minDomain.canConvert<double>()) {
+        if (!doubleValueOk || !minDomainDoubleOk) {
+            QString errorString;
+            QDebug(&errorString) << "Can't compare values:" << value << minDomain;
+            qtif_qmlOrCppWarning(this, errorString.trimmed());
             return false;
         }
-        return value.toDouble() >= minDomain.toDouble();
-    } else if (maxDomain.isValid()) {
-        if (!valueToDouble || !maxDomainToDouble) {
-            qWarning() << "Can't compare values: " << value << maxDomain;
+        return doubleValue >= minDomainDouble;
+    } else if (maxDomain.isValid() && maxDomain.canConvert<double>()) {
+        if (!doubleValueOk || !maxDomainDoubleOk) {
+            QString errorString;
+            QDebug(&errorString) << "Can't compare values:" << value << maxDomain;
+            qtif_qmlOrCppWarning(this, errorString.trimmed());
             return false;
         }
-        return value.toDouble() <= maxDomain.toDouble();
-    } if (domainDomain.isValid()) {
+        return doubleValue <= maxDomainDouble;
+    } if (domainDomain.isValid() && domainDomain.canConvert<QVariantList>()) {
         return domainDomain.toList().contains(value);
     }
 

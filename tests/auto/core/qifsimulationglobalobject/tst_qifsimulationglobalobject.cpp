@@ -225,8 +225,11 @@ private Q_SLOTS:
     void testInitializeDefault();
     void testCheckSettings_data();
     void testCheckSettings();
+    void testCheckSettingsInvalid_data();
+    void testCheckSettingsInvalid();
     void testConstraint_data();
     void testConstraint();
+    void testConstraintInvalid();
 };
 
 QVariant tst_QIfSimulationGlobalObject::parseJson(const QString &json, QString& error) const
@@ -399,17 +402,26 @@ void tst_QIfSimulationGlobalObject::testCheckSettings_data()
     QTest::addColumn<QString>("zone");
     QTest::addColumn<QVariant>("value");
     QTest::addColumn<bool>("expectedResult");
+    QTest::newRow("empty") << "{}" << QString() << QVariant(1) << true;
     QTest::newRow("unsupported") << "{ \"unsupported\": true }" << QString() << QVariant(1) << false;
     QTest::newRow("unsupported zoned") << "{ \"unsupported\": { \"leftZone\": true } }" << QString("leftZone") << QVariant(1) << false;
+    QTest::newRow("unsupported zoned fallback") << "{ \"unsupported\": true }" << QString("leftZone") << QVariant(1) << false;
+    QTest::newRow("unsupported no data for zone") << "{ \"unsupported\": { \"rightZone\": true } }" << QString("leftZone") << QVariant(1) << true;
     QTest::newRow("unsupported false") << "{ \"unsupported\": false }" << QString() << QVariant(1) << true;
     QTest::newRow("minDomain") << "{ \"minimum\": 10 }" << QString() << QVariant(11) << true;
     QTest::newRow("minDomain zoned") << "{ \"minimum\": { \"leftZone\": 10 } }" << QString("leftZone") << QVariant(11) << true;
+    QTest::newRow("minDomain zoned fallback") << "{ \"minimum\": 10 }" << QString("leftZone") << QVariant(11) << true;
+    QTest::newRow("minDomain no data for zone") << "{ \"minimum\": { \"rightZone\": 10 } }" << QString("leftZone") << QVariant(11) << true;
     QTest::newRow("minDomain false") << "{ \"minimum\": 10 }" << QString() << QVariant(1) << false;
     QTest::newRow("maxDomain") << "{ \"maximum\": 10 }" << QString() << QVariant(10) << true;
     QTest::newRow("maxDomain zoned") << "{ \"maximum\": { \"leftZone\": 10 } }" << QString("leftZone") << QVariant(10) << true;
+    QTest::newRow("maxDomain zoned fallback") << "{ \"maximum\": 10 }" << QString("leftZone") << QVariant(10) << true;
+    QTest::newRow("maxDomain no data for zone") << "{ \"maximum\": { \"rightZone\": 10 } }" << QString("leftZone") << QVariant(10) << true;
     QTest::newRow("maxDomain false") << "{ \"maximum\": 10 }" << QString() << QVariant(11) << false;
     QTest::newRow("range") << "{ \"range\": [0, 10] }" << QString() << QVariant(5) << true;
     QTest::newRow("range zoned") << "{ \"range\": { \"leftZone\": [0, 10] } }" << QString("leftZone") << QVariant(5) << true;
+    QTest::newRow("range zoned fallback") << "{ \"range\": [0, 10] }" << QString("leftZone") << QVariant(5) << true;
+    QTest::newRow("range no data for zone") << "{ \"range\": { \"rightZone\": [0, 10] } }" << QString("leftZone") << QVariant(5) << true;
     QTest::newRow("range low") << "{ \"range\": [0, 10] }" << QString() << QVariant(-5) << false;
     QTest::newRow("range high") << "{ \"range\": [0, 10] }" << QString() << QVariant(15) << false;
     QTest::newRow("min, max") << "{ \"minimum\": 0, \"maximum\": 10 }" << QString() << QVariant(5) << true;
@@ -417,6 +429,8 @@ void tst_QIfSimulationGlobalObject::testCheckSettings_data()
     QTest::newRow("min, max high") << "{ \"minimum\": 0, \"maximum\": 10 }" << QString() << QVariant(15) << false;
     QTest::newRow("domain") << "{ \"domain\": [\"string1\", \"string2\"] }" << QString() << QVariant("string1") << true;
     QTest::newRow("domain zoned") << "{ \"domain\": { \"leftZone\": [\"string1\", \"string2\"] } }" << QString("leftZone") << QVariant("string1") << true;
+    QTest::newRow("domain zoned fallback") << "{ \"domain\": [\"string1\", \"string2\"] }" << QString("leftZone") << QVariant("string1") << true;
+    QTest::newRow("domain no data for zone") << "{ \"domain\": { \"rightZone\": [\"string1\", \"string2\"] } }" << QString("leftZone") << QVariant("string1") << true;
     QTest::newRow("domain false") << "{ \"domain\": [\"string1\", \"string2\"] }" << QString() << QVariant("invalid") << false;
 }
 
@@ -437,11 +451,44 @@ void tst_QIfSimulationGlobalObject::testCheckSettings()
     QCOMPARE(result, expectedResult);
 }
 
+void tst_QIfSimulationGlobalObject::testCheckSettingsInvalid_data()
+{
+    QTest::addColumn<QString>("json");
+    QTest::addColumn<QVariant>("value");
+    QTest::addColumn<QString>("expectedWarning");
+    QTest::newRow("invalid min") << "{ \"minimum\": \"false\" }" << QVariant(1) << "Can't compare values: QVariant(int, 1) QVariant(QString, \"false\")";
+    QTest::newRow("invalid max") << "{ \"maximum\": \"false\" }" << QVariant(1) << "Can't compare values: QVariant(int, 1) QVariant(QString, \"false\")";
+    QTest::newRow("invalid min max") << "{ \"minimum\": \"false\", \"maximum\": 10 }" << QVariant(1) << "Can't compare values: QVariant(int, 1) minimum: QVariant(QString, \"false\") maximum: QVariant(qlonglong, 10)";
+    QTest::newRow("invalid max min") << "{ \"maximum\": \"false\", \"minimum\": 10 }" << QVariant(1) << "Can't compare values: QVariant(int, 1) minimum: QVariant(qlonglong, 10) maximum: QVariant(QString, \"false\")";
+    QTest::newRow("invalid value min") << "{ \"minimum\": 10 }" << QVariant("string") << "Can't compare values: QVariant(QString, \"string\") QVariant(qlonglong, 10)";
+    QTest::newRow("invalid value max") << "{ \"maximum\": 10 }" << QVariant("string") << "Can't compare values: QVariant(QString, \"string\") QVariant(qlonglong, 10)";
+    QTest::newRow("invalid value min max") << "{ \"minimum\": 10, \"maximum\": 10 }" << QVariant("string") << "Can't compare values: QVariant(QString, \"string\") minimum: QVariant(qlonglong, 10) maximum: QVariant(qlonglong, 10)";
+    QTest::newRow("invalid range") << "{ \"range\": [0, 10, 100] }" << QVariant(1) << "Domain 'range' needs to be list of exactly two values";
+}
+
+void tst_QIfSimulationGlobalObject::testCheckSettingsInvalid()
+{
+    QFETCH(QString, json);
+    QFETCH(QVariant, value);
+    QFETCH(QString, expectedWarning);
+
+    QIfSimulationGlobalObject globalObject;
+
+    QString error;
+    QVariant data = parseJson(json, error);
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+
+    QTest::ignoreMessage(QtWarningMsg, expectedWarning.toUtf8());
+
+    QVERIFY(!globalObject.checkSettings(data.toMap(), value));
+}
+
 void tst_QIfSimulationGlobalObject::testConstraint_data()
 {
     QTest::addColumn<QString>("json");
     QTest::addColumn<QString>("zone");
     QTest::addColumn<QString>("expectedResult");
+    QTest::newRow("empty") << "{}" << QString() << QString();
     QTest::newRow("unsupported") << "{ \"unsupported\": true }" << QString() << "unsupported";
     QTest::newRow("unsupported zoned") << "{ \"unsupported\": { \"leftZone\": true } }" << QString("leftZone") << "unsupported";
     QTest::newRow("minDomain") << "{ \"minimum\": 10 }" << QString() << ">= 10";
@@ -469,6 +516,20 @@ void tst_QIfSimulationGlobalObject::testConstraint()
 
     QString result = globalObject.constraint(data.toMap(), zone);
     QCOMPARE(result, expectedResult);
+}
+
+void tst_QIfSimulationGlobalObject::testConstraintInvalid()
+{
+    QIfSimulationGlobalObject globalObject;
+
+    QString error;
+    QVariant data = parseJson("{ \"range\": [0, 10, 100] }", error);
+    QVERIFY2(error.isEmpty(), qPrintable(error));
+
+    QTest::ignoreMessage(QtWarningMsg, "Domain 'range' needs to be list of exactly two values");
+
+    QString result = globalObject.constraint(data.toMap());
+    QVERIFY(result.isEmpty());
 }
 
 QTEST_MAIN(tst_QIfSimulationGlobalObject)
