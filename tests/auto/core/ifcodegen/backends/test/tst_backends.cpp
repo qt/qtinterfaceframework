@@ -32,7 +32,13 @@ BackendsTest::BackendsTest()
     , m_localServer(new QLocalServer(this))
     , m_localSocket(nullptr)
 {
-    m_serverProcess->setProcessChannelMode(QProcess::ForwardedChannels);
+    m_serverProcess->setProcessChannelMode(QProcess::MergedChannels);
+    connect(m_serverProcess, &QProcess::readyRead, this, [this]() {
+        while (m_serverProcess->canReadLine()) {
+            QByteArray line = m_serverProcess->readLine().chopped(1);
+            qInfo().noquote() << "server output:" << QString::fromLocal8Bit(line);
+        }
+    });
 
     QString simulationFile = QFINDTESTDATA("simulation.qml");
     QString simulationDataFile = QFINDTESTDATA("minimal_simulation_data.json");
@@ -60,7 +66,7 @@ void BackendsTest::startServer()
         qInfo() << "Starting Server Process";
         QVERIFY2(QFile::exists(m_serverExecutable), qPrintable(u"Executable doesn't exist: %1"_s.arg(m_serverExecutable)));
         m_serverProcess->start(m_serverExecutable);
-        QVERIFY2(m_serverProcess->waitForStarted(), qPrintable(u"Process error: %1\n%2"_s.arg(m_serverProcess->error()).arg(m_serverProcess->readAllStandardError())));
+        QVERIFY2(m_serverProcess->waitForStarted(), qPrintable(u"Process error: %1"_s.arg(m_serverProcess->error())));
     }
     QVERIFY(m_localServer->waitForNewConnection(5000));
     while (m_localServer->hasPendingConnections())
@@ -70,17 +76,26 @@ void BackendsTest::startServer()
     sendCmd(QTest::currentTestFunction());
 }
 
+void BackendsTest::ignoreMessage(QtMsgType type, const char *message)
+{
+    QRegularExpression expression(u".*"_s + message);
+    if (m_isSimulationBackend)
+        QTest::ignoreMessage(type, expression);
+    else
+        QTest::ignoreMessage(QtInfoMsg, expression);
+}
+
 void BackendsTest::initTestCase_data()
 {
     QDir currentDir = QDir::current();
     QTest::addColumn<QString>("backend");
-    QTest::addColumn<bool>("isSimulationBackend");
+    QTest::addColumn<bool>("isSimulation");
     QTest::addColumn<QString>("serverExecutable");
     QTest::newRow("simulation-backend") << "*echo_qtro_simulator*" << true << "";
 
 #if defined(QT_FEATURE_remoteobjects)
     QTest::newRow("qtro-server") << "echo_backend_qtro" << false << currentDir.absoluteFilePath(u"org-example-echo-qtro-server"_s + exeSuffix);
-    QTest::newRow("qtro-simulation-server") << "echo_backend_qtro" << false << currentDir.absoluteFilePath(u"org-example-echo-qtro-simulation-server"_s + exeSuffix);
+    QTest::newRow("qtro-simulation-server") << "echo_backend_qtro" << true << currentDir.absoluteFilePath(u"org-example-echo-qtro-simulation-server"_s + exeSuffix);
 #endif
 }
 
@@ -95,13 +110,14 @@ void BackendsTest::initTestCase()
 void BackendsTest::init()
 {
     QFETCH_GLOBAL(QString, backend);
-    QFETCH_GLOBAL(bool, isSimulationBackend);
+    QFETCH_GLOBAL(bool, isSimulation);
     QFETCH_GLOBAL(QString, serverExecutable);
 
     m_serverExecutable = serverExecutable;
-    m_isSimulationBackend = isSimulationBackend;
+    m_isSimulation = isSimulation;
+    m_isSimulationBackend = isSimulation && serverExecutable.isEmpty();
 
-    QVERIFY(QIfConfiguration::setDiscoveryMode(u"org.example.echomodule"_s, isSimulationBackend ?
+    QVERIFY(QIfConfiguration::setDiscoveryMode(u"org.example.echomodule"_s, m_isSimulationBackend ?
                                                                                 QIfAbstractFeature::LoadOnlySimulationBackends :
                                                                                 QIfAbstractFeature::LoadOnlyProductionBackends));
     QVERIFY(QIfConfiguration::setPreferredBackends(u"org.example.echomodule"_s, {backend}));
@@ -1049,6 +1065,103 @@ void BackendsTest::testModel()
     sendCmd("remove");
     WAIT_AND_COMPARE(countSpy, 1);
     QCOMPARE(model->rowCount(), 0);
+}
+
+void BackendsTest::testSimulationData()
+{
+    if (!m_isSimulation)
+        QSKIP("This test is only for simulation backend and simulation servers");
+
+    Echo client;
+    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QVERIFY(initSpy.isValid());
+    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+
+    startServer();
+
+    //wait until the client has connected and initial values are set
+    WAIT_AND_COMPARE(initSpy, 1);
+    QVERIFY(client.isInitialized());
+
+    QSignalSpy floatValue1Spy(&client, SIGNAL(floatValue1Changed(qreal)));
+    QVERIFY(floatValue1Spy.isValid());
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing floatValue1 is not possible: provided: 1 constraint: >= 2");
+
+    client.setFloatValue1(1);
+    floatValue1Spy.wait(500);
+    QCOMPARE(floatValue1Spy.count(), 0);
+    QCOMPARE(client.floatValue1(), 0);
+
+    QSignalSpy floatValue2Spy(&client, SIGNAL(floatValue2Changed(qreal)));
+    QVERIFY(floatValue2Spy.isValid());
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing floatValue2 is not possible: provided: 400 constraint: <= 300");
+
+    client.setFloatValue2(400);
+    floatValue2Spy.wait(500);
+    QCOMPARE(floatValue2Spy.count(), 0);
+    QCOMPARE(client.floatValue2(), 0);
+
+
+    EchoZoned zonedClient;
+    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QVERIFY(zonedInitSpy.isValid());
+    QVERIFY(zonedClient.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+
+    //wait until the client has connected and initial values are set
+    WAIT_AND_COMPARE(zonedInitSpy, 1);
+    QVERIFY(zonedClient.isInitialized());
+
+    EchoZoned *zone =  qobject_cast<EchoZoned*>(zonedClient.zoneAt(frontLeftZone));
+
+    QSignalSpy intValueSpy(zone, SIGNAL(intValueChanged(int)));
+    QVERIFY(intValueSpy.isValid());
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing intValue is not possible: provided: 1 constraint: \\[10-33\\]");
+
+    zone->setIntValue(1);
+    intValueSpy.wait(500);
+    QCOMPARE(intValueSpy.count(), 0);
+    QCOMPARE(zone->intValue(), 0);
+
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing intValue is not possible: provided: 40 constraint: \\[10-33\\]");
+
+    zone->setIntValue(40);
+    intValueSpy.wait(500);
+    QCOMPARE(intValueSpy.count(), 0);
+    QCOMPARE(zone->intValue(), 0);
+
+    QSignalSpy rangedValueSpy(zone, SIGNAL(rangedValueChanged(int)));
+    QVERIFY(rangedValueSpy.isValid());
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing rangedValue is not possible: provided: 1 constraint: \\[10-15\\]");
+
+    zone->setRangedValue(1);
+    rangedValueSpy.wait(500);
+    QCOMPARE(rangedValueSpy.count(), 0);
+    QCOMPARE(zone->rangedValue(), 0);
+
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing rangedValue is not possible: provided: 40 constraint: \\[10-15\\]");
+
+    zone->setRangedValue(40);
+    rangedValueSpy.wait(500);
+    QCOMPARE(rangedValueSpy.count(), 0);
+    QCOMPARE(zone->rangedValue(), 0);
+
+    QSignalSpy stringValueSpy(zone, SIGNAL(stringValueChanged(QString)));
+    QVERIFY(stringValueSpy.isValid());
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing stringValue is not possible: provided: 12345 constraint: \\[\"hello test\",\"test string\",\"three\"\\]");
+
+    zone->setStringValue(u"12345"_s);
+    stringValueSpy.wait(500);
+    QCOMPARE(stringValueSpy.count(), 0);
+    QCOMPARE(zone->stringValue(), QString());
+
+    QSignalSpy unsupportedValueSpy(zone, SIGNAL(unsupportedValueChanged(QString)));
+    QVERIFY(unsupportedValueSpy.isValid());
+    ignoreMessage(QtCriticalMsg, "SIMULATION changing unsupportedValue is not possible: provided: 12345 constraint: unsupported");
+
+    zone->setUnsupportedValue(u"12345"_s);
+    unsupportedValueSpy.wait(500);
+    QCOMPARE(unsupportedValueSpy.count(), 0);
+    QCOMPARE(zone->stringValue(), QString());
 }
 
 QTEST_MAIN(BackendsTest)
