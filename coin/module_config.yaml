@@ -9,6 +9,9 @@ accept_configuration:
     - condition: property
       property: features
       not_contains_value: Disable
+    - condition: property
+      property: target.osVersion
+      not_equals_value: WebAssembly
 
 instructions:
   Build:
