@@ -73,7 +73,11 @@ if (FLEX_FOUND AND TARGET ${QT_CMAKE_EXPORT_NAMESPACE}::qlalr AND NOT CROSS_COMI
     # qt_process_qlalr doesn't support merged_output and WORKING_DIRECTORY
     # We just call it manually to update the generated code
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser_p.h
+        OUTPUT
+            ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser_p.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparsertable_p.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparsertable.cpp
         COMMAND ${QT_CMAKE_EXPORT_NAMESPACE}::qlalr --no-debug --qt --no-lines ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser.g
         DEPENDS ${QT_CMAKE_EXPORT_NAMESPACE}::qlalr
         MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/queryparser/qifqueryparser.g
@@ -86,7 +90,10 @@ endif ()
 
 qt_internal_extend_target(InterfaceFramework
     SOURCES
+        queryparser/qifqueryparsertable_p.h
+        queryparser/qifqueryparsertable.cpp
         queryparser/qifqueryparser_p.h
+        queryparser/qifqueryparser.cpp
         queryparser/qifqueryparser_flex_p.h
 )
 

@@ -1,161 +1,4 @@
--- Copyright (C) 2021 The Qt Company Ltd.
--- Copyright (C) 2018 Pelagicore AG
--- SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
---
---  W A R N I N G
---  -------------
---
--- This file is not part of the Qt API.  It exists purely as an
--- implementation detail. This header file may change from version to
--- version without notice, or even be removed.
---
--- We mean it.
---
-
-%parser QIfQueryParserTable
-
-%decl qifqueryparser_p.h
-%impl qifqueryparser.cpp
-
-%token AND_OP2 "&"
-%token AND_OP "&&"
-%token OR_OP2 "|"
-%token OR_OP "||"
-%token BANG "!"
-%token EQ_OP "=="
-%token EQ_OP2 "="
-%token IC_EQ_OP "~="
-%token GE_OP ">="
-%token GT_OP ">"
-%token LE_OP "<="
-%token LT_OP "<"
-%token NE_OP "!="
-%token LEFT_PAREN "("
-%token RIGHT_PAREN ")"
-%token ASCENDING "/"
-%token DESCENDING "\\"
-%token LEFT_BRACKET "["
-%token RIGHT_BRACKET "]"
-%token INTCONSTANT "integer"
-%token FLOATCONSTANT "float"
-%token IDENTIFIER "identifier"
-%token STRING "string"
-%token SPACE
-%token ERROR
-
-
-%start translation_unit
-
-/:// Copyright (C) 2023 The Qt Company Ltd.
-// Copyright (C) 2018 Pelagicore AG
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
-
-#ifndef QTIFQUERYPARSER_P_H
-#define QTIFQUERYPARSER_P_H
-
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail. This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
-
-#include <QtCore>
-#include <QtInterfaceFramework/QIfAbstractQueryTerm>
-#include <QtInterfaceFramework/private/qifqueryterm_p.h>
-
-#include "$header"
-
-QT_BEGIN_NAMESPACE
-
-class Q_QTINTERFACEFRAMEWORK_EXPORT QIfQueryParser: protected $table
-{
-public:
-    union Value {
-      int i;
-      float f;
-      const QString *s;
-    };
-
-public:
-    QIfQueryParser();
-    virtual ~QIfQueryParser();
-
-    QIfAbstractQueryTerm *parse();
-
-    void setQuery(const QString& query)
-    {
-        m_query = query;
-    }
-
-    QString lastError() {
-        return m_error;
-    }
-
-    void setAllowedIdentifiers(const QSet<QString> &list)
-    {
-        m_identifierList = list;
-    }
-
-    QList<QIfOrderTerm> orderTerms() const
-    {
-        return m_orderList;
-    }
-
-protected:
-    inline void reallocateStack();
-
-    inline QVariant &sym(int index)
-    {
-        return sym_stack [tos + index - 1];
-    }
-
-    void initBuffer();
-
-    void setErrorString(const QString &error);
-
-    void calcCurrentColumn();
-
-    int nextToken();
-
-    void handleConjunction(bool bangOperator);
-    void handleScope(bool bang);
-
-    void negateLeftMostTerm(QIfAbstractQueryTerm *term);
-
-    bool checkIdentifier(const QString &identifer);
-
-protected:
-    QString m_query;
-    unsigned int m_offset;
-    QString m_error;
-    QSet<QString> m_identifierList;
-
-    int column;
-    int tos;
-    QVector<QVariant> sym_stack;
-    QVector<int> state_stack;
-    QVariant yylval;
-
-    QStack<QIfAbstractQueryTerm*> m_termStack;
-    QStack<QIfFilterTerm::Operator> m_operatorStack;
-    QStack<QIfConjunctionTerm::Conjunction> m_conjunctionStack;
-    QList<QIfOrderTerm> m_orderList;
-};
-
-#endif // QTIFQUERYPARSER_P_H
-
-QT_END_NAMESPACE
-
-:/
-
-
-/.// Copyright (C) 2023 The Qt Company Ltd.
+// Copyright (C) 2023 The Qt Company Ltd.
 // Copyright (C) 2018 Pelagicore AG
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
@@ -397,102 +240,60 @@ QIfAbstractQueryTerm *QIfQueryParser::parse()
             act = state_stack.at(tos++);
 
             switch (r) {
-./
 
-
-translation_unit ::= bang_clause order_term;
-translation_unit ::= bang_clause;
-
-order_term ::= LEFT_BRACKET order_clauses RIGHT_BRACKET;
-
-order_clauses ::= order_clause;
-order_clauses ::= order_clause order_clauses;
-
-order_clause ::= ASCENDING IDENTIFIER;
-/.
-              case $rule_number: {
+              case 5: {
                     QIfOrderTerm order;
                     order.d->m_ascending = true;
                     order.d->m_propertyName = sym(2).toString();
                     m_orderList.append(order);
               } break;
-./
-order_clause ::= DESCENDING IDENTIFIER;
-/.
-              case $rule_number: {
+
+              case 6: {
                     QIfOrderTerm order;
                     order.d->m_ascending = false;
                     order.d->m_propertyName = sym(2).toString();
                     m_orderList.append(order);
               } break;
-./
 
-bang_clause ::= BANG complex_clause ;
-/.
-              case $rule_number: {
+              case 7: {
                 QIfAbstractQueryTerm *term = m_termStack.top();
 
                 negateLeftMostTerm(term);
               } break;
-./
-bang_clause ::= complex_clause ;
 
-complex_clause ::= parenthesed_clause complex_operator complex_clause ;
-/.
-              case $rule_number: {
+              case 9: {
                     handleConjunction(false);
               } break;
-./
-complex_clause ::= parenthesed_clause complex_operator BANG complex_clause ;
-/.
-              case $rule_number: {
+
+              case 10: {
                   handleConjunction(true);
               } break;
-./
-complex_clause ::= parenthesed_clause ;
 
-parenthesed_clause ::= LEFT_PAREN BANG complex_clause RIGHT_PAREN;
-/.
-              case $rule_number: {
+              case 12: {
                   handleScope(true);
               } break;
-./
-parenthesed_clause ::= LEFT_PAREN complex_clause RIGHT_PAREN;
-/.
-              case $rule_number: {
+
+              case 13: {
                   handleScope(false);
               } break;
-./
-parenthesed_clause ::= clause ;
 
-complex_operator ::= OR_OP ;
-/.
-              case $rule_number: {
+              case 15: {
                   m_conjunctionStack.push(QIfConjunctionTerm::Or);
               } break;
-./
-complex_operator ::= OR_OP2 ;
-/.
-              case $rule_number: {
+
+              case 16: {
                   m_conjunctionStack.push(QIfConjunctionTerm::Or);
               } break;
-./
-complex_operator ::= AND_OP ;
-/.
-              case $rule_number: {
-                  m_conjunctionStack.push(QIfConjunctionTerm::And);
-              } break;
-./
-complex_operator ::= AND_OP2 ;
-/.
-              case $rule_number: {
-                  m_conjunctionStack.push(QIfConjunctionTerm::And);
-              } break;
-./
 
-clause ::= IDENTIFIER number_operator literal ;
-/.
-              case $rule_number: {
+              case 17: {
+                  m_conjunctionStack.push(QIfConjunctionTerm::And);
+              } break;
+
+              case 18: {
+                  m_conjunctionStack.push(QIfConjunctionTerm::And);
+              } break;
+
+              case 19: {
                     if (!checkIdentifier(sym(1).toString()))
                         return 0;
                     QIfFilterTerm *term = new QIfFilterTerm();
@@ -501,10 +302,8 @@ clause ::= IDENTIFIER number_operator literal ;
                     term->d_func()->m_value = sym(3);
                     m_termStack.push(term);
               } break;
-./
-clause ::= IDENTIFIER string_operator STRING ;
-/.
-              case $rule_number: {
+
+              case 20: {
                     if (!checkIdentifier(sym(1).toString()))
                         return 0;
                     QIfFilterTerm *term = new QIfFilterTerm();
@@ -513,10 +312,8 @@ clause ::= IDENTIFIER string_operator STRING ;
                     term->d_func()->m_value = sym(3);
                     m_termStack.push(term);
               } break;
-./
-clause ::= STRING string_operator IDENTIFIER ;
-/.
-              case $rule_number: {
+
+              case 21: {
                     if (!checkIdentifier(sym(3).toString()))
                         return 0;
                     QIfFilterTerm *term = new QIfFilterTerm();
@@ -525,10 +322,8 @@ clause ::= STRING string_operator IDENTIFIER ;
                     term->d_func()->m_value = sym(1);
                     m_termStack.push(term);
               } break;
-./
-clause ::= literal number_operator IDENTIFIER ;
-/.
-              case $rule_number: {
+
+              case 22: {
                     if (!checkIdentifier(sym(3).toString()))
                         return 0;
 
@@ -548,65 +343,39 @@ clause ::= literal number_operator IDENTIFIER ;
                     term->d_func()->m_value = sym(1);
                     m_termStack.push(term);
               } break;
-./
 
-literal ::= INTCONSTANT ;
-literal ::= FLOATCONSTANT ;
-
-number_operator ::= GE_OP ;
-/.
-              case $rule_number: {
+              case 25: {
                   m_operatorStack.push(QIfFilterTerm::GreaterEquals);
               } break;
-./
-number_operator ::= GT_OP ;
-/.
-              case $rule_number: {
+
+              case 26: {
                   m_operatorStack.push(QIfFilterTerm::GreaterThan);
               } break;
-./
-number_operator ::= LE_OP ;
-/.
-              case $rule_number: {
+
+              case 27: {
                   m_operatorStack.push(QIfFilterTerm::LowerEquals);
               } break;
-./
-number_operator ::= LT_OP ;
-/.
-              case $rule_number: {
+
+              case 28: {
                   m_operatorStack.push(QIfFilterTerm::LowerThan);
               } break;
-./
-number_operator ::= multi_operator ;
 
-string_operator ::= multi_operator ;
-string_operator ::= IC_EQ_OP ;
-/.
-              case $rule_number: {
+              case 31: {
                   m_operatorStack.push(QIfFilterTerm::EqualsCaseInsensitive);
               } break;
-./
 
-multi_operator ::= EQ_OP ;
-/.
-              case $rule_number: {
+              case 32: {
                   m_operatorStack.push(QIfFilterTerm::Equals);
               } break;
-./
-multi_operator ::= EQ_OP2 ;
-/.
-              case $rule_number: {
+
+              case 33: {
                   m_operatorStack.push(QIfFilterTerm::Equals);
               } break;
-./
-multi_operator ::= NE_OP ;
-/.
-              case $rule_number: {
+
+              case 34: {
                   m_operatorStack.push(QIfFilterTerm::Unequals);
               } break;
-./
 
-/.
             } // switch
 
             state_stack [tos] = nt_action (act, lhs [r] - TERMINAL_COUNT);
@@ -666,4 +435,3 @@ void QIfQueryParser::setErrorString(const QString &error)
 
 QT_END_NAMESPACE
 
-./
