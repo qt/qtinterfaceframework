@@ -36,15 +36,15 @@
             \li Specifies whether the generator should keep track of the changes in the IDL file
                 and update the output on the fly; the default is \c{--no-reload}
         \row
-            \target template-search-path-option
             \li  \c -T, \c --template-search-path <search-path>
-                Adds the given path to the list of search paths. All directories in this list are
+            \target template-search-path-option
+            \li Adds the given path to the list of search paths. All directories in this list are
                 scanned for generation templates (identified by the \l{Generation YAML}).
                 The identified templates can be selected with the
                 \l{template}{--template option}.
         \row
-            \target template
             \li  \c -t, \c --template
+            \target template
             \li Selects the template which should be used for the generation. Templates are searched
                 within the \l{template-search-path-option}{template search path}. Instead of the
                 template name, an absolute path to a template can be provided. This template doesn't
@@ -59,16 +59,16 @@
                 \li \c server_qtro_simulator
                 \endlist
         \row
-            \target annotations-option
             \li -A, --annotations <annotation-file>
+            \target annotations-option
             \li Merges the given annotation file with annotations already in the QFace file and the
                 implicit annotation file. These files are merged according to the order in which
                 they are passed to the generator. Providing a duplicate key in the YAML file
                 overrides the previously set value. This option can be used multiple times. For
                 more information, see \l{merge-annotations}{Merge Annotations}.
         \row
-            \target import-option
             \li -I, --import <import-path>
+            \target import-option
             \li Adds the given path to the list of import paths. All directories in this list are
                 scanned recursively for QFace files. The QFace files found are then used to resolve
                 the information required when importing a module; this is similar to how C++ include
