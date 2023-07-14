@@ -36,14 +36,15 @@ class QIfProxyServiceObject;
 
 Q_DECLARE_LOGGING_CATEGORY(qLcIfServiceManagement)
 
-struct Backend{
+struct Backend {
+    ~Backend();
+
     QString name;
-    bool debug;
+    bool debug = false;
     QVariantMap metaData;
-    QIfServiceInterface *interface;
-    QObject *interfaceObject;
-    QIfProxyServiceObject *proxyServiceObject;
-    QPluginLoader *loader;
+    QIfServiceInterface *interface = nullptr;
+    QIfProxyServiceObject *proxyServiceObject = nullptr;
+    QPluginLoader *loader = nullptr;
 };
 
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceManagerPrivate : public QObject
