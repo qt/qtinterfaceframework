@@ -11,8 +11,6 @@ list(APPEND test_data ${test_data_glob})
 qt_internal_add_test(tst_qifpendingreply
     SOURCES
         tst_qifpendingreply.cpp
-    DEFINES
-        SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     LIBRARIES
         Qt::Gui
         Qt::InterfaceFramework
