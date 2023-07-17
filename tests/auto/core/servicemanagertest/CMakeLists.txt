@@ -6,8 +6,6 @@ qt_internal_add_test(tst_servicemanagertest
     OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     SOURCES
         tst_servicemanagertest.cpp
-    DEFINES
-        SRCDIR=\\\"${CMAKE_CURRENT_SOURCE_DIR}/\\\"
     LIBRARIES
         simpleStaticPlugin
         wrongmetadataStaticPlugin
@@ -37,4 +35,3 @@ add_subdirectory(wrongmetadata_plugin_static)
 set_target_properties(tst_servicemanagertest PROPERTIES
     QT_ANDROID_EXTRA_PLUGINS "${CMAKE_CURRENT_BINARY_DIR}/interfaceframework"
 )
-
