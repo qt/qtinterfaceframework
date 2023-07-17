@@ -166,3 +166,5 @@ QIfPendingReply<int> SearchAndBrowseBackend::indexOf(const QUuid &identifier, co
     reply.setSuccess(int(stations.indexOf(*station)));
     return reply;
 }
+
+#include "moc_searchandbrowsebackend.cpp"

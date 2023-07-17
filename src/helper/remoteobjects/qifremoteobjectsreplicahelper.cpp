@@ -61,3 +61,5 @@ void QIfRemoteObjectsReplicaHelper::onNodeError(QRemoteObjectNode::ErrorCode cod
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifremoteobjectsreplicahelper.cpp"

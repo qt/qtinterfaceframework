@@ -347,3 +347,4 @@ void QIfSimulationEngine::loadSimulation(const QUrl &file)
 QT_END_NAMESPACE
 
 #include "qifsimulationengine.moc"
+//#include "moc_qifsimulationengine.cpp"

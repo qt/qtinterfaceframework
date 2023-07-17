@@ -11,3 +11,5 @@ WrongMetadataStaticPlugin::WrongMetadataStaticPlugin()
 {
 
 }
+
+#include "moc_wrongmetadatastaticplugin.cpp"

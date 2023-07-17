@@ -130,3 +130,5 @@ QString QIfMediaUsbDevice::type() const
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifmediadevice.cpp"

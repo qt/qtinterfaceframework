@@ -378,3 +378,5 @@ bool QIfAmFmTunerStation::operator==(const QIfAmFmTunerStation &other) const
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qiftunerstation.cpp"

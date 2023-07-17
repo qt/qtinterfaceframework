@@ -58,3 +58,5 @@ QIfMediaDeviceDiscoveryModelBackendInterface::QIfMediaDeviceDiscoveryModelBacken
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifmediadevicediscoverymodelbackendinterface.cpp"

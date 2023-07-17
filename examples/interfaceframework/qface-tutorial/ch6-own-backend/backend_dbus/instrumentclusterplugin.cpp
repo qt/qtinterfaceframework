@@ -23,3 +23,5 @@ QIfFeatureInterface *InstrumentClusterPlugin::interfaceInstance(const QString &i
 
     return nullptr;
 }
+
+#include "moc_instrumentclusterplugin.cpp"

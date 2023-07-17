@@ -315,3 +315,5 @@ void MediaIndexerBackend::setState(QIfMediaIndexerControl::State state)
     m_state = state;
     emit stateChanged(state);
 }
+
+#include "moc_mediaindexerbackend.cpp"

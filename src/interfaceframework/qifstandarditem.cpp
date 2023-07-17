@@ -151,3 +151,5 @@ bool QIfStandardItem::operator==(const QIfStandardItem &other) const
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifstandarditem.cpp"

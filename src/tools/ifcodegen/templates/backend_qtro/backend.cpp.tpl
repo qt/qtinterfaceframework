@@ -396,3 +396,5 @@ void {{class}}::onZoneSyncDone()
 {% endif %}
 
 {{ module|end_namespace }}
+
+#include "moc_{{class|lower}}.cpp"

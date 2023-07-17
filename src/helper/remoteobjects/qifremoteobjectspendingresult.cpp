@@ -43,3 +43,5 @@ void QIfRemoteObjectsPendingResult::setFailed(bool failed)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifremoteobjectspendingresult.cpp"

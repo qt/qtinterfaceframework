@@ -65,3 +65,5 @@ void MediaQtROPlugin::updateServiceSettings(const QVariantMap &settings)
     m_searchModel->updateServiceSettings(settings);
     m_discovery->updateServiceSettings(settings);
 }
+
+#include "moc_mediaplugin.cpp"

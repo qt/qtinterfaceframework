@@ -478,3 +478,5 @@ void MediaPlayerBackend::onPlayTrack(const QUrl &url)
     if (playing)
         m_player->play();
 }
+
+#include "moc_mediaplayerbackend.cpp"

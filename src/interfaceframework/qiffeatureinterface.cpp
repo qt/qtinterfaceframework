@@ -66,3 +66,5 @@ QIfFeatureInterface::QIfFeatureInterface(QObjectPrivate &dd, QObject *parent)
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qiffeatureinterface.cpp"

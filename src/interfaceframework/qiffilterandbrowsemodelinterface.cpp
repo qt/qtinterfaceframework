@@ -202,3 +202,5 @@ QSet<QString> QIfFilterAndBrowseModelInterface::identifiersFromItem(const QMetaO
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qiffilterandbrowsemodelinterface.cpp"

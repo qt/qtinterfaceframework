@@ -72,3 +72,5 @@ void QIfServiceObject::updateServiceSettings(const QVariantMap &settings)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifserviceobject.cpp"

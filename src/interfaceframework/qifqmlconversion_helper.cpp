@@ -155,3 +155,5 @@ QVariant qtif_convertFromJSON(const QVariant &value)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifqmlconversion_helper.cpp"

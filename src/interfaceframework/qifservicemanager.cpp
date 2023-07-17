@@ -680,3 +680,5 @@ QHash<int, QByteArray> QIfServiceManager::roleNames() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifservicemanager.cpp"

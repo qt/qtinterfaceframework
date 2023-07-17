@@ -121,3 +121,5 @@ void QIfProxyServiceObject::updateServiceSettings(const QVariantMap &settings)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifproxyserviceobject.cpp"
