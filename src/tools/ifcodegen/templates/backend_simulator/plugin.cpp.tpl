@@ -110,3 +110,5 @@ void {{class}}::updateServiceSettings(const QVariantMap &settings)
 }
 
 {{ module|end_namespace }}
+
+#include "moc_{{class|lower}}.cpp"

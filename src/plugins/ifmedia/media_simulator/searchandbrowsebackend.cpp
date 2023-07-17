@@ -442,3 +442,5 @@ QIfPendingReply<int> SearchAndBrowseBackend::indexOf(const QUuid &identifier, co
 
     return QIfPendingReply<int>::createFailedReply();
 }
+
+#include "moc_searchandbrowsebackend.cpp"

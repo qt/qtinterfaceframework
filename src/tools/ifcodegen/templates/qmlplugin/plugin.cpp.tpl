@@ -38,7 +38,6 @@ public:
 
 {{ module|end_namespace }}
 
-#include "plugin.moc"
-
 #endif // {{oncedefine}}
 
+#include "plugin.moc"

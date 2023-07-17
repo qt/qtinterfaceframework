@@ -164,3 +164,5 @@ void MediaDiscoveryBackend::setupConnections()
     connect(m_replica.data(), &QIfMediaDiscoveryModelReplica::deviceAdded, this, &MediaDiscoveryBackend::onDeviceAdded);
     connect(m_replica.data(), &QIfMediaDiscoveryModelReplica::deviceRemoved, this, &MediaDiscoveryBackend::onDeviceRemoved);
 }
+
+#include "moc_mediadiscoverybackend.cpp"

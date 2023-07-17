@@ -157,3 +157,5 @@ QVariant {{class}}::{{operation}}({{qtif.join_params(operation, zoned = interfac
 {% endfor %}
 
 {{ module|end_namespace }}
+
+#include "moc_{{interface|lower}}adapter.cpp"

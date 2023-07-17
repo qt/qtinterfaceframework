@@ -255,3 +255,5 @@ void {{class}}::addZone(const QString &zone)
 {% endfor %}
 
 {{ module|end_namespace }}
+
+#include "moc_{{class|lower}}.cpp"

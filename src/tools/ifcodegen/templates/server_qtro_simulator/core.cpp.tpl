@@ -68,3 +68,5 @@ void {{class}}::reportError(QRemoteObjectNode::ErrorCode code) const
 }
 
 {{ module|end_namespace }}
+
+#include "moc_{{class|lower}}.cpp"

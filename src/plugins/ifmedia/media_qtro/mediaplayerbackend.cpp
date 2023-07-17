@@ -233,3 +233,5 @@ void MediaPlayerBackend::setupConnections()
     connect(m_replica.data(), &QIfMediaPlayerReplica::dataFetched, this, &MediaPlayerBackend::dataFetched);
     connect(m_replica.data(), &QIfMediaPlayerReplica::dataChanged, this, &MediaPlayerBackend::dataChanged);
 }
+
+#include "moc_mediaplayerbackend.cpp"

@@ -293,3 +293,5 @@ QVariantList QIfAbstractZonedFeature::zoneFeatureList() const
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifabstractzonedfeature.cpp"

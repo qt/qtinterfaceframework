@@ -107,3 +107,5 @@ void MainWindow::onFlowDirectionButtonToggled(QAbstractButton *button, bool chec
     m_climateControl->setAirflowDirections(direction);
 }
 //![3]
+
+#include "moc_mainwindow.cpp"

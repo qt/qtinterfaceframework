@@ -154,3 +154,5 @@ QIfPendingReply<int> UsbBrowseBackend::indexOf(const QUuid &identifier, const QV
 
     return QIfPendingReply<int>::createFailedReply();
 }
+
+#include "moc_usbbrowsebackend.cpp"

@@ -156,3 +156,5 @@ QIfZonedFeatureInterface::QIfZonedFeatureInterface(QObject *parent)
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifzonedfeatureinterface.cpp"

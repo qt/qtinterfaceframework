@@ -11,3 +11,5 @@ SimpleStaticPlugin::SimpleStaticPlugin()
 {
 
 }
+
+#include "moc_simplestaticplugin.cpp"

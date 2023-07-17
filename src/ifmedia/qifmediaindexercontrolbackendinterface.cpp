@@ -65,3 +65,5 @@ QIfMediaIndexerControlBackendInterface::QIfMediaIndexerControlBackendInterface(Q
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifmediaindexercontrolbackendinterface.cpp"

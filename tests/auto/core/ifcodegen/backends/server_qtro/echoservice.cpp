@@ -70,3 +70,5 @@ QVariant EchoService::enumMethod(Echomodule::TestEnum testEnum)
     emit enumMethodCalled(testEnum);
     return QVariant::fromValue(testEnum);
 }
+
+#include "moc_echoservice.cpp"

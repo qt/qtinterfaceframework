@@ -624,3 +624,5 @@ void QIfAbstractFeatureListModel::onErrorChanged(QIfAbstractFeature::Error error
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifabstractfeaturelistmodel.cpp"

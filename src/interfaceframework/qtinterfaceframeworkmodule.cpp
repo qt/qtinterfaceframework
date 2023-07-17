@@ -138,3 +138,5 @@ void QtInterfaceFrameworkModule::registerQmlTypes(const QString &uri, int majorV
     qmlRegisterType<QIfConfiguration>(u, majorVersion, minorVersion, "InterfaceFrameworkConfiguration");
     qmlRegisterSingletonType<QIfServiceManager>(u, majorVersion, minorVersion, "ServiceManager", &QIfServiceManager::create);
 }
+
+#include "moc_qtinterfaceframeworkmodule.cpp"

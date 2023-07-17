@@ -274,3 +274,5 @@ void FilterAndBrowseModel::setupConnections()
     connect(m_replica.data(), &QIfFilterAndBrowseModelReplica::dataFetched, this, &FilterAndBrowseModel::dataFetched);
     connect(m_replica.data(), &QIfFilterAndBrowseModelReplica::dataChanged, this, &FilterAndBrowseModel::dataChanged);
 }
+
+#include "moc_filterandbrowsemodel.cpp"

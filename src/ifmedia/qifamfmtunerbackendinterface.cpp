@@ -161,3 +161,5 @@ QIfAmFmTunerBackendInterface::QIfAmFmTunerBackendInterface(QObject *parent)
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifamfmtunerbackendinterface.cpp"

@@ -207,3 +207,5 @@ void InstrumentClusterBackend::onCurrentWarningChanged(const Warning &warning)
     m_warning = warning;
     emit currentWarningChanged(warning);
 }
+
+#include "moc_instrumentclusterbackend.cpp"

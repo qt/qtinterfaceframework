@@ -47,3 +47,5 @@ QIfFeatureInterface *USBDevice::interfaceInstance(const QString &interface) cons
 
     return nullptr;
 }
+
+#include "moc_usbdevice.cpp"

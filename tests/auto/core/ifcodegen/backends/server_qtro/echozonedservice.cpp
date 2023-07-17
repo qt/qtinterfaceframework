@@ -251,3 +251,5 @@ QVariant EchoZonedService::enumMethod(Echomodule::TestEnum testEnum, const QStri
     emit enumMethodCalled(testEnum, zone);
     return QVariant::fromValue(testEnum);
 }
+
+#include "moc_echozonedservice.cpp"

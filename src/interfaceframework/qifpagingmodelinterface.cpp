@@ -137,3 +137,5 @@ QIfPagingModelInterface::QIfPagingModelInterface(QObjectPrivate &dd, QObject *pa
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifpagingmodelinterface.cpp"

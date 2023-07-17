@@ -145,3 +145,5 @@ void MediaIndexerBackend::setupConnections()
     connect(m_replica.data(), &QIfMediaIndexerReplica::stateChanged, this, &MediaIndexerBackend::stateChanged);
     connect(m_replica.data(), &QIfMediaIndexerReplica::progressChanged, this, &MediaIndexerBackend::progressChanged);
 }
+
+#include "moc_mediaindexerbackend.cpp"

@@ -17,3 +17,5 @@ CmdListener::CmdListener(QObject *parent)
         }
     });
 }
+
+#include "moc_cmdlistener.cpp"

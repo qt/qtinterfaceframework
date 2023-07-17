@@ -33,3 +33,5 @@ void QIfPagingModelQtRoAdapter::fetchData(const QUuid &identifier, int start, in
 {
     m_backend->fetchData(identifier, start, count);
 }
+
+#include "moc_qifpagingmodelqtroadapter.cpp"

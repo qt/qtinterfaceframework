@@ -86,3 +86,5 @@ void MediaDiscoveryBackend::onDirectoryChanged(const QString &path)
         QTimer::singleShot(2000, this, [this, absFolder](){emit mediaDirectoryAdded(absFolder);});
     }
 }
+
+#include "moc_mediadiscoverybackend.cpp"

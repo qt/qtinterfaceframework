@@ -483,3 +483,5 @@ QDataStream &operator>>(QDataStream &in, QIfOrderTerm &var)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_qifqueryterm.cpp"

@@ -95,3 +95,5 @@ void MediaSimulatorPlugin::updateServiceSettings(const QVariantMap &settings)
     qCDebug(media) << Q_FUNC_INFO << settings;
     m_serviceSettings = settings;
 }
+
+#include "moc_mediaplugin.cpp"

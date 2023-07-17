@@ -11,3 +11,5 @@ WrongPlugin::WrongPlugin()
 {
 
 }
+
+#include "moc_wrongplugin.cpp"

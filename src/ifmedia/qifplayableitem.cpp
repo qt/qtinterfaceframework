@@ -498,3 +498,5 @@ QDataStream &operator>>(QDataStream &stream, QIfAudioTrackItem &obj)
 */
 
 QT_END_NAMESPACE
+
+#include "moc_qifplayableitem.cpp"

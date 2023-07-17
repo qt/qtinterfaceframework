@@ -58,3 +58,5 @@ void Core::reportError(QRemoteObjectNode::ErrorCode code)
 }
 
 QT_END_NAMESPACE
+
+#include "moc_core.cpp"

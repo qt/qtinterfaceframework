@@ -148,3 +148,5 @@ QDataStream &operator>>(QDataStream &in, {{class}}::{{enum|flag_type}} &var)
 {% endfor %}
 
 {{ module|end_namespace }}
+
+#include "moc_{{class|lower}}.cpp"

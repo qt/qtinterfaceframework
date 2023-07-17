@@ -214,3 +214,5 @@ void AmFmTunerBackend::timerEvent(QTimerEvent *event)
     Q_UNUSED(event);
     seekUp();
 }
+
+#include "moc_amfmtunerbackend.cpp"

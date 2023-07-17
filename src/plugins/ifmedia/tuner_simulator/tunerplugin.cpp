@@ -36,3 +36,5 @@ QIfFeatureInterface *TunerSimulatorPlugin::interfaceInstance(const QString &inte
 
     return nullptr;
 }
+
+#include "moc_tunerplugin.cpp"
