@@ -22,10 +22,10 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractZonedFeature : public QIfAbstract
     QML_NAMED_ELEMENT(AbstractZonedFeature)
     QML_UNCREATABLE("")
 
-    Q_PROPERTY(QString zone READ zone WRITE setZone NOTIFY zoneChanged)
-    Q_PROPERTY(QStringList availableZones READ availableZones NOTIFY availableZonesChanged)
-    Q_PROPERTY(QVariantList zones READ zoneFeatureList NOTIFY zonesChanged)
-    Q_PROPERTY(QVariantMap zoneAt READ zoneFeatureMap  NOTIFY zonesChanged)
+    Q_PROPERTY(QString zone READ zone WRITE setZone NOTIFY zoneChanged FINAL)
+    Q_PROPERTY(QStringList availableZones READ availableZones NOTIFY availableZonesChanged FINAL)
+    Q_PROPERTY(QVariantList zones READ zoneFeatureList NOTIFY zonesChanged FINAL)
+    Q_PROPERTY(QVariantMap zoneAt READ zoneFeatureMap  NOTIFY zonesChanged FINAL)
 
 public:
 

@@ -19,8 +19,8 @@ class QIfRemoteObjectsPendingResult
 {
     Q_GADGET
 
-    Q_PROPERTY(quint64 id READ id WRITE setId)
-    Q_PROPERTY(bool failed READ failed WRITE setFailed)
+    Q_PROPERTY(quint64 id READ id WRITE setId FINAL)
+    Q_PROPERTY(bool failed READ failed WRITE setFailed FINAL)
 public:
     QIfRemoteObjectsPendingResult();
     explicit QIfRemoteObjectsPendingResult(quint64 id, bool failed);

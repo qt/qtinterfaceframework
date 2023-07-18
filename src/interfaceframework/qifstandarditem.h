@@ -3,8 +3,8 @@
 // Copyright (C) 2018 Pelagicore AG
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#ifndef QIfStandardItem_H
-#define QIfStandardItem_H
+#ifndef QIFSTANDARDITEM_H
+#define QIFSTANDARDITEM_H
 
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
@@ -53,4 +53,4 @@ QT_END_NAMESPACE
 
 Q_DECLARE_METATYPE(QIfStandardItem)
 
-#endif // QIfStandardItem_H
+#endif // QIFSTANDARDITEM_H

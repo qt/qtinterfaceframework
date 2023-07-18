@@ -20,7 +20,7 @@
 class {{class}} : public QIfPagingModelInterface
 {
     Q_OBJECT
-    Q_PROPERTY(int count READ count NOTIFY countChanged)
+    Q_PROPERTY(int count READ count NOTIFY countChanged FINAL)
 public:
     explicit {{class}}(QObject *parent = nullptr);
     ~{{class}}();

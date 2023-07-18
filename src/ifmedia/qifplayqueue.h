@@ -21,13 +21,13 @@ class Q_QTIFMEDIA_EXPORT QIfPlayQueue : public QAbstractListModel
     QML_NAMED_ELEMENT(PlayQueue)
     QML_ANONYMOUS
 
-    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
-    Q_PROPERTY(int chunkSize READ chunkSize WRITE setChunkSize NOTIFY chunkSizeChanged)
-    Q_PROPERTY(int fetchMoreThreshold READ fetchMoreThreshold WRITE setFetchMoreThreshold NOTIFY fetchMoreThresholdChanged)
-    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged FINAL)
+    Q_PROPERTY(int chunkSize READ chunkSize WRITE setChunkSize NOTIFY chunkSizeChanged FINAL)
+    Q_PROPERTY(int fetchMoreThreshold READ fetchMoreThreshold WRITE setFetchMoreThreshold NOTIFY fetchMoreThresholdChanged FINAL)
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged FINAL)
 
     //TODO fix naming
-    Q_PROPERTY(QIfPlayQueue::LoadingType loadingType READ loadingType WRITE setLoadingType NOTIFY loadingTypeChanged)
+    Q_PROPERTY(QIfPlayQueue::LoadingType loadingType READ loadingType WRITE setLoadingType NOTIFY loadingTypeChanged FINAL)
 public:
     ~QIfPlayQueue() override;
 

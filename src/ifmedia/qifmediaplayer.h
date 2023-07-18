@@ -21,14 +21,14 @@ class Q_QTIFMEDIA_EXPORT QIfMediaPlayer : public QIfAbstractFeature
     QML_NAMED_ELEMENT(MediaPlayer)
 
     //TODO Status
-    Q_PROPERTY(QIfPlayQueue *playQueue READ playQueue CONSTANT)
-    Q_PROPERTY(QIfMediaPlayer::PlayMode playMode READ playMode WRITE setPlayMode NOTIFY playModeChanged)
-    Q_PROPERTY(QIfMediaPlayer::PlayState playState READ playState NOTIFY playStateChanged)
-    Q_PROPERTY(QVariant currentTrack READ currentTrack NOTIFY currentTrackChanged)
-    Q_PROPERTY(qint64 position READ position WRITE setPosition NOTIFY positionChanged)
-    Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged)
-    Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
-    Q_PROPERTY(bool muted READ isMuted WRITE setMuted NOTIFY mutedChanged)
+    Q_PROPERTY(QIfPlayQueue *playQueue READ playQueue CONSTANT FINAL)
+    Q_PROPERTY(QIfMediaPlayer::PlayMode playMode READ playMode WRITE setPlayMode NOTIFY playModeChanged FINAL)
+    Q_PROPERTY(QIfMediaPlayer::PlayState playState READ playState NOTIFY playStateChanged FINAL)
+    Q_PROPERTY(QVariant currentTrack READ currentTrack NOTIFY currentTrackChanged FINAL)
+    Q_PROPERTY(qint64 position READ position WRITE setPosition NOTIFY positionChanged FINAL)
+    Q_PROPERTY(qint64 duration READ duration NOTIFY durationChanged FINAL)
+    Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged FINAL)
+    Q_PROPERTY(bool muted READ isMuted WRITE setMuted NOTIFY mutedChanged FINAL)
 
 public:
     enum PlayMode {

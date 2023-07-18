@@ -20,7 +20,7 @@ class Q_QTIFMEDIA_EXPORT QIfMediaDeviceDiscoveryModel : public QIfAbstractFeatur
     Q_OBJECT
     QML_NAMED_ELEMENT(MediaDeviceDiscoveryModel)
 
-    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged FINAL)
 
 public:
     enum Roles {

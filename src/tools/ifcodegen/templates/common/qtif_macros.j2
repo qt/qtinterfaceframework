@@ -61,7 +61,7 @@ QIfPendingReply<{{operation|return_type}}> {{scope}}{{operation}}({{join_params(
 {%   else %}
 {%     set _notify = ''%}
 {%   endif %}
-Q_PROPERTY({{property|return_type}} {{property}} READ {{property|getter_name}}{{write}}{{_notify}})
+Q_PROPERTY({{property|return_type}} {{property}} READ {{property|getter_name}}{{write}}{{_notify}} FINAL)
 {%- endmacro %}
 
 
