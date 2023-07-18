@@ -13,7 +13,6 @@ qt_internal_add_qml_module(InterfaceFramework
         qifabstractfeaturelistmodel.cpp qifabstractfeaturelistmodel.h qifabstractfeaturelistmodel_p.h
         qifabstractzonedfeature.cpp qifabstractzonedfeature.h qifabstractzonedfeature_p.h
         qifconfiguration.cpp qifconfiguration.h qifconfiguration_p.h
-        qifdefaultpropertyoverrider.cpp qifdefaultpropertyoverrider_p.h
         qiffeatureinterface.cpp qiffeatureinterface.h
         qifpagingmodel.cpp qifpagingmodel.h qifpagingmodel_p.h
         qifpagingmodelinterface.cpp qifpagingmodelinterface.h
