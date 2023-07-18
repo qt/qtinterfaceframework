@@ -20,7 +20,7 @@ class Q_QTIFMEDIA_EXPORT QIfPlayableItem : public QIfStandardItem
 {
     Q_GADGET
 
-    Q_PROPERTY(QUrl url READ url WRITE setUrl)
+    Q_PROPERTY(QUrl url READ url WRITE setUrl FINAL)
 
 public:
     explicit QIfPlayableItem();
@@ -44,15 +44,15 @@ class Q_QTIFMEDIA_EXPORT QIfAudioTrackItem : public QIfPlayableItem
 {
     Q_GADGET
 
-    Q_PROPERTY(QString title READ title WRITE setTitle)
-    Q_PROPERTY(QString artist READ artist WRITE setArtist)
-    Q_PROPERTY(QString album READ album WRITE setAlbum)
-    Q_PROPERTY(QString genre READ genre WRITE setGenre)
-    Q_PROPERTY(int year READ year WRITE setYear)
-    Q_PROPERTY(int trackNumber READ trackNumber WRITE setTrackNumber)
-    Q_PROPERTY(qint64 duration READ duration WRITE setDuration)
-    Q_PROPERTY(QUrl coverArtUrl READ coverArtUrl WRITE setCoverArtUrl)
-    Q_PROPERTY(int rating READ rating WRITE setRating)
+    Q_PROPERTY(QString title READ title WRITE setTitle FINAL)
+    Q_PROPERTY(QString artist READ artist WRITE setArtist FINAL)
+    Q_PROPERTY(QString album READ album WRITE setAlbum FINAL)
+    Q_PROPERTY(QString genre READ genre WRITE setGenre FINAL)
+    Q_PROPERTY(int year READ year WRITE setYear FINAL)
+    Q_PROPERTY(int trackNumber READ trackNumber WRITE setTrackNumber FINAL)
+    Q_PROPERTY(qint64 duration READ duration WRITE setDuration FINAL)
+    Q_PROPERTY(QUrl coverArtUrl READ coverArtUrl WRITE setCoverArtUrl FINAL)
+    Q_PROPERTY(int rating READ rating WRITE setRating FINAL)
 
 public:
     QIfAudioTrackItem();

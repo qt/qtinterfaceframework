@@ -23,15 +23,15 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfiguration : public QObject, public QQ
     QML_ADDED_IN_MINOR_VERSION(5)
     Q_INTERFACES(QQmlParserStatus)
 
-    Q_PROPERTY(bool valid READ isValid NOTIFY isValidChanged)
-    Q_PROPERTY(bool ignoreOverrideWarnings READ ignoreOverrideWarnings WRITE setIgnoreOverrideWarnings NOTIFY ignoreOverrideWarningsChanged)
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QVariantMap serviceSettings READ serviceSettings WRITE setServiceSettings NOTIFY serviceSettingsChanged)
-    Q_PROPERTY(QString simulationFile READ simulationFile WRITE setSimulationFile NOTIFY simulationFileChanged)
-    Q_PROPERTY(QString simulationDataFile READ simulationDataFile WRITE setSimulationDataFile NOTIFY simulationDataFileChanged)
-    Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
-    Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged)
-    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged)
+    Q_PROPERTY(bool valid READ isValid NOTIFY isValidChanged FINAL)
+    Q_PROPERTY(bool ignoreOverrideWarnings READ ignoreOverrideWarnings WRITE setIgnoreOverrideWarnings NOTIFY ignoreOverrideWarningsChanged FINAL)
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged FINAL)
+    Q_PROPERTY(QVariantMap serviceSettings READ serviceSettings WRITE setServiceSettings NOTIFY serviceSettingsChanged FINAL)
+    Q_PROPERTY(QString simulationFile READ simulationFile WRITE setSimulationFile NOTIFY simulationFileChanged FINAL)
+    Q_PROPERTY(QString simulationDataFile READ simulationDataFile WRITE setSimulationDataFile NOTIFY simulationDataFileChanged FINAL)
+    Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged FINAL)
+    Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged FINAL)
+    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged FINAL)
 
 public:
     explicit QIfConfiguration(const QString &name = QString(), QObject *parent = nullptr);

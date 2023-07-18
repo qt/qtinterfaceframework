@@ -21,10 +21,10 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfFilterAndBrowseModel : public QIfPagingMo
     Q_OBJECT
     QML_NAMED_ELEMENT(FilterAndBrowseModel)
 
-    Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
-    Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged)
-    Q_PROPERTY(QStringList availableContentTypes READ availableContentTypes NOTIFY availableContentTypesChanged)
-    Q_PROPERTY(bool canGoBack READ canGoBack NOTIFY canGoBackChanged)
+    Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged FINAL)
+    Q_PROPERTY(QString contentType READ contentType WRITE setContentType NOTIFY contentTypeChanged FINAL)
+    Q_PROPERTY(QStringList availableContentTypes READ availableContentTypes NOTIFY availableContentTypesChanged FINAL)
+    Q_PROPERTY(bool canGoBack READ canGoBack NOTIFY canGoBackChanged FINAL)
 
 public:
 

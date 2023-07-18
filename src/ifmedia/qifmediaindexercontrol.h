@@ -18,8 +18,8 @@ class Q_QTIFMEDIA_EXPORT QIfMediaIndexerControl : public QIfAbstractFeature
     Q_OBJECT
     QML_NAMED_ELEMENT(MediaIndexerControl)
 
-    Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
-    Q_PROPERTY(QIfMediaIndexerControl::State state READ state NOTIFY stateChanged)
+    Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged FINAL)
+    Q_PROPERTY(QIfMediaIndexerControl::State state READ state NOTIFY stateChanged FINAL)
 public:
 
     enum State {

@@ -24,10 +24,10 @@ Q_QTINTERFACEFRAMEWORK_EXPORT void qifRegisterPendingReplyBasicTypes();
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyWatcher : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant value READ value NOTIFY valueChanged)
-    Q_PROPERTY(bool valid READ isValid CONSTANT)
-    Q_PROPERTY(bool resultAvailable READ isResultAvailable NOTIFY valueChanged)
-    Q_PROPERTY(bool success READ isSuccessful NOTIFY valueChanged)
+    Q_PROPERTY(QVariant value READ value NOTIFY valueChanged FINAL)
+    Q_PROPERTY(bool valid READ isValid CONSTANT FINAL)
+    Q_PROPERTY(bool resultAvailable READ isResultAvailable NOTIFY valueChanged FINAL)
+    Q_PROPERTY(bool success READ isSuccessful NOTIFY valueChanged FINAL)
 
 public:
     QVariant value() const;
@@ -53,11 +53,11 @@ private:
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyBase
 {
     Q_GADGET
-    Q_PROPERTY(QIfPendingReplyWatcher* watcher READ watcher)
-    Q_PROPERTY(QVariant value READ value)
-    Q_PROPERTY(bool valid READ isValid)
-    Q_PROPERTY(bool resultAvailable READ isResultAvailable)
-    Q_PROPERTY(bool success READ isSuccessful)
+    Q_PROPERTY(QIfPendingReplyWatcher* watcher READ watcher FINAL)
+    Q_PROPERTY(QVariant value READ value FINAL)
+    Q_PROPERTY(bool valid READ isValid FINAL)
+    Q_PROPERTY(bool resultAvailable READ isResultAvailable FINAL)
+    Q_PROPERTY(bool success READ isSuccessful FINAL)
 
 public:
     explicit QIfPendingReplyBase(int userType);

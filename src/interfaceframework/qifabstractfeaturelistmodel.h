@@ -21,14 +21,14 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeatureListModel : public QAbstra
     QML_UNCREATABLE("")
     Q_INTERFACES(QQmlParserStatus)
 
-    Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged)
-    Q_PROPERTY(QIfAbstractFeature::DiscoveryResult discoveryResult READ discoveryResult NOTIFY discoveryResultChanged)
-    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged)
-    Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
-    Q_PROPERTY(bool isInitialized READ isInitialized NOTIFY isInitializedChanged)
-    Q_PROPERTY(QString error READ errorMessage NOTIFY errorChanged)
-    Q_PROPERTY(QString configurationId READ configurationId WRITE setConfigurationId NOTIFY configurationIdChanged REVISION(6, 5))
-    Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged REVISION(6, 5))
+    Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged FINAL)
+    Q_PROPERTY(QIfAbstractFeature::DiscoveryResult discoveryResult READ discoveryResult NOTIFY discoveryResultChanged FINAL)
+    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged FINAL)
+    Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged FINAL)
+    Q_PROPERTY(bool isInitialized READ isInitialized NOTIFY isInitializedChanged FINAL)
+    Q_PROPERTY(QString error READ errorMessage NOTIFY errorChanged FINAL)
+    Q_PROPERTY(QString configurationId READ configurationId WRITE setConfigurationId NOTIFY configurationIdChanged REVISION(6, 5) FINAL)
+    Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged REVISION(6, 5) FINAL)
 
 public:
 

@@ -19,12 +19,12 @@ class Q_QTIFMEDIA_EXPORT QIfTunerStation : public QIfStandardItem
 {
     Q_GADGET
 
-    Q_PROPERTY(QString stationName READ stationName WRITE setStationName)
-    Q_PROPERTY(int frequency READ frequency WRITE setFrequency)
-    Q_PROPERTY(QString stationLogoUrl READ stationLogoUrl WRITE setStationLogoUrl)
-    Q_PROPERTY(QString category READ category WRITE setCategory)
-    Q_PROPERTY(QString radioText READ radioText WRITE setRadioText)
-    Q_PROPERTY(int receptionQuality READ receptionQuality WRITE setReceptionQuality)
+    Q_PROPERTY(QString stationName READ stationName WRITE setStationName FINAL)
+    Q_PROPERTY(int frequency READ frequency WRITE setFrequency FINAL)
+    Q_PROPERTY(QString stationLogoUrl READ stationLogoUrl WRITE setStationLogoUrl FINAL)
+    Q_PROPERTY(QString category READ category WRITE setCategory FINAL)
+    Q_PROPERTY(QString radioText READ radioText WRITE setRadioText FINAL)
+    Q_PROPERTY(int receptionQuality READ receptionQuality WRITE setReceptionQuality FINAL)
 
 public:
     QIfTunerStation();
@@ -59,7 +59,7 @@ class Q_QTIFMEDIA_EXPORT QIfAmFmTunerStation : public QIfTunerStation
 {
     Q_GADGET
 
-    Q_PROPERTY(QIfAmFmTuner::Band band READ band WRITE setBand)
+    Q_PROPERTY(QIfAmFmTuner::Band band READ band WRITE setBand FINAL)
 
 public:
     QIfAmFmTunerStation();

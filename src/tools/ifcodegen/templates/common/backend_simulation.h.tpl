@@ -87,7 +87,7 @@ class {{class}} : public {{class}}Interface
     Q_PROPERTY({{type}} {{property}} READ {{property|getter_name}} WRITE {{property|setter_name}}  NOTIFY {{property.name}}Changed FINAL)
 {% endfor %}
 {% if interface_zoned %}
-    Q_PROPERTY(QQmlPropertyMap *zones READ zones CONSTANT)
+    Q_PROPERTY(QQmlPropertyMap *zones READ zones CONSTANT FINAL)
 {% endif %}
     Q_PROPERTY(QVariantMap serviceSettings READ serviceSettings NOTIFY serviceSettingsChanged FINAL)
 public:

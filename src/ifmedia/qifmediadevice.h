@@ -17,8 +17,8 @@ class Q_QTIFMEDIA_EXPORT QIfMediaDevice : public QIfServiceObject
     QML_NAMED_ELEMENT(MediaDevice)
     QML_ANONYMOUS
 
-    Q_PROPERTY(QString type READ type CONSTANT)
-    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString type READ type CONSTANT FINAL)
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged FINAL)
 
 public:
     explicit QIfMediaDevice(QObject *parent = nullptr);

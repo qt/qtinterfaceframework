@@ -20,13 +20,13 @@ class Q_QTIFMEDIA_EXPORT QIfAmFmTuner : public QIfAbstractFeature
     Q_OBJECT
     QML_NAMED_ELEMENT(AmFmTuner)
 
-    Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged)
-    Q_PROPERTY(int minimumFrequency READ minimumFrequency NOTIFY minimumFrequencyChanged)
-    Q_PROPERTY(int maximumFrequency READ maximumFrequency NOTIFY maximumFrequencyChanged)
-    Q_PROPERTY(int stepSize READ stepSize NOTIFY stepSizeChanged)
-    Q_PROPERTY(QIfAmFmTuner::Band band READ band WRITE setBand NOTIFY bandChanged)
-    Q_PROPERTY(QIfAmFmTunerStation station READ station NOTIFY stationChanged)
-    Q_PROPERTY(bool scanRunning READ isScanRunning NOTIFY scanRunningChanged)
+    Q_PROPERTY(int frequency READ frequency WRITE setFrequency NOTIFY frequencyChanged FINAL)
+    Q_PROPERTY(int minimumFrequency READ minimumFrequency NOTIFY minimumFrequencyChanged FINAL)
+    Q_PROPERTY(int maximumFrequency READ maximumFrequency NOTIFY maximumFrequencyChanged FINAL)
+    Q_PROPERTY(int stepSize READ stepSize NOTIFY stepSizeChanged FINAL)
+    Q_PROPERTY(QIfAmFmTuner::Band band READ band WRITE setBand NOTIFY bandChanged FINAL)
+    Q_PROPERTY(QIfAmFmTunerStation station READ station NOTIFY stationChanged FINAL)
+    Q_PROPERTY(bool scanRunning READ isScanRunning NOTIFY scanRunningChanged FINAL)
 
 public:
     explicit QIfAmFmTuner(QObject *parent = nullptr);

@@ -19,13 +19,13 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPagingModel : public QIfAbstractFeatureLi
     Q_OBJECT
     QML_NAMED_ELEMENT(PagingModel)
 
-    Q_PROPERTY(QtInterfaceFrameworkModule::ModelCapabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
-    Q_PROPERTY(int chunkSize READ chunkSize WRITE setChunkSize NOTIFY chunkSizeChanged)
-    Q_PROPERTY(int fetchMoreThreshold READ fetchMoreThreshold WRITE setFetchMoreThreshold NOTIFY fetchMoreThresholdChanged)
-    Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+    Q_PROPERTY(QtInterfaceFrameworkModule::ModelCapabilities capabilities READ capabilities NOTIFY capabilitiesChanged FINAL)
+    Q_PROPERTY(int chunkSize READ chunkSize WRITE setChunkSize NOTIFY chunkSizeChanged FINAL)
+    Q_PROPERTY(int fetchMoreThreshold READ fetchMoreThreshold WRITE setFetchMoreThreshold NOTIFY fetchMoreThresholdChanged FINAL)
+    Q_PROPERTY(int count READ rowCount NOTIFY countChanged FINAL)
 
     //TODO fix naming
-    Q_PROPERTY(QIfPagingModel::LoadingType loadingType READ loadingType WRITE setLoadingType NOTIFY loadingTypeChanged)
+    Q_PROPERTY(QIfPagingModel::LoadingType loadingType READ loadingType WRITE setLoadingType NOTIFY loadingTypeChanged FINAL)
 
 public:
 

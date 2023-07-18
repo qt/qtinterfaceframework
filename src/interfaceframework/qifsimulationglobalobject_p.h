@@ -36,7 +36,7 @@ QT_BEGIN_NAMESPACE
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfSimulationGlobalObject : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant simulationData READ simulationData CONSTANT)
+    Q_PROPERTY(QVariant simulationData READ simulationData CONSTANT FINAL)
 
 public:
     explicit QIfSimulationGlobalObject(QObject *parent = nullptr);
