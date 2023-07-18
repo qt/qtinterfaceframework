@@ -27,9 +27,6 @@ public:
 
     virtual void fetchData(const QUuid &identifier, int start, int count) = 0;
 
-protected:
-    QIfPagingModelInterface(QObjectPrivate &dd, QObject *parent = nullptr);
-
 Q_SIGNALS:
     void supportedCapabilitiesChanged(const QUuid &identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities);
     void countChanged(const QUuid &identifier = QUuid(), int count = -1);

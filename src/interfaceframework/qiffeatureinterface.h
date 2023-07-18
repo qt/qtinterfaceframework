@@ -20,9 +20,6 @@ public:
 
     virtual void initialize() = 0;
 
-protected:
-    QIfFeatureInterface(QObjectPrivate &dd, QObject *parent = nullptr);
-
 Q_SIGNALS:
     void errorChanged(QIfAbstractFeature::Error error, const QString &message = QString());
     void initializationDone();

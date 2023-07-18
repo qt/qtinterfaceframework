@@ -32,11 +32,6 @@ QIfFeatureInterface::QIfFeatureInterface(QObject *parent)
 {
 }
 
-QIfFeatureInterface::QIfFeatureInterface(QObjectPrivate &dd, QObject *parent)
-    : QObject(dd, parent)
-{
-}
-
 /*!
     \fn void QIfFeatureInterface::initialize()
 
