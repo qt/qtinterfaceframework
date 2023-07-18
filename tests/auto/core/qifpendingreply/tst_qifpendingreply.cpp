@@ -129,11 +129,13 @@ private Q_SLOTS:
     void testInvalidReply();
     void testThen_errors();
     void testTypeError();
+    void testThenLater_data();
     void testThenLater();
 
 private:
-    template <typename T> void test(const QIfPendingReply<T> &reply, bool failed, T expectedResult = T());
-    template <typename T> void test_helper(const QIfPendingReply<T> &reply, bool failed);
+    template <typename T> void test(QIfPendingReply<T> reply, bool failed, T expectedResult = T());
+    template <typename T> void createThenCallbacks(QIfPendingReply<T> reply, bool *successCalled, bool *failedCalled);
+    template <typename T> void test_helper(QIfPendingReply<T> reply, bool failed);
     template <typename T> void testQml(TestObject *testObject, const QByteArray qmlFunction, bool failed, T expectedResult = T());
     template <typename T> void qml_helper(TestObject *testObject, const QByteArray qmlFunction, bool failed,
                                           QVariant &result, QVariant &watcherValue, QVariant &replyValue);
@@ -146,19 +148,32 @@ void tst_QIfPendingReply::initTestCase()
     qIfRegisterPendingReplyType<TestGadget>();
 }
 
-template <typename T> void tst_QIfPendingReply::test(const QIfPendingReply<T> &reply, bool failed, T expectedResult)
+template <typename T> void tst_QIfPendingReply::test(QIfPendingReply<T> reply, bool failed, T expectedResult)
 {
     QCOMPARE(reply.reply(), T());
     test_helper<T>(reply, failed);
     QCOMPARE(reply.reply(), expectedResult);
 }
 
-template <typename T> void tst_QIfPendingReply::test_helper(const QIfPendingReply<T> &reply, bool failed)
+template <typename T> void tst_QIfPendingReply::createThenCallbacks(QIfPendingReply<T> reply, bool *successCalled, bool *failedCalled)
+{
+    reply.then([=](const T &value){*successCalled = true;}, [=](){*failedCalled = true;});
+}
+
+template <> void tst_QIfPendingReply::createThenCallbacks(QIfPendingReply<void> reply, bool *successCalled, bool *failedCalled)
+{
+    reply.then([=](){*successCalled = true;}, [=](){*failedCalled = true;});
+}
+
+template <typename T> void tst_QIfPendingReply::test_helper(QIfPendingReply<T> reply, bool failed)
 {
     QVERIFY(reply.isValid());
     QVERIFY(reply.watcher()->isValid());
     QVERIFY(!reply.isResultAvailable());
     QVERIFY(!reply.isSuccessful());
+    bool failedCalled = false;
+    bool successCalled = false;
+    createThenCallbacks(reply, &successCalled, &failedCalled);
     QSignalSpy successSpy(reply.watcher(), &QIfPendingReplyWatcher::replySuccess);
     QSignalSpy valueChangedSpy(reply.watcher(), &QIfPendingReplyWatcher::valueChanged);
     QSignalSpy failedSpy(reply.watcher(), &QIfPendingReplyWatcher::replyFailed);
@@ -166,10 +181,28 @@ template <typename T> void tst_QIfPendingReply::test_helper(const QIfPendingRepl
         failedSpy.wait();
         QCOMPARE(successSpy.count(), 0);
         QCOMPARE(failedSpy.count(), 1);
+        QVERIFY(failedCalled);
+        QVERIFY(!successCalled);
+
+        // Call then again and make sure the callbacks are executed
+        bool failedLaterCalled = false;
+        bool successLaterCalled = false;
+        createThenCallbacks(reply, &successLaterCalled, &failedLaterCalled);
+        QVERIFY(failedLaterCalled);
+        QVERIFY(!successLaterCalled);
     } else {
         successSpy.wait();
         QCOMPARE(successSpy.count(), 1);
         QCOMPARE(failedSpy.count(), 0);
+        QVERIFY(successCalled);
+        QVERIFY(!failedCalled);
+
+        // Call then again and make sure the callbacks are executed
+        bool failedLaterCalled = false;
+        bool successLaterCalled = false;
+        createThenCallbacks(reply, &successLaterCalled, &failedLaterCalled);
+        QVERIFY(!failedLaterCalled);
+        QVERIFY(successLaterCalled);
     }
 
     QCOMPARE(valueChangedSpy.count(), 1);
@@ -309,6 +342,7 @@ void tst_QIfPendingReply::testSuccess()
     test<TestObject::TestFlags>(testObject.test_TestFlags(TestObject::TestFlags(TestObject::TestFlag_2 | TestObject::TestFlag_1)), false,
                                 TestObject::TestFlags(TestObject::TestFlag_2 | TestObject::TestFlag_1));
     test<TestGadget>(testObject.test_TestGadget(TestGadget("FOO", 5)), false, TestGadget("FOO", 5));
+    test<QVariant>(testObject.test_QVariant(QVariant("Foo")), false, QVariant("Foo"));
 }
 
 void tst_QIfPendingReply::testSuccessFromQml()
@@ -372,6 +406,7 @@ void tst_QIfPendingReply::testFailed()
     test<TestObject::TestEnum>(testObject.test_TestEnum(TestObject::Value_2, true), true);
     test<TestObject::TestFlags>(testObject.test_TestFlags(TestObject::TestFlags(TestObject::TestFlag_2 | TestObject::TestFlag_1), true), true);
     test<TestGadget>(testObject.test_TestGadget(TestGadget("FOO", 5), true), true);
+    test<QVariant>(testObject.test_QVariant(QVariant("Foo"), true), true);
 }
 
 void tst_QIfPendingReply::testFailed_qml()
@@ -444,9 +479,25 @@ void tst_QIfPendingReply::testTypeError()
     QVERIFY(!enumReply.isResultAvailable());
 }
 
+void tst_QIfPendingReply::testThenLater_data()
+{
+    QTest::addColumn<QByteArray>("testFunction");
+    QTest::addColumn<bool>("failed");
+    QTest::addColumn<QVariant>("value");
+    QTest::newRow("string") << QByteArray("testObject.test_QString('TEST_STRING')") << false << QVariant("TEST_STRING");
+    QTest::newRow("variant") << QByteArray("testObject.test_QVariant('Foo')") << false << QVariant("Foo");
+    QTest::newRow("void") << QByteArray("testObject.test_void()") << false << QVariant();
+    QTest::newRow("string failed") << QByteArray("testObject.test_QString('TEST_STRING', true)") << true << QVariant("TEST_STRING");
+    QTest::newRow("variant failed") << QByteArray("testObject.test_QVariant('Foo', true)") << true << QVariant("Foo");
+    QTest::newRow("void failed") << QByteArray("testObject.test_void(true)") << true << QVariant("Foo");
+}
+
 void tst_QIfPendingReply::testThenLater()
 {
-    bool failed = false;
+    QFETCH(QByteArray, testFunction);
+    QFETCH(bool, failed);
+    QFETCH(QVariant, value);
+
     TestObject testObject;
     QQmlEngine engine;
     engine.rootContext()->setContextProperty("testObject", &testObject);
@@ -463,7 +514,7 @@ void tst_QIfPendingReply::testThenLater()
                          property bool callBackCalled: false; \n\
                          property bool success: false; \n\
                          Component.onCompleted: { \n\
-                             reply = testObject.test_QString('TEST_STRING') \n\
+                             reply = " + testFunction + " \n\
                              replyValue = reply.value \n\
                              replyValid = reply.valid \n\
                              replySuccess = reply.success \n\
@@ -520,8 +571,8 @@ void tst_QIfPendingReply::testThenLater()
         QCOMPARE(obj->property("result"), QVariant());
         QCOMPARE(obj->property("replyValue"), QVariant());
     } else {
-        QCOMPARE(obj->property("result").value<QString>(), QString("TEST_STRING"));
-        QCOMPARE(obj->property("replyValue").value<QString>(), QString("TEST_STRING"));
+        QCOMPARE(obj->property("result"), value);
+        QCOMPARE(obj->property("replyValue"), value);
     }
 }
 
