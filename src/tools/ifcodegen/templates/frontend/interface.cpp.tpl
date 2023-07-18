@@ -58,9 +58,6 @@ using namespace Qt::StringLiterals;
 {% endfor %}
 {
     {{module.module_name|upperfirst}}::registerTypes();
-{% if not module.tags.config.disablePrivateIF %}
-    m_supportsPropertyOverriding = true;
-{% endif %}
 }
 
 /*! \internal */
@@ -116,16 +113,6 @@ void {{class}}Private::clearToDefaults()
         f = q;
     if (f->zone() != zone)
         return;
-{% if not module.tags.config.disablePrivateIF and not property.type.is_model %}
-    if (Q_UNLIKELY(m_propertyOverride)) {
-        const int pi = f->metaObject()->indexOfProperty("{{property}}");
-        if (m_propertyOverride->isOverridden(pi)) {
-            QVariant v = QVariant::fromValue<{{property|return_type}}>({{property}});
-            m_propertyOverride->setProperty(pi, v);
-            return;
-        }
-    }
-{% endif %}
 {% if property.type.is_model %}
     {{property|return_type}} old = {{class}}Private::get(f)->m_{{property}};
     if ({{property}}) {
@@ -201,26 +188,6 @@ void {{class}}Private::on{{signal|upperfirst}}({{qtif.join_params(signal)}})
 {%   endif %}
 
 {% endfor %}
-
-{% if not module.tags.config.disablePrivateIF %}
-bool {{class}}Private::notify(const QByteArray &propertyName, const QVariant &value)
-{
-{%   if interface.properties %}
-    auto q = getParent();
-{%     for property in interface.properties %}
-    if (propertyName == QByteArray("{{property}}")) {
-        Q_EMIT q->{{property}}Changed(value.value<{{property|return_type}}>());
-        return true;
-    }
-{%     endfor %}
-{%   endif %}
-{%   if interface.tags.config.zoned %}
-    return QIfAbstractZonedFeaturePrivate::notify(propertyName, value);
-{%   else %}
-    return QIfAbstractFeaturePrivate::notify(propertyName, value);
-{%   endif %}
-}
-{% endif %}
 
 {% if module.tags.config.disablePrivateIF %}
 {%   if interface.tags.config.zoned %}
@@ -319,10 +286,6 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 {{qtif.prop_getter(property, class)}}
 {
     const auto d = {{class}}Private::get(this);
-{% if not module.tags.config.disablePrivateIF %}
-    if (Q_UNLIKELY(d->m_propertyOverride))
-        return d->m_propertyOverride->property(metaObject()->indexOfProperty("{{property}}")).value<{{property|return_type}}>();
-{% endif %}
     return d->m_{{property}};
 }
 {%   if not property.readonly and not property.const and not property.type.is_model %}
@@ -331,20 +294,6 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 {
     auto d = {{class}}Private::get(this);
     bool forceUpdate = false;
-{% if not module.tags.config.disablePrivateIF %}
-    if (Q_UNLIKELY(d->m_propertyOverride)) {
-        const int pi = metaObject()->indexOfProperty("{{property}}");
-        if (d->m_propertyOverride->isOverridden(pi)) {
-            Q_EMIT {{property}}Changed(d->m_propertyOverride->property(pi).value<{{property|return_type}}>());
-            return;
-        }
-        forceUpdate = property("{{property}}DirtyOverride").isValid();
-        if (forceUpdate)
-            setProperty("{{property}}DirtyOverride", {});
-        QVariant v = QVariant::fromValue<{{property|return_type}}>({{property}});
-        d->m_propertyOverride->setProperty(pi, v);
-    }
-{% endif %}
     if (!forceUpdate && d->m_{{property}} == {{property}})
         return;
     if ({{class}}BackendInterface *backend = {{interface|lower}}Backend())

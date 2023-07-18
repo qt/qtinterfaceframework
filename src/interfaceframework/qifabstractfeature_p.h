@@ -26,18 +26,6 @@
 
 QT_BEGIN_NAMESPACE
 
-class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPropertyOverrider {
-public:
-    QIfPropertyOverrider() = default;
-    virtual ~QIfPropertyOverrider() = default;
-
-    virtual QVariant property(int propertyIndex) const = 0;
-    virtual void setProperty(int propertyIndex, const QVariant &value) = 0;
-    virtual bool isOverridden(int propertyIndex) const = 0;
-private:
-    Q_DISABLE_COPY(QIfPropertyOverrider)
-};
-
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeaturePrivate : public QObjectPrivate
 {
 public:
@@ -46,7 +34,6 @@ public:
     static QIfAbstractFeaturePrivate *get(QIfAbstractFeature *q);
 
     virtual void initialize();
-    virtual bool notify(const QByteArray &propertyName, const QVariant &value);
 
     QIfFeatureInterface *backend() const;
     template <class T> T backend() const
@@ -75,9 +62,6 @@ public:
     bool m_qmlCreation;
     bool m_isInitialized;
     bool m_isConnected;
-
-    bool m_supportsPropertyOverriding;
-    QIfPropertyOverrider *m_propertyOverride;
 };
 
 QT_END_NAMESPACE

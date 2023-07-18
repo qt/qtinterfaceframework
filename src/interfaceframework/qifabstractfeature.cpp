@@ -31,8 +31,6 @@ QIfAbstractFeaturePrivate::QIfAbstractFeaturePrivate(const QString &interfaceNam
     , m_qmlCreation(false)
     , m_isInitialized(false)
     , m_isConnected(false)
-    , m_supportsPropertyOverriding(false)
-    , m_propertyOverride(nullptr)
 {
     QtInterfaceFrameworkModule::registerTypes();
 
@@ -43,13 +41,6 @@ QIfAbstractFeaturePrivate::QIfAbstractFeaturePrivate(const QString &interfaceNam
 
 void QIfAbstractFeaturePrivate::initialize()
 {
-}
-
-bool QIfAbstractFeaturePrivate::notify(const QByteArray &propertyName, const QVariant &value)
-{
-    Q_UNUSED(propertyName);
-    Q_UNUSED(value);
-    return false;
 }
 
 /*!
