@@ -40,11 +40,6 @@ QIfPagingModelInterface::QIfPagingModelInterface(QObject *parent)
     : QIfFeatureInterface(parent)
 {}
 
-QIfPagingModelInterface::QIfPagingModelInterface(QObjectPrivate &dd, QObject *parent)
-    : QIfFeatureInterface(dd, parent)
-{
-}
-
 /*!
     \fn void QIfPagingModelInterface::registerInstance(const QUuid &identifier)
 
