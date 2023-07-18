@@ -231,9 +231,6 @@ void QIfPagingModelPrivate::clearToDefaults()
 const QIfStandardItem *QIfPagingModelPrivate::itemAt(int i) const
 {
     const QVariant &var = m_itemList.at(i);
-    if (!var.isValid())
-        return nullptr;
-
     return qtif_gadgetFromVariant<QIfStandardItem>(q_ptr, var);
 }
 

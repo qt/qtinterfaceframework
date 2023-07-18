@@ -19,6 +19,11 @@
 //TODO Add test with multiple model instances, requesting different data at the same time
 //TODO Test the signal without a valid identifier
 
+class TestGadget
+{
+    Q_GADGET
+};
+
 class TestBackend : public QIfPagingModelInterface
 {
     Q_OBJECT
@@ -37,9 +42,9 @@ public:
         m_list = createItemList("simple");
     }
 
-    QList<QIfStandardItem> createItemList(const QString &name)
+    QVariantList createItemList(const QString &name)
     {
-        QList<QIfStandardItem> list;
+        QVariantList list;
         for (int i=0; i<100; i++) {
             QIfStandardItem item;
             item.setId(name + QLatin1String(" ") + QString::number(i));
@@ -47,9 +52,16 @@ public:
             map.insert("type", name);
             map.insert("index", i);
             item.setData(map);
-            list.append(item);
+            list.append(QVariant::fromValue(item));
         }
         return list;
+    }
+
+    void initializeBrokenData()
+    {
+        m_list.append(QVariant());
+        m_list.append(QVariant("string"));
+        m_list.append(QVariant::fromValue(TestGadget()));
     }
 
     void initialize() override
@@ -78,14 +90,14 @@ public:
 
         int size = qMin(start + count, m_list.count());
         for (int i = start; i < size; i++)
-            requestedItems.append(QVariant::fromValue(m_list.at(i)));
+            requestedItems.append(m_list.at(i));
 
         emit dataFetched(identifier, requestedItems, start, start + count < m_list.count());
     }
 
     void insert(int index, const QIfStandardItem item)
     {
-        m_list.insert(index, item);
+        m_list.insert(index, QVariant::fromValue(item));
         QVariantList variantList = { QVariant::fromValue(item) };
 
         emit dataChanged(QUuid(), variantList, index, 0);
@@ -106,7 +118,7 @@ public:
         m_list.move(currentIndex, newIndex);
         QVariantList variantLIst;
         for (int i = min; i <= max; i++)
-            variantLIst.append(QVariant::fromValue(m_list.at(i)));
+            variantLIst.append(m_list.at(i));
 
         emit dataChanged(QUuid(), variantLIst, min, max - min + 1);
     }
@@ -116,7 +128,7 @@ Q_SIGNALS:
     void unregisterInstanceCalled(const QUuid &identifier);
 
 private:
-    QList<QIfStandardItem> m_list;
+    QVariantList m_list;
     QtInterfaceFrameworkModule::ModelCapabilities m_caps;
 };
 
@@ -173,6 +185,7 @@ private Q_SLOTS:
 
     void testRegisterInstance();
     void testBasic_qml();
+    void testBrokenData();
     void testGetAt();
     void testFetchMore_data();
     void testFetchMore();
@@ -279,6 +292,25 @@ void tst_QIfPagingModel::testBasic_qml()
     verifyQml(&engine, "import QtQuick; import QtInterfaceFramework; PagingModel{ \
                             serviceObject: testBackend \n\
                         }");
+}
+
+void tst_QIfPagingModel::testBrokenData()
+{
+    TestServiceObject *service = new TestServiceObject();
+    manager->registerService(service, service->interfaces());
+    service->testBackend()->initializeBrokenData();
+
+    QIfPagingModel model;
+    model.setServiceObject(service);
+
+    QTest::ignoreMessage(QtWarningMsg, "The passed QVariant is undefined");
+    QIfStandardItem item = model.at<QIfStandardItem>(0);
+
+    QTest::ignoreMessage(QtWarningMsg, "The passed QVariant needs to use the Q_GADGET macro");
+    QIfStandardItem item2 = model.at<QIfStandardItem>(1);
+
+    QTest::ignoreMessage(QtWarningMsg, "The passed QVariant is not derived from QIfStandardItem");
+    QIfStandardItem item3 = model.at<QIfStandardItem>(2);
 }
 
 void tst_QIfPagingModel::testGetAt()
