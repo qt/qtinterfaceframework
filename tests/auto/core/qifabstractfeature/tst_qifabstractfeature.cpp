@@ -498,15 +498,23 @@ void BaseTest::testServiceObjectDestruction()
 
     QIfFeatureTester *f = createTester();
     QSignalSpy serviceObjectChangedSpy(f, &QIfFeatureTester::serviceObjectChanged);
+    QSignalSpy initializedChangedSpy(f, &QIfFeatureTester::isInitializedChanged);
     f->startAutoDiscovery();
     QVERIFY(f->serviceObject());
     QCOMPARE(serviceObjectChangedSpy.count(), 1);
+    QVERIFY(f->isInitialized());
+    QCOMPARE(initializedChangedSpy.count(), 1);
+    QCOMPARE(initializedChangedSpy.at(0).at(0), true);
     serviceObjectChangedSpy.clear();
+    initializedChangedSpy.clear();
 
     m_manager->unloadAllBackends();
     QCOMPARE(serviceObjectChangedSpy.count(), 1);
     QVERIFY(!f->serviceObject());
     QVERIFY(!f->isValid());
+    QVERIFY(!f->isInitialized());
+    QCOMPARE(initializedChangedSpy.count(), 1);
+    QCOMPARE(initializedChangedSpy.at(0).at(0), false);
 }
 
 void BaseTest::testResetServiceObject()
