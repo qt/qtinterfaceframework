@@ -87,6 +87,16 @@ void QIfAbstractFeaturePrivate::onInitializationDone()
     emit q->isInitializedChanged(true);
 }
 
+void QIfAbstractFeaturePrivate::serviceObjectDestroyed()
+{
+    Q_Q(QIfAbstractFeature);
+    m_serviceObject = nullptr;
+    m_isInitialized = false;
+    emit q->isInitializedChanged(m_isInitialized);
+    q->clearServiceObject();
+    emit q->serviceObjectChanged();
+}
+
 /*!
     \class QIfAbstractFeature
     \inmodule QtInterfaceFramework
@@ -265,7 +275,7 @@ bool QIfAbstractFeature::setServiceObject(QIfServiceObject *so)
     bool serviceObjectIsSet = d->m_serviceObject;
     if (d->m_serviceObject) {
         disconnectFromServiceObject(d->m_serviceObject);
-        disconnect(d->m_serviceObject, &QObject::destroyed, this, &QIfAbstractFeature::serviceObjectDestroyed);
+        QObjectPrivate::disconnect(d->m_serviceObject, &QObject::destroyed, d, &QIfAbstractFeaturePrivate::serviceObjectDestroyed);
     }
 
     d->m_serviceObject = nullptr;
@@ -296,7 +306,7 @@ bool QIfAbstractFeature::setServiceObject(QIfServiceObject *so)
                       ", as QIfAbstractFeature::connectToServiceObject wasn't called.";
             return false;
         }
-        connect(so, &QObject::destroyed, this, &QIfAbstractFeature::serviceObjectDestroyed);
+        QObjectPrivate::connect(so, &QObject::destroyed, d, &QIfAbstractFeaturePrivate::serviceObjectDestroyed);
     }
 
     return true;
@@ -861,16 +871,6 @@ bool QIfAbstractFeature::isInitialized() const
 void QIfAbstractFeature::onErrorChanged(QIfAbstractFeature::Error error, const QString &message)
 {
     setError(error, message);
-}
-
-void QIfAbstractFeature::serviceObjectDestroyed()
-{
-    Q_D(QIfAbstractFeature);
-    d->m_serviceObject = nullptr;
-    d->m_isInitialized = false;
-    emit isInitializedChanged(false);
-    clearServiceObject();
-    emit serviceObjectChanged();
 }
 
 
