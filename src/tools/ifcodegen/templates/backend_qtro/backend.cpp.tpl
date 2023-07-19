@@ -160,6 +160,12 @@ void {{class}}::updateServiceSettings(const QVariantMap &settings)
 
     m_serviceSettings = settings;
     connectToNode();
+
+{% for property in interface.properties %}
+{%   if property.type.is_model %}
+    m_{{property}}->updateServiceSettings(settings);
+{%   endif %}
+{% endfor %}
 }
 
 {% if interface_zoned %}
