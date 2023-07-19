@@ -874,9 +874,12 @@ void QIfAbstractFeature::serviceObjectDestroyed()
 {
     Q_D(QIfAbstractFeature);
     d->m_serviceObject = nullptr;
+    d->m_isInitialized = false;
+    emit isInitializedChanged(false);
     clearServiceObject();
     emit serviceObjectChanged();
 }
+
 
 QT_END_NAMESPACE
 
