@@ -118,7 +118,11 @@ protected:
     QVariantMap m_serviceSettings;
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-    QIfPagingModelInterface *m_{{property}};
+{%     if interface_zoned %}
+    Zoned{{property|upperfirst}}RoModelBackend *m_{{property}};
+{%     else %}
+    {{property|upperfirst}}RoModelBackend *m_{{property}};
+{%     endif %}
 {%   endif %}
 {% endfor %}
 {% if interface_zoned %}

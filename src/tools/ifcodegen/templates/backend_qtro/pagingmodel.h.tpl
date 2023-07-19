@@ -32,12 +32,15 @@ public:
 
     void fetchData(const QUuid &identifier, int start, int count) override;
 
+    void updateServiceSettings(const QVariantMap &settings);
+
 private:
     bool connectToNode();
     void setupConnections();
 
     QSharedPointer<QIfPagingModelReplica> m_replica;
     QIfRemoteObjectsReplicaHelper *m_helper;
+    QVariantMap m_serviceSettings;
     QRemoteObjectNode *m_node= nullptr;
     QString m_remoteObjectsLookupName;
     QUrl m_url;
