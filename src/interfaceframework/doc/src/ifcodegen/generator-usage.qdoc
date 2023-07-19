@@ -800,19 +800,21 @@
     settings need to be prefixed with the interface name. The following example creates a
     Configuration, which is applied to all Items that are part of the \c cluster group.
     The service settings applied to the currently connected backend use a global \c
-    connectionTimeout and a specific \c connectionUrl for the InstrumentCluster interface, while
-    all other interfaces use the default
-    \c connectionUrl:
+    connectionTimeout and a specific \c connectionUrl for the InstrumentCluster interface in the
+    cluster module, while all other interfaces use the default \c connectionUrl:
 
     \badcode
     InterfaceFrameworkConfiguration {
         name: "cluster"
         serviceSettings: {
             "connectionTimeout": 1000,
-            "InstrumentCluster": {
+            "cluster.InstrumentCluster": {
                 "connectionUrl": "tcp://127.0.0.1:1234"
             }
         }
     }
+
+    Instead of providing settings per interface, it is also possible to provide the settings on a
+    per module basis using the module name as a key.
     \endcode
 */

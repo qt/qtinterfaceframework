@@ -258,11 +258,27 @@ QStringList {{class}}::availableZones() const
 
 bool {{class}}::connectToNode()
 {
-    QUrl url;
-    const auto it = m_serviceSettings.constFind(u"{{interface}}"_s);
+    auto findConnectionUrl = [this](const QString &key) -> QUrl {
+        const auto it = m_serviceSettings.constFind(key);
 
-    if (it != m_serviceSettings.constEnd())
-        url = it->toMap().value(u"connectionUrl"_s).toUrl();
+        if (it != m_serviceSettings.constEnd())
+            return it->toMap().value(u"connectionUrl"_s).toUrl();
+        return QUrl();
+    };
+
+    auto findConnectionTimeout = [this](const QString &key, int defaultTimeout) -> int {
+        const auto it = m_serviceSettings.constFind(key);
+
+        if (it != m_serviceSettings.constEnd())
+            return it->toMap().value(u"connectionTimeout"_s, defaultTimeout).toInt();
+        return defaultTimeout;
+    };
+
+    QUrl url = findConnectionUrl(u"{{interface.qualified_name}}"_s);
+    if (url.isEmpty())
+        url = findConnectionUrl(u"{{interface}}"_s);
+    if (url.isEmpty())
+        url = findConnectionUrl(u"{{module}}"_s);
     if (url.isEmpty())
         url = m_serviceSettings.value(u"connectionUrl"_s).toUrl();
 
@@ -330,8 +346,13 @@ bool {{class}}::connectToNode()
 
         const int defaultTimeout = 3000;
         int connectionTimeout = defaultTimeout;
-        if (it != m_serviceSettings.constEnd())
-            connectionTimeout = it->toMap().value(u"connectionTimeout"_s, defaultTimeout).toInt();
+        connectionTimeout = findConnectionTimeout(u"{{interface.qualified_name}}"_s, defaultTimeout);
+
+        if (connectionTimeout == defaultTimeout)
+            connectionTimeout = findConnectionTimeout(u"{{interface}}"_s, defaultTimeout);
+
+        if (connectionTimeout == defaultTimeout)
+            connectionTimeout = findConnectionTimeout(u"{{module}}"_s, defaultTimeout);
 
         if (connectionTimeout == defaultTimeout)
             connectionTimeout = m_serviceSettings.value(u"connectionTimeout"_s, defaultTimeout).toInt();
