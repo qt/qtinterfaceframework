@@ -46,6 +46,7 @@ public:
 
     void setDiscoveryResult(QIfAbstractFeature::DiscoveryResult discoveryResult);
     void onInitializationDone();
+    void serviceObjectDestroyed();
 
     QIfAbstractFeature * const q_ptr;
     Q_DECLARE_PUBLIC(QIfAbstractFeature)

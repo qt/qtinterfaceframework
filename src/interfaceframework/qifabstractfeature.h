@@ -111,12 +111,10 @@ protected:
 protected Q_SLOTS:
     virtual void onErrorChanged(QIfAbstractFeature::Error error, const QString &message = QString());
 
-private Q_SLOTS:
-    void serviceObjectDestroyed();
-
 private:
     Q_DECLARE_PRIVATE(QIfAbstractFeature)
     Q_PRIVATE_SLOT(d_func(), void onInitializationDone())
+    Q_PRIVATE_SLOT(d_func(), void serviceObjectDestroyed())
     friend class QIfFeatureTester;
     friend class QIfHelperFeature;
 };
