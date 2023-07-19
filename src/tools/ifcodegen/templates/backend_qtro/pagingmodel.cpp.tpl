@@ -59,25 +59,74 @@ void {{class}}::fetchData(const QUuid &identifier, int start, int count)
     m_replica->fetchData(identifier, start, count);
 }
 
+void {{class}}::updateServiceSettings(const QVariantMap &settings)
+{
+    if (m_serviceSettings == settings)
+        return;
+
+    m_serviceSettings = settings;
+    connectToNode();
+}
+
 bool {{class}}::connectToNode()
 {
+    QUrl url;
+    const auto it = m_serviceSettings.constFind(u"{{interface}}"_s);
+
+    if (it != m_serviceSettings.constEnd())
+        url = it->toMap().value(u"connectionUrl"_s).toUrl();
+    if (url.isEmpty())
+        url = m_serviceSettings.value(u"connectionUrl"_s).toUrl();
+
     static QString configPath;
-    if (configPath.isEmpty()) {
-        if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
-            configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
-        } else {
-            configPath = u"./server.conf"_s;
-            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Environment variable SERVER_CONF_PATH not defined, using " << configPath;
+    if (qEnvironmentVariableIsSet("SERVER_CONF_PATH")) {
+        configPath = QString::fromLocal8Bit(qgetenv("SERVER_CONF_PATH"));
+
+        QSettings settings(configPath, QSettings::IniFormat);
+        settings.beginGroup(u"{{module.module_name|lower}}"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
+        if (!url.isEmpty()) {
+            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "SERVER_CONF_PATH environment variable is set.\n"
+                                       << "Overriding service setting: '{{interface}}.connectionUrl'";
+
+            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Using SERVER_CONF_PATH is deprecated and will be removed"
+                                          "in future Qt versions.";
+            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
         }
     }
 
-    QSettings settings(configPath, QSettings::IniFormat);
-    settings.beginGroup(u"{{module.module_name|lower}}"_s);
-    QUrl registryUrl = QUrl(settings.value(u"Registry"_s, QIfRemoteObjectsHelper::buildDefaultUrl(u"{{module.module_name|lower}}"_s)).toString());
-    if (m_url != registryUrl) {
-        m_url = registryUrl;
+    if (url.isEmpty() && QFile::exists(u"./server.conf"_s)) {
+        configPath = u"./server.conf"_s;
+
+        QSettings settings(configPath, QSettings::IniFormat);
+        settings.beginGroup(u"{{module.module_name|lower}}"_s);
+        url = QUrl(settings.value(u"Registry"_s).toString());
+        if (!url.isEmpty()) {
+            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Reading url from ./server.conf.\n"
+                                       << "Overriding service setting: '{{interface}}.connectionUrl'";
+
+            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Using ./server.conf. is deprecated and will be removed"
+                                          "in future Qt versions.";
+            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Please use the new InterfaceFrameworkConfiguration item"
+                                          " and set the backend specific configuration options (using"
+                                          " the serviceSettings property).";
+        }
+    }
+
+    if (url.isEmpty())
+        url = QIfRemoteObjectsHelper::buildDefaultUrl(u"{{module.module_name|lower}}"_s);
+
+    if (m_url != url) {
         // QtRO doesn't allow to change the URL without destroying the Node
-        delete m_node;
+        if (m_node) {
+            qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Disconnecting from" << m_url;
+            delete m_node;
+        }
+
+        m_url = url;
+
         m_node = new QRemoteObjectNode();
         if (!m_node->connectToNode(m_url)) {
             qCCritical(qLcRO{{interface}}{{property|upper_first}}) << "Connection to" << m_url << "failed!";
@@ -87,6 +136,21 @@ bool {{class}}::connectToNode()
         qCInfo(qLcRO{{interface}}{{property|upper_first}}) << "Connecting to" << m_url;
         m_replica.reset(m_node->acquire<QIfPagingModelReplica>(m_remoteObjectsLookupName));
         setupConnections();
+
+        const int defaultTimeout = 3000;
+        int connectionTimeout = defaultTimeout;
+        if (it != m_serviceSettings.constEnd())
+            connectionTimeout = it->toMap().value(u"connectionTimeout"_s, defaultTimeout).toInt();
+
+        if (connectionTimeout == defaultTimeout)
+            connectionTimeout = m_serviceSettings.value(u"connectionTimeout"_s, defaultTimeout).toInt();
+
+        if (connectionTimeout != -1) {
+            QTimer::singleShot(connectionTimeout, this, [this](){
+                if(!m_replica->isInitialized())
+                    qCWarning(qLcRO{{interface}}{{property|upper_first}}) << "{{interface.qualified_name}}.{{property|upper_first}} wasn't initialized within the timeout period. Please make sure the server is running.";
+            });
+        }
     }
     return true;
 }
