@@ -60,12 +60,12 @@ void BackendsTest::sendCmd(const QByteArray &input)
     qApp->processEvents();
 }
 
-void BackendsTest::startServer()
+void BackendsTest::startServer(QStringList arguments)
 {
     if (!m_serverExecutable.isEmpty()) {
         qInfo() << "Starting Server Process";
         QVERIFY2(QFile::exists(m_serverExecutable), qPrintable(u"Executable doesn't exist: %1"_s.arg(m_serverExecutable)));
-        m_serverProcess->start(m_serverExecutable);
+        m_serverProcess->start(m_serverExecutable, arguments);
         QVERIFY2(m_serverProcess->waitForStarted(), qPrintable(u"Process error: %1"_s.arg(m_serverProcess->error())));
     }
     QVERIFY(m_localServer->waitForNewConnection(5000));
@@ -1162,6 +1162,56 @@ void BackendsTest::testSimulationData()
     unsupportedValueSpy.wait(500);
     QCOMPARE(unsupportedValueSpy.count(), 0);
     QCOMPARE(zone->stringValue(), QString());
+}
+
+void BackendsTest::testRemoteObjectsConfig()
+{
+    if (m_isSimulationBackend)
+        QSKIP("This test is only for remoteobject");
+
+    Echo client;
+    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QVERIFY(initSpy.isValid());
+    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+
+    EchoZoned zonedClient;
+    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QVERIFY(zonedInitSpy.isValid());
+    zonedClient.setServiceObject(client.serviceObject());
+
+    // Test with same URL for all services
+    startServer({"--serverUrl", "local:myTestUrl"});
+    client.serviceObject()->updateServiceSettings(QVariantMap({{QString("connectionUrl"), QVariant("local:myTestUrl")}}));
+
+    //wait until the client has connected and initial values are set
+    WAIT_AND_COMPARE(initSpy, 1);
+    QVERIFY(client.isInitialized());
+
+    WAIT_AND_COMPARE(zonedInitSpy, 1);
+    QVERIFY(zonedClient.isInitialized());
+
+    cleanup();
+    QVERIFY(!client.isInitialized());
+    QVERIFY(!zonedClient.isInitialized());
+    initSpy.clear();
+    zonedInitSpy.clear();
+    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    zonedClient.setServiceObject(client.serviceObject());
+
+    // Test with conf file, which uses different URLs for different services
+    startServer({"--serverConf", QFINDTESTDATA("server.conf")});
+    client.serviceObject()->updateServiceSettings(QVariantMap({
+                                                               {QString("org.example.echomodule.EchoZoned"), QVariantMap({{QString("connectionUrl"), QVariant("local:echozoned")}})},
+                                                               {QString("org.example.echomodule"), QVariantMap({{QString("connectionUrl"), QVariant("local:echomoduleconf")}})}
+                                                              }));
+
+
+    //wait until the client has connected and initial values are set
+    WAIT_AND_COMPARE(initSpy, 1);
+    QVERIFY(client.isInitialized());
+
+    WAIT_AND_COMPARE(zonedInitSpy, 1);
+    QVERIFY(zonedClient.isInitialized());
 }
 
 QTEST_MAIN(BackendsTest)

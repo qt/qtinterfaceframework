@@ -11,6 +11,9 @@ endif()
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/core.h
     ${CMAKE_CURRENT_LIST_DIR}/core.cpp
+{% if module.tags.config_server_qtro and module.tags.config_server_qtro.useGeneratedMain %}
+    ${CMAKE_CURRENT_LIST_DIR}/main.cpp
+{% endif %}
 )
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_REPLICAS

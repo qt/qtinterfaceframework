@@ -13,7 +13,7 @@ class EchoService: public EchoSimpleSource
     Q_OBJECT
 
 public:
-    EchoService();
+    explicit EchoService(QObject *parent = nullptr);
 
     Combo m_testCombo;
     QString m_testId;

@@ -421,6 +421,7 @@ if (QT_FEATURE_remoteobjects)
         FILES
         templates/server_qtro/core.cpp.tpl
         templates/server_qtro/core.h.tpl
+        templates/server_qtro/main.cpp.tpl
         templates/server_qtro/server.pri.tpl
         templates/server_qtro/CMakeLists.txt.tpl
         DESTINATION "${templates_install_dir}/server_qtro"

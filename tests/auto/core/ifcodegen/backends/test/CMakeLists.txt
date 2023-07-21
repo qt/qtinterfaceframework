@@ -11,7 +11,7 @@ qt_internal_add_test(tst_backends
         echo_qtro_frontend
     WORKING_DIRECTORY
         ${CMAKE_CURRENT_BINARY_DIR}/../
-    TESTDATA simulation.qml minimal_simulation_data.json
+    TESTDATA simulation.qml minimal_simulation_data.json server.conf
 )
 
 set_target_properties(tst_backends PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)

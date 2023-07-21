@@ -3,15 +3,11 @@
 // Copyright (C) 2018 Pelagicore AG
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include <QCoreApplication>
-#include <QFile>
-#include <QSocketNotifier>
+#include <QIfRemoteObjectsConfig>
 
 #include "echoservice.h"
 #include "echozonedservice.h"
 #include "contactsmodelservice.h"
-
-#include "core.h"
 
 #include "cmdlistener.h"
 
@@ -19,20 +15,18 @@ using namespace Qt::StringLiterals;
 
 static QString frontLeftZone = u"FrontLeft"_s;
 
-int main(int argc, char *argv[])
+void serverMain(QIfRemoteObjectsConfig &config)
 {
-    QCoreApplication app(argc, argv);
+    EchoService *echoService = new EchoService(qApp);
+    EchoZonedService *echoZonedService = new EchoZonedService(qApp);
+    ContactsModelService *contactsModelService = new ContactsModelService(qApp);
 
-    EchoService echoService;
-    EchoZonedService echoZonedService;
-    ContactsModelService contactsModelService;
+    config.enableRemoting(u"org.example.echomodule"_s, u"Echo"_s, echoService);
+    config.enableRemoting(u"org.example.echomodule"_s, u"EchoZoned"_s, echoZonedService);
+    config.enableRemoting(u"org.example.echomodule"_s, u"Echo.contactList"_s, contactsModelService);
 
-    Core::instance()->host()->enableRemoting(&echoService, QStringLiteral("org.example.echomodule.Echo"));
-    Core::instance()->host()->enableRemoting(&contactsModelService, QStringLiteral("org.example.echomodule.Echo.contactList"));
-    Core::instance()->host()->enableRemoting(&echoZonedService, QStringLiteral("org.example.echomodule.EchoZoned"));
-
-    CmdListener listener;
-    QObject::connect(&listener, &::CmdListener::newCmd, [&echoService, &echoZonedService, &contactsModelService](const QString &cmd) {
+    CmdListener *listener = new CmdListener;
+    QObject::connect(listener, &::CmdListener::newCmd, listener, [echoService, echoZonedService, contactsModelService](const QString &cmd) {
         if (cmd == u"testInit"_s) {
             QLatin1String lastMessageTestValue("this is the last message");
             int intValueTestValue(789);
@@ -46,15 +40,15 @@ int main(int argc, char *argv[])
             Echomodule::WeekDay weekDayTestValue = Echomodule::Wednesday;
             Echomodule::TestEnum testEnumTestValue = Echomodule::SecondEnumValue;
 
-            echoService.setLastMessage(lastMessageTestValue);
-            echoService.setIntValue(intValueTestValue);
-            echoService.setFloatValue1(floatValue1TestValue);
-            echoService.setFloatValue2(floatValue2TestValue);
-            echoService.setStringValue(stringValueTestValue);
-            echoService.setComboList(comboListTestValue);
-            echoService.setContact(contactTestValue);
-            echoService.setWeekDay(weekDayTestValue);
-            echoService.setTestEnum(testEnumTestValue);
+            echoService->setLastMessage(lastMessageTestValue);
+            echoService->setIntValue(intValueTestValue);
+            echoService->setFloatValue1(floatValue1TestValue);
+            echoService->setFloatValue2(floatValue2TestValue);
+            echoService->setStringValue(stringValueTestValue);
+            echoService->setComboList(comboListTestValue);
+            echoService->setContact(contactTestValue);
+            echoService->setWeekDay(weekDayTestValue);
+            echoService->setTestEnum(testEnumTestValue);
         } else if (cmd == u"testZonedInit"_s) {
             int intValueTestValue(789);
             QVariant varValueTestValue(789);
@@ -67,15 +61,15 @@ int main(int argc, char *argv[])
             Echomodule::AirflowDirections airflowTestValue = Echomodule::Windshield;
             Echomodule::TestEnum testEnumTestValue = Echomodule::SecondEnumValue;
 
-            echoZonedService.setIntValue(intValueTestValue, QString());
-            echoZonedService.setVarValue(varValueTestValue, QString());
-            echoZonedService.setStringValue(stringValueTestValue, QString());
+            echoZonedService->setIntValue(intValueTestValue, QString());
+            echoZonedService->setVarValue(varValueTestValue, QString());
+            echoZonedService->setStringValue(stringValueTestValue, QString());
 
-            echoZonedService.setAirflowDirection(airflowTestValue, frontLeftZone);
-            echoZonedService.setContact(contactTestValue, frontLeftZone);
-            echoZonedService.setComboList(comboListTestValue, frontLeftZone);
-            echoZonedService.setUPPERCASEPROPERTY(floatValueTestValue, frontLeftZone);
-            echoZonedService.setTestEnum(testEnumTestValue, frontLeftZone);
+            echoZonedService->setAirflowDirection(airflowTestValue, frontLeftZone);
+            echoZonedService->setContact(contactTestValue, frontLeftZone);
+            echoZonedService->setComboList(comboListTestValue, frontLeftZone);
+            echoZonedService->setUPPERCASEPROPERTY(floatValueTestValue, frontLeftZone);
+            echoZonedService->setTestEnum(testEnumTestValue, frontLeftZone);
         } else if (cmd == u"changeProperties"_s) {
             int intValueTestValue = 12345;
             qreal floatValue1TestValue = 1234.5678;
@@ -87,14 +81,14 @@ int main(int argc, char *argv[])
             Contact contactTestValue(QStringLiteral("Nemo"), 47, true, 1);
             Echomodule::WeekDay weekDayTestValue = Echomodule::Friday;
             Echomodule::TestEnum testEnumTestValue = Echomodule::SecondEnumValue;
-            echoService.setIntValue(intValueTestValue);
-            echoService.setFloatValue1(floatValue1TestValue);
-            echoService.setFloatValue2(floatValue2TestValue);
-            echoService.setStringValue(stringValueTestValue);
-            echoService.setComboList(comboListTestValue);
-            echoService.setContact(contactTestValue);
-            echoService.setWeekDay(weekDayTestValue);
-            echoService.setTestEnum(testEnumTestValue);
+            echoService->setIntValue(intValueTestValue);
+            echoService->setFloatValue1(floatValue1TestValue);
+            echoService->setFloatValue2(floatValue2TestValue);
+            echoService->setStringValue(stringValueTestValue);
+            echoService->setComboList(comboListTestValue);
+            echoService->setContact(contactTestValue);
+            echoService->setWeekDay(weekDayTestValue);
+            echoService->setTestEnum(testEnumTestValue);
         } else if (cmd == u"changeZoneProperties"_s) {
             int intValueTestValue = 12345;
             qreal floatValueTestValue = 1234.5678;
@@ -105,32 +99,30 @@ int main(int argc, char *argv[])
             Contact contactTestValue(QStringLiteral("Nemo"), 47, true, 1);
             Echomodule::AirflowDirections airflowTestValue = Echomodule::Windshield;
             Echomodule::TestEnum testEnumTestValue = Echomodule::SecondEnumValue;
-            echoZonedService.setTestEnum(testEnumTestValue, frontLeftZone);
-            echoZonedService.setAirflowDirection(airflowTestValue, frontLeftZone);
-            echoZonedService.setContact(contactTestValue, frontLeftZone);
-            echoZonedService.setComboList(comboListTestValue, frontLeftZone);
-            echoZonedService.setStringValue(stringValueTestValue, frontLeftZone);
-            echoZonedService.setUPPERCASEPROPERTY(floatValueTestValue, QString());
-            echoZonedService.setIntValue(intValueTestValue, QString());
+            echoZonedService->setTestEnum(testEnumTestValue, frontLeftZone);
+            echoZonedService->setAirflowDirection(airflowTestValue, frontLeftZone);
+            echoZonedService->setContact(contactTestValue, frontLeftZone);
+            echoZonedService->setComboList(comboListTestValue, frontLeftZone);
+            echoZonedService->setStringValue(stringValueTestValue, frontLeftZone);
+            echoZonedService->setUPPERCASEPROPERTY(floatValueTestValue, QString());
+            echoZonedService->setIntValue(intValueTestValue, QString());
         } else if (cmd == u"emitSignals"_s) {
             AnotherStruct anotherTestValue(7);
             QLatin1String foobarTestValue("foo and bar");
-            Q_EMIT echoZonedService.somethingHappened(frontLeftZone);
-            Q_EMIT echoZonedService.foobar(foobarTestValue, frontLeftZone);
-            Q_EMIT echoZonedService.anotherChanged(anotherTestValue, QString());
-            Q_EMIT echoService.somethingHappened();
-            Q_EMIT echoService.foobar(foobarTestValue);
-            Q_EMIT echoService.anotherChanged(anotherTestValue);
+            Q_EMIT echoZonedService->somethingHappened(frontLeftZone);
+            Q_EMIT echoZonedService->foobar(foobarTestValue, frontLeftZone);
+            Q_EMIT echoZonedService->anotherChanged(anotherTestValue, QString());
+            Q_EMIT echoService->somethingHappened();
+            Q_EMIT echoService->foobar(foobarTestValue);
+            Q_EMIT echoService->anotherChanged(anotherTestValue);
         } else if (cmd == u"insert"_s) {
             Contact testContact(QStringLiteral("Mr A."), 20, false, "foo");
-            contactsModelService.insert(0, testContact);
+            contactsModelService->insert(0, testContact);
         } else if (cmd == u"update"_s) {
             Contact updatedContact(QStringLiteral("Mr B."), 30, true, QVariant());
-            contactsModelService.update(0, updatedContact);
+            contactsModelService->update(0, updatedContact);
         } else if (cmd == u"remove"_s) {
-            contactsModelService.remove(0);
+            contactsModelService->remove(0);
         }
     });
-
-    return app.exec();
 }

@@ -11,6 +11,9 @@ QT += interfaceframework remoteobjects ifremoteobjects_helper
 HEADERS += $$PWD/core.h
 
 SOURCES += $$PWD/core.cpp
+{% if module.tags.config_server_qtro and module.tags.config_server_qtro.useGeneratedMain %}
+SOURCES += $$PWD/main.cpp
+{% endif %}
 
 REPC_SOURCE += \
 {% for interface in module.interfaces %}

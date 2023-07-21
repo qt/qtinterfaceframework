@@ -19,7 +19,7 @@ public:
     BackendsTest();
 
     void sendCmd(const QByteArray &input);
-    void startServer();
+    void startServer(QStringList arguments = QStringList());
     void ignoreMessage(QtMsgType type, const char *message);
 private slots:
     void initTestCase();
@@ -40,6 +40,7 @@ private slots:
     void testSignals();
     void testModel();
     void testSimulationData();
+    void testRemoteObjectsConfig();
 
 private:
     QProcess *m_serverProcess;

@@ -66,6 +66,9 @@ Q_LOGGING_CATEGORY(qLcQtIfRoConfig, "qt.if.remoteobjects.config", QtInfoMsg)
     "server.conf" in the current directory to read the URLs used for remoting a service.
 
     Reading this config file can be enabled by using the \l parseLegacyConfigFile() function.
+
+    See also the \l{config_server_qtro_useGeneratedMain}{useGeneratedMain QFace Annotation} to let
+    \l ifcodegen generate a main.cpp with fully setup QIfRemoteObjectsConfig.
 */
 
 

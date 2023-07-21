@@ -3,6 +3,7 @@ server_qtro:
         documents:
             - "core.cpp": "core.cpp.tpl"
             - "core.h": "core.h.tpl"
+            - "main.cpp": "main.cpp.tpl"
             - "{{srcBase|lower}}.pri": "server.pri.tpl"
             - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.tpl'
     interface:

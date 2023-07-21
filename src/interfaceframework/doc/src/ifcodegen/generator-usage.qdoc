@@ -345,7 +345,8 @@
     Annotations that are not logically part of the interface description, but rather the ones used
     to specify additional information, are put in the accompanying YAML file.
 
-    Here is a list of annotations used to define the various aspects of the generated backends:
+    Here is a list of annotations used to define the various aspects of the generated backends and
+    servers:
 
     \section3 backend_simulator
 
@@ -514,6 +515,27 @@
             \li Defines the configurationId of the generated plugin, which can be used with
                 \l QIfConfiguration to provide settings to the backend.
                 Defaults to \c module.name
+    \endtable
+
+    \section3 config_server_qtro
+
+    \table 100%
+        \header
+            \li Tag
+            \li Where
+            \li Object type
+            \li Purpose
+        \row
+            \li
+            \target config_server_qtro_useGeneratedMain
+            \code
+            config_server_qtro:
+                useGeneratedMain: true
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Generates a main.cpp with common command-line options and a \l QIfRemoteObjectsConfig
+                instance which is passed to a user-provided serverMain function.
     \endtable
 
 

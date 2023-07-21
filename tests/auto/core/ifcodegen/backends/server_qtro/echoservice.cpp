@@ -7,8 +7,9 @@
 #include <QtIfRemoteObjectsHelper/private/qifremoteobjectspendingresult_p.h>
 #include <QTimer>
 
-EchoService::EchoService()
-    : m_testCombo(Contact(QStringLiteral("Antti"), 34, true, QVariant()), Echomodule::Friday)
+EchoService::EchoService(QObject *parent)
+    : EchoSimpleSource(parent)
+    , m_testCombo(Contact(QStringLiteral("Antti"), 34, true, QVariant()), Echomodule::Friday)
     , m_testId(QStringLiteral("id123"))
 {
     setTestEnum(Echomodule::FirstEnumValue);

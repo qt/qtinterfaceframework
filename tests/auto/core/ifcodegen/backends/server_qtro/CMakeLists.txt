@@ -12,7 +12,7 @@ target_sources(org-example-echo-qtro-server
         contactsmodelservice.cpp contactsmodelservice.h
         echoservice.cpp echoservice.h
         echozonedservice.cpp echozonedservice.h
-        main.cpp
+        serverMain.cpp
 )
 
 # Interface Framework Generator:
