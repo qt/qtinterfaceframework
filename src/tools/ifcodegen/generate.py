@@ -21,9 +21,16 @@ import generator.global_functions as global_functions
 from generator.filters import register_filters
 from generator.rule_generator import CustomRuleGenerator
 
+from functools import reduce
+def deep_get(dictionary, keys, default=None):
+    return reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
+
+
 here = Path(__file__).dirname()
 
 log = logging.getLogger(__file__)
+
+deprecatedAnnotations = {}
 
 def validateType(srcFile, type, errorString):
     if type.is_interface:
@@ -35,24 +42,47 @@ def validateType(srcFile, type, errorString):
 def validateSystem(srcFile, system):
     """
     Searches for types we don't support and reports an error
+    Also checks all annotations for deprecations
     """
+    checkDeprecationOfAnnotation(system)
     for module in system.modules:
+        checkDeprecationOfAnnotation(module)
         for interface in module.interfaces:
+            checkDeprecationOfAnnotation(interface)
             for property in interface.properties:
+                checkDeprecationOfAnnotation(property)
                 validateType(srcFile, property.type, "Properties")
             for operation in interface.operations:
+                checkDeprecationOfAnnotation(operation)
                 for param in operation.parameters:
+                    checkDeprecationOfAnnotation(param)
                     validateType(srcFile, param.type, "Arguments")
                 validateType(srcFile, operation.type, "Return values")
 
             for signal in interface.signals:
+                checkDeprecationOfAnnotation(signal)
                 for param in signal.parameters:
+                    checkDeprecationOfAnnotation(param)
                     validateType(srcFile, param.type, "Arguments")
 
         for struct in module.structs:
+            checkDeprecationOfAnnotation(struct)
             for field in struct.fields:
+                checkDeprecationOfAnnotation(field)
                 validateType(srcFile, field.type, "Fields")
 
+def checkDeprecationOfAnnotation(symbol):
+    type_str = symbol.__class__.__name__
+    if type_str in deprecatedAnnotations:
+        anno = deprecatedAnnotations[type_str]['annotation']
+        if deep_get(symbol.tags, anno):
+            log.warning("warning: {0} is deprecated and will be removed in future Qt versions".format(anno))
+
+def deprecateAnnotation(type, annotation, sinceVersion):
+    deprecatedAnnotations[type] = {
+        'annotation': annotation,
+        'sinceVersion': sinceVersion
+    }
 
 def generate(template_search_paths, tplconfig, moduleConfig, annotations, imports, src, dst):
     log.debug('run {0} {1}'.format(src, dst))
