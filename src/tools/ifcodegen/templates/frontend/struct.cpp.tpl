@@ -177,7 +177,7 @@ QDebug &operator<<(QDebug &dbg, const {{class}} &obj)
         << '('
 {% for field in struct.fields %}
         << obj.{{field}}(){% if not loop.last %} << ", "{% endif %}
-{% endfor +%}
+{% endfor %}
         << ')';
     return dbg;
 }
