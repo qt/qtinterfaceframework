@@ -376,6 +376,11 @@ function(qt6_ifcodegen_generate)
             list(APPEND CMD_ENV PYTHONHOME=${QT_IFCODEGEN_VIRTUALENV_PATH})
         else() # qface installed in system
             include(QtFindPackageHelpers)
+            # Make sure we search in the host Qt path if set. Otherwise me might end up with a
+            # interpreter for the target
+            if (NOT "${QT_HOST_PATH}" STREQUAL "")
+                set(CMAKE_PREFIX_PATH "${QT_HOST_PATH}")
+            endif()
             qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
             set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
             if (NOT Python3_EXECUTABLE)
