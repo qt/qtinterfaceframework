@@ -14,7 +14,7 @@
 #include "{{interface|lower}}adapter.h"
 {% endfor %}
 
-#include "core.h"
+#include <QtIfRemoteObjectsHelper/QIfRemoteObjectsConfig>
 #include <QtInterfaceFramework/QIfSimulationEngine>
 
 using namespace Qt::StringLiterals;
@@ -70,6 +70,12 @@ int main(int argc, char *argv[])
                                                       "in the simulation code"_s);
     parser.addOption(headlessOption);
 
+    QCommandLineOption serverUrlOption(u"serverUrl"_s, u"The serverUrl to use for all Remote Objects hosted in this server"_s, u"url"_s);
+    parser.addOption(serverUrlOption);
+
+    QCommandLineOption confOption(u"serverConf"_s, u"A config file which host url for all Remote Objects"_s, u"file"_s);
+    parser.addOption(confOption);
+
     parser.process(qApp->arguments());
 
     // single instance guard
@@ -78,6 +84,14 @@ int main(int argc, char *argv[])
         qCritical("%s already running, aborting...", qPrintable(qApp->applicationName()));
         return EXIT_FAILURE;
     }
+
+    QIfRemoteObjectsConfig config;
+    if (parser.isSet(serverUrlOption))
+        config.setDefautServerUrl(parser.value(serverUrlOption));
+    if (parser.isSet(confOption))
+        config.parseConfigFile(parser.value(confOption));
+    if (!parser.isSet(serverUrlOption) && !parser.isSet(confOption))
+        config.parseLegacyConfigFile();
 
     auto simulationEngine = new QIfSimulationEngine(u"{{module.name|lower}}"_s);
 
@@ -108,9 +122,8 @@ int main(int argc, char *argv[])
     //Start Remoting the backends
 {% for interface in module.interfaces %}
     auto {{interface|lowerfirst}}Adapter = new {{interface}}QtRoAdapter({{interface|lowerfirst}}Instance);
-    {{interface|lowerfirst}}Adapter->enableRemoting(Core::instance()->host());
+    {{interface|lowerfirst}}Adapter->enableRemoting(config.host(u"{{module}}"_s, u"{{interface}}"_s));
 {% endfor %}
-
 
     return qApp->exec();
 }

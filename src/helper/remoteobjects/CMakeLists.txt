@@ -15,6 +15,7 @@ qt_internal_add_module(IfRemoteObjectsHelper
         qifremoteobjectspendingresult.cpp qifremoteobjectspendingresult_p.h
         qifremoteobjectsreplicahelper.cpp qifremoteobjectsreplicahelper_p.h
         qifremoteobjectssourcehelper_p.h qifremoteobjectshelper.h
+        qifremoteobjectsconfig.cpp qifremoteobjectsconfig.h
         qifremoteobjectshelper.cpp qifremoteobjectshelper.h
     PUBLIC_LIBRARIES
         Qt::InterfaceFramework
