@@ -472,7 +472,9 @@
             \li Defines the possible values for the property; the generated code in the simulator
                 backend validates the value.
         \row
-            \li \code
+            \li
+            \target config_simulator_unsupported
+            \code
             config_simulator:
             unsupported: yes
             \endcode

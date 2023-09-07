@@ -6,6 +6,14 @@
 
 The following page descibes new features by Qt Version:
 
+\section1 6.6
+
+\list
+    \li Introduced a new \l{config_simulator_unsupported}{"unsupported"} annotation for simulation data
+    \li Ability to deprecate ifcodegen annotations
+    \li New compiled ifcodegen binary (helps distribution in installer)
+\endlist
+
 \section1 6.5
 
 \list
