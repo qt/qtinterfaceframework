@@ -60,8 +60,8 @@
 #include "qifpagingmodelinterface.h"
 #include "qifstandarditem.h"
 
-#include <QBitArray>
-#include <QUuid>
+#include <QtCore/QBitArray>
+#include <QtCore/QUuid>
 
 QT_BEGIN_NAMESPACE
 

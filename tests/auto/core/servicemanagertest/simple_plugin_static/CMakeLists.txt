@@ -4,24 +4,21 @@
 ## simple_plugin_static Generic Library:
 #####################################################################
 
-qt_internal_add_cmake_library(simple_plugin_static
+qt_add_plugin(simpleStaticPlugin
+    PLUGIN_TYPE interfaceframework
+    CLASS_NAME SimpleStaticPlugin
     STATIC
-    OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework/"
-    SOURCES
-        simplestaticplugin.cpp simplestaticplugin.h
-    PUBLIC_LIBRARIES
-        Qt::Core
-        Qt::Gui
-        Qt::InterfaceFramework
 )
 
-#### Keys ignored in scope 1:.:.:simple_plugin_static.pro:<TRUE>:
-# DISTFILES = "simple_plugin.json"
-# TEMPLATE = "lib"
+target_sources(simpleStaticPlugin PRIVATE
+    simplestaticplugin.cpp
+    simplestaticplugin.h
+)
 
-## Scopes:
-#####################################################################
+qt_autogen_tools_initial_setup(simpleStaticPlugin)
 
-qt_autogen_tools_initial_setup(simple_plugin_static)
-
-target_compile_definitions(simple_plugin_static PRIVATE QT_STATICPLUGIN)
+target_link_libraries(simpleStaticPlugin PRIVATE
+    Qt::Core
+    Qt::Gui
+    Qt::InterfaceFramework
+)

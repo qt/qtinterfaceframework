@@ -22,3 +22,11 @@ qt6_ifcodegen_extend_target(tst_org-example-echo-noanno
     IDL_FILES ../../org.example.echo.noannotation.qface
     TEMPLATE test
 )
+
+if (ANDROID)
+    set_target_properties(tst_org-example-echo-noanno PROPERTIES
+        QT_ANDROID_EXTRA_LIBS "${CMAKE_CURRENT_BINARY_DIR}/../frontend/libecho_noanno_frontend_${CMAKE_ANDROID_ARCH_ABI}.so"
+    )
+
+    qt6_android_generate_deployment_settings(tst_org-example-echo-noanno)
+endif ()

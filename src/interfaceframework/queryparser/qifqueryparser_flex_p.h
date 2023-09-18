@@ -54,9 +54,9 @@
 //
 
 #include <cassert>
-#include <QString>
-#include <QVariant>
-#include <QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QVariant>
+#include <QtCore/QByteArray>
 
 #ifdef Q_CC_MSVC
 #   pragma warning(disable:4267)
