@@ -10,8 +10,8 @@
 
 The Qt Interface Framework module contains a reference API that provides interfaces to common automotive
 functionality. These APIs rely on the separation of the front-end API from the back-end
-implementation. The Qt Interface Framework module also introduces a set of concepts used in the APIs, such as
-zones and property attributes. For more about concepts, see \l{Concepts and Architecture}.
+implementation. The Qt Interface Framework module also introduces a set of concepts used in the APIs
+which are described in \l{Concepts and Architecture}.
 
 \section1 Modules
 
