@@ -21,24 +21,100 @@ QIfAbstractZonedFeaturePrivate::QIfAbstractZonedFeaturePrivate(const QString &in
     \class QIfAbstractZonedFeature
     \inmodule QtInterfaceFramework
 
-    \since 5.6
+    \brief The QIfAbstractZonedFeature is the base class for all zoned features.
 
-    \brief The QIfAbstractZonedFeature is the base class for all QtInterfaceFramework vehicle features.
+    Subclass QIfAbstractZonedFeature to create an API with several zones. See \l{Zoned Features} for
+    usecases were this concept can be useful.
 
-    QIfAbstractZonedFeature contains all feature attributes and zone handling.
+    \section1 Implementation
+
+    A derived class needs to implement the createZoneFeature function which is responsible for
+    instantiating the class used for the given zone. In the simplest form, the same class is
+    allocated, passing on the \e zone argument to its constructor:
+
+    \code
+    class QIfClimateControl : public QIfAbstractZonedFeature {
+
+        ...
+
+        explicit QIfClimateControl(const QString &zone = QString(), QObject *parent = nullptr)
+            : QIfAbstractZonedFeature(QIfClimateControl_iid, zone, parent)
+        {
+        }
+
+    protected:
+        QIfAbstractZonedFeature *createZoneFeature(const QString &zone) override
+        {
+            new QIfClimateControl(zone, this);
+        }
+    }
+    \endcode
+
+    For the derived class, the same backend connection calls are made in the same order as specified
+    in QIfAbstractFeature and \l {Detailed Connection Order}. This applies also for the zone
+    instances, which use the passed zone argument to identify the signals in the backendinterface
+    belonging to this zone.
+
+    See QIfZonedFeatureInterface for how a backend needs to be implemented and how it can handle
+    zone specific properties.
+
+    \section2 Zone specific instance
+
+    Using the simple form described above, together with handling zone specific properties in the
+    backend has some down-sides. As the API is the same for the front-facing API and all its zones,
+    the developer using such an API cannot identify which properties/functions are zone specific.
+
+    There are two solutions for the problem, which are best used together to provide the most
+    versatile API.
+
+    \section3 Implement an isXAvailable function for each zone functionality
+
+    Add an extra property for each zone functionality to specify whether the functionality is
+    available. A developer can use such a property in the UI the hide the relevant UI elements on
+    the fly, instead of hardcoding it based on a zone name or relying on the error mechanism
+    described in the \l{QIfZonedFeatureInterface}{Setter implementation}.
+
+    \section3 Instantiate a custom class in createZoneFeature
+
+    By instantiating a custom class in createZoneFeature, the API for zoned and unzoned features
+    can be split over two classes. The unzoned functionality is implemented in the front-facing API,
+    while all zone specific functions are implemented in the Zone class which is returned by
+    createZoneFeature().
+
+    \section1 Usage
+
+    Once the backend is connected, the availableZones property can be used to retrieve all currently
+    available zones. A specific zone can be accessed using the zoneAt() function or by using the
+    zones function, which returns all zones in a list.
 */
 
 /*!
     \qmltype AbstractZonedFeature
     \instantiates QIfAbstractZonedFeature
-    \inqmlmodule QtInterfaceFramework 1.0
+    \inqmlmodule QtInterfaceFramework
     \inherits AbstractFeature
     \brief The AbstractZonedFeature is not directly accessible. The QML type provides
-    base QML properties for each QML Vehicle feature like zone and error access.
+    base QML properties for all zoned features.
+
+    AbstractZonedFeature provides an API to access all the available zones.
+
+    Once the backend is connected, the \l availableZones property can be used to learn about all
+    currently available zones. A specific zone can be accessed using the \l zoneAt property or by
+    using the zones property which returns all zones in a list.
+
+    \code
+    ClimateControl{
+        id: climateControl
+    }
+
+    Text {
+        text: climateControl.zoneAt.FrontLeft.temperature
+    }
+    \endcode
 */
 
 /*!
-    Constructs a vehicle feature with a specific \a interface and \a zone.
+    Constructs a zoned feature with a specific \a interface and \a zone.
 
     If \a parent is of type QIfAbstractZonedFeature, then the created instance
     uses parent for the backend connection. Parent is connected to the
