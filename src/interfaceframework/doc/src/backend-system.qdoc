@@ -9,13 +9,14 @@
 
     \section1 Feature
 
-    Modern automotive systems are very complex, usually developed on a strict time frame. Consequently,
-    it is efficient to reuse parts of previously developed systems, for a new system. At the same time,
-    the main development is done by independent companies (tier-1). To make it possible to reuse code
-    from previous projects, and also incorporate code from tier-1 partners, the APIs are split into two
-    layers: a front end and a back end. In the Qt Interface Framework, the front-end API is called a \b feature,
-    as usually a specific class is responsible for a specific feature area, such as QIfClimateControl, which
-    controls the climate feature area.
+    New software projects can easily get very complex and are usually developed on a strict time
+    frame. Consequently, it is efficient to reuse parts of previously developed systems, for a new
+    system. At the same time, the development is often split over various teams working on
+    different parts of the project. To make it possible to reuse code from previous projects, and
+    also incorporate code developed by other teams, the APIs are split into two layers: a front end
+    and a back end. In the Qt Interface Framework, the front-end API is called a \b feature, as
+    usually a specific class is responsible for a specific feature area, such as ClimateControl,
+    which controls the climate feature area.
 
     \section1 Back end
 
@@ -146,32 +147,27 @@
 
     \section1 Zoned Features
 
-    Zones are a standard way to provide a single API for multiple points in the vehicle. For instance,
-    climate control commonly has a driver zone and passenger zone; or even a back seat zone. The same
-    concept applies to:
+    Zones are a standard way to provide a single API for multiple points. For instance, a
+    climate control inside a house can be per room e.g. for the living-room and the bathroom. Those
+    rooms act as a zone. The same concept applies to:
     \list
-        \li wheels
-        \li doors
-        \li mirrors
-        \li windows
+        \li addressbooks for home and corporate use
+        \li several vehicles inside a fleet management system
+        \li windows, mirrors, air-conditioning inside a car
         \li and more...
     \endlist
-
-    A common pattern is to combine zones with property attributes to handle small differences in
-    capabilities between zones; for example, there's no steering wheel heater in a car's passenger side.
 
     Technically, a zoned feature consists of multiple instances of the same feature, a top-level
     instance which provides the zone-independent API and access to instances for a specific zone.
     The feature needs to derive from QIfAbstractZonedFeature and implement createZoneFeature() to
     provide zone-specific instances.
 
-    The top-level interface can provide vehicle wide settings. For example, whether re-circulation
-    should be used in a climate control API. In contrast, the zoned interface provides per-zone
-    functions, such as the desired temperature.
+    The top-level interface can provide system wide settings. For example, the outside temperature
+    and the weather-forecast. In contrast, the zoned interface provides per-zone
+    functions, such as the desired room temperature.
 
     Building a zoned feature requires the back-end interface to be derived from QIfZonedFeatureInterface.
     This class provides the back end with an interface to enumerate the zones available. This interface
     also includes the necessary QIfZonedFeatureInterface::initialize method to initialize any
     properties.
-
 */

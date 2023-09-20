@@ -19,12 +19,12 @@ development and testing purposes.
 
 \section1 The Big Picture
 
-Qt Interface Framework consists of three types of building blocks. The core module provides base classes
-and common code for all the more specific modules and API definitions like a climate API
-or a media player API. Each of these APIs is the second building block called \e Feature,
-which defines the API used by the application developers. The last block consists of a
-back-end interface and one or more \e back ends implementing it to either connect to the
-underlying vehicle or do a simulation of it.
+Qt Interface Framework consists of three types of building blocks. The core module provides base
+classes and common code for all the more specific modules and API definitions like a climate API or
+a media player API. Each of these APIs is the second building block called \e Feature, which
+defines the API used by the application developers. The last block consists of a back-end interface
+and one or more \e back ends implementing it to either connect to the underlying service or to a
+simulation of it.
 
 \section2 Features
 
@@ -32,8 +32,8 @@ A feature is a set of classes for working with a specific function. It defines t
 towards application developers, but it does not implement the complete functionality. Instead, it
 defines a back-end interface to be implemented by a back end providing the actual functionality.
 
-For easy deployment, Qt Interface Framework extensions should be built as Qt modules. This makes it easy to
-install and find headers, shared libraries, and plugin modules from app projects.
+For easy deployment, Qt Interface Framework extensions should be built as Qt modules. This makes it
+easy to install and find headers, shared libraries, and plugin modules from app projects.
 
 By using the module system the developer can easily enable the inclusion of his
 module in the following way:
@@ -49,7 +49,7 @@ make tests
 \endcode
 
 When creating a new Qt Interface Framework module, it is recommended that you pick a name such as
-\e {OemFeatureName}, where \e {Oem} is the name of the car maker or platform owner, and
+\e {PlatformFeatureName}, where \e {Platform} is the name of the platform or product, and
 \e {FeatureName} is the name of the feature(s) of the module. In addition to the name, a reverse
 domain name prefix is needed for prefixing back-end interface names, for example \e {com.example}
 

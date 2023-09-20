@@ -28,14 +28,15 @@
 */
 
 /*!
-    \qmlmodule QtInterfaceFramework 1.0
+    \qmlmodule QtInterfaceFramework
     \title Qt Interface Framework Core QML Types
     \ingroup qmlmodules
     \ingroup qtif_qmlmodules
 
     \brief QML types for the Qt Interface Framework Core API.
 
-    The Qt Interface Framework Core QML API provides core functions for in-vehicle infotainment QML types.
+    The Qt Interface Framework Core QML API provides types which are used together with your own
+    API.
 
     To import the QML types into your application, use the following import statement
     in your .qml file:

@@ -297,7 +297,7 @@
                 that exports all enums to QML.
         \row
             \li \code
-                @designer: {categoryName: "QtInterfaceFramework - Vehicle Functions"}
+                @designer: {categoryName: "Smart Home Components"}
                 \endcode
             \li Main IDL file
             \li Module, Interface
@@ -330,7 +330,7 @@
                 \note The icon needs to be copied to the correct folder by a custom qmake rule.
         \row
             \li \code
-                @config: { configurationId: "vehiclefunctions"}
+                @config: { configurationId: "smarthome"}
                 \endcode
             \li Main IDL file
             \li Module, Interface
@@ -359,7 +359,7 @@
             \li
             \code
             config_simulator:
-                serviceObjectId: "vehiclefunctions_simulation"
+                serviceObjectId: "smarthome_simulation"
             \endcode
             \li Accompanying YAML file
             \li Module
@@ -369,7 +369,7 @@
             \li
             \code
             config_simulator:
-                configurationId: "vehiclefunctions"
+                configurationId: "smarthome"
             \endcode
             \li Accompanying YAML file
             \li Module
@@ -404,9 +404,9 @@
             \li
             \code
             config_simulator:
-                zones: [ FrontLeft,
-                         FrontRight,
-                         Rear ]
+                zones: [ Left,
+                         Right
+                       ]
             \endcode
             \li Accompanying YAML file
             \li Interface
@@ -418,8 +418,8 @@
             \code
             config_simulator:
             default:
-                AirflowDirection.Floor |
-                AirflowDirection.Dashboard
+                MyFlag.Value1 |
+                MyFlag.Value2
             \endcode
             \li Accompanying YAML file
             \li Property
@@ -430,8 +430,8 @@
             \code
             config_simulator:
             default: {
-                FrontLeft: 21.0,
-                FrontRight: 22.5,
+                Left: 21.0,
+                Right: 22.5,
                 =: 0.0
             }
             \endcode
@@ -497,7 +497,7 @@
             \li
             \code
             config_qtro:
-                serviceObjectId: "vehiclefunctions_qtro"
+                serviceObjectId: "smarthome_qtro"
             \endcode
             \li Accompanying YAML file
             \li Module
@@ -507,7 +507,7 @@
             \li
             \code
             config_qtro:
-                configurationId: "vehiclefunctions"
+                configurationId: "smarthome"
             \endcode
             \li Accompanying YAML file
             \li Module
