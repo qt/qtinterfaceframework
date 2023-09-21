@@ -72,7 +72,7 @@ int QIfSimulationProxyBase::qt_metacall(QMetaObject::Call call, int methodId, vo
         // matches and the signal arguments match as well (either completely or just partially)
         // The call got forwarded from the QObject::activate of the proxied instance. In this
         // case we don't forward the call again to the proxied instance, but handle it ourself.
-        auto tryHandleCall = [=]()
+        auto tryHandleCall = [this, methodId, a]()
         {
             if (sender() != m_instance)
                 return false;
