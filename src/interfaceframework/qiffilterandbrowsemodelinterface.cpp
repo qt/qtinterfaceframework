@@ -18,15 +18,64 @@ QT_BEGIN_NAMESPACE
 
     The QIfFilterAndBrowseModelInterface is the interface used by \l QIfFilterAndBrowseModel
 
-    The interface is discovered by a \l QIfFilterAndBrowseModel object, which connects to it and sets it up.
+    The interface is discovered by a \l QIfFilterAndBrowseModel object, which connects to it and
+    sets it up.
 
-    Every QIfFilterAndBrowseModel generates its own QUuid which is passed to the backend interface and can
-    be used to identify a model instance.
+    Implementing QIfFilterAndBrowseModelInterface follows the same pattern as described in
+    QIfPagingModelInterface. In addition, the following features can be used by setting the
+    respective capability.
+
+    \section1 Navigation
+
+    When implementing something like a Media Library, it is useful to support navigating through
+    multiple hierarchies, for example: show all artists, select one and show all albums of that
+    artist. See also the \l {Browsing}{Browsing section of the QIfFilterAndBrowseModel}.
+
+    The \l canGoForwardChanged() and the \l canGoBackChanged() signals let the
+    QIfFilterAndBrowseModel know how it can navigate. The actual request to navigate forward or
+    backward is done using the \l goForward() and \l goBack() functions.
+
+    The \l availableContentTypesChanged() signal needs to be emitted to define which types can be
+    browsed in this backend and let the user select the starting point to browse from.
+
+    Once the user selected a content type, the \l setContentType function is called and the backend
+    needs to inform about the new contentType using the \l contentTypeChanged signal.
+
+    If the backend supports navigating without saving the state of a model instance locally, the
+    \l{ModelCapabilities}{SupportsStatelessNavigation} capability can be set.
+
+    \section1 Filtering and Sorting
+
+    To support sorting and filtering of the model content on the backend side, the respective
+    capabilities need to be set: \l{ModelCapabilities}{SupportsFiltering} and
+    \l{ModelCapabilities}{SupportsSorting}
+    To also allow complex filtering, the \l{ModelCapabilities}{SupportsAndConjunction} and
+    \l{ModelCapabilities}{SupportsOrConjunction} can be set in addition.
+    See also the \l {FilteringAndSorting}{Filtering and Sorting section of the
+    QIfFilterAndBrowseModel}.
+
+    Once a content type has been set on the backend, the \l queryIdentifiersChanged() signal
+    needs to be emitted to inform the frontend about all identifiers that can be used to filter
+    and sort the model. For convenience, the \l identifiersFromItem() function can be used to
+    return all properties of a QMetaObject based type.
+    Afterwards the filter query can be set on the QIfFilterAndBrowseModel and will result in a
+    call to setupFilter(). All following calls to retrieve the content of the model need to work
+    on the filtered data.
+
+    \section1 Changing Model Data
+
+    To allow changing the Items within the model, the following capabilities can be set:
+    \list
+        \li \l{ModelCapabilities}{SupportsInsert}
+        \li \l{ModelCapabilities}{SupportsMove}
+        \li \l{ModelCapabilities}{SupportsRemove}
+    \endlist
+
+    Calls to one of the updating functions in \l QIfFilterAndBrowseModel are forwarded to the
+    matching function in the backend: \l insert, \l move and \l remove. All those functions need
+    to emit the \l {QIfPagingModelInterface::}{dataChanged} signal.
 
     \sa QIfFilterAndBrowseModel
-
-    //TODO explain how the interface works on a example
-    <example of a fully featured backend>
 */
 
 QIfFilterAndBrowseModelInterface::QIfFilterAndBrowseModelInterface(QObject *parent)
