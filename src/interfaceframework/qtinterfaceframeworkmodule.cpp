@@ -75,6 +75,7 @@ QtInterfaceFrameworkModule::QtInterfaceFrameworkModule(QObject *parent)
 
 /*!
     \enum QtInterfaceFrameworkModule::ModelCapability
+    \target ModelCapabilities
     \value NoExtras
            The backend does only support the minimum feature set and is stateful.
     \value SupportsGetSize

@@ -43,7 +43,6 @@ public:
 Q_SIGNALS:
     void canGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start);
     void canGoBackChanged(const QUuid &identifier, bool canGoBack);
-    //does this really make sense ?
     void contentTypeChanged(const QUuid &identifier, const QString &contentType);
     void availableContentTypesChanged(const QStringList &availableContentTypes);
     void queryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers);
