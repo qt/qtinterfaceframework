@@ -157,7 +157,7 @@ template <typename T> void tst_QIfPendingReply::test(QIfPendingReply<T> reply, b
 
 template <typename T> void tst_QIfPendingReply::createThenCallbacks(QIfPendingReply<T> reply, bool *successCalled, bool *failedCalled)
 {
-    reply.then([=](const T &value){*successCalled = true;}, [=](){*failedCalled = true;});
+    reply.then([=](const T &){*successCalled = true;}, [=](){*failedCalled = true;});
 }
 
 template <> void tst_QIfPendingReply::createThenCallbacks(QIfPendingReply<void> reply, bool *successCalled, bool *failedCalled)
