@@ -5,7 +5,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-qt_add_plugin(echo_backend_qtro)
+qt_add_plugin(echo_backend_qtro
+    OUTPUT_NAME echo_backend_qtro
+    PLUGIN_TYPE interfaceframework
+)
 set_target_properties(echo_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:

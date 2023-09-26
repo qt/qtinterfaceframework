@@ -8,9 +8,6 @@ qt_internal_add_app(ifvehiclefunctions-simulation-server
      LIBRARIES
         Qt::InterfaceFramework
         Qt::IfVehicleFunctions
-     PUBLIC_LIBRARIES
-        Qt::InterfaceFramework
-        Qt::IfVehicleFunctions
 )
 
 # Resources:

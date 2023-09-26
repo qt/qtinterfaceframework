@@ -22,7 +22,7 @@ qt_internal_add_app(ifmedia-simulation-server
         qiffilterandbrowsemodelqtroadapter.cpp qiffilterandbrowsemodelqtroadapter.h
     INCLUDE_DIRECTORIES
         ../../plugins/ifmedia/media_simulator
-    PUBLIC_LIBRARIES
+    LIBRARIES
         Qt::InterfaceFramework
         Qt::IfMedia
         Qt::Multimedia

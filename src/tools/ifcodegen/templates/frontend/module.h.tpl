@@ -56,7 +56,7 @@
 {%   endfor %}
 {% endfor %}
 
-#include <QObject>
+#include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
 

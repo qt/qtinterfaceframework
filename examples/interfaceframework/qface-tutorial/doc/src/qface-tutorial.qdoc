@@ -238,7 +238,7 @@
     open the \c instrumentcluster.h from the build folder and notice that the generated
     \c speed property changed -- it no longer has a setter anymore and is now read-only.
 
-    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/instrumentcluster.h
+    \quotefromfile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/frontend/instrumentcluster.h
     \skipto class Q_EXAMPLE
     \printuntil Q_PROPERTY
     \dots
@@ -275,7 +275,7 @@
     In the auto-generated code, this results in an enum which is part of the module class, making it
     possible for the same enum to be used by multiple classes which are part of the same module:
 
-    \quotefile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/instrumentclustermodule.h
+    \quotefile interfaceframework/qface-tutorial/chapter2-enums-structs/frontend/frontend/instrumentclustermodule.h
 
     \section2 Add a New Structure
 
@@ -559,7 +559,7 @@
     annotation was transformed into a JSON file that's now part of the "simulation backend" build
     folder. This JSON file looks like this:
 
-    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/instrumentclustermodule.json
+    \quotefile interfaceframework/qface-tutorial/chapter4-simulation-behavior/backend_simulator/backend_simulator/instrumentclustermodule.json
 
     But how is this JSON file related to the actual simulation back end code? The auto-generated
     simulation back end code uses QIfSimulationEngine, that reads the JSON file and provides its
