@@ -651,7 +651,7 @@ QString QIfConfiguration::name() const
 
     See \l{Settings Overview} for how to provide initial values and overrides.
 
-    \sa ServiceObject::serviceSettings
+    \sa QIfServiceObject::serviceSettings
 */
 /*!
     \property QIfConfiguration::serviceSettings

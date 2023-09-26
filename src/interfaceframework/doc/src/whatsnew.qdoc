@@ -4,7 +4,7 @@
 \page whatsnew.html
 \title What's New in the Qt Interface Framework
 
-The following page descibes new features by Qt Version:
+The following page describes new features by Qt Version:
 
 \section1 6.5
 
@@ -34,7 +34,7 @@ The following page descibes new features by Qt Version:
 \list
     \li Added \l{CMake Commands in Qt6 InterfaceFramework}{CMake support}
     \li Added support to define a \l {template-search-path-option}{template search path} for ifcodegen
-    \li Rename from \l {QtIvi} to Qt Interface Framework
+    \li Rename from \l {QtIVI} to Qt Interface Framework
 \endlist
 
 */

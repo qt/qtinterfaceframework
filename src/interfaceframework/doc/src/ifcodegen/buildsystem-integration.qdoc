@@ -86,43 +86,18 @@ In CMake the following functions and variables are provided by the QtInterfaceFr
 
 \section1 QtModule Support
 
-\section2 QMake
-
-The  integration also supports generating code that you can subsequently compile into a Qt
-module. Since this module needs to work more closely with Qt's module building system, it shouldn't
-be loaded using the \c CONFIG variable, but using the \c load() function instead. The
-\c ifcodegen_qt_module feature replaces the \c load(qt_module) call.
-
-The following shows how you can integrate the QtIfVehicleFunctions module:
-
-\badcode
-TARGET = QtIfVehicleFunctions
-QT = core core-private interfaceframework
-CONFIG += c++11 ifcodegen
-
-QT_FOR_CONFIG += interfaceframework
-!qtConfig(ifcodegen): error("No ifcodegen available")
-
-...
-
-IFCODEGEN_MODULE_NAME = QtIfVehicleFunctions
-IFCODEGEN_SOURCES += ifvehiclefunctions.qface
-
-load(ifcodegen_qt_module)
-\endcode
-
 \section2 CMake
 
-The following shows how you can use CMake to build the QtIfVehicleFunctions module:
+The integration also supports generating code that you can subsequently compile into a Qt
+module. The following shows how you can use CMake to build a module named MyModule:
 
 \badcode
 qt_ifcodegen_generate(
-    IDL_FILES ifvehiclefunctions.qface
+    IDL_FILES mymodule.qface
     TEMPLATE frontend
-    MODULE_NAME QtIfVehicleFunctions
+    MODULE_NAME QtMyModule
 )
-
-qt_internal_add_module(IfVehicleFunctions
+qt_internal_add_module(MyModule
     LIBRARIES
         Qt::CorePrivate
         Qt::InterfaceFrameworkPrivate
@@ -133,10 +108,9 @@ qt_internal_add_module(IfVehicleFunctions
         Qt::CorePrivate
         Qt::InterfaceFrameworkPrivate
 )
-
-qt_ifcodegen_extend_target(IfVehicleFunctions
+qt_ifcodegen_extend_target(MyModule
     NO_GENERATE
-    IDL_FILES ifvehiclefunctions.qface
+    IDL_FILES mymodule.qface
 )
 \endcode
 
@@ -153,7 +127,7 @@ Usually, the \c sync.profile is setup to search for these headers in the source 
 \badcode
 ...
 %modules = ( # path to module name map
-    "QtIfVehicleFunctions" => "$basedir/src/ifvehiclefunctions;$out_basedir/src/ifvehiclefunctions"
+    "QtMyModule" => "$basedir/src/mymodule;$out_basedir/src/mymodule"
 );
 ...
 \endcode
@@ -171,24 +145,24 @@ using the new registration macros and provides all the necessary information for
 the rest:
 
 \badcode
-qt_ifcodegen_extend_target(IfVehicleFunctions
+qt_ifcodegen_extend_target(MyModule
     NO_GENERATE
-    PREFIX VEHICLEFUNCTIONS
-    IDL_FILES ifvehiclefunctions.qface
+    PREFIX MYMODULE
+    IDL_FILES mymodule.qface
 )
 
-qt_add_qml_module(IfVehicleFunctions
-    URI ${VEHICLEFUNCTIONS_URI}
-    VERSION ${VEHICLEFUNCTIONS_VERSION}
+qt_add_qml_module(MyModule
+    URI ${MYMODULE_URI}
+    VERSION ${MYMODULE_VERSION}
     RESOURCE_PREFIX "/"
-    CLASS_NAME QtIfVehicleFunctionsPlugin
-    PLUGIN_TARGET qtifvehiclefunctionsplugin
+    CLASS_NAME QtMyModulePlugin
+    PLUGIN_TARGET qtmymoduleplugin
     IMPORTS QtInterfaceFramework
 )
 \endcode
 
 By using the \c PREFIX argument in the \l qt_ifcodegen_extend_target call, additional variables get
-exposed to using \c VEHICLEFUNCTIONS as their prefix.
+exposed to using \c MYMODULE as their prefix.
 Those variables can be used in the following call to \l qt_add_qml_module, which handles the QML
 type registration for all types and also generates a QML plugin.
 
@@ -198,26 +172,26 @@ Instead of using the new QML Type registration, ifcodegen can be used to generat
 which registers all types when loaded:
 
 \badcode
-qt_ifcodegen_import_variables(VEHICLEFUNCTIONS
-    IDL_FILES ifvehiclefunctions.qface
+qt_ifcodegen_import_variables(MYMODULE
+    IDL_FILES mymodule.qface
     TEMPLATE qmlplugin
-    MODULE_NAME QtIfVehicleFunctions
+    MODULE_NAME QtMyModule
 )
 
-qt_add_qml_module(qtifvehiclefunctionsplugin
-    URI ${VEHICLEFUNCTIONS_URI}
-    VERSION ${VEHICLEFUNCTIONS_VERSION}
+qt_add_qml_module(qtmymoduleplugin
+    URI ${MYMODULE_URI}
+    VERSION ${MYMODULE_VERSION}
     RESOURCE_PREFIX "/"
-    PLUGIN_TARGET qtifvehiclefunctionsplugin
+    PLUGIN_TARGET qtmymoduleplugin
     NO_PLUGIN_OPTIONAL
     NO_GENERATE_PLUGIN_SOURCE
     NO_GENERATE_QMLTYPES
     NO_GENERATE_QMLDIR
     SOURCES
-        ${VEHICLEFUNCTIONS_SOURCES}
+        ${MYMODULE_SOURCES}
     PUBLIC_LIBRARIES
         Qt::InterfaceFramework
-        Qt::IfVehicleFunctions
+        Qt::MyModule
 )
 \endcode
 
