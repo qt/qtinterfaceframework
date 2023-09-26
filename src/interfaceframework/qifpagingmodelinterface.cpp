@@ -20,13 +20,63 @@ QT_BEGIN_NAMESPACE
 
     The interface is discovered by a \l QIfPagingModel object, which connects to it and sets it up.
 
+    \section1 QIfPagingModel registration
+
     Every QIfPagingModel generates its own QUuid which is passed to the backend interface and can
-    be used to identify a model instance.
+    be used to identify a model instance. By using the QUuid of a specific instance in a signal,
+    only this specific instance gets notified about the change. This can be useful for stateful
+    backends, such as an addressbook with a filter function. Because of the filtering, the number
+    of items inside the model will change. The notification and the filtering itself is only done
+    for the specific instance which requested it. All other instances could still display the full
+    set of model data. The QIfFilterAndBrowseModel is using this concept for filtering. To inform
+    all feature instances of a change, a default constructed QUuid can be used instead.
+
+    The \l registerInstance and \l unregisterInstance functions are called respectively when a new
+    QIfPagingModel instance connects to this backend or disconnects from it.
+
+    \section1 Capabilities
+
+    Depending on the data of the model and the underlying store the data is coming from, different
+    features might be supported. The \l supportedCapabilitiesChanged signal informs the
+    QIfPagingModel instance about the features supported by this backend. The \l
+    {ModelCapabilities} type used in this signal hosts different features supported in the
+    QIfPagingModel and the QIfFilterAndBrowseModel.
+
+    For a QIfPagingModel, the \l {ModelCapabilities}{SupportsGetSize}
+    capability can be used to indicate that this backend knows the total size of the model and that
+    it will inform about it using the \l countChanged() signal. In case the capabilities are not
+    reported, or the SupportsGetSize capability is not set, the QIfPagingModel needs to use the
+    \l{QIfPagingModel::}{FetchMore} loading type.
+
+    \section1 Returning model data
+
+    Other than QIfFeatureInterface based backends, the \l initialize() function does not emit the
+    complete state. Instead the actual model data is returned on request. This is done to support
+    big models as well and save bandwidth when the data needs to be transferred over an IPC. Once a
+    QIfPagingModel is used inside a View class, the model data is requested from the backend by
+    calling \l fetchData(). The amount of data requested in one call can be controlled by the
+    QIfPagingModel instance. Once the requested data is ready, the backend needs to inform about it
+    using the
+    \l dataFetched() signal.
+    To inform the QIfPagingModel about an updated row, the dataChanged() signal can be used.
+
+    \section1 Example call order
+
+    \list 1
+        \li A QIfPagingModel instance is created and connects to this backend
+        \li \l initialize() is called
+        \li The backend initializes it's internal state and informs about all extra properties it
+            has by emitting the respective change signals.
+        \li The backend emits \l initializationDone()
+        \li The QIfPagingModel instance calls \l registerInstance() with its own QUuid
+        \li The backend informs about its capabilities and its size by emitting
+            \l supportedCapabilitiesChanged() and \l countChanged().
+        \li The QIfPagingModel fetches the first rows by calling \l fetchData()
+        \li The backend emits dataFetched() once it is ready.
+        \li The last two steps might repeat depending on the current state of the view
+    \endlist
 
     \sa QIfPagingModel
-
-    //TODO explain how the interface works on a example
-    <example of a fully featured backend>
 */
 
 /*!
