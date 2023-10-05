@@ -26,6 +26,7 @@ qt_internal_add_app(ifmedia-simulation-server
         Qt::Multimedia
         Qt::RemoteObjects
         Qt::Sql
+        Qt::IfRemoteObjectsHelper
         Qt::IfRemoteObjectsHelperPrivate
 )
 

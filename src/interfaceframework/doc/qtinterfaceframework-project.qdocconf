@@ -5,13 +5,16 @@ url                           = http://doc.qt.io/QtInterfaceFramework
 
 moduleheader                  = QtInterfaceFrameworkDoc
 includepaths                  = -I . \
-                                -I ..
+                                -I .. \
+                                -I ../../helper
 
 headerdirs                   += . \
                                 .. \
+                                ../../helper \
 
 sourcedirs                   += . \
                                 .. \
+                                ../../helper \
 
 imagedirs                    += images
 exampledirs                  += ../../../examples \

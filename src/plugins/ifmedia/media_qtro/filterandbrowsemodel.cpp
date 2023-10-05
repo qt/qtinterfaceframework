@@ -7,6 +7,7 @@
 
 #include <QTimer>
 #include <QSettings>
+#include <QFile>
 #include <QIODevice>
 
 using namespace Qt::StringLiterals;

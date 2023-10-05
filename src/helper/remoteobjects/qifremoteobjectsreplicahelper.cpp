@@ -2,7 +2,7 @@
 // Copyright (C) 2019 Luxoft Sweden AB
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qifremoteobjectsreplicahelper.h"
+#include "qifremoteobjectsreplicahelper_p.h"
 
 using namespace Qt::StringLiterals;
 
@@ -62,4 +62,4 @@ void QIfRemoteObjectsReplicaHelper::onNodeError(QRemoteObjectNode::ErrorCode cod
 
 QT_END_NAMESPACE
 
-#include "moc_qifremoteobjectsreplicahelper.cpp"
+#include "moc_qifremoteobjectsreplicahelper_p.cpp"

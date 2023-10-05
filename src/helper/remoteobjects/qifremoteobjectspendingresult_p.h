@@ -2,20 +2,32 @@
 // Copyright (C) 2019 Luxoft Sweden AB
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#ifndef QIFREMOTEOBJECTSPENDINGRESULT_H
-#define QIFREMOTEOBJECTSPENDINGRESULT_H
+#ifndef QIFREMOTEOBJECTSPENDINGRESULT_P_H
+#define QIFREMOTEOBJECTSPENDINGRESULT_P_H
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists purely as an
+// implementation detail. This header file may change from version to
+// version without notice, or even be removed.
+//
+// We mean it.
+//
 
 #include <QtCore/QDataStream>
 #include <QtCore/QObject>
 #include <QtRemoteObjects/qtremoteobjectglobal.h>
+#include <QtIfRemoteObjectsHelper/qtifremoteobjectshelper_global.h>
 
 QT_BEGIN_NAMESPACE
 
 namespace qtif_private {
-    Q_DECLARE_LOGGING_CATEGORY(qLcQtIfRoHelper)
+    Q_DECLARE_EXPORTED_LOGGING_CATEGORY(qLcQtIfRoHelper, Q_IFREMOTEOBJECTSHELPER_EXPORT)
 }
 
-class QIfRemoteObjectsPendingResult
+class Q_IFREMOTEOBJECTSHELPER_EXPORT QIfRemoteObjectsPendingResult
 {
     Q_GADGET
 
@@ -53,4 +65,4 @@ inline QDataStream &operator>>(QDataStream &ds, QIfRemoteObjectsPendingResult &o
 
 QT_END_NAMESPACE
 
-#endif //QIFREMOTEOBJECTSPENDINGRESULT_H
+#endif //QIFREMOTEOBJECTSPENDINGRESULT_P_H

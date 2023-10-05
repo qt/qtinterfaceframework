@@ -1,7 +1,9 @@
 // Copyright (C) 2021 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#include "qifpagingmodelqtroadapter.h"
+#include "qifpagingmodelqtroadapter_p.h"
+
+QT_BEGIN_NAMESPACE
 
 QIfPagingModelQtRoAdapter::QIfPagingModelQtRoAdapter(const QString &remoteObjectsLookupName, QIfPagingModelInterface *parent)
     : QIfPagingModelSource(parent)
@@ -34,4 +36,6 @@ void QIfPagingModelQtRoAdapter::fetchData(const QUuid &identifier, int start, in
     m_backend->fetchData(identifier, start, count);
 }
 
-#include "moc_qifpagingmodelqtroadapter.cpp"
+QT_END_NAMESPACE
+
+#include "moc_qifpagingmodelqtroadapter_p.cpp"

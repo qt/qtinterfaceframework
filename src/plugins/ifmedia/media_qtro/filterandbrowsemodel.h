@@ -7,7 +7,7 @@
 
 #include <QtInterfaceFramework/QIfFilterAndBrowseModelInterface>
 #include <QtIfMedia/QIfPlayableItem>
-#include <QIfRemoteObjectsReplicaHelper>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectsreplicahelper_p.h>
 #include <QRemoteObjectNode>
 #include "rep_qiffilterandbrowsemodel_replica.h"
 

@@ -5,7 +5,7 @@
 #ifndef QIFSEARCHANDBROWSEMODELQTROADAPTER_H
 #define QIFSEARCHANDBROWSEMODELQTROADAPTER_H
 
-#include <QIfRemoteObjectsSourceHelper>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectssourcehelper_p.h>
 
 #include "searchandbrowsebackend.h"
 #include "rep_qiffilterandbrowsemodel_source.h"

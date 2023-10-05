@@ -14,6 +14,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QTimer>
+#include <QtIfRemoteObjectsHelper/QtIfRemoteObjectsHelper>
 #include "{{module.module_name|lower}}.h"
 
 using namespace Qt::StringLiterals;

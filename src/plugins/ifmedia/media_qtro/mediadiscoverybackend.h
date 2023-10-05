@@ -7,7 +7,7 @@
 
 #include <QtIfMedia/QIfMediaDeviceDiscoveryModelBackendInterface>
 #include <QtInterfaceFramework/QIfServiceObject>
-#include <QIfRemoteObjectsReplicaHelper>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectsreplicahelper_p.h>
 #include <QRemoteObjectNode>
 
 #include "rep_qifmediadiscoverymodel_replica.h"

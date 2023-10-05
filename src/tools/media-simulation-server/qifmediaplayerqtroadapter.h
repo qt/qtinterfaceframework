@@ -5,7 +5,7 @@
 #ifndef QIFMEDIAPLAYERQTROADAPTER_H
 #define QIFMEDIAPLAYERQTROADAPTER_H
 
-#include <QIfRemoteObjectsSourceHelper>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectssourcehelper_p.h>
 
 #include "mediaplayerbackend.h"
 #include "rep_qifmediaplayer_source.h"

@@ -14,7 +14,7 @@
 #define {{oncedefine}}
 
 #include <QRemoteObjectNode>
-#include <QtIfRemoteObjectsHelper/QIfRemoteObjectsReplicaHelper>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectsreplicahelper_p.h>
 {% if module.tags.config.module %}
 #include <{{module.tags.config.module}}/{{interface}}BackendInterface>
 {% else %}

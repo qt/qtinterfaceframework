@@ -7,25 +7,15 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 
+#include <QtIfRemoteObjectsHelper/qtifremoteobjectshelper_global.h>
+
 QT_BEGIN_NAMESPACE
 
-class QIfRemoteObjectsHelper {
+namespace QIfRemoteObjectsHelper {
 
-public:
-    static QString buildDefaultUrl(const QString &url) {
-#ifdef Q_OS_ANDROID
-        return QStringLiteral("localabstract:") + url;
-#elif defined(Q_OS_LINUX)
-        static bool isTempWritable = QFileInfo(QDir::tempPath()).isWritable();
-        if (!isTempWritable)
-            return QStringLiteral("localabstract:") + url;
-        else
-            return QStringLiteral("local:") + url;
-#else
-        return QStringLiteral("local:") + url;
-#endif
-    }
-};
+Q_IFREMOTEOBJECTSHELPER_EXPORT QString buildDefaultUrl(const QString &url);
+
+} // namespace QIfRemoteObjectsHelper
 
 QT_END_NAMESPACE
 

@@ -8,23 +8,27 @@
 # building the module and at that time the rep headers are not created yet
 set(QT_FEATURE_headersclean FALSE)
 
-qt_internal_add_module(IfRemoteObjectsHelperPrivate
+qt_internal_add_module(IfRemoteObjectsHelper
     CONFIG_MODULE_NAME ifremoteobjects_helper
-    STATIC
-    INTERNAL_MODULE
     SOURCES
-        qifpagingmodelqtroadapter.cpp qifpagingmodelqtroadapter.h
-        qifremoteobjectspendingresult.cpp qifremoteobjectspendingresult.h
-        qifremoteobjectsreplicahelper.cpp qifremoteobjectsreplicahelper.h
-        qifremoteobjectssourcehelper.h qifremoteobjectshelper.h
+        qifpagingmodelqtroadapter.cpp qifpagingmodelqtroadapter_p.h
+        qifremoteobjectspendingresult.cpp qifremoteobjectspendingresult_p.h
+        qifremoteobjectsreplicahelper.cpp qifremoteobjectsreplicahelper_p.h
+        qifremoteobjectssourcehelper_p.h qifremoteobjectshelper.h
+        qifremoteobjectshelper.cpp qifremoteobjectshelper.h
     PUBLIC_LIBRARIES
         Qt::InterfaceFramework
         Qt::Qml
         Qt::RemoteObjects
 )
-qt6_add_repc_sources(IfRemoteObjectsHelperPrivate
+
+target_sources(IfRemoteObjectsHelper
+  PRIVATE
+    qtifremoteobjectshelper_global.h
+)
+qt6_add_repc_sources(IfRemoteObjectsHelper
     qifpagingmodel.rep
 )
-qt6_add_repc_replicas(IfRemoteObjectsHelperPrivate
+qt6_add_repc_replicas(IfRemoteObjectsHelper
     qifpagingmodel.rep
 )

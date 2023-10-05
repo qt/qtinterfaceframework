@@ -5,6 +5,7 @@
 #include "mediaindexerbackend.h"
 
 #include <QTimer>
+#include <QFile>
 #include <QSettings>
 
 using namespace Qt::StringLiterals;

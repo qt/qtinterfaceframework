@@ -6,7 +6,7 @@
 #define MEDIAINDEXERBACKEND_H
 
 #include <QtIfMedia/QIfMediaIndexerControlBackendInterface>
-#include <QIfRemoteObjectsReplicaHelper>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectsreplicahelper_p.h>
 #include <QRemoteObjectNode>
 
 #include "rep_qifmediaindexer_replica.h"

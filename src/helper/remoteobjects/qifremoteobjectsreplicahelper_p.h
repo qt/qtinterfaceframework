@@ -2,8 +2,19 @@
 // Copyright (C) 2019 Luxoft Sweden AB
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
-#ifndef QIFREMOTEOBJECTSREPLICAHELPER_H
-#define QIFREMOTEOBJECTSREPLICAHELPER_H
+#ifndef QIFREMOTEOBJECTSREPLICAHELPER_P_H
+#define QIFREMOTEOBJECTSREPLICAHELPER_P_H
+
+//
+//  W A R N I N G
+//  -------------
+//
+// This file is not part of the Qt API.  It exists purely as an
+// implementation detail. This header file may change from version to
+// version without notice, or even be removed.
+//
+// We mean it.
+//
 
 #include <QtInterfaceFramework/QIfPendingReply>
 #include <QtInterfaceFramework/QIfAbstractFeature>
@@ -11,12 +22,12 @@
 #include <QtRemoteObjects/QRemoteObjectReplica>
 #include <QtRemoteObjects/QRemoteObjectPendingCall>
 
-#include <QtIfRemoteObjectsHelper/qifremoteobjectshelper.h>
-#include <QtIfRemoteObjectsHelper/qifremoteobjectspendingresult.h>
+#include "qtifremoteobjectshelper_global.h"
+#include "qifremoteobjectspendingresult_p.h"
 
 QT_BEGIN_NAMESPACE
 
-class QIfRemoteObjectsReplicaHelper : public QObject
+class Q_IFREMOTEOBJECTSHELPER_EXPORT QIfRemoteObjectsReplicaHelper : public QObject
 {
     Q_OBJECT
 
@@ -69,4 +80,4 @@ private:
 
 QT_END_NAMESPACE
 
-#endif //QIFREMOTEOBJECTSREPLICAHELPER_H
+#endif //QIFREMOTEOBJECTSREPLICAHELPER_P_H

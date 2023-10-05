@@ -6,6 +6,7 @@
 #include "qifqmlconversion_helper.h"
 
 #include <QTimer>
+#include <QFile>
 #include <QSettings>
 
 using namespace Qt::StringLiterals;

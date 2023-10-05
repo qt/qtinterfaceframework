@@ -4,7 +4,7 @@
 
 #include "echozonedservice.h"
 
-#include <QtIfRemoteObjectsHelper/QIfRemoteObjectsPendingResult>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectspendingresult_p.h>
 #include <QTimer>
 
 #define SET_VALUE(m_VALUE, VALUE, CHANGED_SIGNAL) \

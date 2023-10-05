@@ -25,4 +25,5 @@ target_link_libraries(org-example-echo-qtro-server
     PRIVATE
         echo_qtro_frontend
         cmdlistener
+        Qt6::IfRemoteObjectsHelperPrivate
 )

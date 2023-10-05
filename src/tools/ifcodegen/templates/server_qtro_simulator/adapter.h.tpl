@@ -11,8 +11,8 @@
 #ifndef {{oncedefine}}
 #define {{oncedefine}}
 
-#include <QtIfRemoteObjectsHelper/QIfRemoteObjectsSourceHelper>
-#include "QtIfRemoteObjectsHelper/rep_qifpagingmodel_source.h"
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectssourcehelper_p.h>
+#include <QtIfRemoteObjectsHelper/QIfPagingModelSource>
 
 #include "{{interface|lower}}backend.h"
 #include "rep_{{interface|lower}}_source.h"

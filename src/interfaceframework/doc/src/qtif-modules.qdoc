@@ -13,7 +13,9 @@
     Qt Interface Framework contains the following modules:
     \annotatedlist qtif_modules
 
+    The following helper modules provide protocol specific functions:
 
+    \annotatedlist qtif_helper_modules
 */
 
 /*!

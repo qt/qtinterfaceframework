@@ -1,7 +1,11 @@
 #include <QtInterfaceFramework/QtInterfaceFrameworkModule>
 #include <QUuid>
 
-class QIfPagingModel
+#include <QtIfRemoteObjectsHelper/qtifremoteobjectshelper_global.h>
+
+#HEADER QT_BEGIN_NAMESPACE
+
+class Q_IFREMOTEOBJECTSHELPER_EXPORT QIfPagingModel
 {
     SLOT(void registerInstance(const QUuid &identifier))
     SLOT(void unregisterInstance(const QUuid &identifier))
@@ -12,3 +16,5 @@ class QIfPagingModel
     SIGNAL(dataFetched(const QUuid &identifier, const QList<QVariant> &data, int start, bool moreAvailable))
     SIGNAL(dataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count))
 };
+
+#FOOTER QT_END_NAMESPACE

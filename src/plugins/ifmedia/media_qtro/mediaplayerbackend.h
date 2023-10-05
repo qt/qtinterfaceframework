@@ -6,7 +6,7 @@
 #define MEDIAPLAYERBACKEND_H
 
 #include <QtIfMedia/QIfMediaPlayerBackendInterface>
-#include <QIfRemoteObjectsReplicaHelper>
+#include <QtIfRemoteObjectsHelper/private/qifremoteobjectsreplicahelper_p.h>
 #include <QRemoteObjectNode>
 #include "rep_qifmediaplayer_replica.h"
 

@@ -6,7 +6,7 @@
 #}
 {% include "common/generated_comment.qmake.tpl" %}
 
-QT += interfaceframework remoteobjects ifremoteobjects_helper_private
+QT += interfaceframework remoteobjects ifremoteobjects_helper
 
 HEADERS += $$PWD/core.h
 
