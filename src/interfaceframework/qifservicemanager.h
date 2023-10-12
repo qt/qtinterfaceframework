@@ -78,10 +78,10 @@ public:
 
     static QIfServiceManager *instance();
 
-    Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, SearchFlags searchFlags = IncludeAll);
+    Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags = IncludeAll);
     Q_INVOKABLE bool hasInterface(const QString &interface) const;
 
-    bool registerService(QObject *serviceBackendInterface, const QStringList &interfaces, BackendType backendType = ProductionBackend);
+    bool registerService(QObject *serviceBackendInterface, const QStringList &interfaces, QIfServiceManager::BackendType backendType = ProductionBackend);
     void unloadAllBackends();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
