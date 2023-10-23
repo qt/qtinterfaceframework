@@ -4,9 +4,6 @@ accept_configuration:
   condition: and
   conditions:
     - condition: property
-      property: host.arch
-      not_equals_value: AARCH64
-    - condition: property
       property: features
       not_contains_value: Disable
     - condition: property
