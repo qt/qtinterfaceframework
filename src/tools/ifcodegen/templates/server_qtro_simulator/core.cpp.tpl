@@ -1,11 +1,17 @@
 {#
 # Copyright (C) 2021 The Qt Company Ltd.
 # Copyright (C) 2019 Luxoft Sweden AB
+# Copyright (C) 2018 Pelagicore AG
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #}
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = "Core" %}
 
+#include <QtDeprecationMarkers>
+
+#if QT_DEPRECATED_SINCE(6, 7)
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 
 #include "{{class|lower}}.h"
 #include "{{module.module_name|lower}}.h"
@@ -18,7 +24,7 @@ using namespace Qt::StringLiterals;
 
 {{ module|begin_namespace }}
 
-{{class}} *{{class}}::s_instance(nullptr);
+{{class}}* {{class}}::s_instance(nullptr);
 
 {{class}}::{{class}}(QObject *parent)
     : QObject(parent)
@@ -48,7 +54,7 @@ void {{class}}::init()
     connect(m_host, &QRemoteObjectNode::error, this, &{{class}}::reportError);
 }
 
-{{class}} *{{class}}::instance()
+{{class}}* {{class}}::instance()
 {
     if (!s_instance)
         s_instance = new {{class}}(QCoreApplication::instance());
@@ -56,13 +62,13 @@ void {{class}}::init()
     return s_instance;
 }
 
-QRemoteObjectRegistryHost *{{class}}::host() const
+QRemoteObjectRegistryHost* {{class}}::host() const
 {
     Q_ASSERT(m_host);
     return m_host;
 }
 
-void {{class}}::reportError(QRemoteObjectNode::ErrorCode code) const
+void {{class}}::reportError(QRemoteObjectNode::ErrorCode code)
 {
     qWarning() << "QRemoteObjects Error: " << code;
 }
@@ -70,3 +76,6 @@ void {{class}}::reportError(QRemoteObjectNode::ErrorCode code) const
 {{ module|end_namespace }}
 
 #include "moc_{{class|lower}}.cpp"
+
+QT_WARNING_POP
+#endif // QT_DEPRECATED_SINCE(6, 7)

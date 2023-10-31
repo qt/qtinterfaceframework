@@ -7,6 +7,11 @@
 {% include "common/generated_comment.cpp.tpl" %}
 {% set class = "Core" %}
 
+#include <QtDeprecationMarkers>
+
+#if QT_DEPRECATED_SINCE(6, 7)
+QT_WARNING_PUSH
+QT_WARNING_DISABLE_DEPRECATED
 
 #include "{{class|lower}}.h"
 #include "{{module.module_name|lower}}.h"
@@ -71,3 +76,6 @@ void {{class}}::reportError(QRemoteObjectNode::ErrorCode code)
 {{ module|end_namespace }}
 
 #include "moc_{{class|lower}}.cpp"
+
+QT_WARNING_POP
+#endif // QT_DEPRECATED_SINCE(6, 7)

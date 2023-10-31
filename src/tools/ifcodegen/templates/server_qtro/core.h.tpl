@@ -10,11 +10,15 @@
 #ifndef {{class|upper}}_H
 #define {{class|upper}}_H
 
+#include <QtDeprecationMarkers>
+#if QT_DEPRECATED_SINCE(6, 7)
+
 #include <QRemoteObjectNode>
 
 {{ module|begin_namespace }}
 
-class {{class}} : public QObject
+class QT_DEPRECATED_VERSION_X_6_7("Please use the QIfRemoteObjectConfig class instead.")
+{{class}} : public QObject
 {
     Q_OBJECT
 private:
@@ -34,5 +38,7 @@ private:
 };
 
 {{ module|end_namespace }}
+
+#endif // QT_DEPRECATED_SINCE(6, 7)
 
 #endif
