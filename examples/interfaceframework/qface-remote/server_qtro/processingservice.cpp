@@ -7,7 +7,8 @@
 using namespace Qt::StringLiterals;
 
 //! [0]
-ProcessingService::ProcessingService()
+ProcessingService::ProcessingService(QObject *parent)
+    : ProcessingServiceSimpleSource(parent)
 {
     setLastMessage(u"Service online."_s);
 }

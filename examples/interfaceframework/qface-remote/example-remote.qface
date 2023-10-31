@@ -1,6 +1,9 @@
 /**
  * Test module
  */
+//! [2]
+@config_server_qtro: { useGeneratedMain: true }
+//! [2]
 //! [0]
 module Example.If.RemoteModule 1.0;
 //! [0]

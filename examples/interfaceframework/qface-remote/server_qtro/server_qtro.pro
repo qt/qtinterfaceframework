@@ -11,7 +11,7 @@ DESTDIR = ../
 LIBS += -L$$OUT_PWD/../ -l$$qtLibraryTarget(QtIfRemoteExample)
 INCLUDEPATH += $$OUT_PWD/../frontend
 
-SOURCES += main.cpp \
+SOURCES += serverMain.cpp \
     processingservice.cpp
 
 QMAKE_RPATHDIR += $ORIGIN

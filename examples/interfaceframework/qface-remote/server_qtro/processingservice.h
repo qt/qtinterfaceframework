@@ -10,7 +10,7 @@
 class ProcessingService : public ProcessingServiceSimpleSource
 {
 public:
-    ProcessingService();
+    ProcessingService(QObject *parent);
 
     QVariant process(const QString & data) override;
 };

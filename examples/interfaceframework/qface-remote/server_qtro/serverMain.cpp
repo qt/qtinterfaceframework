@@ -6,17 +6,14 @@
 #include <QCoreApplication>
 
 #include "processingservice.h"
-#include "core.h"
+
+#include <QIfRemoteObjectsConfig>
 
 using namespace Qt::StringLiterals;
 
-int main(int argc, char *argv[])
+void serverMain(QIfRemoteObjectsConfig &config)
 {
-    QCoreApplication app(argc, argv);
-
-    ProcessingService service;
-    Core::instance()->host()->enableRemoting(&service,u"Example.If.RemoteModule.ProcessingService"_s);
-
-    return app.exec();
+    auto service = new ProcessingService(qApp);
+    config.enableRemoting(u"Example.If.RemoteModule"_s, u"ProcessingService"_s, service);
 }
 //! [0]

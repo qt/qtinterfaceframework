@@ -14,7 +14,7 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-remote-s
 find_package(Qt6 REQUIRED COMPONENTS Core InterfaceFramework Qml Quick)
 
 qt_add_executable(qface-remote-server
-    main.cpp
+    serverMain.cpp
     processingservice.cpp processingservice.h
 )
 
