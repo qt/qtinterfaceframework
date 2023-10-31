@@ -13,16 +13,7 @@
     Qt Interface Framework contains the following modules:
     \annotatedlist qtif_modules
 
-    \section1 Classes
 
-    \section2 Qt Interface Framework Core C++ Classes
-    \generatelist classesbymodule QtInterfaceFramework
-
-    \section2 Qt Interface Framework Vehicle Functions C++ Classes
-    \generatelist classesbymodule QtIfVehicleFunctions
-
-    \section2 Qt Interface Framework Media C++ Classes
-    \generatelist classesbymodule QtIfMedia
 */
 
 /*!
@@ -35,15 +26,4 @@
 
     Qt Interface Framework contains the following QML modules:
     \annotatedlist qtif_qmlmodules
-
-    \section1 QML Types
-
-    \section2 Qt Interface Framework Core QML Types
-    \generatelist qmltypesbymodule QtInterfaceFramework
-
-    \section2 Qt Interface Framework VehicleFunctions QML Types
-    \generatelist qmltypesbymodule QtInterfaceFramework.VehicleFunctions
-
-    \section2 Qt Interface Framework Media QML Types
-    \generatelist qmltypesbymodule QtInterfaceFramework.Media
 */
