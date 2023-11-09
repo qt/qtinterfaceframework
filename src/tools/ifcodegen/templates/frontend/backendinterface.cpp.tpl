@@ -1,7 +1,7 @@
 {#
 # Copyright (C) 2021 The Qt Company Ltd.
 # Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
-# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial
 #}
 {% import 'common/qtif_macros.j2' as qtif %}
 {% set class = '{0}BackendInterface'.format(interface) %}
