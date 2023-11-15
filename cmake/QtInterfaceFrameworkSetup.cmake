@@ -12,7 +12,7 @@ function(qt_config_python3_package_test name)
 
     message(STATUS "Performing Test ${arg_LABEL}")
 
-    execute_process(COMMAND ${Python3_EXECUTABLE} "-c" "import pkg_resources; print(pkg_resources.get_distribution(\"${arg_PACKAGE}\").version)"
+    execute_process(COMMAND ${Python3_EXECUTABLE} "-c" "from importlib.metadata import version; print(version(\"${arg_PACKAGE}\"))"
                     RESULT_VARIABLE ${name}_RESULT
                     OUTPUT_VARIABLE ${name}_VERSION
                     ERROR_QUIET
