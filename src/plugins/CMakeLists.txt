@@ -1,6 +1,0 @@
-if(TARGET Qt::IfMedia)
-    add_subdirectory(ifmedia)
-endif()
-if(TARGET Qt::IfVehicleFunctions)
-    add_subdirectory(ifvehiclefunctions)
-endif()

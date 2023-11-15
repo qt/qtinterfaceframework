@@ -1,9 +1,0 @@
-headerdirs  += .. \
-               $$BUILDDIR/../ifvehiclefunctions \
-
-sourcedirs  += .. \
-               $$BUILDDIR/../ifvehiclefunctions \
-
-exampledirs += snippets
-
-imagedirs   += images

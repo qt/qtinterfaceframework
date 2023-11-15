@@ -1,5 +1,5 @@
 TEMPLATE = lib
-QT = interfaceframework ifvehiclefunctions
+QT = interfaceframework
 CONFIG += c++11 plugin
 
 INCLUDEPATH += $$OUT_PWD/../frontend

@@ -75,33 +75,6 @@
        \li \l{What's New in the Qt Interface Framework}
     \endlist
 
-    \section1 Reference APIs
-
-    In addition to the tools and core APIs, the Qt Interface Framework module also provides an extendable set of
-    reference APIs for automotive features. This module can be used to develop automotive
-    applications and to provide automotive features to Qt-based applications in a structured
-    manner. This reference API already contains some simulation back ends, which provide partially
-    simulated behavior of a real middleware service.
-
-    \note There is no compatibility guarantee for the reference APIs. As those are
-    based on the Qt Interface Framework Generator, the same compatibility guarantee
-    is applied to those.
-    We try to keep the API source compatible for as long as possible.
-
-    \list
-    \li \l{Use the Qt Interface Framework Reference API}
-    \li \l{QtInterfaceFramework Backends}
-    \endlist
-
-    \section1 Getting Started with the Qt Interface Framework Reference API
-
-    \list
-      \li \l {Qt Interface Framework Vehicle Functions C++ Classes#Getting Started}
-             {Getting started with Qt Interface Framework Vehicle Functions (C++)}
-      \li \l {Qt Interface Framework Vehicle Functions QML Types#Getting Started}
-             {Getting started with Qt Interface Framework Vehicle Functions (QML)}
-    \endlist
-
     \section1 Reference
 
     \list
@@ -109,6 +82,10 @@
       \li \l {Qt Interface Framework QML Types}
       \li \l {Qt Interface Framework Examples}
     \endlist
+
+    \section1 Reference APIs
+
+    The documentation for the Qt Interface Framework Reference modules can be found <<<<<<<<<<<<<<<<<ADD LINK TO NEW DOC HERE>>>>>>>>>.
 
     \section1 Licenses and Attributions
 

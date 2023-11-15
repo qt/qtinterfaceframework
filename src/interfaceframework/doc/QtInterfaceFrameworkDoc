@@ -1,6 +1,2 @@
 #include <QtInterfaceFramework/QtInterfaceFramework>
 #include <QtIfRemoteObjectsHelper/QIfRemoteObjectsHelper>
-#include <QtIfVehicleFunctions/QtIfVehicleFunctions>
-#include <QtIfVehicleFunctions/QIfClimateControlBackendInterface>
-#include <QtIfVehicleFunctions/QIfWindowControlBackendInterface>
-#include <QtIfMedia/QtIfMedia>

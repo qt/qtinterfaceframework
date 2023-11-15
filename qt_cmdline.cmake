@@ -1,3 +1,1 @@
 qt_commandline_subconfig(src/interfaceframework)
-qt_commandline_subconfig(src/ifvehiclefunctions)
-qt_commandline_subconfig(src/ifmedia)

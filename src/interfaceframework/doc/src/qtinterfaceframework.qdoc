@@ -5,33 +5,39 @@
 
 /*!
     \module QtInterfaceFramework
-    \title Qt Interface Framework Core C++ Classes
+    \title Qt Interface Framework C++ Classes
     \ingroup modules
-    \ingroup qtif_modules
     \qtvariable interfaceframework
 
     \brief C++ classes for the Qt Interface Framework Core API.
 
-    To include the definitions of the module's classes, use the following directive:
+    To link against the Qt Interface Framework module, use the following directive:
+
+    Using CMake:
 
     \code
-    #include <QtInterfaceFramework>
+    find_package(Qt6 COMPONENTS InterfaceFramework REQUIRED)
+    target_link_libraries(mytarget PRIVATE Qt6::InterfaceFramework)
     \endcode
 
-    To link against the module, add this line to your qmake .pro file:
+    Using qmake:
 
     \code
     QT += interfaceframework
     \endcode
 
-    For more information, see \l{Use the Qt Interface Framework Reference API}.
+    To use Qt Interface Framework Media C++ classes in your application, use the
+    following include statement:
+
+    \code
+    #include <QtInterfaceFramework>
+    \endcode
 */
 
 /*!
     \qmlmodule QtInterfaceFramework
-    \title Qt Interface Framework Core QML Types
+    \title Qt Interface Framework QML Types
     \ingroup qmlmodules
-    \ingroup qtif_qmlmodules
 
     \brief QML types for the Qt Interface Framework Core API.
 
@@ -51,10 +57,9 @@
 /*!
     \group qtinterfaceframework-examples
     \ingroup all-examples
-    \ingroup interfaceframework-examples
-    \title Qt Interface Framework Core Examples
+    \title Qt Interface Framework Examples
 
-    \brief Examples for using the Qt Interface Framework Core features
+    \brief Examples for the Qt Interface Framework module
 
-    These are the Qt Interface Framework Core features examples.
+    These are the Qt Interface Framework examples.
 */

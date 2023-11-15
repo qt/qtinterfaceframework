@@ -23,13 +23,7 @@ exampledirs                  += ../../../examples \
 
 examples.fileextensions      += *.qface *.yaml
 
-include(../../ifvehiclefunctions/doc/qtifvehiclefunctions.qdocconf)
-include(../../ifmedia/doc/qtifmedia.qdocconf)
 include(exampleurl-qtinterfaceframework.qdocconf)
-
-# include the backend plugins documentation
-include(../../plugins/ifmedia/doc/qtifmedia_plugins.qdocconf)
-include(../../plugins/ifvehiclefunctions/doc/qtifvehiclefunctions_plugins.qdocconf)
 
 # include extra image to qhp (referred to in the generated examples-manifest.xml)
 HTML.extraimages             += images/qtinterfaceframework-codesample.png

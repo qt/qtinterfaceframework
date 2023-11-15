@@ -1,8 +1,0 @@
-{
-    "interfaces" : [
-        "org.qt-project.interfaceframework.MediaPlayer/1.0",
-        "org.qt-project.interfaceframework.FilterAndBrowseModel/1.0",
-        "org.qt-project.interfaceframework.MediaDiscovery/1.0",
-        "org.qt-project.interfaceframework.MediaIndexer/1.0"
-    ]
-}

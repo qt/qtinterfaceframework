@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/simulation">
-        <file>simulation.qml</file>
-        <file>QIfConcreteWindowControlSimulation.qml</file>
-    </qresource>
-</RCC>

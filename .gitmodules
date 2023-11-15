@@ -1,7 +1,3 @@
 [submodule "src/3rdparty/qface"]
 	path = src/3rdparty/qface
 	url = ../qtinterfaceframework-qface.git
-[submodule "src/3rdparty/taglib/taglib"]
-	path = src/3rdparty/taglib/taglib
-	url = ../qtinterfaceframework-taglib.git
-	branch = upstream/master

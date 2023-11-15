@@ -12,7 +12,7 @@ project(QtInterfaceFramework
 set(QT_NO_INTERNAL_COMPATIBILITY_FUNCTIONS TRUE)
 
 find_package(Qt6 ${PROJECT_VERSION} CONFIG REQUIRED COMPONENTS BuildInternals Core)
-find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Gui Qml Quick QuickTest RemoteObjects Multimedia Sql DBus Widgets)
+find_package(Qt6 ${PROJECT_VERSION} CONFIG OPTIONAL_COMPONENTS Gui Qml Quick QuickTest RemoteObjects DBus Widgets)
 qt_internal_project_setup()
 
 find_package(FLEX)

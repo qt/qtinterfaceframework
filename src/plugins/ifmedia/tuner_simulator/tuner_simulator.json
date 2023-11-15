@@ -1,6 +1,0 @@
-{
-    "interfaces" : [
-        "org.qt-project.interfaceframework.AmFmTuner/1.0",
-        "org.qt-project.interfaceframework.FilterAndBrowseModel/1.0"
-    ]
-}

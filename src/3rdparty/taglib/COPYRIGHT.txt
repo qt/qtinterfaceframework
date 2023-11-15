@@ -1,6 +1,0 @@
-Copyright (c) 2006, David Faure, <faure@kde.org>
-Copyright (c) 2007, Pino Toscano, <pino@kde.org>
-Copyright (C) 1991, 1999 Free Software Foundation, Inc.
-Copyright (C) 2003, 2004 Scott Wheeler <wheeler@kde.org>
-Copyright 2001 Unicode, Inc.
-Copyright (C) Martin Nilsson 1998, 2000. All Rights Reserved.

@@ -1,7 +1,0 @@
-headerdirs  += .. \
-
-sourcedirs  += .. \
-
-exampledirs += snippets
-
-imagedirs   += images
