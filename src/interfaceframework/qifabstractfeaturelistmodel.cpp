@@ -581,7 +581,7 @@ void QIfAbstractFeatureListModel::componentComplete()
 /*!
     Returns the interface name this Feature expect to be available from the Service Object and this Feature is implementing.
 
-    See \l {Extending Qt Interface Framework} for more information.
+    \sa acceptServiceObject
 */
 QString QIfAbstractFeatureListModel::interfaceName() const
 {

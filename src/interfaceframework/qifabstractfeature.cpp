@@ -380,7 +380,7 @@ void QIfAbstractFeature::componentComplete()
     When the feature discovers a matching backend, this interface's name needs to be supported by
     the service object that the feature is connecting to.
 
-    See \l {Extending Qt Interface Framework} for more information.
+    \sa acceptServiceObject
 */
 QString QIfAbstractFeature::interfaceName() const
 {
