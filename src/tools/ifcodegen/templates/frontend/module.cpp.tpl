@@ -99,6 +99,7 @@ void {{class}}::registerTypes()
 {% endfor %}
 
 {% for enum in module.enums %}
+    qRegisterMetaType<{{class}}*>();
     qRegisterMetaType<{{class}}::{{enum|flag_type}}>();
     qIfRegisterPendingReplyType<{{class}}::{{enum|flag_type}}>();
 {%   if enum.is_flag %}

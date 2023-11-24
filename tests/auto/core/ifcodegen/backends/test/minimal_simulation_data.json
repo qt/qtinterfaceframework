@@ -5,6 +5,12 @@
     },
     "floatValue2": {
       "maximum": 300.0
+    },
+    "weekDay": {
+      "default": {
+        "type": "enum",
+        "value": "Echomodule::Wednesday"
+      }
     }
   },
   "EchoZoned": {
