@@ -138,6 +138,7 @@ void BackendsTest::cleanup()
 
 void BackendsTest::testInit()
 {
+    QTest::failOnWarning(QRegularExpression(u".*Couldn't retrieve MetaObject for enum parsing:.*"_s));
     Echo client;
     QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
