@@ -774,7 +774,7 @@ void QIfPendingReplyBase::setSuccessNoCheck(const QVariant &value)
 */
 
 /*!
-    \fn template <class T> QIfPendingReply<T>::createFailedReply()
+    \fn template <class T> QIfPendingReply<T> QIfPendingReply<T>::createFailedReply()
 
     Creates a reply object which is marked as failed. This is convenient in error cases inside
     functions returning a reply e.g.
@@ -808,7 +808,7 @@ void QIfPendingReplyBase::setSuccessNoCheck(const QVariant &value)
 */
 
 /*!
-    \fn template <class T> QIfPendingReply<T>::reply() const
+    \fn template <class T> T QIfPendingReply<T>::reply() const
 
     Returns the result of the reply. If no result has been set yet or when the reply is marked as
     failed, a default constructed value is returned.
@@ -817,7 +817,7 @@ void QIfPendingReplyBase::setSuccessNoCheck(const QVariant &value)
 */
 
 /*!
-    \fn template <class T> QIfPendingReply<T>::setSuccess(const T &val)
+    \fn template <class T> void QIfPendingReply<T>::setSuccess(const T &val)
 
     Sets the result of the reply to \a val and marks the reply as succeeded.
 
@@ -827,7 +827,7 @@ void QIfPendingReplyBase::setSuccessNoCheck(const QVariant &value)
 */
 
 /*!
-    \fn template <class T> QIfPendingReply<T>::then(const std::function<void (const T &)> &success, const std::function<void ()> &failed)
+    \fn template <class T> void QIfPendingReply<T>::then(const std::function<void (const T &)> &success, const std::function<void ()> &failed)
 
     Sets the C++ callbacks to be called once a result is delivered. If the reply succeeds
     \a success is called; otherwise \a failed is called.
