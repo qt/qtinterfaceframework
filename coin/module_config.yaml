@@ -23,28 +23,28 @@ instructions:
     variableValue: "1"
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_CONFIGURE_ARGS
-    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
     disable_if:
       condition: property
       property: features
       contains_value: UseConfigure
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_TARGET_CONFIGURE_ARGS
-    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
     disable_if:
       condition: property
       property: features
       contains_value: UseConfigure
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_CMAKE_ARGS
-    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
     enable_if:
       condition: property
       property: features
       contains_value: UseConfigure
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_TARGET_CMAKE_ARGS
-    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}}"
+    variableValue: " -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
     enable_if:
       condition: property
       property: features
