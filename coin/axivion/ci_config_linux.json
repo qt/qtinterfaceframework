@@ -28,7 +28,6 @@
             ],
             "ir": "build/$(env:TESTED_MODULE_COIN).ir",
             "plugin_files": [
-                "build/plugins/*/lib*.so*.ir"
             ],
             "options": "--include_unused"
         }
