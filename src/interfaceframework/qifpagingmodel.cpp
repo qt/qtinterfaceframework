@@ -65,7 +65,7 @@ void QIfPagingModelPrivate::onInitializationDone()
     resetModel();
 }
 
-void QIfPagingModelPrivate::onCapabilitiesChanged(const QUuid &identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities)
+void QIfPagingModelPrivate::onCapabilitiesChanged(QUuid identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities)
 {
     if (!identifier.isNull() && identifier != m_identifier)
         return;
@@ -78,7 +78,7 @@ void QIfPagingModelPrivate::onCapabilitiesChanged(const QUuid &identifier, QtInt
     emit q->capabilitiesChanged(capabilities);
 }
 
-void QIfPagingModelPrivate::onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable)
+void QIfPagingModelPrivate::onDataFetched(QUuid identifier, const QList<QVariant> &items, int start, bool moreAvailable)
 {
     if (!identifier.isNull() && (!items.count() || identifier != m_identifier))
         return;
@@ -112,7 +112,7 @@ void QIfPagingModelPrivate::onDataFetched(const QUuid &identifier, const QList<Q
     }
 }
 
-void QIfPagingModelPrivate::onCountChanged(const QUuid &identifier, int new_length)
+void QIfPagingModelPrivate::onCountChanged(QUuid identifier, int new_length)
 {
     if (m_loadingType != QIfPagingModel::DataChanged || (!identifier.isNull() && identifier != m_identifier) || m_itemList.count() == new_length)
         return;
@@ -126,7 +126,7 @@ void QIfPagingModelPrivate::onCountChanged(const QUuid &identifier, int new_leng
     m_availableChunks.resize(new_length / m_chunkSize + 1);
 }
 
-void QIfPagingModelPrivate::onDataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count)
+void QIfPagingModelPrivate::onDataChanged(QUuid identifier, const QList<QVariant> &data, int start, int count)
 {
     if (!identifier.isNull() && identifier != m_identifier)
         return;

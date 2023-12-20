@@ -289,15 +289,16 @@ QVariantMap QIfSimulationGlobalObject::findData(const QVariantMap &data, const Q
 void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObject *object)
 {
     for (auto i = data.constBegin(); i != data.constEnd(); ++i) {
+        QByteArray key = i.key().toLatin1();
         const QVariant defVal = defaultValue(i.value().toMap());
         if (defVal.isValid()) {
-            QVariant currentValue = object->property(i.key().toLatin1());
+            QVariant currentValue = object->property(key);
             if (QIfPagingModelInterface *model = currentValue.value<QIfPagingModelInterface*>()) {
                 QVariantList list = defVal.toList();
                 for (auto i = list.crbegin(); i != list.crend(); ++i)
                     QMetaObject::invokeMethod(model, "insert", createArgument(int(0)), createArgument(*i));
             } else {
-                object->setProperty(i.key().toLatin1(), defVal);
+                object->setProperty(key, defVal);
             }
         }
 
@@ -311,7 +312,7 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
             if (defVal.isValid()) {
                 QObject *zoneObject = map->value(zone).value<QObject*>();
                 if (zoneObject)
-                    zoneObject->setProperty(i.key().toLatin1(), defVal);
+                    zoneObject->setProperty(key, defVal);
             }
         }
     }

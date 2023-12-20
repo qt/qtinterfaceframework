@@ -88,10 +88,10 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(QIfPagingModel)
-    Q_PRIVATE_SLOT(d_func(), void onCapabilitiesChanged(const QUuid &identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities))
-    Q_PRIVATE_SLOT(d_func(), void onDataFetched(const QUuid &identifer, const QList<QVariant> &items, int start, bool moreAvailable))
-    Q_PRIVATE_SLOT(d_func(), void onCountChanged(const QUuid &identifier, int new_length))
-    Q_PRIVATE_SLOT(d_func(), void onDataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count))
+    Q_PRIVATE_SLOT(d_func(), void onCapabilitiesChanged(QUuid identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities))
+    Q_PRIVATE_SLOT(d_func(), void onDataFetched(QUuid identifer, const QList<QVariant> &items, int start, bool moreAvailable))
+    Q_PRIVATE_SLOT(d_func(), void onCountChanged(QUuid identifier, int new_length))
+    Q_PRIVATE_SLOT(d_func(), void onDataChanged(QUuid identifier, const QList<QVariant> &data, int start, int count))
     Q_PRIVATE_SLOT(d_func(), void onFetchMoreThresholdReached())
 };
 

@@ -40,11 +40,11 @@ public:
     void parseQuery();
     void setupFilter(QIfAbstractQueryTerm* queryTerm, const QList<QIfOrderTerm> &orderTerms);
     void clearToDefaults() override;
-    void onCanGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start);
-    void onCanGoBackChanged(const QUuid &identifier, bool canGoBack);
-    void onContentTypeChanged(const QUuid &identifier, const QString &contentType);
+    void onCanGoForwardChanged(QUuid identifier, const QVector<bool> &indexes, int start);
+    void onCanGoBackChanged(QUuid identifier, bool canGoBack);
+    void onContentTypeChanged(QUuid identifier, const QString &contentType);
     void onAvailableContentTypesChanged(const QStringList &contentTypes);
-    void onQueryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers);
+    void onQueryIdentifiersChanged(QUuid identifier, const QSet<QString> &queryIdentifiers);
 
     QIfFilterAndBrowseModelInterface *searchBackend() const;
     void updateContentType(const QString &contentType);

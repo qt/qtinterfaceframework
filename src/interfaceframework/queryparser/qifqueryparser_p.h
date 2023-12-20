@@ -99,7 +99,6 @@ protected:
     QList<QIfOrderTerm> m_orderList;
 };
 
-#endif // QTIFQUERYPARSER_P_H
-
 QT_END_NAMESPACE
 
+#endif // QTIFQUERYPARSER_P_H
