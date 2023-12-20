@@ -343,12 +343,12 @@ function(qt6_ifcodegen_generate)
                     set(QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION ${CMAKE_MATCH_1} CACHE STRING "ifcodegen virtualenv python version")
                 endif()
                 set(PYTHON_EXECUTABLE ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/python)
-                set(ENV{LC_ALL} en_US.UTF-8)
-                set(ENV{LD_LIBRARY_PATH} ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin)
+                list(APPEND CMD_ENV LC_ALL=en_US.UTF-8)
+                list(APPEND CMD_ENV LD_LIBRARY_PATH=${QT_IFCODEGEN_VIRTUALENV_PATH}/bin)
             endif()
-            set(ENV{VIRTUAL_ENV} ${QT_IFCODEGEN_VIRTUALENV_PATH})
-            set(ENV{PYTHONPATH} ${QT_IFCODEGEN_VIRTUALENV_PATH}/lib/python${QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION}/site-packages)
-            set(ENV{PYTHONHOME} ${QT_IFCODEGEN_VIRTUALENV_PATH})
+            list(APPEND CMD_ENV VIRTUAL_ENV=${QT_IFCODEGEN_VIRTUALENV_PATH})
+            list(APPEND CMD_ENV PYTHONPATH=${QT_IFCODEGEN_VIRTUALENV_PATH}/lib/python${QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION}/site-packages)
+            list(APPEND CMD_ENV PYTHONHOME=${QT_IFCODEGEN_VIRTUALENV_PATH})
         else()
             include(QtFindPackageHelpers)
             qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
@@ -358,12 +358,13 @@ function(qt6_ifcodegen_generate)
             endif()
         endif()
         if (DEFINED QT_IFCODEGEN_IFGENERATOR_CONFIG)
-            set(ENV{IFGENERATOR_CONFIG} ${QT_IFCODEGEN_IFGENERATOR_CONFIG})
+            list(APPEND CMD_ENV IFGENERATOR_CONFIG=${QT_IFCODEGEN_IFGENERATOR_CONFIG})
         endif()
 
         message(STATUS "Running ifcodegen for ${IDL_FILES} with template ${TEMPLATE}")
         set(GENERATOR_CMD
-                ${PYTHON_EXECUTABLE}
+                ${CMAKE_COMMAND} -E env ${CMD_ENV}
+                ${PYTHON_EXECUTABLE} -B
                 ${QT_IFCODEGEN_GENERATOR_PATH}/generate.py
                 ${GENERATOR_ARGUMENTS}
                 ${IDL_FILES}
@@ -385,7 +386,11 @@ function(qt6_ifcodegen_generate)
             endif()
             execute_process(COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_DIR}/.stamp-ifcodegen)
         else()
-            message(FATAL_ERROR "Error while running the ifcodegen:\n${GENERATOR_CMD_STR}\n${GENERATOR_LOG}")
+            # FATAL_ERROR doesn't print the message as is. Because of that the command cannot
+            # be copied into a terminal window anymore. To fix this we report the full
+            # command and log output and then exit with a fatal error
+            message("ifcodegen call failed:\n${GENERATOR_CMD_STR}\n${GENERATOR_LOG}")
+            message(FATAL_ERROR "Error while running ifcodegen")
         endif()
     endif()
 
