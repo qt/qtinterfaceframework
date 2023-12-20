@@ -70,7 +70,7 @@ public:
     bool setServiceObject(QIfSettingsObject *so, QIfServiceObject *serviceObject);
 
     QVariantMap readGroup(QSettings *settings, QAnyStringView group);
-    void parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func);
+    void parseEnv(const QByteArray &rulesSrc, const std::function<void (const QString &, const QString &)> &func);
 
     QHash<QString, QIfSettingsObject*> m_settingsHash;
     QHash<QString, QIfConfiguration*> m_configurationHash;

@@ -18,11 +18,11 @@
 QT_BEGIN_NAMESPACE
 
 namespace qtif_helper {
-    static const QString qrcUrlLiteral = QStringLiteral("qrc:");
-    static const QString qrcLiteral = QStringLiteral("qrc");
-    static const QString resourceLiteral = QStringLiteral(":/");
-
     QUrl toQmlUrl(const QString &path) {
+        static const QString qrcUrlLiteral = QStringLiteral("qrc:");
+        static const QString qrcLiteral = QStringLiteral("qrc");
+        static const QString resourceLiteral = QStringLiteral(":/");
+
         if (path.startsWith(qrcUrlLiteral))
             return path;
         else if (path.startsWith(resourceLiteral))

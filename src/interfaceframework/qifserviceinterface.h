@@ -43,6 +43,7 @@ public:
         T inst = qif_interface_cast<T>(interfaceInstance(interfaceName));
         return inst;
     }
+
 };
 
 #define QIfServiceInterface_iid "org.qt-project.interfaceframework.QIfServiceInterface/1.0"

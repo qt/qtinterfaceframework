@@ -43,12 +43,14 @@ QIfProxyServiceObjectPrivate::QIfProxyServiceObjectPrivate(const QHash<QString, 
 /*!
     Creates a new QIfProxyServiceObject for the given \a interface.
 
+    The \a parent argument is sent to the QIfServiceObject constructor.
+
     This can be used to load a backend which is derived from QIfServiceInterface and supposed to
     be loaded as a plugin, but is part of the same library and can be loaded directly instead. e.g.
     within a autotest
 */
-QIfProxyServiceObject::QIfProxyServiceObject(QIfServiceInterface *interface)
-    : QIfServiceObject()
+QIfProxyServiceObject::QIfProxyServiceObject(QIfServiceInterface *interface, QObject *parent)
+    : QIfServiceObject(parent)
     , d_ptr(new QIfProxyServiceObjectPrivate(interface))
 {
 }
@@ -59,8 +61,8 @@ QIfProxyServiceObject::QIfProxyServiceObject(QIfServiceInterface *interface)
     This can be used to directly connect a feature class to the backend implementing the
     QIfFeatureInterface.
 */
-QIfProxyServiceObject::QIfProxyServiceObject(const QHash<QString, QIfFeatureInterface*> &interfaceMap)
-    : QIfServiceObject()
+QIfProxyServiceObject::QIfProxyServiceObject(const QHash<QString, QIfFeatureInterface*> &interfaceMap, QObject *parent)
+    : QIfServiceObject(parent)
     , d_ptr(new QIfProxyServiceObjectPrivate(interfaceMap))
 {
 }

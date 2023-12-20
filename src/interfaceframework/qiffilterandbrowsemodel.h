@@ -78,10 +78,10 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(QIfFilterAndBrowseModel)
-    Q_PRIVATE_SLOT(d_func(), void onCanGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start))
-    Q_PRIVATE_SLOT(d_func(), void onCanGoBackChanged(const QUuid &identifier, bool canGoBack))
-    Q_PRIVATE_SLOT(d_func(), void onQueryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers))
-    Q_PRIVATE_SLOT(d_func(), void onContentTypeChanged(const QUuid &identifier, const QString &contentType))
+    Q_PRIVATE_SLOT(d_func(), void onCanGoForwardChanged(QUuid identifier, const QVector<bool> &indexes, int start))
+    Q_PRIVATE_SLOT(d_func(), void onCanGoBackChanged(QUuid identifier, bool canGoBack))
+    Q_PRIVATE_SLOT(d_func(), void onQueryIdentifiersChanged(QUuid identifier, const QSet<QString> &queryIdentifiers))
+    Q_PRIVATE_SLOT(d_func(), void onContentTypeChanged(QUuid identifier, const QString &contentType))
     Q_PRIVATE_SLOT(d_func(), void onAvailableContentTypesChanged(const QStringList &contentTypes))
 };
 
