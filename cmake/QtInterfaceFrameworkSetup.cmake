@@ -12,11 +12,19 @@ function(qt_config_python3_package_test name)
 
     message(STATUS "Performing Test ${arg_LABEL}")
 
-    execute_process(COMMAND ${Python3_EXECUTABLE} "-c" "from importlib.metadata import version; print(version(\"${arg_PACKAGE}\"))"
-                    RESULT_VARIABLE ${name}_RESULT
-                    OUTPUT_VARIABLE ${name}_VERSION
-                    ERROR_QUIET
-                   )
+    if (Python3_VERSION VERSION_LESS "3.8")
+        execute_process(COMMAND ${Python3_EXECUTABLE} "-c" "import pkg_resources; print(pkg_resources.get_distribution(\"${arg_PACKAGE}\").version)"
+                        RESULT_VARIABLE ${name}_RESULT
+                        OUTPUT_VARIABLE ${name}_VERSION
+                        ERROR_QUIET
+                       )
+    else()
+        execute_process(COMMAND ${Python3_EXECUTABLE} "-c" "import importlib.metadata; print(importlib.metadata.version(\"${arg_PACKAGE}\"))"
+                        RESULT_VARIABLE ${name}_RESULT
+                        OUTPUT_VARIABLE ${name}_VERSION
+                        ERROR_QUIET
+                       )
+    endif()
 
     set(HAVE_${name} FALSE)
     set(status_label "Failed")
