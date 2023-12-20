@@ -107,7 +107,7 @@ void QIfFilterAndBrowseModelPrivate::clearToDefaults()
     QIfPagingModelPrivate::resetModel();
 }
 
-void QIfFilterAndBrowseModelPrivate::onCanGoForwardChanged(const QUuid &identifier, const QVector<bool> &indexes, int start)
+void QIfFilterAndBrowseModelPrivate::onCanGoForwardChanged(QUuid identifier, const QVector<bool> &indexes, int start)
 {
     if (m_identifier != identifier)
         return;
@@ -120,7 +120,7 @@ void QIfFilterAndBrowseModelPrivate::onCanGoForwardChanged(const QUuid &identifi
         m_canGoForward[start + i] = indexes.at(i);
 }
 
-void QIfFilterAndBrowseModelPrivate::onCanGoBackChanged(const QUuid &identifier, bool canGoBack)
+void QIfFilterAndBrowseModelPrivate::onCanGoBackChanged(QUuid identifier, bool canGoBack)
 {
     if (m_identifier != identifier)
         return;
@@ -133,7 +133,7 @@ void QIfFilterAndBrowseModelPrivate::onCanGoBackChanged(const QUuid &identifier,
     emit q->canGoBackChanged(m_canGoBack);
 }
 
-void QIfFilterAndBrowseModelPrivate::onContentTypeChanged(const QUuid &identifier, const QString &contentType)
+void QIfFilterAndBrowseModelPrivate::onContentTypeChanged(QUuid identifier, const QString &contentType)
 {
     if (m_identifier != identifier)
         return;
@@ -160,7 +160,7 @@ void QIfFilterAndBrowseModelPrivate::onAvailableContentTypesChanged(const QStrin
     emit q->availableContentTypesChanged(contentTypes);
 }
 
-void QIfFilterAndBrowseModelPrivate::onQueryIdentifiersChanged(const QUuid &identifier, const QSet<QString> &queryIdentifiers)
+void QIfFilterAndBrowseModelPrivate::onQueryIdentifiersChanged(QUuid identifier, const QSet<QString> &queryIdentifiers)
 {
     if (m_identifier != identifier)
         return;

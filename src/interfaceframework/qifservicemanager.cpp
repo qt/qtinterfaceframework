@@ -249,7 +249,7 @@ void QIfServiceManagerPrivate::registerBackend(const QString &fileName, const QJ
     addBackend(backend);
 }
 
-void QIfServiceManagerPrivate::registerStaticBackend(QStaticPlugin plugin)
+void QIfServiceManagerPrivate::registerStaticBackend(const QStaticPlugin &plugin)
 {
     QVariantMap backendMetaData = plugin.metaData().value(metaDataLiteral).toVariant().toMap();
     const char* pluginName = plugin.instance()->metaObject()->className();
