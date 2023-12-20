@@ -20,11 +20,11 @@ using namespace Qt::StringLiterals;
 QT_BEGIN_NAMESPACE
 
 namespace qtif_helper {
-    static const QString qrcUrlLiteral = u"qrc:"_s;
-    static const QString qrcLiteral = u"qrc"_s;
-    static const QString resourceLiteral = u":/"_s;
-
     QUrl toQmlUrl(const QString &path) {
+        static const QString qrcUrlLiteral = u"qrc:"_s;
+        static const QString qrcLiteral = u"qrc"_s;
+        static const QString resourceLiteral = u":/"_s;
+
         if (path.startsWith(qrcUrlLiteral))
             return path;
         else if (path.startsWith(resourceLiteral))
