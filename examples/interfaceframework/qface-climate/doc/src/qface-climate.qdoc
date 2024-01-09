@@ -266,8 +266,7 @@ in the annotations and checks the boundaries of new values using the \c minimum/
 annotations.
 
 Using the \c zones annotations, the generated back end provides individual values for every zone
-and communicates the available zones to the front-end library. For more information, see the
-\l {Climate Control QML Example}.
+and communicates the available zones to the front-end library.
 
 \section1 Demo Application
 

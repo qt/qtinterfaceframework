@@ -24,8 +24,6 @@ The following environment variables are supported for runtime configurations:
             See \l {Runtime Override}{QIfSimulationEngine} for more information.
 \endtable
 
-For more runtime configuration options, see \l{QtInterfaceFramework Backends}{backend plugins}.
-
 \section2 Logging
 
 The \c qt.if.servicemanagement Logging Category can be used to get more information on which

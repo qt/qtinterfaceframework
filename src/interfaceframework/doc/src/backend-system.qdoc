@@ -110,7 +110,7 @@
 
     \section2 Detailed Connection Order
 
-    Based on the \l{Climate Control QML Example}, the detailed connection order would be as follows:
+    Imagine a interface called ClimateControl the detailed connection order would be as follows:
 
     \list 1
         \li A ClimateControl element is created in QML.

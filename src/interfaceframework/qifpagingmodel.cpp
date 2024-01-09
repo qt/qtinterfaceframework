@@ -621,7 +621,7 @@ QVariant QIfPagingModel::data(const QModelIndex &index, int role) const
 }
 
 /*!
-    \fn T QIfPagingModel::at(int i) const
+    \fn template <typename T> T QIfPagingModel::at(int i) const
 
     Returns the item at index \a i converted to the template type T.
 */
