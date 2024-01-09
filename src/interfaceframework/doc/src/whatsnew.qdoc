@@ -6,6 +6,15 @@
 
 The following page describes new features by Qt Version:
 
+\section1 6.7
+
+\list
+    \li \l{QtIfRemoteObjectsHelper} is now a Qt module with public headers
+    \li Introduction of a new \l{QIfRemoteObjectsConfig} class
+    \li Ability to generate a \c{main()} function with useful command-line arguments in the \l{config_server_qtro_useGeneratedMain}{config_server_qtro} template
+    \li Reference APIs have been moved into a separate \l{Qt Vehicle Services}{qt-labs module}
+\endlist
+
 \section1 6.6
 
 \list
@@ -18,8 +27,8 @@ The following page describes new features by Qt Version:
 
 \list
     \li Introduced the \l {QIfConfiguration}{Configuration Management System}
-    \li Ability to configure connectionURL and connectionTimeout in the \l {backend_qtro_configuration}{qtro_backend}
-    \li Ability to reconnect to a different URL in the \l {backend_qtro_configuration}{qtro_backend}
+    \li Ability to configure connectionURL and connectionTimeout in the \l {backend_qtro_configuration}{qtro_backend} template
+    \li Ability to reconnect to a different URL in the \l {backend_qtro_configuration}{qtro_backend} template
     \li Ability to configure the \l {qtifmedia_simulation_configuration}{media_simulation} backend by using the new Configuration Management System
 \endlist
 
