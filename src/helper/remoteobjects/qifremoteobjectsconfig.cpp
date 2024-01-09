@@ -52,7 +52,7 @@ Q_LOGGING_CATEGORY(qLcQtIfRoConfig, "qt.if.remoteobjects.config", QtInfoMsg)
     Usually multiple interfaces are defined within a module and by using the default urls those
     services are always served by a single module URL using a local socket.
 
-    To change the URL of all services a default server can be set using the \l setDefaultServerUrl
+    To change the URL of all services a default server can be set using the \l setDefaultServerUrl()
     function.
 
     For more flexibility, a config file can be provided using the \l parseConfigFile function. This
@@ -132,7 +132,7 @@ bool QIfRemoteObjectsConfig::reportErrorsOnStdErr() const
     Returns a QRemoteObjectHost with a preconfigured url.
 
     The url is specific to the provided \a module and \a interface arguments and can be modified
-    using the \l setDefaultServer() function or by using one of the config files.
+    using the \l setDefautServerUrl() function or by using one of the config files.
 
     If multiple values are configured the urls are resolved in the following order:
     \list numbered

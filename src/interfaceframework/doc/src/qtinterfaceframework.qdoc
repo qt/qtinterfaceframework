@@ -26,7 +26,7 @@
     QT += interfaceframework
     \endcode
 
-    To use Qt Interface Framework Media C++ classes in your application, use the
+    To use Qt Interface Framework C++ classes in your application, use the
     following include statement:
 
     \code

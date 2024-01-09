@@ -843,7 +843,7 @@ void QIfPendingReplyBase::setSuccessNoCheck(const QVariant &value)
 */
 
 /*!
-    \fn qIfRegisterPendingReplyType(const char *name)
+    \fn template <typename T> void qIfRegisterPendingReplyType(const char *name)
     \relates QIfPendingReply
 
     Registers the type name \a name for the type \c{T} for usage inside a QIfPendingReply. Any
