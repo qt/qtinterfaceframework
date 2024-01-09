@@ -60,7 +60,7 @@ qhp.QtInterfaceFramework.subprojects.examples.sortPages = true
 
 tagfile                 = interfaceframework.tags
 
-depends += qtcore qtdbus qtwidgets qtdoc qtcmake qtquick qtqml qtremoteobjects
+depends += qtcore qtdbus qtwidgets qtdoc qtcmake qtquick qtqml qtremoteobjects qtvehicleservices
 
 navigation.landingpage = "Qt Interface Framework"
 navigation.cppclassespage = "Qt Interface Framework C++ Classes"
