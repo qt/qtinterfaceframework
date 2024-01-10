@@ -78,6 +78,7 @@
     \section1 Reference
 
     \list
+      \li \l {Qt Interface Framework Modules}
       \li \l {Qt Interface Framework C++ Classes}
       \li \l {Qt Interface Framework QML Types}
       \li \l {Qt Interface Framework Examples}
