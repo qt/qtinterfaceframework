@@ -15,6 +15,14 @@ The following environment variables are supported for runtime configurations:
         \li Environment Variable
         \li Description
     \row
+        \li QTIF_DISCOVERY_MODE_OVERRIDE
+        \li Overrides the discovery mode of all features inside a specific configurationId.
+            See \l {QIfConfiguration::}{Environment Overrides} for more information.
+    \row
+        \li QTIF_PREFERRED_BACKENDS_OVERRIDE
+        \li Overrides the preferred backends of all features inside a specific configurationId.
+            See \l {QIfConfiguration::}{Environment Overrides} for more information.
+    \row
         \li QTIF_SIMULATION_OVERRIDE
         \li Overrides the simulation file used by a specific simulation engine.
             See \l {Runtime Override}{QIfSimulationEngine} for more information.
