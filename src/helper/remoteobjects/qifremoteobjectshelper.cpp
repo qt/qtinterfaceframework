@@ -8,28 +8,6 @@ QT_BEGIN_NAMESPACE
 using namespace Qt::Literals::StringLiterals;
 
 /*!
-    \module QtIfRemoteObjectsHelper
-    \title Qt Interface Framework Remote Object Helper Classes
-    \ingroup modules
-    \ingroup qtif_helper_modules
-    \qtvariable interfaceframework
-
-    \brief Qt Interface Framework Remote Object Helper Classes.
-
-    To include the definitions of the module's classes, use the following directive:
-
-    \code
-    #include <QtIfRemoteObjectsHelper>
-    \endcode
-
-    To link against the module, add this line to your qmake .pro file:
-
-    \code
-    QT += ifremoteobjects_helper
-    \endcode
-*/
-
-/*!
     \namespace QIfRemoteObjectsHelper
     \inmodule QtIfRemoteObjectsHelper
 

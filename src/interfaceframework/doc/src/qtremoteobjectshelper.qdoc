@@ -1,0 +1,35 @@
+// Copyright (C) 2024 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \module QtIfRemoteObjectsHelper
+    \title Qt Interface Framework Remote Objects Helper Classes
+    \ingroup modules
+    \ingroup qtif_helper_modules
+    \qtvariable interfaceframework
+
+    \brief Qt Interface Framework Remote Objects Helper Classes.
+
+    To link against the Qt Interface Framework Remote Objects Helper Module,
+    use the following directive:
+
+    Using CMake:
+
+    \code
+    find_package(Qt6 COMPONENTS IfRemoteObjectsHelper REQUIRED)
+    target_link_libraries(mytarget PRIVATE Qt6::IfRemoteObjectsHelper)
+    \endcode
+
+    Using qmake:
+
+    \code
+    QT += ifremoteobjects_helper
+    \endcode
+
+    To use Qt Interface Framework Remote Objects Helper C++ classes in your
+    application, use the following include statement:
+
+    \code
+    #include <QtIfRemoteObjectsHelper>
+    \endcode
+*/
