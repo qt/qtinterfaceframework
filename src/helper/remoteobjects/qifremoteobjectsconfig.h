@@ -18,7 +18,7 @@ public:
     QIfRemoteObjectsConfig() = default;
     virtual ~QIfRemoteObjectsConfig() = default;
 
-    void setDefautServerUrl(const QUrl &defaultServerUrl);
+    void setDefaultServerUrl(const QUrl &defaultServerUrl);
     void parseConfigFile(const QString &confFilePath);
     void parseLegacyConfigFile();
 

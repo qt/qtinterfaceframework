@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
     QIfRemoteObjectsConfig config;
     if (parser.isSet(serverUrlOption))
-        config.setDefautServerUrl(parser.value(serverUrlOption));
+        config.setDefaultServerUrl(parser.value(serverUrlOption));
     if (parser.isSet(confOption))
         config.parseConfigFile(parser.value(confOption));
     if (!parser.isSet(serverUrlOption) && !parser.isSet(confOption))
