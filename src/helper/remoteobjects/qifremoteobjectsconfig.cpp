@@ -76,7 +76,7 @@ Q_LOGGING_CATEGORY(qLcQtIfRoConfig, "qt.if.remoteobjects.config", QtInfoMsg)
     Sets the \a defaultServerUrl, which will be used for all services which don't have a server set
     either for the interface or the module inside a config file.
 */
-void QIfRemoteObjectsConfig::setDefautServerUrl(const QUrl &defaultServerUrl)
+void QIfRemoteObjectsConfig::setDefaultServerUrl(const QUrl &defaultServerUrl)
 {
     m_defaultServer = defaultServerUrl;
 }
@@ -132,7 +132,7 @@ bool QIfRemoteObjectsConfig::reportErrorsOnStdErr() const
     Returns a QRemoteObjectHost with a preconfigured url.
 
     The url is specific to the provided \a module and \a interface arguments and can be modified
-    using the \l setDefautServerUrl() function or by using one of the config files.
+    using the \l setDefaultServerUrl() function or by using one of the config files.
 
     If multiple values are configured the urls are resolved in the following order:
     \list numbered
