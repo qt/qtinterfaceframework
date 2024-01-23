@@ -3,7 +3,7 @@
     "Name": "Jinja Documentation",
     "QDocModule": "interfaceframework",
     "QtUsage": "Used in the Documentation of the Jinja template language",
-    "Path": "template-syntax.qdoc",
+    "Files": "ifcodegen/template-syntax.qdoc",
 
     "Description": "Full featured template engine for python.",
     "Homepage": "http://jinja.pocoo.org/",

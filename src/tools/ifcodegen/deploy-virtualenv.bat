@@ -53,38 +53,29 @@ FOR %%F in (%VIRTUALENV_LIB%\python*) DO (
     )
 )
 
-IF EXIST %LIB_FOLDER%\orig-prefix.txt (
-    SET /p ORIG_PREFIX=<%LIB_FOLDER%\orig-prefix.txt
-) else (
-    IF EXIST "%VIRTUALENV%\pyvenv.cfg" (
-        FOR /f "tokens=1,2 delims==" %%a in (%VIRTUALENV%\pyvenv.cfg) DO (
-            SET NAME=%%a
-            SET NAME=!NAME:~0,-1!
-            IF !NAME!==base-prefix (
-                SET ORIG_PREFIX=%%b
-                SET ORIG_PREFIX=!ORIG_PREFIX:~1!
-            )
-        )
-    ) ELSE (
-        echo "Neither %LIB_FOLDER%\orig-prefix.txt nor %VIRTUALENV%\pyvenv.cfg exists"
-        exit 1
-    )
+START /b /wait %VIRTUALENV%\Scripts\python.exe -c "import sys; print(sys.base_prefix)" > sys_path.txt
+FOR /f "delims= usebackq" %%i in ("sys_path.txt") DO (
+    SET ORIG_PREFIX=%%i
 )
 
 SET ORIG_LIB=%ORIG_PREFIX%\lib\%PYTHON_VERSION%
 IF NOT EXIST "%ORIG_LIB%" (
-    echo "%ORIG_LIB% doesn't exist"
+    echo "Couldn't find python prefix folder. The virtualenv will not be fully functional."
     exit 1
 )
 
 echo "copying files from %ORIG_LIB% to %VIRTUALENV_LIB%"
-FOR /f %%i in (%SCRIPT%\deploy-virtualenv-files.txt) DO (
+FOR /f "usebackq" %%i in ("%SCRIPT%\deploy-virtualenv-files.txt") DO (
     IF EXIST "%ORIG_LIB%%%i\" (
-        IF NOT EXIST %VIRTUALENV_LIB%\%%i mkdir %VIRTUALENV_LIB%\%%i
+        IF NOT EXIST "%VIRTUALENV_LIB%\%%i" mkdir "%VIRTUALENV_LIB%\%%i"
         xcopy "%ORIG_LIB%%%i" "%VIRTUALENV_LIB%\%%i" /E /Q /H /Y >NUL 2>&1
     ) else (
         xcopy "%ORIG_LIB%%%i" "%VIRTUALENV_LIB%" /H /Q /Y >NUL 2>&1
     )
+)
+
+FOR %%F in ("%ORIG_PREFIX%\python*") DO (
+    copy "%%F" "%VIRTUALENV%\Scripts\" /Y >NUL 2>&1
 )
 
 IF EXIST %ORIG_PREFIX%\DLLs\ (

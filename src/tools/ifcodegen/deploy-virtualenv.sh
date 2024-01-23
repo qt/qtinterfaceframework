@@ -115,8 +115,10 @@ if [ "$PLATFORM" == "linux" ]; then
         echo "copying $LIBCRYPTO"
         cp -Lf "$LIBCRYPTO" "$VIRTUALENV/bin"
         LIBSSL=`ldd $HASHLIB | awk '{print $3}' | grep libssl`
-        echo "copying $LIBSSL"
-        cp -Lf "$LIBSSL" "$VIRTUALENV/bin"
+        if [ -e "$LIBSSL" ]; then
+            echo "copying $LIBSSL"
+            cp -Lf "$LIBSSL" "$VIRTUALENV/bin"
+        fi
     fi
     CTYPESLIB=`find $LIB_FOLDER/lib-dynload -iname '_ctypes.*'`
     if [[ -e "$CTYPESLIB" ]] ; then
@@ -145,9 +147,15 @@ fi
 # some files might have wrong permissions, e.g. readonly
 chmod -R ug+rw $VIRTUALENV
 
-if [ "$(readlink -- "$VIRTUALENV/lib64")" != "lib" ] ; then
-    cp -a "$VIRTUALENV/lib64"/* "$VIRTUALENV/lib/"
-    rm -rf "$VIRTUALENV/lib64"
+if [ -e "$VIRTUALENV/lib64" ] ; then
+    if [ "$(readlink -- "$VIRTUALENV/lib64")" != "lib" ] ; then
+        cp -a "$VIRTUALENV/lib64"/* "$VIRTUALENV/lib/"
+        rm -rf "$VIRTUALENV/lib64"
+        cd "$VIRTUALENV"
+        ln -s lib lib64
+        cd -
+    fi
+else
     cd "$VIRTUALENV"
     ln -s lib lib64
     cd -
