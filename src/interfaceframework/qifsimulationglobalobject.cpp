@@ -11,6 +11,7 @@ using namespace Qt::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
+// AXIVION DISABLE Qt-NonPodGlobalStatic
 namespace qtif_helper {
     static const QString unsupportedLiteral = u"unsupported"_s;
     static const QString minLiteral = u"minimum"_s;
@@ -18,6 +19,7 @@ namespace qtif_helper {
     static const QString rangeLiteral = u"range"_s;
     static const QString domainLiteral = u"domain"_s;
 }
+// AXIVION ENABLE Qt-NonPodGlobalStatic
 
 using namespace qtif_helper;
 
