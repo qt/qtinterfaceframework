@@ -27,6 +27,7 @@ QT_BEGIN_NAMESPACE
 Q_LOGGING_CATEGORY(qLcIfServiceManagement, "qt.if.servicemanagement");
 
 namespace qtif_helper {
+// AXIVION DISABLE Qt-NonPodGlobalStatic
 #ifdef QT_DEBUG
     static const bool loadDebug = true;
 #else
@@ -43,6 +44,7 @@ namespace qtif_helper {
 #else
     static const QString debugSuffixLiteral = u"_debug"_s;
 #endif
+// AXIVION ENABLE Qt-NonPodGlobalStatic
 
     QString backendBaseName(const QString &fileName)
     {

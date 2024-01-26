@@ -21,6 +21,7 @@ class QIfPendingReplyWatcherPrivate;
 
 Q_QTINTERFACEFRAMEWORK_EXPORT void qifRegisterPendingReplyBasicTypes();
 
+// AXIVION Next Line Qt-CtorMissingParentArgument: private ctor
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyWatcher : public QObject
 {
     Q_OBJECT

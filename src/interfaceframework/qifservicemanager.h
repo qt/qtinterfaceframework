@@ -17,6 +17,7 @@ QT_BEGIN_NAMESPACE
 class QIfServiceObject;
 class QIfServiceManagerPrivate;
 
+// AXIVION Next Line Qt-CtorMissingParentArgument: private ctor
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceManager : public QAbstractListModel
 {
     Q_OBJECT

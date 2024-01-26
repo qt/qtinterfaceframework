@@ -1,4 +1,44 @@
 {
+    "Analysis": {
+        "EnableDisable": {
+            "_active": true
+        },
+        "EnableDisableSingleRule": {
+            "_active": true
+        },
+        "InitialExternalAnnotations": {
+            "_active": true,
+            "initial_comments": {
+                "$(delta:+)": {
+                    "*/rep_*": [
+                        "AXIVION Disable"
+                    ],
+                    "*/qifqueryparser_flex*": [
+                        "AXIVION Disable"
+                    ],
+                    "build/include/*/*": [
+                        "AXIVION Disable"
+                    ],
+                    "build/*/*-config*.h": [
+                        "AXIVION Disable"
+                    ],
+                    "build/*/*_qmltyperegistrations.cpp": [
+                        "AXIVION Disable"
+                    ]
+                },
+                "$(delta:-)": []
+            }
+        },
+        "NextLine": {
+            "_active": true
+        },
+        "PreviousLine": {
+            "_active": true
+        },
+        "SameLine": {
+            "_active": true
+        }
+    },
     "Project": {
         "BuildSystemIntegration": {
             "child_order": [
