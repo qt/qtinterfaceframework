@@ -92,9 +92,10 @@
     \section2 Auto-generation
 
     Now that our first version of the IDL file is ready, it's time to auto-generate an API from it,
-    using the \l{Qt Interface Framework Generator}{Interface Framework Generator tool}. Similar to
-    \l{Using the Meta-Object Compiler (moc)}{moc}, this auto-generation process is integrated into the
-    build system and is done at compile time.
+    using the \l{Qt Interface Framework Generator}{Interface Framework Generator tool}. Using qmake
+    this auto-generation process is integrated into the build system and is done at compile time.
+    similar to \l{Using the Meta-Object Compiler (moc)}{moc}. With CMake, the generation happens
+    at configuration time.
 
     In the following snippets we build a C++ library based on our IDL file:
 
