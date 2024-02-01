@@ -18,34 +18,14 @@ instructions:
   - type: EnvironmentVariable
     variableName: BUILD_DOCUMENTATION
     variableValue: "1"
-  - type: AppendToEnvironmentVariable
-    variableName: NON_QTBASE_CONFIGURE_ARGS
-    variableValue: " -DPython3_EXECUTABLE={{.Env.PYTHON3_EXECUTABLE}} -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
-    disable_if:
-      condition: property
-      property: features
-      contains_value: UseConfigure
-  - type: AppendToEnvironmentVariable
-    variableName: NON_QTBASE_TARGET_CONFIGURE_ARGS
-    variableValue: " -DPython3_EXECUTABLE={{.Env.PYTHON3_EXECUTABLE}} -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
-    disable_if:
-      condition: property
-      property: features
-      contains_value: UseConfigure
+  # Detect python3 and make ifcodegen mandatory for all configs
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_CMAKE_ARGS
     variableValue: " -DPython3_EXECUTABLE={{.Env.PYTHON3_EXECUTABLE}} -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
-    enable_if:
-      condition: property
-      property: features
-      contains_value: UseConfigure
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_TARGET_CMAKE_ARGS
     variableValue: " -DPython3_EXECUTABLE={{.Env.PYTHON3_EXECUTABLE}} -DPython3_ROOT_DIR={{.Env.PYTHON3_PATH}} -DFEATURE_ifcodegen=ON"
-    enable_if:
-      condition: property
-      property: features
-      contains_value: UseConfigure
+  # Enable compiled ifcodegen on all packaging configs
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_CONFIGURE_ARGS
     variableValue: " -compiled-ifcodegen"
