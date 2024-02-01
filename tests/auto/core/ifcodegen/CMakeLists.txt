@@ -24,7 +24,7 @@ endif()
 # The CMAKE_OSX_ARCHITECTURES is defined when building several architectures in one go
 # Running qmake in that setup doesn't work
 if (QT_BUILD_STANDALONE_TESTS OR QT_BUILD_QMAKE_TEST)
-    if (NOT CMAKE_CROSSCOMPILING AND NOT CMAKE_OSX_ARCHITECTURES)
+    if (NOT CMAKE_CROSSCOMPILING AND NOT CMAKE_OSX_ARCHITECTURES AND NOT DEFINED ENV{COIN_ASAN_BUILD})
         include(ProcessorCount)
         ProcessorCount(CPU_COUNT)
         if(CPU_COUNT EQUAL 0)

@@ -18,6 +18,14 @@ instructions:
   - type: EnvironmentVariable
     variableName: BUILD_DOCUMENTATION
     variableValue: "1"
+  # Detect an ASAN build and set an env variable for CMake
+  - type: AppendToEnvironmentVariable
+    variableName: COIN_ASAN_BUILD
+    variableValue: "1"
+    enable_if:
+      condition: property
+      property: features
+      contains_value: UseAddressSanitizer
   # Detect python3 and make ifcodegen mandatory for all configs
   - type: AppendToEnvironmentVariable
     variableName: NON_QTBASE_CMAKE_ARGS
