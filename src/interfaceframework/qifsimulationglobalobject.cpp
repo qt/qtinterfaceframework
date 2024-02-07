@@ -248,7 +248,7 @@ void QIfSimulationGlobalObject::setSimulationData(const QVariant &simulationData
 }
 
 /*!
-    \qmlmethod IfSimulator::findData(object data, string interface)
+    \qmlmethod var IfSimulator::findData(object data, string interface)
 
     Searches for the key \a interface within \a data and returns the stored values. Returns
     undefined if no data was found for this \a interface.
@@ -282,7 +282,7 @@ QVariantMap QIfSimulationGlobalObject::findData(const QVariantMap &data, const Q
 }
 
 /*!
-    \qmlmethod IfSimulator::initializeDefault(object data, QObject* object)
+    \qmlmethod void IfSimulator::initializeDefault(object data, QObject* object)
 
     Applies the default values read from \a data to \a object.
 
@@ -321,7 +321,7 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
 }
 
 /*!
-    \qmlmethod IfSimulator::defaultValue(object data, string zone)
+    \qmlmethod var IfSimulator::defaultValue(object data, string zone)
 
     Provides the default value stored in \a data for the given \a zone. If \a zone is undefined or
     the data doesn't provide a default value for the given \a zone, it returns the unzoned default
@@ -335,7 +335,7 @@ QVariant QIfSimulationGlobalObject::defaultValue(const QVariantMap &data, const 
 }
 
 /*!
-    \qmlmethod IfSimulator::constraint(object data, string zone)
+    \qmlmethod string IfSimulator::constraint(object data, string zone)
 
     Searches for all boundary settings in \a data for the given \a zone and returns the constraint
     (which is enforced for newly set values) in a human readable form.
@@ -376,7 +376,7 @@ QString QIfSimulationGlobalObject::constraint(const QVariantMap &data, const QSt
 }
 
 /*!
-    \qmlmethod IfSimulator::checkSettings(object data, var value, string zone)
+    \qmlmethod bool IfSimulator::checkSettings(object data, var value, string zone)
 
     Searches for all boundary settings in \a data for the given \a zone and returns whether the
     provided \a value meets this constraint.
@@ -447,7 +447,7 @@ bool QIfSimulationGlobalObject::checkSettings(const QVariantMap &data, const QVa
 }
 
 /*!
-    \qmlmethod IfSimulator::parseDomainValue(object data, string domain, string zone)
+    \qmlmethod var IfSimulator::parseDomainValue(object data, string domain, string zone)
 
     Search for the \a domain in \a data for the given \a zone. If \a zone is undefined or
     the data doesn't provide this domain for the given \a zone, it returns the unzoned domain
