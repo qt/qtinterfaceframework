@@ -14,7 +14,7 @@
 \nextpage Use the Generator
 
 This page is about the Jinja template engine. While the most detailed description of the template
-language can be found in the \l {https://jinja.palletsprojects.com/en/3.1.x/templates/}}{Jinja documentation},
+language can be found in the \l {https://jinja.palletsprojects.com/en/3.1.x/templates/}{Jinja documentation},
 some basic concepts are given in this article.
 
 
