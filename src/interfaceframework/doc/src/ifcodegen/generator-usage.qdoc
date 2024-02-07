@@ -319,7 +319,7 @@
             \li Main IDL file
             \li Interface
             \li The typeIcon is a 16x16 icon used in the Navigator Pane within Qt Design Studio.
-                \note The icon needs to be copied to the correct folder by a custom qmake rule.
+                \note The icon needs to be copied to the correct folder by a custom build rule.
         \row
             \li \code
                 @designer: {libraryIcon: "images/climate.png"}
@@ -327,7 +327,7 @@
             \li Main IDL file
             \li Interface
             \li The libraryIcon is shown in the Library within Qt Design Studio.
-                \note The icon needs to be copied to the correct folder by a custom qmake rule.
+                \note The icon needs to be copied to the correct folder by a custom build rule.
         \row
             \li \code
                 @config: { configurationId: "smarthome"}
@@ -548,6 +548,11 @@
             \li A standard Qt \c{.pri} file that contains all the generated files. Use this
                 \c{.pri} file to include the generated files into a qmake project.
         \row
+            \li CMakeLists.txt
+            \li File to integrate with the CMake build system. This file defines the rules
+                how to build the generated files with CMake. In addition extra variables
+                can be exposed by using \l {qt6_set_ifcodegen_variable}.
+        \row
             \li qml/{{module|qml_type|replace('.', '/')}}/plugins.qmltypes
             \li QML code-completion file for use in QtCreator.
         \row
@@ -584,6 +589,11 @@
             \li A standard Qt \c{.pri} file that contains all the generated files. Use this
                 \c{.pri} file to include the generated files into a qmake project.
         \row
+            \li CMakeLists.txt
+            \li File to integrate with the CMake build system. This file defines the rules
+                how to build the generated files with CMake. In addition extra variables
+                can be exposed by using \l {qt6_set_ifcodegen_variable}.
+        \row
             \li plugins.qmltypes
             \li QML code-completion file for use in QtCreator.
         \row
@@ -613,6 +623,11 @@
             \li A standard Qt \c{.pri} file that contains all the generated files. Use this \c{.pri}
                 file to include the generated files into a qmake project.
         \row
+            \li CMakeLists.txt
+            \li File to integrate with the CMake build system. This file defines the rules
+                how to build the generated files with CMake. In addition extra variables
+                can be exposed by using \l {qt6_set_ifcodegen_variable}.
+        \row
             \li {{module.module_name|lower}}_simulation.qml
             \li QML simulation file that loads the interface specific QML simulation files.
         \row
@@ -637,9 +652,9 @@
 
     \section2 QtRemoteObjects Backend
 
-    The backend_qtro template is only available if qmake finds the QtRemoteObjects module. This
-    remote object backend is a client for connecting to the remote backend server; not the location
-    to implement the actual backend logic.
+    The backend_qtro template is only available if the QtRemoteObjects module was detected when building
+    the qtinterfaceframework repository. This backend is a client for connecting to the remote backend
+    server; not the location to implement the actual backend logic.
 
     \table 100%
         \header
@@ -659,6 +674,11 @@
             file to include the generated files into a qmake project. Also includes the \c{.rep} file
             to the project and calls the remote object compiler.
         \row
+            \li CMakeLists.txt
+            \li File to integrate with the CMake build system. This file defines the rules
+                how to build the generated files with CMake. In addition extra variables
+                can be exposed by using \l {qt6_set_ifcodegen_variable}.
+        \row
             \li {{interface|lower}}backend.h/cpp
             \li Files containing the implementation of the remote object backend.
             Establishes the connection and initializes the remote object replica.
@@ -676,9 +696,9 @@
 
     \section2 QtRemoteObjects Server
 
-    The server_qtro template is only available if qmake finds the QtRemoteObjects module. The
-    code produced only contains the source classes to inherit and the code for establishing the
-    connection. The developer must implement the actual backend logic.
+    The server_qtro template is only available if the QtRemoteObjects module was detected when building
+    the qtinterfaceframework repository. The code produced only contains the source classes to inherit
+    and the code for establishing the connection. The developer must implement the actual backend logic.
 
     \table 100%
         \header
@@ -694,6 +714,11 @@
                 file to include the generated files into a qmake project. Also includes the \c{.rep}
                 file to the project and calls the remote object compiler.
         \row
+            \li CMakeLists.txt
+            \li File to integrate with the CMake build system. This file defines the rules
+                how to build the generated files with CMake. In addition extra variables
+                can be exposed by using \l {qt6_set_ifcodegen_variable}.
+        \row
             \li {{interface|lower}}.rep
             \li The input file for the Qt’s
             \l [QtRemoteObjects] {Qt Remote Objects Compiler} {replica compiler} to produce the
@@ -707,10 +732,10 @@
 
     \section2 QtRemoteObjects Simulation Server
 
-    The server_qtro_simulator template is only available if qmake finds the QtRemoteObjects module.
-    The code produced contains a fully-implemented server that may use the same implementation as
-    the backend_simulator template, which uses the QIfSimulationEngine to implement the simulation
-    behavior in QML.
+    The server_qtro template is only available if the QtRemoteObjects module was detected when building
+    the qtinterfaceframework repository. The code produced contains a fully-implemented server that
+    may use the same implementation as the backend_simulator template, which uses the QIfSimulationEngine
+    to implement the simulation behavior in QML.
 
     By default a QCoreApplication is used in the generated server and enables the server to be
     run headless. To also allow instantiating UI controls inside the simulation QML code, the
@@ -747,6 +772,11 @@
             \li A standard Qt \c{.pri} file that contains all the generated files. Use this \c{.pri}
                 file to include the generated files into a qmake project. Also includes the \c{.rep}
                 file to the project and calls the remote object compiler.
+        \row
+            \li CMakeLists.txt
+            \li File to integrate with the CMake build system. This file defines the rules
+                how to build the generated files with CMake. In addition extra variables
+                can be exposed by using \l {qt6_set_ifcodegen_variable}.
         \row
             \li {{interface|lower}}.rep
             \li The input file for the Qt’s
