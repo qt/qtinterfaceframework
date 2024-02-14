@@ -73,6 +73,16 @@ if(IF_COVERAGE)
     )
 endif()
 
+if (IF_SANITIZE)
+    if (MSVC)
+        set(ECM_ENABLE_SANITIZERS address)
+    else()
+        set(ECM_ENABLE_SANITIZERS address undefined)
+    endif()
+    include(3rdparty/extra-cmake-modules/modules/ECMEnableSanitizers)
+endif()
+
+
 qt_build_repo()
 
 if(NOT QT_BUILD_STANDALONE_TESTS)
