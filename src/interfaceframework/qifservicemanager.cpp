@@ -589,6 +589,8 @@ QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QStrin
     one interface, supported by the backend. The \a backendType indicates the type of the backend
     and influences whether the backend can be found by the Feature's auto discovery option.
 
+    The ownership of \a serviceBackendInterface is transferred to the QIfServiceManager.
+
     Returns \c true if the backend was successfully registered; otherwise \c false.
 
     \sa QIfServiceInterface
