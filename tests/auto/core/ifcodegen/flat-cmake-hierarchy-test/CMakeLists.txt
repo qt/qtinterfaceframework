@@ -33,7 +33,9 @@ target_link_libraries(echo_flat_simulator PUBLIC
 
 ####### TEST #######
 
-file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
+if (NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp")
+    file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
+endif()
 qt_internal_add_test(tst_flat-cmake-hierarchy
     SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
