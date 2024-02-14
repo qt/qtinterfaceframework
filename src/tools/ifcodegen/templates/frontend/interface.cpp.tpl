@@ -60,6 +60,18 @@ using namespace Qt::StringLiterals;
     {{module.module_name|upperfirst}}::registerTypes();
 }
 
+{{class}}Private::~{{class}}Private()
+{
+{% for property in interface.properties %}
+{%   if property.type.is_model %}
+    if (m_{{property}}) {
+        delete m_{{property}}->serviceObject();
+        delete m_{{property}};
+    }
+{%   endif %}
+{% endfor %}
+}
+
 /*! \internal */
 {{class}}Private *{{class}}Private::get({{class}} *v)
 {

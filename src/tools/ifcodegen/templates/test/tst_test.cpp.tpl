@@ -36,8 +36,8 @@ class {{interface}}TestBackend : public {{interface}}BackendInterface
     Q_OBJECT
 
 public:
-    {{interface}}TestBackend()
-        : {{interface}}BackendInterface()
+    {{interface}}TestBackend(QObject *parent = nullptr)
+        : {{interface}}BackendInterface(parent)
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
 {%     if interface_zoned %}
@@ -169,7 +169,7 @@ public:
     explicit {{interface}}TestServiceObject(QObject *parent=nullptr) :
         QIfServiceObject(parent), m_name(QLatin1String(""))
     {
-        m_backend = new {{interface}}TestBackend;
+        m_backend = new {{interface}}TestBackend(this);
         m_interfaces << {{module.module_name|upperfirst}}_{{interface}}_iid;
     }
 
