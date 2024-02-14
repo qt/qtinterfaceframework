@@ -308,7 +308,7 @@ QIfSimulationEngine::QIfSimulationEngine(QObject *parent)
 */
 QIfSimulationEngine::QIfSimulationEngine(const QString &identifier, QObject *parent)
     : QQmlApplicationEngine (parent)
-    , m_globalObject(new QIfSimulationGlobalObject)
+    , m_globalObject(new QIfSimulationGlobalObject(this))
     , m_identifier(identifier)
 {
     rootContext()->setContextProperty(QStringLiteral("IfSimulator"), m_globalObject);

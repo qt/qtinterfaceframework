@@ -58,6 +58,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfProxyServiceObject : public QIfServiceObj
 public:
     explicit QIfProxyServiceObject(QIfServiceInterface *interface);
     explicit QIfProxyServiceObject(const QHash<QString, QIfFeatureInterface*> &interfaceMap);
+    ~QIfProxyServiceObject() override;
 
     QStringList interfaces() const override;
     QIfFeatureInterface *interfaceInstance(const QString &interface) const override;
