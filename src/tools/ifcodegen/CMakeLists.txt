@@ -255,9 +255,13 @@ elseif(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
             DESTINATION "${ifcodegen_install_dir}"
             )
     else()
-        add_custom_target(copy_virtualenv
+        add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-copy_virtualenv
                            COMMAND ${CMAKE_COMMAND} -E copy_directory ${VIRTUALENV_PATH} "${ifcodegen_install_dir}/${VIRTUALENV_NAME}"
+                           COMMAND ${CMAKE_COMMAND} -E touch .stamp-copy_virtualenv
                            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
+                          )
+        add_custom_target(copy_virtualenv ALL
+                          DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-copy_virtualenv
                           )
         add_dependencies(ifcodegen copy_virtualenv)
     endif()

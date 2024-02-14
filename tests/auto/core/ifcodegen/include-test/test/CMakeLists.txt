@@ -4,7 +4,9 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
+if (NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp")
+    file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
+endif()
 qt_internal_add_test(tst_qface_include
     SOURCES
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
