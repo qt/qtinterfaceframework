@@ -63,7 +63,7 @@ void {{zone_class}}::sync()
 {% for property in interface.properties %}
 {%   if not property.type.is_model %}
     QRemoteObjectPendingReply<{{property|return_type}}> {{property}}Reply = m_parent->m_replica->{{property|getter_name}}(m_zone);
-    auto {{property}}Watcher = new QRemoteObjectPendingCallWatcher({{property}}Reply);
+    auto {{property}}Watcher = new QRemoteObjectPendingCallWatcher({{property}}Reply, this);
     connect({{property}}Watcher, &QRemoteObjectPendingCallWatcher::finished, this, [this](QRemoteObjectPendingCallWatcher *self) mutable {
         if (self->error() == QRemoteObjectPendingCallWatcher::NoError) {
             m_{{property}} = self->returnValue().value<{{property|return_type}}>();
@@ -177,7 +177,7 @@ void {{class}}::syncZones()
     if (m_replica.isNull())
         return;
     QRemoteObjectPendingReply<QStringList> zoneReply = m_replica->availableZones();
-    auto zoneWatcher = new QRemoteObjectPendingCallWatcher(zoneReply);
+    auto zoneWatcher = new QRemoteObjectPendingCallWatcher(zoneReply, this);
     connect(zoneWatcher, &QRemoteObjectPendingCallWatcher::finished, this, [this, zoneReply](QRemoteObjectPendingCallWatcher *self) mutable {
         if (self->error() == QRemoteObjectPendingCallWatcher::NoError) {
             if (!m_synced) {

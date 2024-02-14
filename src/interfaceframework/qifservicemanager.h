@@ -47,6 +47,7 @@ public:
 
     static QIfServiceManager *instance();
     static QIfServiceManager *create(QQmlEngine *, QJSEngine *);
+    ~QIfServiceManager() override;
 
     Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags = IncludeAll, const QStringList &preferredBackends = QStringList());
     Q_INVOKABLE bool hasInterface(const QString &interface) const;
@@ -60,7 +61,7 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    explicit QIfServiceManager();
+    explicit QIfServiceManager(QObject *parent = nullptr);
     QIfServiceManagerPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(QIfServiceManager)
 };

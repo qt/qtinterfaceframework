@@ -112,6 +112,8 @@ QVariant qtif_convertFromJSON(const QVariant &value)
                 }
 
                 void *gadget = metaType.create();
+                auto cleanup = qScopeGuard([gadget, metaType] { metaType.destroy(gadget); });
+
                 if (!Q_UNLIKELY(gadget)) {
                     qWarning("Couldn't create a new instance of %s", metaType.name());
                     return QVariant();

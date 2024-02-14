@@ -141,6 +141,7 @@ public:
         QIfServiceObject(parent)
     {
         m_backend = new TestBackend;
+        m_backend->setParent(this);
         m_interfaces << QIfPagingModel_iid;
     }
 

@@ -37,6 +37,10 @@ QIfConfigurationManager *QIfConfigurationManager::instance()
     return &s_manager;
 }
 
+QIfConfigurationManager::~QIfConfigurationManager()
+{
+    qDeleteAll(m_settingsHash.constBegin(), m_settingsHash.constEnd());
+}
 
 QIfAbstractFeature::DiscoveryMode discoveryModeFromString(const QString &modeString)
 {
@@ -101,8 +105,10 @@ void QIfConfigurationManager::readInitialSettings(const QString &configPath)
 
         if (discoveryModeVariant.isValid()) {
             auto discoveryMode = discoveryModeFromString(discoveryModeVariant.toString());
-            if (discoveryMode == QIfAbstractFeature::InvalidAutoDiscovery)
+            if (discoveryMode == QIfAbstractFeature::InvalidAutoDiscovery) {
+                delete settingsObject;
                 return;
+            }
             settingsObject->discoveryMode = discoveryMode;
             settingsObject->discoveryModeSet = true;
         }

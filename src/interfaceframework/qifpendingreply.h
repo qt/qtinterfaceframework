@@ -115,17 +115,15 @@ public:
             else if (failed)
                 failed();
         } else {
-            QSharedPointer<QIfPendingReplyWatcher> w = m_watcher;
+            QWeakPointer<QIfPendingReplyWatcher> w = m_watcher;
             if (success) {
                 QObject::connect(watcher(), &QIfPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
-                    success(w->value().value<T>());
+                    if (w)
+                        success(w.toStrongRef()->value().value<T>());
                 });
             }
-            if (failed) {
-                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), [failed]() {
-                    failed();
-                });
-            }
+            if (failed)
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), failed);
         }
     }
 
@@ -164,17 +162,15 @@ public:
             else if (failed)
                 failed();
         } else {
-            QSharedPointer<QIfPendingReplyWatcher> w = m_watcher;
+            QWeakPointer<QIfPendingReplyWatcher> w = m_watcher;
             if (success) {
                 QObject::connect(watcher(), &QIfPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
-                    success(w->value());
+                    if (w)
+                        success(w.toStrongRef()->value());
                 });
             }
-            if (failed) {
-                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), [failed]() {
-                    failed();
-                });
-            }
+            if (failed)
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), failed);
         }
     }
 
@@ -209,17 +205,10 @@ public:
             else if (failed)
                 failed();
         } else {
-            QSharedPointer<QIfPendingReplyWatcher> w = m_watcher;
-            if (success) {
-                QObject::connect(watcher(), &QIfPendingReplyWatcher::replySuccess, watcher(), [success, w]() {
-                    success();
-                });
-            }
-            if (failed) {
-                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), [failed]() {
-                    failed();
-                });
-            }
+            if (success)
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replySuccess, watcher(), success);
+            if (failed)
+                QObject::connect(watcher(), &QIfPendingReplyWatcher::replyFailed, watcher(), failed);
         }
     }
 
