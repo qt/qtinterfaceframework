@@ -527,8 +527,8 @@ QIfServiceInterface *QIfServiceManagerPrivate::loadServiceBackendInterface(struc
     For more information about QIfServiceManager and how it works, see its \l{QIfServiceManager}{C++ documentation}.
 */
 
-QIfServiceManager::QIfServiceManager()
-    : QAbstractListModel(nullptr)
+QIfServiceManager::QIfServiceManager(QObject *parent)
+    : QAbstractListModel(parent)
     , d_ptr(new QIfServiceManagerPrivate(this))
 {
     QtInterfaceFrameworkModule::registerTypes();
@@ -540,7 +540,7 @@ QIfServiceManager::QIfServiceManager()
 */
 QIfServiceManager *QIfServiceManager::instance()
 {
-    static auto *instance = new QIfServiceManager();
+    static auto *instance = new QIfServiceManager(qApp);
     return instance;
 }
 
@@ -549,6 +549,12 @@ QIfServiceManager *QIfServiceManager::create(QQmlEngine *, QJSEngine *)
     auto manager = QIfServiceManager::instance();
     QQmlEngine::setObjectOwnership(manager, QQmlEngine::CppOwnership);
     return manager;
+}
+
+QIfServiceManager::~QIfServiceManager()
+{
+    unloadAllBackends();
+    delete d_ptr;
 }
 
 /*!

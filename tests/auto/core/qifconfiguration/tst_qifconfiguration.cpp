@@ -557,7 +557,7 @@ void tst_QIfConfiguration::testServiceObjects()
     auto backend = new TestBackend;
     QIfServiceManager::instance()->registerService(backend, QStringList({"testFeature"}));
 
-    auto testFeature = new TestFeature;
+    std::unique_ptr<TestFeature> testFeature(new TestFeature);
     testFeature->startAutoDiscovery();
     QVERIFY(testFeature->serviceObject());
 
@@ -578,6 +578,7 @@ void tst_QIfConfiguration::testServiceObjects()
     QVERIFY(testFeature2->serviceObject());
 
     QCOMPARE(backend2->serviceSettings, QVariantMap({{"key1", "value1"}}));
+    delete testFeature2;
 }
 
 void tst_QIfConfiguration::simulationEngine()

@@ -54,6 +54,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfigurationManager
 {
 public:
     static QIfConfigurationManager *instance();
+    ~QIfConfigurationManager();
 
     void readInitialSettings(const QString &configPath);
     QIfSettingsObject *settingsObject(const QString &group, bool create = false);
