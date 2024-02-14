@@ -14,7 +14,7 @@
 
 #define TEST_FUNCTION(NAME, TYPE) QIfPendingReply<TYPE> TestObject::test_##NAME(TYPE result, bool fail) { \
     QIfPendingReply<TYPE> reply; \
-    auto timer = new QTimer(); \
+    auto timer = new QTimer(this); \
     timer->setSingleShot(true); \
     connect(timer, &QTimer::timeout, this, [reply, fail, result]() mutable { \
         if (fail) \
@@ -90,7 +90,7 @@ Q_DECLARE_METATYPE(TestGadget)
 
 QIfPendingReply<void> TestObject::test_void(bool fail) {
     QIfPendingReply<void> reply;
-    auto timer = new QTimer();
+    auto timer = new QTimer(this);
     timer->setSingleShot(true);
     connect(timer, &QTimer::timeout, this, [reply, fail]() mutable {
         if (fail)
