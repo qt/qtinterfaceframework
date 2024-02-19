@@ -603,7 +603,7 @@ QVariant QIfPagingModel::data(const QModelIndex &index, int role) const
     }
 
     if (row >= d->m_fetchedDataCount - d->m_fetchMoreThreshold && canFetchMore(QModelIndex()))
-        emit fetchMoreThresholdReached();
+        emit const_cast<QIfPagingModel*>(this)->fetchMoreThresholdReached();
 
     const QIfStandardItem *item = d->itemAt(row);
     if (!item) {
@@ -764,7 +764,7 @@ void QIfPagingModel::clearServiceObject()
 }
 
 /*!
-    \fn void QIfPagingModel::fetchMoreThresholdReached() const
+    \fn void QIfPagingModel::fetchMoreThresholdReached()
 
     This signal is emitted whenever the fetchMoreThreshold is reached and new data is requested from the backend.
 */
