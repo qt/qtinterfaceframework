@@ -91,6 +91,7 @@ namespace qtif_private {
     template <typename T> class QIfSimulationProxy: public QIfSimulationProxyBase
     {
     public:
+        Q_DISABLE_COPY_MOVE(QIfSimulationProxy)
         QIfSimulationProxy(QObject *p=nullptr)
             : QIfSimulationProxyBase(&staticMetaObject, m_instance, methodMap(), p)
         {
@@ -164,6 +165,8 @@ namespace qtif_private {
     template <class T> class RecursionGuard
     {
     public:
+        Q_DISABLE_COPY_MOVE(RecursionGuard)
+
         RecursionGuard() {
             m_savedValue = qtif_private::QIfSimulationProxy<T>::recursionGuard;
         }

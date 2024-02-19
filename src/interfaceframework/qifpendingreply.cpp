@@ -559,6 +559,11 @@ QIfPendingReplyBase::QIfPendingReplyBase(const QIfPendingReplyBase &other)
     this->m_watcher = other.m_watcher;
 }
 
+QIfPendingReplyBase::QIfPendingReplyBase(const QIfPendingReplyBase && other)
+{
+    this->m_watcher = std::move(other.m_watcher);
+}
+
 /*!
     \qmlproperty QIfPendingReplyWatcher* PendingReply::watcher
     \brief Holds the watcher for the PendingReply

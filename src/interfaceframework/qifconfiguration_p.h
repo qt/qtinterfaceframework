@@ -76,6 +76,7 @@ public:
     QHash<QString, QIfSettingsObject*> m_settingsHash;
     QHash<QString, QIfConfiguration*> m_configurationHash;
 private:
+    Q_DISABLE_COPY_MOVE(QIfConfigurationManager)
     QIfConfigurationManager();
 };
 

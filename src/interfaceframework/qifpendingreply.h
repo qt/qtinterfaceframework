@@ -64,6 +64,7 @@ public:
     explicit QIfPendingReplyBase(int userType);
     QIfPendingReplyBase() = default;
     QIfPendingReplyBase(const QIfPendingReplyBase & other);
+    QIfPendingReplyBase(const QIfPendingReplyBase && other);
     ~QIfPendingReplyBase() = default;
     QIfPendingReplyBase& operator=(const QIfPendingReplyBase&) = default;
     QIfPendingReplyBase& operator=(QIfPendingReplyBase&&) = default;
@@ -87,6 +88,7 @@ protected:
 template <typename T> class QIfPendingReply : public QIfPendingReplyBase
 {
 public:
+    // AXIVION Next Line Qt-FunctionArgsByValueRef: treat T as a complex type
     QIfPendingReply(const T &successValue)
         : QIfPendingReply()
     {
@@ -99,6 +101,7 @@ public:
 
     using QIfPendingReplyBase::setSuccess;
 
+    // AXIVION Next Line Qt-FunctionArgsByValueRef: treat T as a complex type
     void setSuccess(const T &val)
     {
         setSuccessNoCheck(QVariant::fromValue(val));

@@ -37,6 +37,9 @@ class QIfProxyServiceObject;
 Q_DECLARE_LOGGING_CATEGORY(qLcIfServiceManagement)
 
 struct Backend {
+    Q_DISABLE_COPY_MOVE(Backend)
+
+    Backend() = default;
     ~Backend();
 
     QString name;
