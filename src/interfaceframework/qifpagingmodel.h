@@ -76,7 +76,7 @@ Q_SIGNALS:
     void chunkSizeChanged(int chunkSize);
     void countChanged();
     void fetchMoreThresholdChanged(int fetchMoreThreshold);
-    void fetchMoreThresholdReached() const;
+    void fetchMoreThresholdReached();
     void loadingTypeChanged(QIfPagingModel::LoadingType loadingType);
 
 protected:
