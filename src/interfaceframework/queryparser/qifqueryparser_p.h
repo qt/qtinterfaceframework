@@ -34,6 +34,8 @@ public:
     };
 
 public:
+    Q_DISABLE_COPY_MOVE(QIfQueryParser)
+
     QIfQueryParser();
     virtual ~QIfQueryParser();
 
