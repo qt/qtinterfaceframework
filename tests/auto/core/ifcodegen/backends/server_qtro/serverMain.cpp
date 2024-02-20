@@ -123,6 +123,8 @@ void serverMain(QIfRemoteObjectsConfig &config)
             contactsModelService->update(0, updatedContact);
         } else if (cmd == u"remove"_s) {
             contactsModelService->remove(0);
+        } else if (cmd == u"quit"_s) {
+            qApp->quit();
         }
     });
 }

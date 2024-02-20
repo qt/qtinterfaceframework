@@ -127,8 +127,14 @@ void BackendsTest::cleanup()
 {
     if (m_serverProcess->state() == QProcess::Running) {
         qInfo() << "Stopping Server Process";
-        m_serverProcess->kill();
-        QVERIFY(m_serverProcess->waitForFinished());
+
+        sendCmd("quit");
+        m_serverProcess->waitForFinished(500);
+
+        if (m_serverProcess->state() == QProcess::Running) {
+            m_serverProcess->kill();
+            QVERIFY(m_serverProcess->waitForFinished());
+        }
     }
     delete m_localSocket;
     m_localSocket = nullptr;
