@@ -157,6 +157,8 @@ QtObject {
             echo.contactList.update(0, Echomodule.contact("Mr B.", 30, true, undefined))
         } else if (cmd === "remove") {
             echo.contactList.remove(0)
+        } else if (cmd === "quit") {
+            Qt.quit()
         }
     }
 }

@@ -14,5 +14,11 @@ qt_internal_add_test(tst_backends
     TESTDATA simulation.qml minimal_simulation_data.json server.conf
 )
 
+add_custom_target(tst_backends_extra_files
+    SOURCES
+        simulation.qml
+        minimal_simulation_data.json
+)
+
 set_target_properties(tst_backends PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 
