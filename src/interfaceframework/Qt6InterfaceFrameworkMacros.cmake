@@ -2,6 +2,49 @@
 ## Internal API
 #####################################################################
 
+function(internal_check_if_venv VENV_PATH)
+    message(STATUS "Checking venv ${VENV_PATH}")
+    set(VENV_OLD_PATH_FILE "${VENV_PATH}/venvpath.txt")
+    if (NOT EXISTS "${VENV_OLD_PATH_FILE}")
+        message(STATUS "Still empty venv, bailing out")
+        return()
+    endif()
+    file(READ "${VENV_OLD_PATH_FILE}" VENV_OLD_PATH)
+    if ("${VENV_OLD_PATH}" STREQUAL "")
+        message(STATUS "Cannot get previous venv path, bailing out")
+        return()
+    endif()
+    set(REQUIREMENTS_FILE "${VENV_PATH}/requirements.txt")
+    if (${VENV_PATH} STREQUAL ${VENV_OLD_PATH} AND EXISTS "${REQUIREMENTS_FILE}")
+        include(QtFindPackageHelpers)
+        # Make sure we search in the host Qt path if set. Otherwise me might end up with a
+        # interpreter for the target
+        if (NOT "${QT_HOST_PATH}" STREQUAL "")
+            set(CMAKE_PREFIX_PATH "${QT_HOST_PATH}")
+        endif()
+        qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
+        if (NOT Python3_EXECUTABLE)
+            message(STATUS "Could not locate Python3 for venv regeneration.")
+            return()
+        endif()
+
+        if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
+            set(PIPEXE "${VENV_PATH}/Scripts/pip3.exe")
+        else()
+            set(PIPEXE "${VENV_PATH}/bin/pip3")
+        endif()
+
+        message(STATUS "Regenerating outdated venv originally at ${VENV_OLD_PATH}")
+        file(READ "${REQUIREMENTS_FILE}" REQUIREMENTS)
+        file(REMOVE_RECURSE "${VENV_PATH}")
+
+        execute_process(COMMAND "${Python3_EXECUTABLE}" -m venv "${VENV_PATH}")
+        file(WRITE "${REQUIREMENTS_FILE}" "${REQUIREMENTS}")
+        file(WRITE "${VENV_OLD_PATH_FILE}" "${VENV_PATH}")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E env VIRTUAL_ENV="${VENV_PATH}" --unset=PYTHONHOME "${PIPEXE}" install -r "${VENV_PATH}/requirements.txt")
+    endif()
+endfunction()
+
 # Determines the location of the correct ifcodegen installation
 # Inside the interface framework the features are used to determine whether a virtualenv needs to be used
 # In all other cases the existence of the virtualenv is checked and depending on that the
@@ -14,7 +57,7 @@ function(qt_ensure_ifcodegen)
 
     if (NOT "${QT_HOST_PATH}" STREQUAL "")
         set (QT_IFCODEGEN_GENERATOR_PATH ${QT_HOST_PATH}/${QT6_HOST_INFO_LIBEXECDIR}/ifcodegen CACHE FILEPATH "ifcodegen generator")
-        set (QT_IFCODEGEN_VIRTUALENV_PATH ${QT_IFCODEGEN_GENERATOR_PATH}/qtif_qface_virtualenv CACHE FILEPATH "ifcodegen virtualenv")
+        set (QT_IFCODEGEN_VIRTUALENV_PATH ${QT_IFCODEGEN_GENERATOR_PATH}/ifcodegen_venv CACHE FILEPATH "ifcodegen virtualenv")
         set (QT_IFCODEGEN_TYPE "host")
 
         # Expand the variable manually as we use a CACHE variable
@@ -28,15 +71,15 @@ function(qt_ensure_ifcodegen)
 
         if (QT_FEATURE_compiled_ifcodegen)
             set (QT_IFCODEGEN_GENERATOR_PATH ${QT_BUILD_DIR}/${INSTALL_LIBEXECDIR}/ifcodegen CACHE FILEPATH "ifcodegen generator" FORCE)
-        elseif (QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
-            set (QT_IFCODEGEN_VIRTUALENV_PATH ${QtInterfaceFramework_BINARY_DIR}/src/tools/ifcodegen/qtif_qface_virtualenv CACHE FILEPATH "ifcodegen virtualenv")
+        elseif (QT_FEATURE_python3_venv AND NOT QT_FEATURE_system_qface)
+            set (QT_IFCODEGEN_VIRTUALENV_PATH ${QtInterfaceFramework_BINARY_DIR}/src/tools/ifcodegen/ifcodegen_venv CACHE FILEPATH "ifcodegen virtualenv")
         endif()
     endif()
 
     # Fallback to the installed codepath if the host path doesn't exist
     if (NOT EXISTS ${QT_IFCODEGEN_GENERATOR_PATH})
         set (QT_IFCODEGEN_GENERATOR_PATH ${QTIF_INSTALL_PREFIX}/${QT6_INSTALL_LIBEXECS}/ifcodegen CACHE FILEPATH "ifcodegen generator")
-        set (QT_IFCODEGEN_VIRTUALENV_PATH ${QT_IFCODEGEN_GENERATOR_PATH}/qtif_qface_virtualenv CACHE FILEPATH "ifcodegen virtualenv")
+        set (QT_IFCODEGEN_VIRTUALENV_PATH ${QT_IFCODEGEN_GENERATOR_PATH}/ifcodegen_venv CACHE FILEPATH "ifcodegen virtualenv")
         set (QT_IFCODEGEN_TYPE "installed")
 
         # Expand the variable manually as we use a CACHE variable
@@ -64,6 +107,7 @@ function(qt_ensure_ifcodegen)
     message(STATUS "Using ${QT_IFCODEGEN_TEMPLATE_TYPE} ifcodegen templates found at: ${QT_IFCODEGEN_TEMPLATES_PATH}")
     if (QT_IFCODEGEN_VIRTUALENV_PATH)
         message(STATUS "Using ${QT_IFCODEGEN_TYPE} ifcodegen virtualenv found at: ${QT_IFCODEGEN_VIRTUALENV_PATH}")
+        internal_check_if_venv("${QT_IFCODEGEN_VIRTUALENV_PATH}")
     endif()
 
     if (NOT QT_FEATURE_compiled_ifcodegen AND NOT EXISTS ${QT_IFCODEGEN_GENERATOR_PATH})
@@ -421,24 +465,12 @@ function(qt6_ifcodegen_generate)
             if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
                 set(PYTHON_EXECUTABLE ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/python.exe)
                 file(TO_NATIVE_PATH "${QT_IFCODEGEN_VIRTUALENV_PATH}" QT_IFCODEGEN_VIRTUALENV_PATH)
-                if (NOT DEFINED QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION)
-                    file(GLOB _PYTHON_PATH ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/python3*.dll)
-                    string(REGEX MATCH "python3([0-9]+).dll" VERSION ${_PYTHON_PATH})
-                    set(QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION 3.${CMAKE_MATCH_1} CACHE STRING "ifcodegen virtualenv python version")
-                endif()
             else()
-                if (NOT DEFINED QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION)
-                    file(GLOB _PYTHON_PATH ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/python3.*)
-                    string(REGEX MATCH "python(3.[0-9]+)" VERSION ${_PYTHON_PATH})
-                    set(QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION ${CMAKE_MATCH_1} CACHE STRING "ifcodegen virtualenv python version")
-                endif()
                 set(PYTHON_EXECUTABLE ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/python)
                 list(APPEND CMD_ENV LC_ALL=en_US.UTF-8)
                 list(APPEND CMD_ENV LD_LIBRARY_PATH=${QT_IFCODEGEN_VIRTUALENV_PATH}/bin)
             endif()
             list(APPEND CMD_ENV VIRTUAL_ENV=${QT_IFCODEGEN_VIRTUALENV_PATH})
-            list(APPEND CMD_ENV PYTHONPATH=${QT_IFCODEGEN_VIRTUALENV_PATH}/lib/python${QT_IFCODEGEN_VIRTUALENV_PYTHON_VERSION}/site-packages)
-            list(APPEND CMD_ENV PYTHONHOME=${QT_IFCODEGEN_VIRTUALENV_PATH})
         else() # qface installed in system
             include(QtFindPackageHelpers)
             # Make sure we search in the host Qt path if set. Otherwise me might end up with a
