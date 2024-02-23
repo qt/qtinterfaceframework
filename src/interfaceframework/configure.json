@@ -17,10 +17,10 @@
             "type": "python3",
             "files": [ "python3" ]
         },
-        "virtualenv": {
-            "label": "virtualenv",
+        "venv": {
+            "label": "venv",
             "type": "python3_package",
-            "package": "virtualenv"
+            "package": "ensurepip"
         },
         "qface": {
             "label": "qface 2.0.3",
@@ -44,9 +44,9 @@
                 { "type": "varAssign", "public": true, "name": "QMAKE_PYTHON3_VERSION", "value": "tests.python3.version" }
             ]
         },
-        "python3-virtualenv": {
-            "label": "virtualenv",
-            "condition": "features.python3 && tests.virtualenv",
+        "python3-venv": {
+            "label": "venv",
+            "condition": "features.python3 && tests.venv",
             "output": [ "privateFeature" ]
         },
         "system-qface": {
@@ -66,7 +66,7 @@
             "label": "Interface Framework Generator",
             "enable": "input.ifcodegen == 'qt' || input.ifcodegen == 'system'",
             "disable": "input.ifcodegen == 'no'",
-            "condition": "features.interfaceframework && features.python3 && ((features.python3-virtualenv && tests.qface-submodule) || (features.system-qface)) || features.system-ifcodegen",
+            "condition": "features.interfaceframework && features.python3 && ((features.python3-venv && tests.qface-submodule) || (features.system-qface)) || features.system-ifcodegen",
             "output": [ "publicFeature" ]
         },
         "host-tools-only": {
@@ -91,9 +91,9 @@
             "condition": "features.interfaceframework && !features.ifcodegen && input.ifcodegen != 'no'",
             "message": "Cannot build the Interface Framework Generator because its dependencies are not satisfied.
 The Interface Framework Generator provides tooling to generate source code out of IDL files.
-Make sure python3 and its 'virtualenv' packages are installed.
+Make sure python3 and its 'venv' packages are installed.
 E.g. by running
-    apt-get install python3 python3-virtualenv
+    apt-get install python3 python3-venv
 
 And make sure the qface submodule is initialized or the correct qface version is installed on your system.
 E.g. by running the following command:
@@ -117,7 +117,7 @@ E.g. by running the following command:
                         {
                             "type": "python3"
                         },
-                        "python3-virtualenv",
+                        "python3-venv",
                         "system-qface"
                     ]
                },

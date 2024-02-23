@@ -15,9 +15,9 @@ qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interf
 
 #### Tests
 
-qt_config_python3_package_test(virtualenv
-    LABEL "Python3 virtualenv package"
-    PACKAGE "virtualenv"
+qt_config_python3_package_test(venv
+    LABEL "Python3 venv package"
+    PACKAGE "ensurepip"
 )
 qt_config_python3_package_test(qface
     LABEL "Python3 qface package"
@@ -32,9 +32,9 @@ qt_feature("python3" PRIVATE
     LABEL "python3"
     CONDITION PYTHON3_FOUND AND NOT QT_FEATURE_cross_compile
 )
-qt_feature("python3-virtualenv" PRIVATE
-    LABEL "virtualenv"
-    CONDITION QT_FEATURE_python3 AND TEST_virtualenv AND NOT QT_FEATURE_cross_compile
+qt_feature("python3-venv" PRIVATE
+    LABEL "venv"
+    CONDITION QT_FEATURE_python3 AND TEST_venv AND NOT QT_FEATURE_cross_compile
 )
 qt_feature("system-qface" PUBLIC
     LABEL "System QFace"
@@ -48,7 +48,7 @@ qt_feature("host-ifcodegen" PRIVATE
 )
 qt_feature("ifcodegen" PUBLIC
     LABEL "Interface Framework Generator"
-    CONDITION QT_FEATURE_interfaceframework AND (QT_FEATURE_python3 AND ( ( QT_FEATURE_python3_virtualenv AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/qface/setup.py" ) OR ( QT_FEATURE_system_qface ) )) OR QT_FEATURE_host_ifcodegen
+    CONDITION QT_FEATURE_interfaceframework AND (QT_FEATURE_python3 AND ( ( QT_FEATURE_python3_venv AND EXISTS "${CMAKE_CURRENT_LIST_DIR}/../3rdparty/qface/setup.py" ) OR ( QT_FEATURE_system_qface ) )) OR QT_FEATURE_host_ifcodegen
 )
 qt_feature("compiled-ifcodegen" PUBLIC
     LABEL "Compiled Interface Framework Generator"
@@ -92,7 +92,7 @@ if (NOT QT_FEATURE_cross_compile)
     else()
         qt_configure_add_summary_entry(TYPE "message" ARGS "Executable" MESSAGE "no")
     endif()
-    qt_configure_add_summary_entry(ARGS "python3-virtualenv")
+    qt_configure_add_summary_entry(ARGS "python3-venv")
     qt_configure_add_summary_entry(ARGS "system-qface")
     qt_configure_end_summary_section() # end of "Python3" section
 endif()
@@ -109,9 +109,9 @@ qt_configure_add_report_entry(
     MESSAGE [[
 Cannot build the Interface Framework Generator because its dependencies are not satisfied.
 The Interface Framework Generator provides tooling to generate source code out of IDL files.
-Make sure python3 and its 'virtualenv' packages are installed.
+Make sure python3 and its 'venv' package are installed.
 E.g. by running
-    apt-get install python3 python3-virtualenv
+    apt-get install python3 python3-venv
 
 And make sure the qface submodule is initialized or the correct qface version is installed on your system.
 E.g. by running the following command:

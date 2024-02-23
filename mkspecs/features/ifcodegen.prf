@@ -37,8 +37,8 @@ equals(QMAKE_HOST.os, Windows): ENV = chcp 65001 &&
 else: ENV = LC_ALL="en_US.UTF-8"
 
 # Detect whether we are using the feature inside the interfaceframework repository
-VIRTUALENV_PATH = $$[QT_HOST_LIBEXECS]/ifcodegen/qtif_qface_virtualenv
-INTERNAL_VIRTUALENV_PATH = $$QTIF_BUILD_ROOT/src/tools/ifcodegen/qtif_qface_virtualenv
+VIRTUALENV_PATH = $$[QT_HOST_LIBEXECS]/ifcodegen/ifcodegen_venv
+INTERNAL_VIRTUALENV_PATH = $$QTIF_BUILD_ROOT/src/tools/ifcodegen/ifcodegen_venv
 IF_GENERATOR_PATH = $$[QT_HOST_LIBEXECS]/ifcodegen
 IF_TEMPLATE_PATH = $$[QT_INSTALL_DATA]/ifcodegen-templates
 
@@ -64,9 +64,7 @@ exists($$VIRTUALENV_PATH) {
         SITE_PACKAGES = $${_LIB_FOLDER}/site-packages
 
         # No space between the path and && otherwise python3 adds the space to the path
-        ENV += set PYTHONHOME=$$system_path($$VIRTUALENV_PATH)&&
-        ENV += set PYTHONPATH=$$system_path($$SITE_PACKAGES)&&
-        ENV += set VIRTUAL_ENV=%PYTHONHOME%&&
+        ENV += set VIRTUAL_ENV=$$system_path($$VIRTUALENV_PATH)&&
     } else {
         PYTHON = $$VIRTUALENV_PATH/bin/python
         _LIB_FOLDERS = $$files($$VIRTUALENV_PATH/lib/python*)
@@ -74,8 +72,6 @@ exists($$VIRTUALENV_PATH) {
         SITE_PACKAGES = $${_LIB_FOLDER}/site-packages
 
         ENV += LD_LIBRARY_PATH="$$system_path($$VIRTUALENV_PATH/bin)"
-        ENV += PYTHONHOME=$$system_path($$VIRTUALENV_PATH)
-        ENV += PYTHONPATH=$$system_path($$SITE_PACKAGES)
         ENV += VIRTUAL_ENV=$$system_path($$VIRTUALENV_PATH)
     }
 } else {
