@@ -54,10 +54,38 @@ instructions:
       condition: property
       property: features
       contains_value: Axivion_qtinterfaceframework
+  # Enable a lcov code-coverage build
+  - type: AppendToEnvironmentVariable
+    variableName: NON_QTBASE_CMAKE_ARGS
+    variableValue: " -DIF_COVERAGE=ON"
+    enable_if:
+      condition: property
+      property: features
+      contains_value: lcov
+  - type: AppendToEnvironmentVariable
+    variableName: COMMON_TEST_CMAKE_ARGS
+    variableValue: " -DIF_COVERAGE=ON"
+    enable_if:
+      condition: property
+      property: features
+      contains_value: lcov
   - type: Group
     instructions:
       - !include "{{qt/qtbase}}/coin_module_build_template_v2.yaml"
+  - type: Group
+    instructions:
+      - !include "{{qt/qtinterfaceframework}}/cmake_module_lcov_code_coverage.yaml"
+    enable_if:
+      condition: property
+      property: features
+      contains_value: lcov
 
   Test:
-    - !include "{{qt/qtbase}}/coin_module_test_template_v3.yaml"
-    - !include "{{qt/qtbase}}/coin_module_test_docs.yaml"
+    - type: Group
+      instructions:
+        - !include "{{qt/qtbase}}/coin_module_test_template_v3.yaml"
+        - !include "{{qt/qtbase}}/coin_module_test_docs.yaml"
+      disable_if:
+        condition: property
+        property: features
+        contains_value: lcov
