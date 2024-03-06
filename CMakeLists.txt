@@ -44,7 +44,7 @@ if(IF_COVERAGE)
     set(GCOV_EXCLUDE
         '/usr/*'
         '${QT_BUILD_INTERNALS_RELOCATABLE_INSTALL_PREFIX}/*'
-        '${CMAKE_CURRENT_LIST_DIR}/tests/*'
+        #'${CMAKE_CURRENT_LIST_DIR}/tests/*'
         '${CMAKE_CURRENT_LIST_DIR}/examples/*'
         '${CMAKE_CURRENT_LIST_DIR}/src/3rdparty/*'
         'moc_*'
@@ -52,12 +52,11 @@ if(IF_COVERAGE)
         '${CMAKE_CURRENT_BINARY_DIR}/*'
     )
 
-    if(QT_BUILD_STANDALONE_TESTS)
-        # Coin splits the build into two separate directories, so we need to merge the coverage info
-        set(GCOV_EXTRA_FOLDER "../qtinterfaceframework_build")
-        set(LCOV_EXTRA_ARGS -d ${GCOV_EXTRA_FOLDER})
-        list(APPEND GCOV_EXCLUDE '/home/qt/work/qt/qtinterfaceframework_build/*')
+    if(QT_SOURCE_TREE AND NOT DEFINED ENV{HOST_OS_COIN})
+        string(REGEX REPLACE "/qtbase$" "" qtSrcDir ${QT_SOURCE_TREE})
+        list(APPEND GCOV_EXCLUDE '${qtSrcDir}/*')
     endif()
+
     set(COVERAGE_DEPENDS all)
     if(QT_WILL_INSTALL)
         list(APPEND COVERAGE_DEPENDS tests/auto/install)
@@ -68,10 +67,10 @@ if(IF_COVERAGE)
         COMMAND sh -c 'which genhtml >/dev/null || { echo "The genhtml tool is not available." && exit 2 \; }'
         COMMAND sh -c 'lcov --version | grep -q "^lcov: LCOV version 2\." || { echo "The lcov tool must be version 2." && exit 2 \; }'
         COMMAND find . \\\( -name \"*.gcov-info\" -o -name \"*.gcda\" \\\) -print0 | xargs -0 rm -f
-        COMMAND lcov -keep-going -c -i -d . ${LCOV_EXTRA_ARGS} --rc branch_coverage=1 --rc geninfo_auto_base=1 -o "${CMAKE_CURRENT_BINARY_DIR}/base.gcov-info"
+        COMMAND lcov -keep-going -c -i -d . --rc branch_coverage=1 --rc geninfo_auto_base=1 -o "${CMAKE_CURRENT_BINARY_DIR}/base.gcov-info"
         COMMAND ctest --test-dir tests/auto --verbose --repeat until-pass:3
-        COMMAND lcov -keep-going -c -d . ${LCOV_EXTRA_ARGS} --rc branch_coverage=1 --rc geninfo_auto_base=1 -o "${CMAKE_CURRENT_BINARY_DIR}/test.gcov-info"
-        COMMAND lcov -keep-going --rc branch_coverage=1 -o "${CMAKE_CURRENT_BINARY_DIR}/temp.gcov-info" `find . ${GCOV_EXTRA_FOLDER} -name \"*.gcov-info\" | xargs -n1 echo -a`
+        COMMAND lcov -keep-going -c -d . --rc branch_coverage=1 --rc geninfo_auto_base=1 -o "${CMAKE_CURRENT_BINARY_DIR}/test.gcov-info"
+        COMMAND lcov -keep-going --rc branch_coverage=1 -o "${CMAKE_CURRENT_BINARY_DIR}/temp.gcov-info" `find . -name \"*.gcov-info\" | xargs -n1 echo -a`
         COMMAND lcov -keep-going --rc branch_coverage=1 -o "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.gcov-info" -r temp.gcov-info ${GCOV_EXCLUDE}
         COMMAND rm -f base.gcov-info test.gcov-info temp.gcov-info
         COMMAND genhtml -o coverage-report -s -f -t "${PROJECT_NAME}" --legend --branch-coverage --rc branch_coverage=1 --rc geninfo_unexecuted_blocks=1 --demangle-cpp "c++filt" ${PROJECT_NAME}.gcov-info
