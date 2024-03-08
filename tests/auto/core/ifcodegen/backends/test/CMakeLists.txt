@@ -12,6 +12,7 @@ qt_internal_add_test(tst_backends
     WORKING_DIRECTORY
         ${CMAKE_CURRENT_BINARY_DIR}/../
     TESTDATA simulation.qml minimal_simulation_data.json server.conf
+    NO_BATCH
 )
 
 add_custom_target(tst_backends_extra_files

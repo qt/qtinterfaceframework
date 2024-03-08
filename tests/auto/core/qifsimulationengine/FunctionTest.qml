@@ -1,7 +1,7 @@
 import QtQuick;
 import TestAPI;
 
-SimpleAPI {
+SimpleTestAPI {
     function simpleFunction() {
         simpleFunctionCalled();
     }

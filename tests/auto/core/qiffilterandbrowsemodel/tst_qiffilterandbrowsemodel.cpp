@@ -50,7 +50,7 @@ bool operator>(const QVariant &left, const QVariant &right)
 
 QT_END_NAMESPACE
 
-class TestBackend : public QIfFilterAndBrowseModelInterface
+class FilterTestBackend : public QIfFilterAndBrowseModelInterface
 {
     Q_OBJECT
 
@@ -351,7 +351,7 @@ public:
     explicit TestServiceObject(QObject *parent = nullptr) :
         QIfServiceObject(parent)
     {
-        m_backend = new TestBackend;
+        m_backend = new FilterTestBackend;
         m_backend->setParent(this);
         m_interfaces << QIfFilterAndBrowseModel_iid;
     }
@@ -365,23 +365,16 @@ public:
             return 0;
     }
 
-    TestBackend *testBackend() const
+    FilterTestBackend *testBackend() const
     {
         return m_backend;
     }
 
 private:
     QStringList m_interfaces;
-    TestBackend *m_backend;
+    FilterTestBackend *m_backend;
 };
 
-void verifyQml(QQmlEngine *engine, const QByteArray &qml)
-{
-    QQmlComponent component(engine);
-    component.setData(qml, QUrl());
-    QScopedPointer<QObject> obj(component.create());
-    QVERIFY2(obj, qPrintable(component.errorString()));
-}
 
 class tst_QIfFilterAndBrowseModel : public QObject
 {
@@ -389,6 +382,7 @@ class tst_QIfFilterAndBrowseModel : public QObject
 
 public:
     tst_QIfFilterAndBrowseModel();
+    void verifyQml(QQmlEngine *engine, const QByteArray &qml);
 
 private Q_SLOTS:
     void cleanup();
@@ -421,6 +415,14 @@ private:
 tst_QIfFilterAndBrowseModel::tst_QIfFilterAndBrowseModel()\
     : manager(QIfServiceManager::instance())
 {
+}
+
+void tst_QIfFilterAndBrowseModel::verifyQml(QQmlEngine *engine, const QByteArray &qml)
+{
+    QQmlComponent component(engine);
+    component.setData(qml, QUrl());
+    QScopedPointer<QObject> obj(component.create());
+    QVERIFY2(obj, qPrintable(component.errorString()));
 }
 
 void tst_QIfFilterAndBrowseModel::cleanup()

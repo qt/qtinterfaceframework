@@ -12,6 +12,7 @@ qt_internal_add_test(tst_org-example-echo
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
     LIBRARIES
         echo_frontend
+    NO_BATCH
 )
 set_target_properties(tst_org-example-echo PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 

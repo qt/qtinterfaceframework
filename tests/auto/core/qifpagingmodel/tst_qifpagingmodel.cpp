@@ -19,12 +19,12 @@
 //TODO Add test with multiple model instances, requesting different data at the same time
 //TODO Test the signal without a valid identifier
 
-class TestGadget
+class PagingTestGadget
 {
     Q_GADGET
 };
 
-class TestBackend : public QIfPagingModelInterface
+class PagingTestBackend : public QIfPagingModelInterface
 {
     Q_OBJECT
 
@@ -61,7 +61,7 @@ public:
     {
         m_list.append(QVariant());
         m_list.append(QVariant("string"));
-        m_list.append(QVariant::fromValue(TestGadget()));
+        m_list.append(QVariant::fromValue(PagingTestGadget()));
     }
 
     void initialize() override
@@ -132,15 +132,15 @@ private:
     QtInterfaceFrameworkModule::ModelCapabilities m_caps;
 };
 
-class TestServiceObject : public QIfServiceObject
+class PagingTestServiceObject : public QIfServiceObject
 {
     Q_OBJECT
 
 public:
-    explicit TestServiceObject(QObject *parent = nullptr) :
+    explicit PagingTestServiceObject(QObject *parent = nullptr) :
         QIfServiceObject(parent)
     {
-        m_backend = new TestBackend;
+        m_backend = new PagingTestBackend;
         m_backend->setParent(this);
         m_interfaces << QIfPagingModel_iid;
     }
@@ -154,14 +154,14 @@ public:
             return 0;
     }
 
-    TestBackend *testBackend() const
+    PagingTestBackend *testBackend() const
     {
         return m_backend;
     }
 
 private:
     QStringList m_interfaces;
-    TestBackend *m_backend;
+    PagingTestBackend *m_backend;
 };
 
 void verifyQml(QQmlEngine *engine, const QByteArray &qml)
@@ -212,7 +212,7 @@ void tst_QIfPagingModel::cleanup()
 
 void tst_QIfPagingModel::testClearServiceObject()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
     service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
@@ -252,7 +252,7 @@ void tst_QIfPagingModel::testClearServiceObject()
 
 void tst_QIfPagingModel::testRegisterInstance()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
@@ -283,7 +283,7 @@ void tst_QIfPagingModel::testRegisterInstance()
 
 void tst_QIfPagingModel::testBasic_qml()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
@@ -297,7 +297,7 @@ void tst_QIfPagingModel::testBasic_qml()
 
 void tst_QIfPagingModel::testBrokenData()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeBrokenData();
 
@@ -316,7 +316,7 @@ void tst_QIfPagingModel::testBrokenData()
 
 void tst_QIfPagingModel::testGetAt()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
@@ -344,7 +344,7 @@ void tst_QIfPagingModel::testFetchMore()
     QFETCH(int, chunkSize);
     QFETCH(int, fetchMoreThreshold);
 
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
@@ -403,7 +403,7 @@ void tst_QIfPagingModel::testFetchMore()
 
 void tst_QIfPagingModel::testDataChangedMode()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
@@ -443,7 +443,7 @@ void tst_QIfPagingModel::testDataChangedMode()
 
 void tst_QIfPagingModel::testReload()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
@@ -469,7 +469,7 @@ void tst_QIfPagingModel::testReload()
 
 void tst_QIfPagingModel::testDataChangedMode_jump()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
     service->testBackend()->initializeSimpleData();
@@ -503,7 +503,7 @@ void tst_QIfPagingModel::testDataChangedMode_jump()
 
 void tst_QIfPagingModel::testEditing()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
@@ -546,7 +546,7 @@ void tst_QIfPagingModel::testEditing()
 
 void tst_QIfPagingModel::testMissingCapabilities()
 {
-    TestServiceObject *service = new TestServiceObject();
+    PagingTestServiceObject *service = new PagingTestServiceObject();
     manager->registerService(service, service->interfaces());
     service->testBackend()->initializeSimpleData();
 
