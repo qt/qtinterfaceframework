@@ -41,6 +41,7 @@ qt_internal_add_test(tst_flat-cmake-hierarchy
         ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp
     LIBRARIES
         echo_flat_frontend
+    NO_BATCH
 )
 
 # Interface Framework Generator:

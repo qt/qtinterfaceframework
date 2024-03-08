@@ -28,10 +28,13 @@ static QString exeSuffix;
 
 BackendsTest::BackendsTest()
     : QObject()
+#if QT_CONFIG(process)
     , m_serverProcess(new QProcess(this))
+#endif
     , m_localServer(new QLocalServer(this))
     , m_localSocket(nullptr)
 {
+#if QT_CONFIG(process)
     m_serverProcess->setProcessChannelMode(QProcess::MergedChannels);
     connect(m_serverProcess, &QProcess::readyRead, this, [this]() {
         while (m_serverProcess->canReadLine()) {
@@ -39,6 +42,7 @@ BackendsTest::BackendsTest()
             qInfo().noquote() << "server output:" << QString::fromLocal8Bit(line);
         }
     });
+#endif
 
     QString simulationFile = QFINDTESTDATA("simulation.qml");
     QString simulationDataFile = QFINDTESTDATA("minimal_simulation_data.json");
@@ -62,12 +66,14 @@ void BackendsTest::sendCmd(const QByteArray &input)
 
 void BackendsTest::startServer(QStringList arguments)
 {
+#if QT_CONFIG(process)
     if (!m_serverExecutable.isEmpty()) {
         qInfo() << "Starting Server Process";
         QVERIFY2(QFile::exists(m_serverExecutable), qPrintable(u"Executable doesn't exist: %1"_s.arg(m_serverExecutable)));
         m_serverProcess->start(m_serverExecutable, arguments);
         QVERIFY2(m_serverProcess->waitForStarted(), qPrintable(u"Process error: %1"_s.arg(m_serverProcess->error())));
     }
+#endif
     QVERIFY(m_localServer->waitForNewConnection(5000));
     while (m_localServer->hasPendingConnections())
         m_localSocket = m_localServer->nextPendingConnection();
@@ -125,6 +131,7 @@ void BackendsTest::init()
 
 void BackendsTest::cleanup()
 {
+#if QT_CONFIG(process)
     if (m_serverProcess->state() == QProcess::Running) {
         qInfo() << "Stopping Server Process";
 
@@ -136,6 +143,7 @@ void BackendsTest::cleanup()
             QVERIFY(m_serverProcess->waitForFinished());
         }
     }
+#endif
     delete m_localSocket;
     m_localSocket = nullptr;
 
@@ -353,8 +361,10 @@ void BackendsTest::testReconnect()
     QVERIFY(disconnectSpy.isValid());
     QVERIFY(zonedDisconnectSpy.isValid());
 
+#if QT_CONFIG(process)
     m_serverProcess->kill();
     m_serverProcess->waitForFinished();
+#endif
 
     WAIT_AND_COMPARE(disconnectSpy, 1);
     QCOMPARE(client.error(), QIfAbstractFeature::Unknown);

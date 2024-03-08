@@ -13,12 +13,12 @@
 #include <qifabstractfeaturelistmodel.h>
 #include <qifservicemanager.h>
 
-class TestFeature : public QIfAbstractFeature
+class ConfigTestFeature : public QIfAbstractFeature
 {
     Q_OBJECT
 
 public:
-    TestFeature(QObject *parent = nullptr)
+    ConfigTestFeature(QObject *parent = nullptr)
         : QIfAbstractFeature("testFeature", parent)
     {}
 
@@ -32,12 +32,12 @@ public:
     }
 };
 
-class TestFeatureListModel : public QIfAbstractFeatureListModel
+class ConfigTestFeatureListModel : public QIfAbstractFeatureListModel
 {
     Q_OBJECT
 
 public:
-    TestFeatureListModel(QObject *parent = nullptr)
+    ConfigTestFeatureListModel(QObject *parent = nullptr)
         : QIfAbstractFeatureListModel("testFeature", parent)
     {}
 
@@ -64,13 +64,13 @@ public:
     }
 };
 
-class TestBackend : public QObject, public QIfServiceInterface
+class ConfigTestBackend : public QObject, public QIfServiceInterface
 {
     Q_OBJECT
     Q_INTERFACES(QIfServiceInterface)
 
 public:
-    TestBackend(QObject *parent = nullptr)
+    ConfigTestBackend(QObject *parent = nullptr)
         : QObject(parent)
     {}
 
@@ -167,7 +167,7 @@ void tst_QIfConfiguration::invalidConfiguration()
     QVERIFY(!configuration.setSimulationDataFile("foo"));
     QTest::ignoreMessage(QtWarningMsg, "Configuration Object is not usable until the name has been configured");
     QVERIFY(!configuration.setPreferredBackends({"backend"}));
-    TestBackend backend;
+    ConfigTestBackend backend;
     QIfProxyServiceObject serviceObject(&backend);
     QTest::ignoreMessage(QtWarningMsg, "Configuration Object is not usable until the name has been configured");
     QVERIFY(!configuration.setServiceObject(&serviceObject));
@@ -365,7 +365,7 @@ void tst_QIfConfiguration::discoveryMode()
 void tst_QIfConfiguration::serviceObject()
 {
     // call static setter
-    TestBackend backend;
+    ConfigTestBackend backend;
     QIfProxyServiceObject serviceObject(&backend);
     QVERIFY(QIfConfiguration::setServiceObject("staticGroup", &serviceObject));
     QVERIFY(QIfConfiguration::exists("staticGroup"));
@@ -387,7 +387,7 @@ void tst_QIfConfiguration::serviceObject()
     // Test the change signal
     QSignalSpy spy(&config, &QIfConfiguration::serviceObjectChanged);
     QVERIFY(spy.isValid());
-    TestBackend backend2;
+    ConfigTestBackend backend2;
     QIfProxyServiceObject serviceObject2(&backend2);
     QVERIFY(config.setServiceObject(&serviceObject2));
     QCOMPARE(config.serviceObject(), &serviceObject2);
@@ -518,7 +518,7 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QCOMPARE(testFeature->discoveryMode(), QIfAbstractFeature::LoadOnlyProductionBackends);
     QCOMPARE(discoverySpy.count(), 1);
 
-    TestBackend backend;
+    ConfigTestBackend backend;
     QIfProxyServiceObject serviceObject(&backend);
     QSignalSpy serviceObjectSpy(testFeature, &T::serviceObjectChanged);
     QVERIFY(QIfConfiguration::setServiceObject("config1", &serviceObject));
@@ -547,17 +547,17 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
 
 void tst_QIfConfiguration::testFeature()
 {
-    testFeatureHelper<TestFeature>();
+    testFeatureHelper<ConfigTestFeature>();
     cleanup();
-    testFeatureHelper<TestFeatureListModel>();
+    testFeatureHelper<ConfigTestFeatureListModel>();
 }
 
 void tst_QIfConfiguration::testServiceObjects()
 {
-    auto backend = new TestBackend;
+    auto backend = new ConfigTestBackend;
     QIfServiceManager::instance()->registerService(backend, QStringList({"testFeature"}));
 
-    std::unique_ptr<TestFeature> testFeature(new TestFeature);
+    std::unique_ptr<ConfigTestFeature> testFeature(new ConfigTestFeature);
     testFeature->startAutoDiscovery();
     QVERIFY(testFeature->serviceObject());
 
@@ -571,9 +571,9 @@ void tst_QIfConfiguration::testServiceObjects()
 
     QIfServiceManager::instance()->unloadAllBackends();
 
-    auto backend2 = new TestBackend;
+    auto backend2 = new ConfigTestBackend;
     QIfServiceManager::instance()->registerService(backend2, QStringList({"testFeature"}));
-    auto testFeature2 = new TestFeature;
+    auto testFeature2 = new ConfigTestFeature;
     testFeature2->startAutoDiscovery();
     QVERIFY(testFeature2->serviceObject());
 
@@ -623,9 +623,9 @@ void tst_QIfConfiguration::duplicateConfigurationQML()
 
 void tst_QIfConfiguration::updateValuesQML()
 {
-    TestBackend backend1;
+    ConfigTestBackend backend1;
     QIfProxyServiceObject serviceObject1(&backend1);
-    TestBackend backend2;
+    ConfigTestBackend backend2;
     QIfProxyServiceObject serviceObject2(&backend2);
 
     QQmlApplicationEngine engine;

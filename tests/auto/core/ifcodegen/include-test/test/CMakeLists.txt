@@ -13,6 +13,7 @@ qt_internal_add_test(tst_qface_include
     LIBRARIES
         include_test_common
         include_test_frontend
+    NO_BATCH
 )
 set_target_properties(tst_qface_include PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 

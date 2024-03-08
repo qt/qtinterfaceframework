@@ -111,7 +111,7 @@ private:
     bool m_complexPropertyInDerived = false;
 };
 
-class SimpleAPI: public QObject
+class SimpleTestAPI: public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int testProperty READ testProperty WRITE setTestProperty NOTIFY testPropertyChanged)
@@ -122,7 +122,7 @@ public:
 public slots:
     void setTestProperty(int testProperty)
     {
-        QIF_SIMULATION_TRY_CALL(SimpleAPI, "setTestProperty", void, testProperty)
+        QIF_SIMULATION_TRY_CALL(SimpleTestAPI, "setTestProperty", void, testProperty)
 
         m_callCounter++;
         if (m_testProperty == testProperty)
@@ -134,7 +134,7 @@ public slots:
 
     void simpleFunction()
     {
-        QIF_SIMULATION_TRY_CALL(SimpleAPI, "simpleFunction", void)
+        QIF_SIMULATION_TRY_CALL(SimpleTestAPI, "simpleFunction", void)
 
         m_callCounter++;
         emit simpleFunctionCalled();
@@ -142,7 +142,7 @@ public slots:
 
     void functionWithArguments(int intArgument, const QString &stringArgument)
     {
-        QIF_SIMULATION_TRY_CALL(SimpleAPI, "functionWithArguments", void, intArgument, stringArgument)
+        QIF_SIMULATION_TRY_CALL(SimpleTestAPI, "functionWithArguments", void, intArgument, stringArgument)
 
         m_callCounter++;
         emit functionWithArgumentsCalled(intArgument, stringArgument);
@@ -150,7 +150,7 @@ public slots:
 
     int functionWithReturnValue(int intArgument)
     {
-        QIF_SIMULATION_TRY_CALL(SimpleAPI, "functionWithReturnValue", int, intArgument)
+        QIF_SIMULATION_TRY_CALL(SimpleTestAPI, "functionWithReturnValue", int, intArgument)
 
         m_callCounter++;
         emit functionWithReturnValueCalled(intArgument);
@@ -182,14 +182,6 @@ public:
     int m_testProperty = -1;
 };
 
-void verifyQml(QQmlEngine *engine, const QByteArray &qml)
-{
-    QQmlComponent component(engine);
-    component.setData(qml, QUrl());
-    QScopedPointer<QObject> obj(component.create());
-    QVERIFY2(obj, qPrintable(component.errorString()));
-}
-
 QVariant callTestFunction(QObject* object, const QByteArray &function, QVariantList &expectedValues, const QVariant &returnValue, const QVariant &value1, const QVariant &value2)
 {
     //call the testfunction
@@ -219,6 +211,7 @@ class tst_QIfSimulationEngine : public QObject
     Q_OBJECT
 
     QVariant parseJson(const QString &json, QString &error) const;
+    void verifyQml(QQmlEngine *engine, const QByteArray &qml);
 
 private Q_SLOTS:
     void testUsageInCorrectEngine();
@@ -263,6 +256,14 @@ QVariant tst_QIfSimulationEngine::parseJson(const QString &json, QString& error)
         error = pe.errorString();
 
     return data;
+}
+
+void tst_QIfSimulationEngine::verifyQml(QQmlEngine *engine, const QByteArray &qml)
+{
+    QQmlComponent component(engine);
+    component.setData(qml, QUrl());
+    QScopedPointer<QObject> obj(component.create());
+    QVERIFY2(obj, qPrintable(component.errorString()));
 }
 
 void tst_QIfSimulationEngine::testUsageInCorrectEngine()
@@ -648,13 +649,13 @@ void tst_QIfSimulationEngine::testSignals()
 {
     QIfSimulationEngine engine;
 
-    SimpleAPI testObject;
-    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+    SimpleTestAPI testObject;
+    engine.registerSimulationInstance<SimpleTestAPI>(&testObject, "TestAPI", 1, 0, "SimpleTestAPI");
 
     QByteArray qml ("import QtQuick; \n\
                     import TestAPI; \n\
                     Item { \n\
-                            SimpleAPI { \n\
+                            SimpleTestAPI { \n\
                                 onTestPropertyChanged: { \n\
                                     somethingHappened('test') \n\
                                     otherSignal('test') \n\
@@ -703,12 +704,12 @@ void tst_QIfSimulationEngine::testFunctionCalls()
 
     QIfSimulationEngine engine;
 
-    SimpleAPI testObject;
-    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+    SimpleTestAPI testObject;
+    engine.registerSimulationInstance<SimpleTestAPI>(&testObject, "TestAPI", 1, 0, "SimpleTestAPI");
 
     QByteArray qml ("import QtQuick; \n\
                      import TestAPI; \n\
-                     SimpleAPI { \n\
+                     SimpleTestAPI { \n\
                      }");
 
     QQmlComponent component(&engine);
@@ -756,12 +757,12 @@ void tst_QIfSimulationEngine::testFunctionOverride()
 
     QIfSimulationEngine engine;
 
-    SimpleAPI testObject;
-    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+    SimpleTestAPI testObject;
+    engine.registerSimulationInstance<SimpleTestAPI>(&testObject, "TestAPI", 1, 0, "SimpleTestAPI");
 
     QByteArray qml ("import QtQuick; \n\
                      import TestAPI; \n\
-                     SimpleAPI { \n\
+                     SimpleTestAPI { \n\
                         function simpleFunction() { \n\
                             simpleFunctionCalled(); \n\
                         } \n\
@@ -801,8 +802,8 @@ void tst_QIfSimulationEngine::testFunctionWithInheritance()
 {
     QIfSimulationEngine engine;
 
-    SimpleAPI testObject;
-    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+    SimpleTestAPI testObject;
+    engine.registerSimulationInstance<SimpleTestAPI>(&testObject, "TestAPI", 1, 0, "SimpleTestAPI");
 
     engine.loadSimulation(QUrl("qrc:/FunctionTestMain.qml"));
 
@@ -852,12 +853,12 @@ void tst_QIfSimulationEngine::testCallingBaseFunction()
 
     QIfSimulationEngine engine;
 
-    SimpleAPI testObject;
-    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+    SimpleTestAPI testObject;
+    engine.registerSimulationInstance<SimpleTestAPI>(&testObject, "TestAPI", 1, 0, "SimpleTestAPI");
 
     QByteArray qml ("import QtQuick; \n\
                      import TestAPI; \n\
-                     SimpleAPI { \n\
+                     SimpleTestAPI { \n\
                         function simpleFunction() { \n\
                             simpleFunctionCalled(); \n\
                             Base.simpleFunction(); \n\
@@ -901,12 +902,12 @@ void tst_QIfSimulationEngine::testRecursionPrevention()
 {
     QIfSimulationEngine engine;
 
-    SimpleAPI testObject;
-    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+    SimpleTestAPI testObject;
+    engine.registerSimulationInstance<SimpleTestAPI>(&testObject, "TestAPI", 1, 0, "SimpleTestAPI");
 
     QByteArray qml ("import QtQuick; \n\
                      import TestAPI; \n\
-                     SimpleAPI { \n\
+                     SimpleTestAPI { \n\
                         function setTestProperty(value) { \n\
                             testProperty = value \n\
                         } \n\
@@ -938,15 +939,15 @@ void tst_QIfSimulationEngine::testMultipleInstances()
 {
     QIfSimulationEngine engine;
 
-    SimpleAPI testObject;
-    engine.registerSimulationInstance<SimpleAPI>(&testObject, "TestAPI", 1, 0, "SimpleAPI");
+    SimpleTestAPI testObject;
+    engine.registerSimulationInstance<SimpleTestAPI>(&testObject, "TestAPI", 1, 0, "SimpleTestAPI");
 
     QByteArray qml ("import QtQuick; \n\
                      import TestAPI; \n\
                      Item { \n\
                          signal firstInstanceCalled(); \n\
                          signal secondInstanceCalled(); \n\
-                         SimpleAPI { \n\
+                         SimpleTestAPI { \n\
                             function simpleFunction() { \n\
                                 simpleFunctionCalled(); \n\
                                 firstInstanceCalled(); \n\
@@ -957,7 +958,7 @@ void tst_QIfSimulationEngine::testMultipleInstances()
                                 return intArgument; \n\
                             } \n\
                          } \n\
-                         SimpleAPI { \n\
+                         SimpleTestAPI { \n\
                             function functionWithArguments(intArgument, stringArgument) { \n\
                                 functionWithArgumentsCalled(intArgument, stringArgument); \n\
                                 secondInstanceCalled(); \n\

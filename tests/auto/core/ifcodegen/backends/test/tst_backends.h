@@ -43,7 +43,9 @@ private slots:
     void testRemoteObjectsConfig();
 
 private:
+#if QT_CONFIG(process)
     QProcess *m_serverProcess;
+#endif
     QLocalServer *m_localServer;
     QLocalSocket *m_localSocket;
     bool m_isSimulation;

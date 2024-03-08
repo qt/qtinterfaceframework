@@ -18,4 +18,5 @@ qt_internal_add_test(tst_qifabstractfeature
         Qt::InterfaceFrameworkPrivate
         Qt::Qml
     TESTDATA ${test_data}
+    NO_BATCH
 )
