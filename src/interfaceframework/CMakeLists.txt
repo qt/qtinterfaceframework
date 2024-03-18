@@ -41,8 +41,8 @@ qt_internal_add_qml_module(InterfaceFramework
         Qt::Core
         Qt::Qml
     PRIVATE_MODULE_INTERFACE
-        Qt::CorePrivate
-        Qt::QmlPrivate
+        Qt6::CorePrivate
+        Qt6::QmlPrivate
     EXTRA_CMAKE_FILES
         Qt6InterfaceFrameworkConfigExtras.cmake.in
         Qt6InterfaceFrameworkMacros.cmake
