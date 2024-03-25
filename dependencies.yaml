@@ -3,7 +3,7 @@ dependencies:
     ref: e6d14fcdc95713f65367499629f93fb1f1e35ec9
     required: true
   ../qtmultimedia:
-    ref: b988940afc7cbd33167801e744624b1d7714eb90
+    ref: 5d2bdf00927771b74c407f7ffa958eb37b1f5e89
     required: true
   ../qtremoteobjects:
     ref: 6d973e34b5704a2a7c8ebe3db29f95004a1facb1
