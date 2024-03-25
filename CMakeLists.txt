@@ -44,7 +44,7 @@ if(IF_COVERAGE)
     set(GCOV_EXCLUDE
         '/usr/*'
         '${QT_BUILD_INTERNALS_RELOCATABLE_INSTALL_PREFIX}/*'
-        #'${CMAKE_CURRENT_LIST_DIR}/tests/*'
+        '${CMAKE_CURRENT_LIST_DIR}/tests/*'
         '${CMAKE_CURRENT_LIST_DIR}/examples/*'
         '${CMAKE_CURRENT_LIST_DIR}/src/3rdparty/*'
         'moc_*'
