@@ -31,13 +31,20 @@
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.h
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}_p.h
     ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backendinterface.h
     ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backendinterface.cpp
 {% endfor %}
 {% for struct in module.structs %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{struct|lower}}.h
     ${CMAKE_CURRENT_LIST_DIR}/{{struct|lower}}.cpp
 {% endfor %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}global.h
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}.h
     ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}factory.h
     ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}factory.cpp
 )
 

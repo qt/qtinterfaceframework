@@ -59,7 +59,8 @@ IF_TEMPLATE_PATH = $$[QT_INSTALL_DATA]/ifcodegen-templates
 exists($$VIRTUALENV_PATH) {
     equals(QMAKE_HOST.os, Windows) {
         PYTHON = $$VIRTUALENV_PATH/Scripts/python.exe
-        _LIB_FOLDER = $$files($$VIRTUALENV_PATH/lib/python*)
+        _LIB_FOLDERS = $$files($$VIRTUALENV_PATH/lib/python*)
+        _LIB_FOLDER = $$first(_LIB_FOLDERS)
         SITE_PACKAGES = $${_LIB_FOLDER}/site-packages
 
         # No space between the path and && otherwise python3 adds the space to the path
@@ -68,7 +69,8 @@ exists($$VIRTUALENV_PATH) {
         ENV += set VIRTUAL_ENV=%PYTHONHOME%&&
     } else {
         PYTHON = $$VIRTUALENV_PATH/bin/python
-        _LIB_FOLDER = $$files($$VIRTUALENV_PATH/lib/python*)
+        _LIB_FOLDERS = $$files($$VIRTUALENV_PATH/lib/python*)
+        _LIB_FOLDER = $$first(_LIB_FOLDERS)
         SITE_PACKAGES = $${_LIB_FOLDER}/site-packages
 
         ENV += LD_LIBRARY_PATH="$$system_path($$VIRTUALENV_PATH/bin)"

@@ -35,9 +35,12 @@ endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backend.h
     ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}backend.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}adapter.h
     ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}adapter.cpp
 {% endfor %}
+    ${CMAKE_CURRENT_LIST_DIR}/core.h
     ${CMAKE_CURRENT_LIST_DIR}/core.cpp
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
