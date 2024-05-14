@@ -399,6 +399,7 @@ QIfAbstractQueryTerm *QIfQueryParser::parse()
                     ++shifts;
                 }
             }
+            Q_UNUSED(reduces);
 
             QString errorMessage = QString(QLatin1String("Got %1 but expected on of the following types:\n")).arg(QLatin1String(spell[yytoken]));
             for (int token : expectedTokens)

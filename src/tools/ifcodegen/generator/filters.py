@@ -105,8 +105,8 @@ def test_type_value(symbol):
     elif symbol.type.is_list:
         value = test_type_value(t.nested.type)
         if not (t.nested.type.is_primitive):
-            value = 'QVariant::fromValue({0})'.format(value)
-        return 'QVariantList({{{0}}})'.format(value)
+            return 'QVariantList({{QVariant::fromValue({0})}})'.format(value)
+        return 'QVariantList({0})'.format(value)
     elif symbol.type.is_struct:
         prefix = namespace_prefix(symbol.type.reference.module)
         values_string = ', '.join(test_type_value(e) for e in symbol.type.reference.fields)
