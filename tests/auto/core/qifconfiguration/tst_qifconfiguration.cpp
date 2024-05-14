@@ -518,8 +518,9 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QCOMPARE(testFeature->discoveryMode(), QIfAbstractFeature::LoadOnlyProductionBackends);
     QCOMPARE(discoverySpy.count(), 1);
 
-    ConfigTestBackend backend;
-    QIfProxyServiceObject serviceObject(&backend);
+    auto backend = new ConfigTestBackend;
+    QIfServiceManager::instance()->registerService(backend, QStringList({"testFeature"}));
+    QIfProxyServiceObject serviceObject(backend);
     QSignalSpy serviceObjectSpy(testFeature, &T::serviceObjectChanged);
     QVERIFY(QIfConfiguration::setServiceObject("config1", &serviceObject));
     QCOMPARE(testFeature->serviceObject(), &serviceObject);
@@ -536,6 +537,17 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QCOMPARE(testFeature2->discoveryMode(), QIfAbstractFeature::LoadOnlyProductionBackends);
     QCOMPARE(testFeature2->serviceObject(), &serviceObject);
     QCOMPARE(testFeature2->preferredBackends(), QStringList({"*simulation*"}));
+
+    // Reset the serviceObject and settings and test the auto discovery
+    QVERIFY(QIfConfiguration::setServiceObject("config1", nullptr));
+    QVERIFY(QIfConfiguration::setPreferredBackends("config1", QStringList()));
+    QCOMPARE(testFeature->serviceObject(), nullptr);
+    QCOMPARE(testFeature2->serviceObject(), nullptr);
+    QIfConfiguration::startAutoDiscovery("config1");
+    QVERIFY(testFeature->serviceObject());
+    QVERIFY(testFeature2->serviceObject());
+    QIfServiceManager::instance()->unloadAllBackends();
+
 
     // Make sure the pointers to the registered features are removed when the features are deleted
     delete testFeature2;

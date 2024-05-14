@@ -328,6 +328,19 @@ bool QIfConfigurationManager::setServiceObject(QIfSettingsObject *so, QIfService
     return true;
 }
 
+bool QIfConfigurationManager::startAutoDiscovery(QIfSettingsObject *so)
+{
+    Q_ASSERT(so);
+    for (auto &feature : std::as_const(so->features)) {
+        if (!feature)
+            continue;
+        qCDebug(qLcIfConfig) << "Starting auto discovery of " << feature;
+        feature->startAutoDiscovery();
+    }
+
+    return true;
+}
+
 void QIfConfigurationManager::parseEnv(const QByteArray &rulesSrc, const std::function<void(const QString &, const QString &)> &func)
 {
     const QString content = QString::fromLocal8Bit(rulesSrc);
@@ -1069,6 +1082,25 @@ bool QIfConfiguration::setServiceObject(QIfServiceObject *serviceObject)
     return false;
 }
 
+/*!
+    Starts the auto discovery of all QIfAbstractFeature or QIfAbstractFeatureListModel instances
+    of this configuration.
+
+    Returns \c false if starting the auto discovery failed because an override was active, returns
+    \c true otherwise.
+
+    \since 6.8
+    \sa {QIfAbstractFeature::startAutoDiscovery()} {Environment Overrides}
+*/
+bool QIfConfiguration::startAutoDiscovery()
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    return QIfConfigurationManager::instance()->startAutoDiscovery(d->m_settingsObject);
+}
+
 void QIfConfiguration::classBegin()
 {
     Q_D(QIfConfiguration);
@@ -1368,6 +1400,22 @@ bool QIfConfiguration::isServiceObjectSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->serviceObjectSet : false;
+}
+
+/*!
+    Starts the auto discovery of all QIfAbstractFeature or QIfAbstractFeatureListModel instances
+    in the configuration \a group.
+
+    Returns \c false if starting the auto discovery failed because an override was active, returns
+    \c true otherwise.
+
+    \since 6.8
+    \sa {QIfAbstractFeature::startAutoDiscovery()} {Environment Overrides}
+*/
+bool QIfConfiguration::startAutoDiscovery(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->startAutoDiscovery(so);
 }
 
 

@@ -47,6 +47,7 @@ public:
     QStringList preferredBackends() const;
     QIfServiceObject *serviceObject() const;
 
+
 public Q_SLOTS:
     void setIgnoreOverrideWarnings(bool ignoreOverrideWarnings);
     bool setName(const QString &name);
@@ -56,6 +57,7 @@ public Q_SLOTS:
     bool setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode);
     bool setPreferredBackends(const QStringList &preferredBackends);
     bool setServiceObject(QIfServiceObject *serviceObject);
+    Q_REVISION(6, 8) bool startAutoDiscovery();
 
 Q_SIGNALS:
     void isValidChanged(bool isValid);
@@ -94,6 +96,8 @@ public: //static methods
     static QIfServiceObject *serviceObject(const QString &group);
     static bool setServiceObject(const QString &group, QIfServiceObject *serviceObject);
     static bool isServiceObjectSet(const QString &group);
+
+    static bool startAutoDiscovery(const QString &group);
 
 protected:
     QIfConfiguration(QIfConfigurationPrivate &dd, QObject *parent);

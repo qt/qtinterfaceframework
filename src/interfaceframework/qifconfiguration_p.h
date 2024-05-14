@@ -69,6 +69,7 @@ public:
     bool setDiscoveryMode(QIfConfiguration *obj, QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode);
     bool setPreferredBackends(QIfConfiguration *obj, QIfSettingsObject *so, const QStringList &preferredBackends);
     bool setServiceObject(QIfSettingsObject *so, QIfServiceObject *serviceObject);
+    bool startAutoDiscovery(QIfSettingsObject *so);
 
     QVariantMap readGroup(QSettings *settings, QAnyStringView group);
     void parseEnv(const QByteArray &rulesSrc, const std::function<void (const QString &, const QString &)> &func);
