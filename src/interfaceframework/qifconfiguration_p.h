@@ -46,6 +46,8 @@ public:
     bool serviceObjectSet = false;
     QVariantMap serviceSettings;
     bool serviceSettingsSet = false;
+    bool backendUpdatesEnabled = false;
+    bool backendUpdatesEnabledSet = false;
     QList<QPointer<QIfProxyServiceObject>> serviceObjects;
     QList<QPointer<QIfAbstractFeature>> features;
 };
@@ -69,6 +71,7 @@ public:
     bool setDiscoveryMode(QIfConfiguration *obj, QIfSettingsObject *so, QIfAbstractFeature::DiscoveryMode discoveryMode);
     bool setPreferredBackends(QIfConfiguration *obj, QIfSettingsObject *so, const QStringList &preferredBackends);
     bool setServiceObject(QIfSettingsObject *so, QIfServiceObject *serviceObject);
+    bool setBackendUpdatesEnabled(QIfSettingsObject *so, bool backendUpdatesEnabled);
     bool startAutoDiscovery(QIfSettingsObject *so);
 
     QVariantMap readGroup(QSettings *settings, QAnyStringView group);

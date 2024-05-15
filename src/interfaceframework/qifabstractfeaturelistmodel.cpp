@@ -155,18 +155,8 @@ QIfFeatureInterface *QIfAbstractFeatureListModelPrivate::backend() const
     The \a interfaceName argument is used to locate suitable service objects.
 */
 QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(const QString &interfaceName, QObject *parent)
-    : QAbstractListModel(*new QIfAbstractFeatureListModelPrivate(interfaceName, this), parent)
+    : QIfAbstractFeatureListModel(*new QIfAbstractFeatureListModelPrivate(interfaceName, this), parent)
 {
-    Q_D(QIfAbstractFeatureListModel);
-    d->initialize();
-    connect(d->m_feature, &QIfAbstractFeature::serviceObjectChanged, this, &QIfAbstractFeatureListModel::serviceObjectChanged);
-    connect(d->m_feature, &QIfAbstractFeature::discoveryModeChanged, this, &QIfAbstractFeatureListModel::discoveryModeChanged);
-    connect(d->m_feature, &QIfAbstractFeature::discoveryResultChanged, this, &QIfAbstractFeatureListModel::discoveryResultChanged);
-    connect(d->m_feature, &QIfAbstractFeature::isValidChanged, this, &QIfAbstractFeatureListModel::isValidChanged);
-    connect(d->m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfAbstractFeatureListModel::isInitializedChanged);
-    connect(d->m_feature, &QIfAbstractFeature::errorChanged, this, &QIfAbstractFeatureListModel::errorChanged);
-    connect(d->m_feature, &QIfAbstractFeature::configurationIdChanged, this, &QIfAbstractFeatureListModel::configurationIdChanged);
-    connect(d->m_feature, &QIfAbstractFeature::preferredBackendsChanged, this, &QIfAbstractFeatureListModel::preferredBackendsChanged);
 }
 
 /*!
@@ -415,6 +405,43 @@ QStringList QIfAbstractFeatureListModel::preferredBackends() const
     return d->m_feature->preferredBackends();
 }
 
+/*!
+    \qmlproperty bool AbstractFeatureListModel::backendUpdatesEnabled
+    \brief This property holds whether backend updates are enabled
+
+    By default, this property is \c true.
+
+    setUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
+    to skip expensive updates while the application is currently not visible on the screen.
+
+    This is especially useful when backend upates are triggered over an IPC and received by multiple
+    applications. By disabling updates, the application can avoid unnecessary updates.
+
+    A change to this property will cause the connectToServiceObject() and disconnectFromServiceObject()
+    functions to be called, depending on the new value.
+*/
+
+/*!
+    \property QIfAbstractFeatureListModel::backendUpdatesEnabled
+    \brief This property holds whether backend updates are enabled
+
+    By default, this property is \c true.
+
+    setUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
+    to skip expensive updates while the application is currently not visible on the screen.
+
+    This is especially useful when backend upates are triggered over an IPC and received by multiple
+    applications. By disabling updates, the application can avoid unnecessary updates.
+
+    A change to this property will cause the connectToServiceObject() and disconnectFromServiceObject()
+    functions to be called, depending on the new value.
+*/
+bool QIfAbstractFeatureListModel::backendUpdatesEnabled() const
+{
+    Q_D(const QIfAbstractFeatureListModel);
+    return d->m_feature->backendUpdatesEnabled();
+}
+
 bool QIfAbstractFeatureListModel::setServiceObject(QIfServiceObject *so)
 {
     Q_D(QIfAbstractFeatureListModel);
@@ -437,6 +464,12 @@ void QIfAbstractFeatureListModel::setPreferredBackends(const QStringList &prefer
 {
     Q_D(QIfAbstractFeatureListModel);
     d->m_feature->setPreferredBackends(preferredBackends);
+}
+
+void QIfAbstractFeatureListModel::setBackendUpdatesEnabled(bool newBackendUpdatesEnabled)
+{
+    Q_D(QIfAbstractFeatureListModel);
+    d->m_feature->setBackendUpdatesEnabled(newBackendUpdatesEnabled);
 }
 
 /*!
@@ -472,6 +505,7 @@ QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(QIfAbstractFeatureListM
     connect(d->m_feature, &QIfAbstractFeature::errorChanged, this, &QIfAbstractFeatureListModel::errorChanged);
     connect(d->m_feature, &QIfAbstractFeature::configurationIdChanged, this, &QIfAbstractFeatureListModel::configurationIdChanged);
     connect(d->m_feature, &QIfAbstractFeature::preferredBackendsChanged, this, &QIfAbstractFeatureListModel::preferredBackendsChanged);
+    connect(d->m_feature, &QIfAbstractFeature::backendUpdatesEnabledChanged, this, &QIfAbstractFeatureListModel::backendUpdatesEnabledChanged);
 }
 
 /*!
@@ -553,6 +587,8 @@ void QIfAbstractFeatureListModel::disconnectFromServiceObject(QIfServiceObject *
 {
     Q_D(QIfAbstractFeatureListModel);
     d->m_feature->disconnectFromServiceObjectDefaultImpl(serviceObject);
+    if (d->backend())
+        disconnect(d->backend(), nullptr, this, nullptr);
 }
 
 /*!

@@ -31,17 +31,25 @@ public:
 
 Q_SIGNALS:
     void errorChanged(QIfAbstractFeature::Error error, const QString &message = QString());
+    void intPropertyChanged(int intProperty);
 };
 
 class TestFeature : public QIfAbstractFeature
 {
     Q_OBJECT
 
+    Q_PROPERTY(int intProperty READ intProperty NOTIFY intPropertyChanged)
+
 public:
     TestFeature(bool testBaseFunctions = false, QObject *parent = nullptr)
         : QIfAbstractFeature("testFeature", parent)
         , m_testBaseFunctions(testBaseFunctions)
     {}
+
+    int intProperty() const
+    {
+        return m_intProperty;
+    }
 
     QString errorText() const
     {
@@ -65,6 +73,7 @@ public:
             return;
         TestFeatureInterface* testInterface = qobject_cast<TestFeatureInterface*>(serviceObject->interfaceInstance(interfaceName()));
         connect(testInterface, &TestFeatureInterface::errorChanged, this, &TestFeature::onErrorChanged);
+        connect(testInterface, &TestFeatureInterface::intPropertyChanged, this, &TestFeature::onIntPropertyChanged);
 
         QIfAbstractFeature::connectToServiceObject(serviceObject);
     }
@@ -73,19 +82,40 @@ public:
     {
     }
 
+    void onIntPropertyChanged(int intProperty)
+    {
+        if (m_intProperty == intProperty)
+            return;
+
+        m_intProperty = intProperty;
+        emit intPropertyChanged();
+    }
+
+
+signals:
+    void intPropertyChanged();
+
 private:
     bool m_testBaseFunctions;
+    int m_intProperty = 0;
 };
 
 class TestFeatureListModel : public QIfAbstractFeatureListModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(int intProperty READ intProperty NOTIFY intPropertyChanged)
+
 public:
     TestFeatureListModel(bool testBaseFunctions = false, QObject *parent = nullptr)
         : QIfAbstractFeatureListModel("testFeature", parent)
         , m_testBaseFunctions(testBaseFunctions)
     {}
+
+    int intProperty() const
+    {
+        return m_intProperty;
+    }
 
     QString errorText() const
     {
@@ -109,6 +139,7 @@ public:
             return;
         TestFeatureInterface* testInterface = qobject_cast<TestFeatureInterface*>(serviceObject->interfaceInstance(interfaceName()));
         connect(testInterface, &TestFeatureInterface::errorChanged, this, &TestFeatureListModel::onErrorChanged);
+        connect(testInterface, &TestFeatureInterface::intPropertyChanged, this, &TestFeatureListModel::onIntPropertyChanged);
 
         QIfAbstractFeatureListModel::connectToServiceObject(serviceObject);
     }
@@ -130,8 +161,21 @@ public:
         return QVariant();
     }
 
+    void onIntPropertyChanged(int intProperty)
+    {
+        if (m_intProperty == intProperty)
+            return;
+
+        m_intProperty = intProperty;
+        emit intPropertyChanged();
+    }
+
+signals:
+    void intPropertyChanged();
+
 private:
     bool m_testBaseFunctions;
+    int m_intProperty = 0;
 };
 
 class TestFeatureBackend : public TestFeatureInterface
@@ -145,6 +189,7 @@ public:
 
     void initialize() override
     {
+        emit intPropertyChanged(m_intProperty);
         emit initializationDone();
     }
 
@@ -152,6 +197,17 @@ public:
     {
         emit errorChanged(error, message);
     }
+
+    void setIntProperty(int intProperty)
+    {
+        if (m_intProperty == intProperty)
+            return;
+        m_intProperty = intProperty;
+        emit intPropertyChanged(m_intProperty);
+    }
+
+private:
+    int m_intProperty = 0;
 };
 
 class TestBackend : public QObject, public QIfServiceInterface
@@ -183,7 +239,6 @@ public:
         m_testBackend->emitError(error, message);
     }
 
-private:
     TestFeatureBackend* m_testBackend;
 };
 
@@ -213,6 +268,7 @@ private Q_SLOTS:
     void testErrors();
     void testServiceObjectDestruction();
     void testResetServiceObject();
+    void testBackendUpdates();
 
 private:
     QIfFeatureTester *createTester(bool testBaseFunctions = false)
@@ -542,6 +598,41 @@ void BaseTest::testResetServiceObject()
     QCOMPARE(serviceObjectChangedSpy.count(), 1);
 }
 
+void BaseTest::testBackendUpdates()
+{
+    TestBackend* backend = new TestBackend();
+    m_manager->registerService(backend, backend->interfaces());
+
+    QIfFeatureTester *f = createTester();
+    QSignalSpy serviceObjectChangedSpy(f, &QIfFeatureTester::serviceObjectChanged);
+    f->startAutoDiscovery();
+    QVERIFY(f->serviceObject());
+    QCOMPARE(serviceObjectChangedSpy.count(), 1);
+    serviceObjectChangedSpy.clear();
+
+    // Test that updates from the backend are propagated to the feature
+    QCOMPARE(f->intProperty(), 0);
+    backend->m_testBackend->setIntProperty(42);
+    QCOMPARE(f->intProperty(), 42);
+
+    // Test that updates from the backend are NOT propagated to the feature anymore
+    f->setBackendUpdatesEnabled(false);
+    backend->m_testBackend->setIntProperty(100);
+    QCOMPARE(f->intProperty(), 42);
+
+    // Verify that the current value is propagated automatically after enabling updates again
+    f->setBackendUpdatesEnabled(true);
+    QCOMPARE(f->intProperty(), 100);
+
+    // Verify that the current value is not propagated to the Feature after disabling updates
+    // and connecting to a new ServiceObject
+    QIfFeatureTester *secondFeature = createTester();
+    secondFeature->setBackendUpdatesEnabled(false);
+    secondFeature->startAutoDiscovery();
+    QVERIFY(secondFeature->serviceObject());
+    QCOMPARE(secondFeature->intProperty(), 0);
+}
+
 //This construction is used to run the test twice once for a Feature and once for the FeatureListModel but show the results as separate tests.
 class tst_QIfAbstractFeature : public BaseTest
 {
@@ -579,4 +670,3 @@ int main(int argc, char *argv[])
 }
 
 #include "tst_qifabstractfeature.moc"
-

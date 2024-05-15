@@ -89,6 +89,16 @@ public:
         return m_feature ? m_feature->errorText() : m_featureListModel->errorText();
     }
 
+    void setBackendUpdatesEnabled(bool backendUpdatesEnabled)
+    {
+        m_feature ? m_feature->setBackendUpdatesEnabled(backendUpdatesEnabled) : m_featureListModel->setBackendUpdatesEnabled(backendUpdatesEnabled);
+    }
+
+    int intProperty() const
+    {
+        return m_feature ? m_feature->property("intProperty").toInt() : m_featureListModel->property("intProperty").toInt();
+    }
+
 public Q_SLOTS:
     bool setServiceObject(QIfServiceObject *so)
     {

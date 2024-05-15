@@ -32,6 +32,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfiguration : public QObject, public QQ
     Q_PROPERTY(QIfAbstractFeature::DiscoveryMode discoveryMode READ discoveryMode WRITE setDiscoveryMode NOTIFY discoveryModeChanged FINAL)
     Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged FINAL)
     Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged FINAL)
+    Q_PROPERTY(bool backendUpdatesEnabled READ backendUpdatesEnabled WRITE setBackendUpdatesEnabled NOTIFY backendUpdatesEnabledChanged REVISION(6, 8) FINAL)
 
 public:
     explicit QIfConfiguration(const QString &name = QString(), QObject *parent = nullptr);
@@ -46,7 +47,7 @@ public:
     QIfAbstractFeature::DiscoveryMode discoveryMode() const;
     QStringList preferredBackends() const;
     QIfServiceObject *serviceObject() const;
-
+    bool backendUpdatesEnabled() const;
 
 public Q_SLOTS:
     void setIgnoreOverrideWarnings(bool ignoreOverrideWarnings);
@@ -57,6 +58,7 @@ public Q_SLOTS:
     bool setDiscoveryMode(QIfAbstractFeature::DiscoveryMode discoveryMode);
     bool setPreferredBackends(const QStringList &preferredBackends);
     bool setServiceObject(QIfServiceObject *serviceObject);
+    Q_REVISION(6, 8) bool setBackendUpdatesEnabled(bool backendUpdatesEnabled);
     Q_REVISION(6, 8) bool startAutoDiscovery();
 
 Q_SIGNALS:
@@ -69,6 +71,7 @@ Q_SIGNALS:
     void preferredBackendsChanged(const QStringList &preferredBackends);
     void serviceObjectChanged(const QIfServiceObject *serviceObject);
     void ignoreOverrideWarningsChanged(bool ignoreOverrideWarnings);
+    Q_REVISION(6, 8) void backendUpdatesEnabledChanged(bool backendUpdatesEnabled);
 
 public: //static methods
     static bool exists(const QString &group);
@@ -96,6 +99,10 @@ public: //static methods
     static QIfServiceObject *serviceObject(const QString &group);
     static bool setServiceObject(const QString &group, QIfServiceObject *serviceObject);
     static bool isServiceObjectSet(const QString &group);
+
+    static bool backendUpdatesEnabled(const QString &group);
+    static bool setBackendUpdatesEnabled(const QString &group, bool backendUpdatesEnabled);
+    static bool isBackendUpdatesEnabledSet(const QString &group);
 
     static bool startAutoDiscovery(const QString &group);
 

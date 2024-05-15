@@ -221,6 +221,11 @@ void QIfConfigurationManager::addAbstractFeature(const QString &group, QIfAbstra
         qCDebug(qLcIfConfig) << "Updating serviceObject of" << feature << "with" << so->serviceObject;
         feature->setServiceObject(so->serviceObject);
     }
+
+    if (so->backendUpdatesEnabledSet) {
+        qCDebug(qLcIfConfig) << "Updating backendUpdatesEnabled of" << feature << "with" << so->backendUpdatesEnabled;
+        feature->setBackendUpdatesEnabled(so->backendUpdatesEnabled);
+    }
 }
 
 void QIfConfigurationManager::removeAbstractFeature(const QString &group, QIfAbstractFeature *feature)
@@ -324,6 +329,21 @@ bool QIfConfigurationManager::setServiceObject(QIfSettingsObject *so, QIfService
             continue;
         qCDebug(qLcIfConfig) << "Updating serviceObject of" << feature << "with" << serviceObject;
         feature->setServiceObject(so->serviceObject);
+    }
+    return true;
+}
+
+bool QIfConfigurationManager::setBackendUpdatesEnabled(QIfSettingsObject *so, bool backendUpdatesEnabled)
+{
+    Q_ASSERT(so);
+    so->backendUpdatesEnabled = backendUpdatesEnabled;
+    so->backendUpdatesEnabledSet = true;
+
+    for (auto &feature : std::as_const(so->features)) {
+        if (!feature)
+            continue;
+        qCDebug(qLcIfConfig) << "Updating backendUpdatesEnabled of" << feature << "with" << backendUpdatesEnabled;
+        feature->setBackendUpdatesEnabled(so->backendUpdatesEnabled);
     }
     return true;
 }
@@ -868,6 +888,39 @@ QIfServiceObject *QIfConfiguration::serviceObject() const
     return d->m_settingsObject->serviceObject;
 }
 
+/*!
+    \qmlproperty bool InterfaceFrameworkConfiguration::backendUpdatesEnabled
+
+    Holds the backendUpdatesEnabled setting of the configuration. The value is applied to all
+    AbstractFeature or AbstractFeatureListModel instances with a matching configurationId.
+    The value is applied when a new matching instance is created and
+    it is also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa AbstractFeature::backendUpdatesEnabled AbstractFeatureListModel::backendUpdatesEnabled
+*/
+/*!
+    \property QIfConfiguration::backendUpdatesEnabled
+
+    Holds the backendUpdatesEnabled setting of the configuration. The value is applied to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+    The value is applied when a new matching instance is created and it is also applied to
+    all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfAbstractFeature::backendUpdatesEnabled QIfAbstractFeatureListModel::backendUpdatesEnabled
+*/
+bool QIfConfiguration::backendUpdatesEnabled() const
+{
+    Q_D(const QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    return d->m_settingsObject->backendUpdatesEnabled;
+}
+
 void QIfConfiguration::setIgnoreOverrideWarnings(bool ignoreOverrideWarnings)
 {
     Q_D(QIfConfiguration);
@@ -930,7 +983,7 @@ bool QIfConfiguration::setName(const QString &name)
     Sets the \a serviceSettings of this configuration and applies it to all QIfServiceObject instances
     with a matching configurationId.
 
-    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
+    Returns \c false if setting the serviceSettings failed because an override was active, returns \c true
     otherwise.
 
     \sa {Environment Overrides}
@@ -1083,6 +1136,33 @@ bool QIfConfiguration::setServiceObject(QIfServiceObject *serviceObject)
 }
 
 /*!
+    Sets the \a backendUpdatesEnabled setting of this configuration and applies it to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the value failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
+bool QIfConfiguration::setBackendUpdatesEnabled(bool backendUpdatesEnabled)
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    if (d->m_settingsObject->backendUpdatesEnabled == backendUpdatesEnabled)
+        return false;
+
+    if (QIfConfigurationManager::instance()->setBackendUpdatesEnabled(d->m_settingsObject, backendUpdatesEnabled)) {
+        emit backendUpdatesEnabledChanged(backendUpdatesEnabled);
+        return true;
+    }
+
+    return false;
+}
+
+
+/*!
     Starts the auto discovery of all QIfAbstractFeature or QIfAbstractFeatureListModel instances
     of this configuration.
 
@@ -1166,8 +1246,8 @@ QVariantMap QIfConfiguration::serviceSettings(const QString &group)
     Sets the \a serviceSettings of the configuration \a group and applies it to all QIfServiceObject
     instances with a matching configurationId.
 
-    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
-    otherwise.
+    Returns \c false if setting the serviceSettings failed because an override was active, returns
+    \c true otherwise.
 
     \sa {Environment Overrides}
 */
@@ -1208,7 +1288,7 @@ QString QIfConfiguration::simulationFile(const QString &group)
     Sets the \a simulationFile of the configuration \a group and applies it to all
     QIfSimulationEngine instances with a matching configurationId.
 
-    Returns \c false if setting the simulationDataFile failed because an override was active, returns \c true
+    Returns \c false if setting the simulationFile failed because an override was active, returns \c true
     otherwise.
 
     \sa {Environment Overrides}
@@ -1292,8 +1372,8 @@ QIfAbstractFeature::DiscoveryMode QIfConfiguration::discoveryMode(const QString 
     Sets the \a discoveryMode of the configuration \a group and applies it to all QIfAbstractFeature or
     QIfAbstractFeatureListModel instances with a matching configurationId.
 
-    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
-    otherwise.
+    Returns \c false if setting the discoveryMode failed because an override was active, returns \c
+    true otherwise.
 
     \sa {Environment Overrides}
 */
@@ -1334,8 +1414,8 @@ QStringList QIfConfiguration::preferredBackends(const QString &group)
     Sets the \a preferredBackends of the configuration \a group and applies it to all QIfAbstractFeature or
     QIfAbstractFeatureListModel instances with a matching configurationId.
 
-    Returns \c false if setting the serviceObject failed because an override was active, returns \c true
-    otherwise.
+    Returns \c false if setting the preferredBackends failed because an override was active,
+    returns \c true otherwise.
 
     \sa {Environment Overrides}
 */
@@ -1400,6 +1480,48 @@ bool QIfConfiguration::isServiceObjectSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->serviceObjectSet : false;
+}
+
+/*!
+    Returns the current value of \c backendUpdatesEnabled setting of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+*/
+bool QIfConfiguration::backendUpdatesEnabled(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->backendUpdatesEnabled : false;
+}
+
+/*!
+    Sets the \a backendUpdatesEnabled setting of the configuration \a group and applies it to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the value failed because an override was active, returns \c true
+    otherwise.
+
+    \sa {Environment Overrides}
+*/
+bool QIfConfiguration::setBackendUpdatesEnabled(const QString &group, bool backendUpdatesEnabled)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->setBackendUpdatesEnabled(so, backendUpdatesEnabled);
+}
+
+/*!
+    Returns \c true when the \c backendUpdatesEnabled setting has been set in the configuration
+    named \a group and false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \sa {Settings file}
+*/
+bool QIfConfiguration::isBackendUpdatesEnabledSet(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->backendUpdatesEnabledSet : false;
 }
 
 /*!

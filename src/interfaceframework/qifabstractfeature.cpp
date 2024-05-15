@@ -27,6 +27,7 @@ QIfAbstractFeaturePrivate::QIfAbstractFeaturePrivate(const QString &interfaceNam
     , m_serviceObject(nullptr)
     , m_discoveryMode(QIfAbstractFeature::AutoDiscovery)
     , m_discoveryResult(QIfAbstractFeature::NoResult)
+    , m_backendUpdatesEnabled(true)
     , m_error(QIfAbstractFeature::NoError)
     , m_qmlCreation(false)
     , m_isInitialized(false)
@@ -299,12 +300,14 @@ bool QIfAbstractFeature::setServiceObject(QIfServiceObject *so)
     emit isValidChanged(isValid());
 
     if (so) {
-        connectToServiceObject(d->m_serviceObject);
-        if (!d->m_isConnected) {
-            qCritical() << this <<
-                      "accepted the given QIfServiceObject, but didn't connect to it completely"
-                      ", as QIfAbstractFeature::connectToServiceObject wasn't called.";
-            return false;
+        if (d->m_backendUpdatesEnabled) {
+            connectToServiceObject(d->m_serviceObject);
+            if (!d->m_isConnected) {
+                qCritical() << this <<
+                          "accepted the given QIfServiceObject, but didn't connect to it completely"
+                          ", as QIfAbstractFeature::connectToServiceObject wasn't called.";
+                return false;
+            }
         }
         QObjectPrivate::connect(so, &QObject::destroyed, d, &QIfAbstractFeaturePrivate::serviceObjectDestroyed);
     }
@@ -524,6 +527,58 @@ void QIfAbstractFeature::setPreferredBackends(const QStringList &preferredBacken
         return;
     d->m_preferredBackends = preferredBackends;
     emit preferredBackendsChanged(preferredBackends);
+}
+
+/*!
+    \qmlproperty bool AbstractFeature::backendUpdatesEnabled
+    \brief This property holds whether backend updates are enabled
+
+    By default, this property is \c true.
+
+    setUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
+    to skip expensive updates while the application is currently not visible on the screen.
+
+    This is especially useful when backend upates are triggered over an IPC and received by multiple
+    applications. By disabling updates, the application can avoid unnecessary updates.
+
+    A change to this property will cause the connectToServiceObject() and disconnectFromServiceObject()
+    functions to be called, depending on the new value.
+*/
+
+/*!
+    \property QIfAbstractFeature::backendUpdatesEnabled
+    \brief This property holds whether backend updates are enabled
+
+    By default, this property is \c true.
+
+    setUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
+    to skip expensive updates while the application is currently not visible on the screen.
+
+    This is especially useful when backend upates are triggered over an IPC and received by multiple
+    applications. By disabling updates, the application can avoid unnecessary updates.
+
+    A change to this property will cause the connectToServiceObject() and disconnectFromServiceObject()
+    functions to be called, depending on the new value.
+*/
+bool QIfAbstractFeature::backendUpdatesEnabled() const
+{
+    Q_D(const QIfAbstractFeature);
+    return d->m_backendUpdatesEnabled;
+}
+
+void QIfAbstractFeature::setBackendUpdatesEnabled(bool newBackendUpdatesEnabled)
+{
+    Q_D(QIfAbstractFeature);
+    if (d->m_backendUpdatesEnabled == newBackendUpdatesEnabled)
+        return;
+    d->m_backendUpdatesEnabled = newBackendUpdatesEnabled;
+    if (d->m_serviceObject) {
+        if (d->m_backendUpdatesEnabled)
+            connectToServiceObject(d->m_serviceObject);
+        else
+            disconnectFromServiceObject(d->m_serviceObject);
+    }
+    emit backendUpdatesEnabledChanged(newBackendUpdatesEnabled);
 }
 
 /*!

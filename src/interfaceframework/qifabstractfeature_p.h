@@ -58,6 +58,7 @@ public:
     QIfAbstractFeature::DiscoveryResult m_discoveryResult;
     QString m_configurationId;
     QStringList m_preferredBackends;
+    bool m_backendUpdatesEnabled;
     QString m_errorMessage;
     QIfAbstractFeature::Error m_error;
     bool m_qmlCreation;

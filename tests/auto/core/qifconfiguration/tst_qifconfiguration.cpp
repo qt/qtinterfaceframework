@@ -118,6 +118,7 @@ private Q_SLOTS:
     void preferredBackends();
     void discoveryMode();
     void serviceObject();
+    void backendUpdatesEnabled();
 
     void emptySettingsFile();
     void emptyGroupSettingsFile();
@@ -395,6 +396,35 @@ void tst_QIfConfiguration::serviceObject()
     QCOMPARE(spy.data()[0][0], QVariant::fromValue<QIfServiceObject*>(&serviceObject2));
 }
 
+void tst_QIfConfiguration::backendUpdatesEnabled()
+{
+    // call static setter
+    QVERIFY(QIfConfiguration::setBackendUpdatesEnabled("staticGroup", true));
+    QVERIFY(QIfConfiguration::exists("staticGroup"));
+    QVERIFY(QIfConfiguration::isBackendUpdatesEnabledSet("staticGroup"));
+    QCOMPARE(QIfConfiguration::backendUpdatesEnabled("staticGroup"), true);
+
+    // Verify that reading the setting using the object API works as well
+    QIfConfiguration staticGroupConfig("staticGroup");
+    QCOMPARE(staticGroupConfig.backendUpdatesEnabled(), true);
+
+    // Create Configuration and call that method
+    QIfConfiguration config("objectGroup");
+    QVERIFY(config.isValid());
+    QVERIFY(config.setBackendUpdatesEnabled(true));
+    QCOMPARE(config.backendUpdatesEnabled(), true);
+    QVERIFY(QIfConfiguration::exists("objectGroup"));
+    QVERIFY(QIfConfiguration::isBackendUpdatesEnabledSet("objectGroup"));
+
+    // Test the change signal
+    QSignalSpy spy(&config, &QIfConfiguration::backendUpdatesEnabledChanged);
+    QVERIFY(spy.isValid());
+    QVERIFY(config.setBackendUpdatesEnabled(false));
+    QCOMPARE(config.backendUpdatesEnabled(), false);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.data()[0][0], false);
+}
+
 void tst_QIfConfiguration::emptySettingsFile()
 {
     // Reading a empty file shouldn't cause any problem
@@ -511,12 +541,17 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QCOMPARE(testFeature->discoveryMode(), QIfAbstractFeature::AutoDiscovery);
     QCOMPARE(testFeature->serviceObject(), nullptr);
     QCOMPARE(testFeature->preferredBackends(), QStringList());
+    QCOMPARE(testFeature->backendUpdatesEnabled(), true);
 
     // Set a configuration and make sure the matching Feature changes as well
     QSignalSpy discoverySpy(testFeature, &T::discoveryModeChanged);
     QVERIFY(QIfConfiguration::setDiscoveryMode("config1", QIfAbstractFeature::LoadOnlyProductionBackends));
     QCOMPARE(testFeature->discoveryMode(), QIfAbstractFeature::LoadOnlyProductionBackends);
     QCOMPARE(discoverySpy.count(), 1);
+    QSignalSpy backendUpdatesEnabledSpy(testFeature, &T::backendUpdatesEnabledChanged);
+    QVERIFY(QIfConfiguration::setBackendUpdatesEnabled("config1", false));
+    QCOMPARE(testFeature->backendUpdatesEnabled(), false);
+    QCOMPARE(backendUpdatesEnabledSpy.count(), 1);
 
     auto backend = new ConfigTestBackend;
     QIfServiceManager::instance()->registerService(backend, QStringList({"testFeature"}));
@@ -537,6 +572,7 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QCOMPARE(testFeature2->discoveryMode(), QIfAbstractFeature::LoadOnlyProductionBackends);
     QCOMPARE(testFeature2->serviceObject(), &serviceObject);
     QCOMPARE(testFeature2->preferredBackends(), QStringList({"*simulation*"}));
+    QCOMPARE(testFeature2->backendUpdatesEnabled(), false);
 
     // Reset the serviceObject and settings and test the auto discovery
     QVERIFY(QIfConfiguration::setServiceObject("config1", nullptr));
@@ -578,7 +614,6 @@ void tst_QIfConfiguration::testServiceObjects()
     QCOMPARE(so->serviceSettings(), QVariantMap());
 
     QVERIFY(QIfConfiguration::setServiceSettings("testBackend", QVariantMap({{"key1", "value1"}})));
-    qDebug() << so;
     QCOMPARE(so->serviceSettings(), QVariantMap({{"key1", "value1"}}));
 
     QIfServiceManager::instance()->unloadAllBackends();
