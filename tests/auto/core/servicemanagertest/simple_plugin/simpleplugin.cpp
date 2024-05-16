@@ -5,11 +5,11 @@
 
 
 #include "simpleplugin.h"
+#include <QThread>
 
 SimplePlugin::SimplePlugin()
     : QObject()
 {
-
 }
 
 #include "moc_simpleplugin.cpp"

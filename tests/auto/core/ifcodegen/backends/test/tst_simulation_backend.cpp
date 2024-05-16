@@ -12,7 +12,8 @@ private slots:
     {
         BackendsTestBase::initTestCase_data();
 
-        QTest::newRow("simulation-backend") << "*echo_qtro_simulator*" << true << "";
+        QTest::newRow("simulation-backend") << "*echo_qtro_simulator*" << true << false << "";
+        QTest::newRow("simulation-backend asyncBackendLoading") << "*echo_qtro_simulator*" << true << true << "";
     }
 };
 

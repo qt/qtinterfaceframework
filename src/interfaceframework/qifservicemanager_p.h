@@ -47,6 +47,8 @@ struct Backend {
     QVariantMap metaData;
     QIfServiceInterface *interface = nullptr;
     QIfProxyServiceObject *proxyServiceObject = nullptr;
+    QAtomicInteger<bool> loading = false;
+    QPointer<QThread> thread = nullptr;
     QPluginLoader *loader = nullptr;
 };
 
@@ -61,7 +63,7 @@ public:
     static bool isSimulation(const QVariantMap &metaData);
 
     QIfProxyServiceObject *createServiceObject(struct Backend *backend) const;
-    QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends) const;
+    QList<QIfServiceObjectHandle> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends) const;
 
     void searchPlugins();
     void registerStaticBackend(const QStaticPlugin &plugin);
@@ -72,6 +74,10 @@ public:
     void unloadAllBackends();
 
     QIfServiceInterface *loadServiceBackendInterface(struct Backend *backend) const;
+    void loadServiceBackendInterfaceAsync(struct Backend *backend);
+    static std::tuple<QIfServiceInterface *, QPluginLoader*> loadPlugin(const QString &pluginFile);
+
+    Backend *verifyHandle(void *handle);
 
     QList<Backend*> m_backends;
     QSet<QString> m_interfaceNames;
@@ -84,7 +90,6 @@ public:
 Q_SIGNALS:
     void beginInsertRows(const QModelIndex &index, int start, int end);
     void endInsertRows();
-
 };
 
 QT_END_NAMESPACE

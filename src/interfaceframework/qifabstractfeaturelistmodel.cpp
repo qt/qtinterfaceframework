@@ -442,6 +442,12 @@ bool QIfAbstractFeatureListModel::backendUpdatesEnabled() const
     return d->m_feature->backendUpdatesEnabled();
 }
 
+bool QIfAbstractFeatureListModel::asynchronousBackendLoading() const
+{
+    Q_D(const QIfAbstractFeatureListModel);
+    return d->m_feature->asynchronousBackendLoading();
+}
+
 bool QIfAbstractFeatureListModel::setServiceObject(QIfServiceObject *so)
 {
     Q_D(QIfAbstractFeatureListModel);
@@ -470,6 +476,12 @@ void QIfAbstractFeatureListModel::setBackendUpdatesEnabled(bool newBackendUpdate
 {
     Q_D(QIfAbstractFeatureListModel);
     d->m_feature->setBackendUpdatesEnabled(newBackendUpdatesEnabled);
+}
+
+void QIfAbstractFeatureListModel::setAsynchronousBackendLoading(bool asynchronousBackendLoading)
+{
+    Q_D(QIfAbstractFeatureListModel);
+    d->m_feature->setAsynchronousBackendLoading(asynchronousBackendLoading);
 }
 
 /*!
@@ -506,6 +518,7 @@ QIfAbstractFeatureListModel::QIfAbstractFeatureListModel(QIfAbstractFeatureListM
     connect(d->m_feature, &QIfAbstractFeature::configurationIdChanged, this, &QIfAbstractFeatureListModel::configurationIdChanged);
     connect(d->m_feature, &QIfAbstractFeature::preferredBackendsChanged, this, &QIfAbstractFeatureListModel::preferredBackendsChanged);
     connect(d->m_feature, &QIfAbstractFeature::backendUpdatesEnabledChanged, this, &QIfAbstractFeatureListModel::backendUpdatesEnabledChanged);
+    connect(d->m_feature, &QIfAbstractFeature::asynchronousBackendLoadingChanged, this, &QIfAbstractFeatureListModel::asynchronousBackendLoadingChanged);
 }
 
 /*!

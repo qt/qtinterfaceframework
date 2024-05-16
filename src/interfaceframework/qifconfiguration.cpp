@@ -226,6 +226,11 @@ void QIfConfigurationManager::addAbstractFeature(const QString &group, QIfAbstra
         qCDebug(qLcIfConfig) << "Updating backendUpdatesEnabled of" << feature << "with" << so->backendUpdatesEnabled;
         feature->setBackendUpdatesEnabled(so->backendUpdatesEnabled);
     }
+
+    if (so->asynchronousBackendLoadingSet) {
+        qCDebug(qLcIfConfig) << "Updating asynchronousBackendLoading of" << feature << "with" << so->asynchronousBackendLoading;
+        feature->setAsynchronousBackendLoading(so->asynchronousBackendLoading);
+    }
 }
 
 void QIfConfigurationManager::removeAbstractFeature(const QString &group, QIfAbstractFeature *feature)
@@ -344,6 +349,21 @@ bool QIfConfigurationManager::setBackendUpdatesEnabled(QIfSettingsObject *so, bo
             continue;
         qCDebug(qLcIfConfig) << "Updating backendUpdatesEnabled of" << feature << "with" << backendUpdatesEnabled;
         feature->setBackendUpdatesEnabled(so->backendUpdatesEnabled);
+    }
+    return true;
+}
+
+bool QIfConfigurationManager::setAsynchronousBackendLoading(QIfSettingsObject *so, bool asynchronousBackendLoading)
+{
+    Q_ASSERT(so);
+    so->asynchronousBackendLoading = asynchronousBackendLoading;
+    so->asynchronousBackendLoadingSet = true;
+
+    for (auto &feature : std::as_const(so->features)) {
+        if (!feature)
+            continue;
+        qCDebug(qLcIfConfig) << "Updating asynchronousBackendLoading of" << feature << "with" << asynchronousBackendLoading;
+        feature->setAsynchronousBackendLoading(so->asynchronousBackendLoading);
     }
     return true;
 }
@@ -921,6 +941,15 @@ bool QIfConfiguration::backendUpdatesEnabled() const
     return d->m_settingsObject->backendUpdatesEnabled;
 }
 
+bool QIfConfiguration::asynchronousBackendLoading() const
+{
+    Q_D(const QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    return d->m_settingsObject->asynchronousBackendLoading;
+}
+
 void QIfConfiguration::setIgnoreOverrideWarnings(bool ignoreOverrideWarnings)
 {
     Q_D(QIfConfiguration);
@@ -1155,6 +1184,23 @@ bool QIfConfiguration::setBackendUpdatesEnabled(bool backendUpdatesEnabled)
 
     if (QIfConfigurationManager::instance()->setBackendUpdatesEnabled(d->m_settingsObject, backendUpdatesEnabled)) {
         emit backendUpdatesEnabledChanged(backendUpdatesEnabled);
+        return true;
+    }
+
+    return false;
+}
+
+bool QIfConfiguration::setAsynchronousBackendLoading(bool asynchronousBackendLoading)
+{
+    Q_D(QIfConfiguration);
+
+    Q_CHECK_SETTINGSOBJECT(false);
+
+    if (d->m_settingsObject->asynchronousBackendLoading == asynchronousBackendLoading)
+        return false;
+
+    if (QIfConfigurationManager::instance()->setAsynchronousBackendLoading(d->m_settingsObject, asynchronousBackendLoading)) {
+        emit asynchronousBackendLoadingChanged(asynchronousBackendLoading);
         return true;
     }
 
@@ -1522,6 +1568,24 @@ bool QIfConfiguration::isBackendUpdatesEnabledSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->backendUpdatesEnabledSet : false;
+}
+
+bool QIfConfiguration::asynchronousBackendLoading(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->asynchronousBackendLoading : false;
+}
+
+bool QIfConfiguration::setAsynchronousBackendLoading(const QString &group, bool asynchronousBackendLoading)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
+    return QIfConfigurationManager::instance()->setAsynchronousBackendLoading(so, asynchronousBackendLoading);
+}
+
+bool QIfConfiguration::isAsynchronousBackendLoadingSet(const QString &group)
+{
+    QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
+    return so ? so->asynchronousBackendLoadingSet : false;
 }
 
 /*!

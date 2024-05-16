@@ -10,6 +10,7 @@
 #include "qifservicemanager_p.h"
 #include "qifconfiguration_p.h"
 
+#include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
@@ -17,6 +18,7 @@
 #include <QLibrary>
 #include <QModelIndex>
 #include <QStringList>
+#include <QThread>
 
 using namespace Qt::StringLiterals;
 
@@ -25,6 +27,7 @@ using namespace Qt::StringLiterals;
 QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(qLcIfServiceManagement, "qt.if.servicemanagement");
+Q_LOGGING_CATEGORY(qLcIfPerf, "qt.if.servicemanagement.perf");
 
 namespace qtif_helper {
 // AXIVION DISABLE Qt-NonPodGlobalStatic
@@ -67,6 +70,10 @@ using namespace qtif_helper;
 
 Backend::~Backend()
 {
+    if (thread) {
+        thread->deleteLater();
+        thread = nullptr;
+    }
     delete interface;
     delete proxyServiceObject;
     delete loader;
@@ -98,6 +105,18 @@ QIfProxyServiceObject *QIfServiceManagerPrivate::createServiceObject(struct Back
     if (!backend)
         return nullptr;
 
+    // The plugin is currently loaded asynchronously in a different thread.
+    // We need to wait until the thread is finished and for the queued connection to be triggered
+    // until all the data is written to the backend object.
+    if (Q_UNLIKELY(backend->loading)) {
+        qCDebug(qLcIfServiceManagement) << "Backend is already loading asynchronously. Waiting for it to finish.";
+        Q_ASSERT(backend->thread);
+        backend->thread->wait();
+        // Depending on how full the event loop is currently we need to wait multiple cycles
+        // until the queued connection is triggered.
+        while (backend->loading)
+            QAbstractEventDispatcher::instance()->processEvents(QEventLoop::WaitForMoreEvents);
+    }
     if (!backend->proxyServiceObject) {
         QIfServiceInterface *backendInterface = loadServiceBackendInterface(backend);
         if (backendInterface)
@@ -122,9 +141,9 @@ QIfProxyServiceObject *QIfServiceManagerPrivate::createServiceObject(struct Back
     return nullptr;
 }
 
-QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends) const
+QList<QIfServiceObjectHandle> QIfServiceManagerPrivate::findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends) const
 {
-    QList<QIfServiceObject*> list;
+    QList<QIfServiceObjectHandle> list;
     qCDebug(qLcIfServiceManagement) << "Searching for a backend for:" << interface << "SearchFlags:" << searchFlags << "PreferredBackends:" << preferredBackends;
 
     QList<Backend *> foundBackends;
@@ -148,7 +167,7 @@ QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const
         const auto regexp = QRegularExpression(QRegularExpression::wildcardToRegularExpression(wildCard));
         for (Backend *backend : std::as_const(foundBackends)) {
             const auto fileInfo = QFileInfo(backend->metaData[fileNameLiteral].toString());
-            QIfServiceObject *serviceObject = nullptr;
+            QIfServiceObjectHandle handle;
             QString identifier = fileInfo.fileName();
 
             if (identifier.isEmpty() && backend->interface) {
@@ -157,10 +176,10 @@ QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const
             }
 
             if (regexp.match(identifier).hasMatch())
-                serviceObject = createServiceObject(backend);
+                handle.m_handle = backend;
 
-            if (serviceObject)
-                list.append(serviceObject);
+            if (handle.m_handle)
+                list.append(handle);
             else
                 qCDebug(qLcIfServiceManagement) << "Wildcard doesn't contain:" << identifier;
         }
@@ -172,9 +191,9 @@ QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const
     if (list.isEmpty()) {
         qCDebug(qLcIfServiceManagement) << "Didn't find any preferred backends. Returning all found.";
         for (Backend *backend : std::as_const(foundBackends)) {
-            auto serviceObject = createServiceObject(backend);
-            if (serviceObject)
-                list.append(serviceObject);
+            QIfServiceObjectHandle handle;
+            handle.m_handle = backend;
+            list.append(handle);
         }
     }
 
@@ -388,7 +407,6 @@ static QIfServiceInterface *warn(const char *what, const QPluginLoader *loader)
 {
     qWarning("ServiceManager::serviceObjects - failed to %s '%s'",
              what, qPrintable(loader->fileName()));
-    delete loader;
     return nullptr;
 }
 } // unnamed namespace
@@ -399,19 +417,141 @@ QIfServiceInterface *QIfServiceManagerPrivate::loadServiceBackendInterface(struc
         return backend->interface;
     }
 
-    QPluginLoader *loader = new QPluginLoader(backend->metaData[fileNameLiteral].toString());
-    QObject *plugin = loader->instance();
-    if (Q_UNLIKELY(!plugin))
-        return warn("load", loader);
+    const QString pluginFile = backend->metaData[fileNameLiteral].toString();
 
-    QIfServiceInterface *backendInterface = qobject_cast<QIfServiceInterface*>(plugin);
-    if (Q_UNLIKELY(!backendInterface))
-        return warn("cast to interface from", loader);
+    auto [backendInterface, loader] = loadPlugin(pluginFile);
 
     backend->interface = backendInterface;
     backend->loader = loader;
     return backend->interface;
 }
+
+void QIfServiceManagerPrivate::loadServiceBackendInterfaceAsync(struct Backend *backend)
+{
+    Q_Q(QIfServiceManager);
+
+    auto emitServiceObjectLoaded = [this] (struct Backend *backend) {
+        backend->loading = false;
+        if (backend->interface) {
+            backend->proxyServiceObject = new QIfProxyServiceObject(backend->interface);
+            // We just created the serviceObject, but we still call this function to make sure
+            // the debug messages are printed and it is correctly registered to the QIfConfigurationManager
+            createServiceObject(backend);
+        } else {
+            delete backend->loader;
+            backend->loader = nullptr;
+        }
+        Q_Q(QIfServiceManager);
+        QIfServiceObjectHandle handle;
+        handle.m_handle = backend;
+        emit q->serviceObjectLoaded(handle);
+    };
+
+    if (backend->loading)
+        return;
+    backend->loading = true;
+
+    // The backend is already loaded, register it and emit the loaded signal in the next event
+    // loop run
+    if (backend->interface) {
+        QMetaObject::invokeMethod(q, [=]() {
+            emitServiceObjectLoaded(backend);
+        }, Qt::QueuedConnection);
+        return;
+    }
+
+    const QString pluginFile = backend->metaData[fileNameLiteral].toString();
+
+    auto thread = QThread::create([backend, q, emitServiceObjectLoaded](const QString &pluginFile) {
+        // Load the plugin in the new thread
+        auto [backendInterface, loader] = QIfServiceManagerPrivate::loadPlugin(pluginFile);
+
+        // register the serviceObject in the main thread
+        QMetaObject::invokeMethod(q, [emitServiceObjectLoaded](struct Backend *backend, QIfServiceInterface * interface, QPluginLoader *loader) {
+            backend->interface = interface;
+            backend->loader = loader;
+            emitServiceObjectLoaded(backend);
+        }, Qt::QueuedConnection, backend, backendInterface, loader);
+    }, pluginFile);
+    backend->thread = thread;
+    connect(thread, &QThread::finished, thread, [thread]() {
+        thread->deleteLater();
+        qCDebug(qLcIfServiceManagement) << "Loading Thread finished";
+    });
+    backend->thread->start();
+}
+
+std::tuple<QIfServiceInterface *, QPluginLoader*> QIfServiceManagerPrivate::loadPlugin(const QString &pluginFile)
+{
+    qCDebug(qLcIfServiceManagement) << "Loading plugin:" << pluginFile << "in thread" << QThread::currentThread();
+    std::unique_ptr<QPluginLoader> loader(new QPluginLoader(pluginFile));
+    QElapsedTimer elapsedTimer;
+    if (qLcIfPerf().isDebugEnabled())
+        elapsedTimer.start();
+
+    loader->load();
+    if (elapsedTimer.isValid()) {
+        qCDebug(qLcIfPerf) << "Loaded " << pluginFile << "in" << elapsedTimer.elapsed() << "ms";
+        elapsedTimer.restart();
+    }
+
+    QObject *plugin = loader->instance();
+    if (Q_UNLIKELY(!plugin))
+        return {warn("load", loader.get()), nullptr};
+
+    if (elapsedTimer.isValid())
+        qCDebug(qLcIfPerf) << "Instantiated ServiceInterface in" << elapsedTimer.elapsed() << "ms";
+
+    QThread *mainThread = QCoreApplication::instance()->thread();
+    if (loader->thread() != mainThread) {
+        loader->moveToThread(mainThread);
+        plugin->moveToThread(mainThread);
+    }
+
+    QIfServiceInterface *backendInterface = qobject_cast<QIfServiceInterface*>(plugin);
+    if (Q_UNLIKELY(!backendInterface))
+        return {warn("cast to interface from", loader.get()), nullptr};
+
+    return { backendInterface, loader.release() };
+}
+
+Backend *QIfServiceManagerPrivate::verifyHandle(void *handle)
+{
+    if (!m_backends.contains(handle))
+        return nullptr;
+    return static_cast<Backend*>(handle);
+}
+
+
+bool QIfServiceObjectHandle::isValid() const
+{
+    if (!m_handle)
+        return false;
+    return QIfServiceManager::instance()->d_ptr->verifyHandle(m_handle);
+}
+
+bool QIfServiceObjectHandle::isLoaded() const
+{
+    return bool(serviceObject());
+}
+
+QIfServiceObject *QIfServiceObjectHandle::serviceObject() const
+{
+    if (!m_handle)
+        return nullptr;
+
+    Backend *backend = QIfServiceManager::instance()->d_ptr->verifyHandle(m_handle);
+    if (!backend)
+        return nullptr;
+
+    return backend->proxyServiceObject;
+}
+
+QIfServiceObjectHandle::QIfServiceObjectHandle(void *handle)
+    : m_handle(handle)
+{
+}
+
 
 /*!
     \class QIfServiceManager
@@ -456,9 +596,12 @@ QIfServiceInterface *QIfServiceManagerPrivate::loadServiceBackendInterface(struc
            The actual QIfServiceObject, which can be used to connect a frontend API to this
            backend.
            \note When using this role in the data() function, the backend plugin is loaded and
-           instantiated.
+           instantiated. Since 6.8 you can use the ServiceObjectHandleRole to have more control
+           over loading the backend.
     \value InterfacesRole
            A list of interfaces that the backend implements.
+    \value ServiceObjectHandleRole
+           The handle to the backend, which can be used to load the backend asynchronously.
 */
 
 /*!
@@ -588,6 +731,21 @@ QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QStrin
 {
     Q_D(QIfServiceManager);
     d->searchPlugins();
+    QList<QIfServiceObject *> serviceObjects;
+    const QList<QIfServiceObjectHandle> handles = d->findServiceByInterface(interface, searchFlags, preferredBackends);
+    for (auto handle : handles) {
+        auto backend = d->createServiceObject(static_cast<Backend*>(handle.m_handle));
+        if (backend)
+            serviceObjects.append(backend);
+    }
+
+    return serviceObjects;
+}
+
+QList<QIfServiceObjectHandle> QIfServiceManager::findServiceHandleByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends)
+{
+    Q_D(QIfServiceManager);
+    d->searchPlugins();
     return d->findServiceByInterface(interface, searchFlags, preferredBackends);
 }
 
@@ -669,6 +827,7 @@ QVariant QIfServiceManager::data(const QModelIndex &index, int role) const
     case NameRole: return backend->name;
     case ServiceObjectRole: return QVariant::fromValue(d->createServiceObject(backend));
     case InterfacesRole: return backend->metaData[interfacesLiteral];
+    case ServiceObjectHandleRole: return QVariant::fromValue(QIfServiceObjectHandle(backend));
     }
 
     return QVariant();
@@ -685,8 +844,25 @@ QHash<int, QByteArray> QIfServiceManager::roleNames() const
         roles[NameRole] = "name";
         roles[ServiceObjectRole] = "serviceObject";
         roles[InterfacesRole] = "interfaces";
+        roles[ServiceObjectHandleRole] = "serviceObjectHandle";
     }
     return roles;
+}
+
+void QIfServiceManager::loadServiceObject(QIfServiceObjectHandle handle, bool async)
+{
+    Q_D(QIfServiceManager);
+
+    if (!d->m_backends.contains(handle.m_handle))
+        return;
+
+    Backend *backend = static_cast<Backend*>(handle.m_handle);
+    if (async) {
+        d->loadServiceBackendInterfaceAsync(backend);
+    } else {
+        d->createServiceObject(backend);
+        emit serviceObjectLoaded(handle);
+    }
 }
 
 QT_END_NAMESPACE

@@ -30,6 +30,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfAbstractFeatureListModel : public QAbstra
     Q_PROPERTY(QString configurationId READ configurationId WRITE setConfigurationId NOTIFY configurationIdChanged REVISION(6, 5) FINAL)
     Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged REVISION(6, 5) FINAL)
     Q_PROPERTY(bool backendUpdatesEnabled READ backendUpdatesEnabled WRITE setBackendUpdatesEnabled NOTIFY backendUpdatesEnabledChanged REVISION(6, 8) FINAL)
+    Q_PROPERTY(bool asynchronousBackendLoading READ asynchronousBackendLoading WRITE setAsynchronousBackendLoading NOTIFY asynchronousBackendLoadingChanged REVISION(6, 8) FINAL)
 
 public:
 
@@ -45,6 +46,7 @@ public:
     QString configurationId() const;
     QStringList preferredBackends() const;
     bool backendUpdatesEnabled() const;
+    bool asynchronousBackendLoading() const;
 
 public Q_SLOTS:
     bool setServiceObject(QIfServiceObject *so);
@@ -52,6 +54,7 @@ public Q_SLOTS:
     Q_REVISION(6, 5) void setConfigurationId(const QString &configurationId);
     Q_REVISION(6, 5) void setPreferredBackends(const QStringList &preferredBackends);
     Q_REVISION(6, 8) void setBackendUpdatesEnabled(bool newBackendUpdatesEnabled);
+    Q_REVISION(6, 8) void setAsynchronousBackendLoading(bool asynchronousBackendLoading);
 
     QIfAbstractFeature::DiscoveryResult startAutoDiscovery();
 
@@ -65,6 +68,7 @@ Q_SIGNALS:
     Q_REVISION(6, 5) void configurationIdChanged(const QString &configurationId);
     Q_REVISION(6, 5) void preferredBackendsChanged(const QStringList &preferredBackends);
     Q_REVISION(6, 8) void backendUpdatesEnabledChanged(bool backendUpdatesEnabled);
+    Q_REVISION(6, 8) void asynchronousBackendLoadingChanged(bool asynchronousBackendLoading);
 
 protected:
     QIfAbstractFeatureListModel(QIfAbstractFeatureListModelPrivate &dd, QObject *parent = nullptr);

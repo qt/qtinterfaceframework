@@ -84,9 +84,15 @@ private Q_SLOTS:
 
     void testRetakeSingleton();
     void testHasInterface();
+    void testInvalidServiceHandles();
     void testFindServiceObjectsReturnInValidInstance();
     void testFindServiceObjects_data();
     void testFindServiceObjects();
+    void testLoadServiceObjects_data();
+    void testLoadServiceObjects();
+    void testLoadServiceObjectsQML_data();
+    void testLoadServiceObjectsQML();
+    void testSyncAfterAsyncLoading();
     void testPreferredBackends();
     void testRegisterWithNoInterfaces();
     void testRegisterNonServiceBackendInterfaceObject();
@@ -155,6 +161,8 @@ void ServiceManagerTest::initTestCase()
     QCOMPARE(services.count(), 1);
     // Save the id of the service object. This needed in the pluginLoaderTest
     m_simplePluginID = services.at(0)->id();
+
+    cleanup();
 }
 
 void ServiceManagerTest::cleanup()
@@ -217,10 +225,21 @@ void ServiceManagerTest::testHasInterface()
     QCOMPARE(manager->hasInterface("Bar"), true);
 }
 
+void ServiceManagerTest::testInvalidServiceHandles()
+{
+    QIfServiceObjectHandle handle;
+    QCOMPARE(handle.isValid(), false);
+    QCOMPARE(handle.isLoaded(), false);
+    QCOMPARE(handle.serviceObject(), nullptr);
+}
+
 void ServiceManagerTest::testFindServiceObjectsReturnInValidInstance()
 {
     QList<QIfServiceObject*> list = manager->findServiceByInterface("NonExistingInterface");
     QVERIFY(list.isEmpty());
+
+    QList<QIfServiceObjectHandle> handles = manager->findServiceHandleByInterface("NonExistingInterface");
+    QVERIFY(handles.isEmpty());
 }
 
 void ServiceManagerTest::testFindServiceObjects_data()
@@ -243,11 +262,155 @@ void ServiceManagerTest::testFindServiceObjects()
     QIfFeatureInterface *testObject = new TestInterface(backend);
     backend->addServiceObject("TestInterface", testObject);
 
+    // Search using handles
+    // Make sure that the handles are valid, but not loaded yet
+    QList<QIfServiceObjectHandle> handles = manager->findServiceHandleByInterface("TestInterface", searchFlags);
+    QCOMPARE(handles.count(), 1);
+    QCOMPARE(handles.at(0).isValid(), true);
+    QCOMPARE(handles.at(0).isLoaded(), false);
+
     QList<QIfServiceObject*> list = manager->findServiceByInterface("TestInterface", searchFlags);
     QVERIFY(!list.isEmpty());
     QIfServiceObject *serviceObject = list.at(0);
     QVERIFY(serviceObject->interfaces().contains("TestInterface"));
     QCOMPARE(serviceObject->interfaceInstance("TestInterface"), testObject);
+
+    // Search using handles again
+    // Make sure that the handles are valid and is already loaded
+    // The service object should be the same as the one we got before
+    handles = manager->findServiceHandleByInterface("TestInterface", searchFlags);
+    QCOMPARE(handles.count(), 1);
+    QCOMPARE(handles.at(0).isValid(), true);
+    QCOMPARE(handles.at(0).isLoaded(), true);
+    QCOMPARE(handles.at(0).serviceObject(), serviceObject);
+}
+
+void ServiceManagerTest::testLoadServiceObjects_data()
+{
+    QTest::addColumn<bool>("asyncLoading");
+    QTest::addColumn<QString>("interface");
+    QTest::newRow("registered service sync") << false << "TestInterface";
+    QTest::newRow("registered service async") << true << "TestInterface";
+    QTest::newRow("dynamic plugin sync") << false << "simple_plugin";
+    QTest::newRow("dynamic plugin async") << true << "simple_plugin";
+    QTest::newRow("static plugin sync") << false << "simple_plugin_static";
+    QTest::newRow("static plugin async") << true << "simple_plugin_static";
+}
+
+void ServiceManagerTest::testLoadServiceObjects()
+{
+    QFETCH(bool, asyncLoading);
+    QFETCH(QString, interface);
+
+    if (interface == "TestInterface") {
+        MockServiceBackend *backend = new MockServiceBackend(manager);
+        QIfFeatureInterface *testObject = new TestInterface(backend);
+        backend->addServiceObject("TestInterface", testObject);
+        QVERIFY(manager->registerService(backend, QStringList() << "TestInterface", QIfServiceManager::ProductionBackend));
+    }
+
+    QList<QIfServiceObjectHandle> handles = manager->findServiceHandleByInterface(interface);
+    QCOMPARE(handles.count(), 1);
+    QCOMPARE(handles.at(0).isValid(), true);
+    QCOMPARE(handles.at(0).isLoaded(), false);
+
+    // Load the service object
+    QSignalSpy serviceObjectLoadedSpy(manager, &QIfServiceManager::serviceObjectLoaded);
+    manager->loadServiceObject(handles.at(0), asyncLoading);
+    // Make sure the signal is emitted immediately when loading synchronously
+    if (asyncLoading) {
+        QCOMPARE(serviceObjectLoadedSpy.count(), 0);
+
+        // Make sure that calling manager->loadServiceObject with the same handle multiple times
+        // Doesn't cause the signal to be emitted multiple times
+        manager->loadServiceObject(handles.at(0), asyncLoading);
+
+        serviceObjectLoadedSpy.wait();
+        QCOMPARE(serviceObjectLoadedSpy.count(), 1);
+    } else {
+        QCOMPARE(serviceObjectLoadedSpy.count(), 1);
+    }
+    QCOMPARE(serviceObjectLoadedSpy.at(0).count(), 1);
+    QCOMPARE(serviceObjectLoadedSpy.at(0).at(0).value<QIfServiceObjectHandle>(), handles.at(0));
+    QCOMPARE(handles.at(0).isValid(), true);
+    QCOMPARE(handles.at(0).isLoaded(), true);
+    QCOMPARE(handles.at(0).serviceObject()->interfaces().contains(interface), true);
+
+    // Calling loadServiceObject again should cause the signal to be emitted again
+    serviceObjectLoadedSpy.clear();
+    manager->loadServiceObject(handles.at(0), false);
+    QCOMPARE(serviceObjectLoadedSpy.count(), 1);
+    QCOMPARE(serviceObjectLoadedSpy.at(0).count(), 1);
+    QCOMPARE(serviceObjectLoadedSpy.at(0).at(0).value<QIfServiceObjectHandle>(), handles.at(0));
+    QCOMPARE(handles.at(0).isValid(), true);
+    QCOMPARE(handles.at(0).isLoaded(), true);
+    QCOMPARE(handles.at(0).serviceObject()->interfaces().contains(interface), true);
+}
+
+void ServiceManagerTest::testLoadServiceObjectsQML_data()
+{
+    QTest::addColumn<bool>("asyncLoading");
+    QTest::addColumn<QString>("interface");
+    QTest::newRow("registered service sync") << false << "TestInterface";
+    QTest::newRow("registered service async") << true << "TestInterface";
+    QTest::newRow("dynamic plugin sync") << false << "simple_plugin";
+    QTest::newRow("dynamic plugin async") << true << "simple_plugin";
+    QTest::newRow("static plugin sync") << false << "simple_plugin_static";
+    QTest::newRow("static plugin async") << true << "simple_plugin_static";
+}
+
+void ServiceManagerTest::testLoadServiceObjectsQML()
+{
+    QFETCH(bool, asyncLoading);
+    QFETCH(QString, interface);
+
+    if (interface == "TestInterface") {
+        MockServiceBackend *backend = new MockServiceBackend(manager);
+        QIfFeatureInterface *testObject = new TestInterface(backend);
+        backend->addServiceObject("TestInterface", testObject);
+        QVERIFY(manager->registerService(backend, QStringList() << "TestInterface", QIfServiceManager::ProductionBackend));
+    }
+
+    QQmlEngine engine;
+    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/testdata/loadserviceobject.qml")));
+    QObject *obj = component.create();
+    QVERIFY2(obj, qPrintable(component.errorString()));
+
+    QSignalSpy loadingSucceededSpy(obj, SIGNAL(loadingSucceeded()));
+    QVERIFY(loadingSucceededSpy.isValid());
+    QVERIFY(QMetaObject::invokeMethod(obj, "findAndLoad", Q_ARG(QString, interface), Q_ARG(bool, asyncLoading)));
+    if (asyncLoading)
+        loadingSucceededSpy.wait();
+    QCOMPARE(loadingSucceededSpy.count(), 1);
+    delete obj;
+}
+
+void ServiceManagerTest::testSyncAfterAsyncLoading()
+{
+    QList<QIfServiceObjectHandle> handles = manager->findServiceHandleByInterface("simple_plugin");
+    QCOMPARE(handles.count(), 1);
+    QCOMPARE(handles.at(0).isValid(), true);
+    QCOMPARE(handles.at(0).isLoaded(), false);
+
+    // Load the service object
+    QSignalSpy serviceObjectLoadedSpy(manager, &QIfServiceManager::serviceObjectLoaded);
+    manager->loadServiceObject(handles.at(0), true);
+    QCOMPARE(serviceObjectLoadedSpy.count(), 0);
+
+    // Wait one event loop cycle to make sure the async loading thread started
+    QTest::qWait(0);
+    QCOMPARE(serviceObjectLoadedSpy.count(), 0);
+
+    // Start to load the same plugin synchronously
+    manager->loadServiceObject(handles.at(0), false);
+
+    // DOES IT MAKE SENSE TO HAVE IT EMITTED TWICE ?
+    QCOMPARE(serviceObjectLoadedSpy.count(), 2);
+    QCOMPARE(serviceObjectLoadedSpy.at(0).count(), 1);
+    QCOMPARE(serviceObjectLoadedSpy.at(0).at(0).value<QIfServiceObjectHandle>(), handles.at(0));
+    QCOMPARE(handles.at(0).isValid(), true);
+    QCOMPARE(handles.at(0).isLoaded(), true);
+    QCOMPARE(handles.at(0).serviceObject()->interfaces().contains("simple_plugin"), true);
 }
 
 void ServiceManagerTest::testPreferredBackends()
@@ -312,6 +475,7 @@ void ServiceManagerTest::testManagerListModel()
     QCOMPARE(managerModelSpy.count(), 0);
     QCOMPARE(manager->data(QModelIndex(), QIfServiceManager::NameRole), QVariant());
     QCOMPARE(manager->data(QModelIndex(), QIfServiceManager::ServiceObjectRole), QVariant());
+    QCOMPARE(manager->data(QModelIndex(), QIfServiceManager::ServiceObjectHandleRole), QVariant());
     QCOMPARE(manager->data(QModelIndex(), QIfServiceManager::InterfacesRole), QVariant());
 
     // Register backend-0 with 'Interface0'
@@ -322,6 +486,10 @@ void ServiceManagerTest::testManagerListModel()
     //QCOMPARE(manager->data(manager->index(0), Qt::DisplayRole).value<QIfServiceInterface*>(), backend0);
     QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
     QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::ServiceObjectRole).value<QIfProxyServiceObject*>()->d_ptr->m_serviceInterface, backend0);
+    auto handle = manager->data(manager->index(backendCount), QIfServiceManager::ServiceObjectHandleRole).value<QIfServiceObjectHandle>();
+    QCOMPARE(handle.isValid(), true);
+    QCOMPARE(handle.isLoaded(), true);
+    QCOMPARE(static_cast<QIfProxyServiceObject*>(handle.serviceObject())->d_ptr->m_serviceInterface, backend0);
     QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface0");
     QCOMPARE(managerModelSpy.count(), 1);
     // Extendend sanity check
@@ -334,9 +502,17 @@ void ServiceManagerTest::testManagerListModel()
     QCOMPARE(manager->rowCount(), backendCount + 2);
     QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
     QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::ServiceObjectRole).value<QIfProxyServiceObject*>()->d_ptr->m_serviceInterface, backend0);
+    handle = manager->data(manager->index(backendCount), QIfServiceManager::ServiceObjectHandleRole).value<QIfServiceObjectHandle>();
+    QCOMPARE(handle.isValid(), true);
+    QCOMPARE(handle.isLoaded(), true);
+    QCOMPARE(static_cast<QIfProxyServiceObject*>(handle.serviceObject())->d_ptr->m_serviceInterface, backend0);
     QCOMPARE(manager->data(manager->index(backendCount), QIfServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface0");
     QCOMPARE(manager->data(manager->index(backendCount + 1), QIfServiceManager::NameRole).toString(), QStringLiteral("MockServiceBackend"));
     QCOMPARE(manager->data(manager->index(backendCount + 1), QIfServiceManager::ServiceObjectRole).value<QIfProxyServiceObject*>()->d_ptr->m_serviceInterface, backend1);
+    handle = manager->data(manager->index(backendCount + 1), QIfServiceManager::ServiceObjectHandleRole).value<QIfServiceObjectHandle>();
+    QCOMPARE(handle.isValid(), true);
+    QCOMPARE(handle.isLoaded(), true);
+    QCOMPARE(static_cast<QIfProxyServiceObject*>(handle.serviceObject())->d_ptr->m_serviceInterface, backend1);
     QCOMPARE(manager->data(manager->index(backendCount + 1), QIfServiceManager::InterfacesRole).toStringList(), QStringList() << "Interface1" << "Interface2");
     QCOMPARE(managerModelSpy.count(), 2);
 
@@ -364,6 +540,21 @@ void ServiceManagerTest::pluginLoaderTest()
     QTest::ignoreMessage(QtWarningMsg, QRegularExpression("ServiceManager::serviceObjects - failed to cast to interface from '.*wrong.*'"));
     QList<QIfServiceObject *> wServices = manager->findServiceByInterface("wrong_plugin");
     QCOMPARE(wServices.count(), 0);
+
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression("ServiceManager::serviceObjects - failed to cast to interface from '.*wrong.*'"));
+    auto handles = manager->findServiceHandleByInterface("wrong_plugin");
+    QCOMPARE(handles.count(), 1);
+    QSignalSpy serviceObjectLoadedSpy(manager, &QIfServiceManager::serviceObjectLoaded);
+    manager->loadServiceObject(handles.at(0), true);
+    QCOMPARE(serviceObjectLoadedSpy.count(), 0);
+    serviceObjectLoadedSpy.wait();
+    QCOMPARE(serviceObjectLoadedSpy.count(), 1);
+    QCOMPARE(serviceObjectLoadedSpy.at(0).count(), 1);
+    auto handle = serviceObjectLoadedSpy.at(0).at(0).value<QIfServiceObjectHandle>();
+    QCOMPARE(handle, handles.at(0));
+    QCOMPARE(handle.isValid(), true);
+    QCOMPARE(handle.isLoaded(), false);
+    QCOMPARE(handle.serviceObject(), nullptr);
 
     //Test that the plugin is unloaded (or at least removed from the registry)
     manager->unloadAllBackends();

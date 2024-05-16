@@ -12,7 +12,7 @@ private slots:
     {
         BackendsTestBase::initTestCase_data();
 
-        QTest::newRow("simulation-static-backend") << "org.example.echomodule_simulator_static" << true << "";
+        QTest::newRow("simulation-static-backend") << "org.example.echomodule_simulator_static" << true << false << "";
     }
 };
 
