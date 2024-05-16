@@ -33,6 +33,7 @@ class Q_QTINTERFACEFRAMEWORK_EXPORT QIfConfiguration : public QObject, public QQ
     Q_PROPERTY(QStringList preferredBackends READ preferredBackends WRITE setPreferredBackends NOTIFY preferredBackendsChanged FINAL)
     Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject WRITE setServiceObject NOTIFY serviceObjectChanged FINAL)
     Q_PROPERTY(bool backendUpdatesEnabled READ backendUpdatesEnabled WRITE setBackendUpdatesEnabled NOTIFY backendUpdatesEnabledChanged REVISION(6, 8) FINAL)
+    Q_PROPERTY(bool asynchronousBackendLoading READ asynchronousBackendLoading WRITE setAsynchronousBackendLoading NOTIFY asynchronousBackendLoadingChanged REVISION(6, 8) FINAL)
 
 public:
     explicit QIfConfiguration(const QString &name = QString(), QObject *parent = nullptr);
@@ -48,6 +49,7 @@ public:
     QStringList preferredBackends() const;
     QIfServiceObject *serviceObject() const;
     bool backendUpdatesEnabled() const;
+    bool asynchronousBackendLoading() const;
 
 public Q_SLOTS:
     void setIgnoreOverrideWarnings(bool ignoreOverrideWarnings);
@@ -59,6 +61,7 @@ public Q_SLOTS:
     bool setPreferredBackends(const QStringList &preferredBackends);
     bool setServiceObject(QIfServiceObject *serviceObject);
     Q_REVISION(6, 8) bool setBackendUpdatesEnabled(bool backendUpdatesEnabled);
+    Q_REVISION(6, 8) bool setAsynchronousBackendLoading(bool asynchronousBackendLoading);
     Q_REVISION(6, 8) bool startAutoDiscovery();
 
 Q_SIGNALS:
@@ -72,6 +75,7 @@ Q_SIGNALS:
     void serviceObjectChanged(const QIfServiceObject *serviceObject);
     void ignoreOverrideWarningsChanged(bool ignoreOverrideWarnings);
     Q_REVISION(6, 8) void backendUpdatesEnabledChanged(bool backendUpdatesEnabled);
+    Q_REVISION(6, 8) void asynchronousBackendLoadingChanged(bool asynchronousBackendLoading);
 
 public: //static methods
     static bool exists(const QString &group);
@@ -103,6 +107,10 @@ public: //static methods
     static bool backendUpdatesEnabled(const QString &group);
     static bool setBackendUpdatesEnabled(const QString &group, bool backendUpdatesEnabled);
     static bool isBackendUpdatesEnabledSet(const QString &group);
+
+    static bool asynchronousBackendLoading(const QString &group);
+    static bool setAsynchronousBackendLoading(const QString &group, bool asynchronousBackendLoading);
+    static bool isAsynchronousBackendLoadingSet(const QString &group);
 
     static bool startAutoDiscovery(const QString &group);
 

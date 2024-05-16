@@ -13,12 +13,9 @@ qt_internal_add_test(tst_servicemanagertest
         Qt::InterfaceFrameworkPrivate
 )
 
-# This dummy QML file is not used by the test itself, but helps
-# to let tools like androiddeployqt know what QML dependencies we
-# have and package everything correctly
 qt_add_resources(tst_servicemanagertest "qml"
     PREFIX "/"
-    FILES qml_dependencies.qml
+    FILES testdata/loadserviceobject.qml
 )
 
 qt_internal_extend_target(tst_servicemanagertest CONDITION QT_FEATURE_debug_and_release

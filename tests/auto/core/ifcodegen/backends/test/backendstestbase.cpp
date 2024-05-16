@@ -62,7 +62,10 @@ void BackendsTestBase::startServer(QStringList arguments)
         QVERIFY2(m_serverProcess->waitForStarted(), qPrintable(u"Process error: %1"_s.arg(m_serverProcess->error())));
     }
 #endif
-    QVERIFY(m_localServer->waitForNewConnection(5000));
+    // Give the simulation some time to (re)connect
+    QTest::qWait(100);
+    if (!m_localServer->hasPendingConnections())
+        QVERIFY(m_localServer->waitForNewConnection(5000));
     while (m_localServer->hasPendingConnections())
         m_localSocket = m_localServer->nextPendingConnection();
     QVERIFY(m_localSocket);
@@ -104,6 +107,7 @@ void BackendsTestBase::initTestCase_data()
 {
     QTest::addColumn<QString>("backend");
     QTest::addColumn<bool>("isSimulation");
+    QTest::addColumn<bool>("asyncBackendLoading");
     QTest::addColumn<QString>("serverExecutable");
 }
 
@@ -119,10 +123,12 @@ void BackendsTestBase::init()
 {
     QFETCH_GLOBAL(QString, backend);
     QFETCH_GLOBAL(bool, isSimulation);
+    QFETCH_GLOBAL(bool, asyncBackendLoading);
     QFETCH_GLOBAL(QString, serverExecutable);
 
     m_serverExecutable = serverExecutable;
     m_isSimulation = isSimulation;
+    m_asyncBackendLoading = asyncBackendLoading;
     m_isSimulationBackend = isSimulation && serverExecutable.isEmpty();
 
     QVERIFY(QIfConfiguration::setDiscoveryMode(u"org.example.echomodule"_s, m_isSimulationBackend ?
@@ -139,8 +145,12 @@ void BackendsTestBase::cleanup()
 void BackendsTestBase::testInit()
 {
     QTest::failOnWarning(QRegularExpression(u".*Couldn't retrieve MetaObject for enum parsing:.*"_s));
+
     Echo client;
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     QCOMPARE(client.lastMessage(), QString());
     QCOMPARE(client.intValue(), 0);
@@ -226,7 +236,10 @@ void BackendsTestBase::testInit()
 void BackendsTestBase::testZonedInit()
 {
     EchoZoned client;
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     //Just compare a few of them
     QCOMPARE(client.intValue(), 0);
@@ -381,9 +394,12 @@ void BackendsTestBase::testReconnect()
 void BackendsTestBase::testClient2Server()
 {
     Echo client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -466,9 +482,12 @@ void BackendsTestBase::testClient2Server()
 void BackendsTestBase::testZonedClient2Server()
 {
     EchoZoned client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -549,9 +568,12 @@ void BackendsTestBase::testZonedClient2Server()
 void BackendsTestBase::testServer2Client()
 {
     Echo client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -631,9 +653,12 @@ void BackendsTestBase::testServer2Client()
 void BackendsTestBase::testZonedServer2Client()
 {
     EchoZoned client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -710,9 +735,12 @@ void BackendsTestBase::testZonedServer2Client()
 void BackendsTestBase::testSlots()
 {
     Echo client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -778,9 +806,12 @@ void BackendsTestBase::testSlots()
 void BackendsTestBase::testZonedSlots()
 {
     EchoZoned client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -899,9 +930,12 @@ void BackendsTestBase::testMultipleSlotCalls()
 void BackendsTestBase::testAsyncSlotResults()
 {
     Echo client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -961,9 +995,12 @@ void BackendsTestBase::testAsyncSlotResults()
 void BackendsTestBase::testSignals()
 {
     Echo client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -1026,9 +1063,12 @@ void BackendsTestBase::testSignals()
 void BackendsTestBase::testModel()
 {
     Echo client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 
@@ -1076,9 +1116,12 @@ void BackendsTestBase::testSimulationData()
         QSKIP("This test is only for simulation backend and simulation servers");
 
     Echo client;
+    client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    client.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
 
     startServer();
 

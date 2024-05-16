@@ -23,6 +23,7 @@
 #include "qifabstractfeature.h"
 #include "qiffeatureinterface.h"
 #include "qifserviceobject.h"
+#include "qifservicemanager.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -47,6 +48,9 @@ public:
     void setDiscoveryResult(QIfAbstractFeature::DiscoveryResult discoveryResult);
     void onInitializationDone();
     void serviceObjectDestroyed();
+    void loadServiceObject(QIfServiceManager::SearchFlag searchFlag);
+    void onServiceObjectLoaded(QIfServiceObjectHandle handle);
+    void onServiceObjectFailure();
 
     QIfAbstractFeature * const q_ptr;
     Q_DECLARE_PUBLIC(QIfAbstractFeature)
@@ -59,6 +63,10 @@ public:
     QString m_configurationId;
     QStringList m_preferredBackends;
     bool m_backendUpdatesEnabled;
+    bool m_asynchronousBackendLoading;
+    QList<QIfServiceObjectHandle> m_serviceHandles;
+    int m_currentServiceHandleIndex;
+    QIfServiceManager::SearchFlag m_currentSearch;
     QString m_errorMessage;
     QIfAbstractFeature::Error m_error;
     bool m_qmlCreation;

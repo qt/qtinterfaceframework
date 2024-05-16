@@ -17,6 +17,33 @@ QT_BEGIN_NAMESPACE
 class QIfServiceObject;
 class QIfServiceManagerPrivate;
 
+class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObjectHandle
+{
+    Q_GADGET
+    Q_PROPERTY(bool valid READ isValid FINAL)
+    Q_PROPERTY(bool loaded READ isLoaded FINAL)
+    Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject FINAL)
+
+public:
+    QIfServiceObjectHandle() = default;
+    ~QIfServiceObjectHandle() = default;
+    QIfServiceObjectHandle(const QIfServiceObjectHandle &) = default;
+
+    bool isValid() const;
+    bool isLoaded() const;
+    QIfServiceObject *serviceObject() const;
+
+    bool operator==(QIfServiceObjectHandle other) const { return m_handle == other.m_handle; }
+    bool operator!=(QIfServiceObjectHandle other) const { return !(*this == other); }
+
+private:
+    QIfServiceObjectHandle(void *handle);
+    void *m_handle = nullptr;
+
+    friend class QIfServiceManagerPrivate;
+    friend class QIfServiceManager;
+};
+
 // AXIVION Next Line Qt-CtorMissingParentArgument: private ctor
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceManager : public QAbstractListModel
 {
@@ -28,7 +55,8 @@ public:
     enum Roles {
         NameRole = Qt::DisplayRole,
         ServiceObjectRole = Qt::UserRole,
-        InterfacesRole = Qt::UserRole +1
+        InterfacesRole,
+        ServiceObjectHandleRole,
     };
 
     enum SearchFlag {
@@ -50,6 +78,7 @@ public:
     ~QIfServiceManager() override;
 
     Q_INVOKABLE QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags = IncludeAll, const QStringList &preferredBackends = QStringList());
+    Q_REVISION(6, 8) Q_INVOKABLE QList<QIfServiceObjectHandle> findServiceHandleByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags = IncludeAll, const QStringList &preferredBackends = QStringList());
     Q_INVOKABLE bool hasInterface(const QString &interface) const;
 
     bool registerService(QObject *serviceBackendInterface, const QStringList &interfaces, QIfServiceManager::BackendType backendType = ProductionBackend);
@@ -60,10 +89,17 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
+    Q_REVISION(6, 8) Q_INVOKABLE void loadServiceObject(QIfServiceObjectHandle handle, bool async = false);
+
+Q_SIGNALS:
+    void serviceObjectLoaded(QIfServiceObjectHandle handle);
+
 private:
     explicit QIfServiceManager(QObject *parent = nullptr);
     QIfServiceManagerPrivate * const d_ptr;
     Q_DECLARE_PRIVATE(QIfServiceManager)
+
+    friend class QIfServiceObjectHandle;
 };
 
 QT_END_NAMESPACE

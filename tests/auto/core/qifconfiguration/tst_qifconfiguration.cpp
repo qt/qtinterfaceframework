@@ -119,6 +119,7 @@ private Q_SLOTS:
     void discoveryMode();
     void serviceObject();
     void backendUpdatesEnabled();
+    void asynchronousBackendLoading();
 
     void emptySettingsFile();
     void emptyGroupSettingsFile();
@@ -425,6 +426,35 @@ void tst_QIfConfiguration::backendUpdatesEnabled()
     QCOMPARE(spy.data()[0][0], false);
 }
 
+void tst_QIfConfiguration::asynchronousBackendLoading()
+{
+    // call static setter
+    QVERIFY(QIfConfiguration::setAsynchronousBackendLoading("staticGroup", true));
+    QVERIFY(QIfConfiguration::exists("staticGroup"));
+    QVERIFY(QIfConfiguration::isAsynchronousBackendLoadingSet("staticGroup"));
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("staticGroup"), true);
+
+    // Verify that reading the setting using the object API works as well
+    QIfConfiguration staticGroupConfig("staticGroup");
+    QCOMPARE(staticGroupConfig.asynchronousBackendLoading(), true);
+
+    // Create Configuration and call that method
+    QIfConfiguration config("objectGroup");
+    QVERIFY(config.isValid());
+    QVERIFY(config.setAsynchronousBackendLoading(true));
+    QCOMPARE(config.asynchronousBackendLoading(), true);
+    QVERIFY(QIfConfiguration::exists("objectGroup"));
+    QVERIFY(QIfConfiguration::isAsynchronousBackendLoadingSet("objectGroup"));
+
+    // Test the change signal
+    QSignalSpy spy(&config, &QIfConfiguration::asynchronousBackendLoadingChanged);
+    QVERIFY(spy.isValid());
+    QVERIFY(config.setAsynchronousBackendLoading(false));
+    QCOMPARE(config.asynchronousBackendLoading(), false);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.data()[0][0], false);
+}
+
 void tst_QIfConfiguration::emptySettingsFile()
 {
     // Reading a empty file shouldn't cause any problem
@@ -542,6 +572,7 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QCOMPARE(testFeature->serviceObject(), nullptr);
     QCOMPARE(testFeature->preferredBackends(), QStringList());
     QCOMPARE(testFeature->backendUpdatesEnabled(), true);
+    QCOMPARE(testFeature->asynchronousBackendLoading(), false);
 
     // Set a configuration and make sure the matching Feature changes as well
     QSignalSpy discoverySpy(testFeature, &T::discoveryModeChanged);
@@ -552,6 +583,10 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QVERIFY(QIfConfiguration::setBackendUpdatesEnabled("config1", false));
     QCOMPARE(testFeature->backendUpdatesEnabled(), false);
     QCOMPARE(backendUpdatesEnabledSpy.count(), 1);
+    QSignalSpy asynchronousBackendLoadingdSpy(testFeature, &T::asynchronousBackendLoadingChanged);
+    QVERIFY(QIfConfiguration::setAsynchronousBackendLoading("config1", true));
+    QCOMPARE(testFeature->asynchronousBackendLoading(), true);
+    QCOMPARE(asynchronousBackendLoadingdSpy.count(), 1);
 
     auto backend = new ConfigTestBackend;
     QIfServiceManager::instance()->registerService(backend, QStringList({"testFeature"}));
@@ -573,10 +608,12 @@ template <class T> void tst_QIfConfiguration::testFeatureHelper()
     QCOMPARE(testFeature2->serviceObject(), &serviceObject);
     QCOMPARE(testFeature2->preferredBackends(), QStringList({"*simulation*"}));
     QCOMPARE(testFeature2->backendUpdatesEnabled(), false);
+    QCOMPARE(testFeature2->asynchronousBackendLoading(), true);
 
     // Reset the serviceObject and settings and test the auto discovery
     QVERIFY(QIfConfiguration::setServiceObject("config1", nullptr));
     QVERIFY(QIfConfiguration::setPreferredBackends("config1", QStringList()));
+    QVERIFY(QIfConfiguration::setAsynchronousBackendLoading("config1", false));
     QCOMPARE(testFeature->serviceObject(), nullptr);
     QCOMPARE(testFeature2->serviceObject(), nullptr);
     QIfConfiguration::startAutoDiscovery("config1");

@@ -28,6 +28,9 @@ QIfAbstractFeaturePrivate::QIfAbstractFeaturePrivate(const QString &interfaceNam
     , m_discoveryMode(QIfAbstractFeature::AutoDiscovery)
     , m_discoveryResult(QIfAbstractFeature::NoResult)
     , m_backendUpdatesEnabled(true)
+    , m_asynchronousBackendLoading(false)
+    , m_currentServiceHandleIndex(-1)
+    , m_currentSearch(QIfServiceManager::IncludeProductionBackends)
     , m_error(QIfAbstractFeature::NoError)
     , m_qmlCreation(false)
     , m_isInitialized(false)
@@ -96,6 +99,88 @@ void QIfAbstractFeaturePrivate::serviceObjectDestroyed()
     emit q->isInitializedChanged(m_isInitialized);
     q->clearServiceObject();
     emit q->serviceObjectChanged();
+}
+
+void QIfAbstractFeaturePrivate::loadServiceObject(QIfServiceManager::SearchFlag searchFlag)
+{
+    QIfServiceManager *serviceManager = QIfServiceManager::instance();
+    m_currentSearch = searchFlag;
+
+    if (m_currentServiceHandleIndex == -1) {
+        m_serviceHandles = serviceManager->findServiceHandleByInterface(m_interface, searchFlag, m_preferredBackends);
+        if (!m_serviceHandles.isEmpty())
+            m_currentServiceHandleIndex = 0;
+    }
+
+    if (m_serviceHandles.isEmpty()) {
+        onServiceObjectFailure();
+        return;
+    }
+
+    qCDebug(qLcIfServiceManagement) << "Loading first ServiceObject";
+    auto currentHandle = m_serviceHandles.at(m_currentServiceHandleIndex);
+    if (currentHandle.isLoaded())
+        onServiceObjectLoaded(currentHandle);
+    else
+        serviceManager->loadServiceObject(currentHandle, m_asynchronousBackendLoading);
+}
+
+void QIfAbstractFeaturePrivate::onServiceObjectLoaded(QIfServiceObjectHandle handle)
+{
+    Q_Q(QIfAbstractFeature);
+
+    if (m_currentServiceHandleIndex < 0 || m_currentServiceHandleIndex >= m_serviceHandles.count())
+        return;
+
+    auto currentHandle = m_serviceHandles.at(m_currentServiceHandleIndex);
+    if (currentHandle != handle)
+        return;
+    qCDebug(qLcIfServiceManagement) << "ServiceObject loaded";
+
+    QIfServiceObject *object = currentHandle.serviceObject();
+    qCDebug(qLcIfServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
+    if (q->setServiceObject(object)) {
+        if (Q_UNLIKELY(m_serviceHandles.count() > 1)) {
+            qWarning().nospace() << "There is more than one backend implementing " << m_interface
+                                 << ". Using the first one (enable \"" << qLcIfServiceManagement().categoryName()
+                                 << "\" logging to see which are found)";
+        }
+        if (m_currentSearch == QIfServiceManager::IncludeProductionBackends)
+            setDiscoveryResult(QIfAbstractFeature::ProductionBackendLoaded);
+        else
+            setDiscoveryResult(QIfAbstractFeature::SimulationBackendLoaded);
+        m_currentServiceHandleIndex = -1;
+        m_serviceHandles.clear();
+    } else {
+        if (++m_currentServiceHandleIndex < m_serviceHandles.count()) {
+            // Try next ServiceObject
+            qCDebug(qLcIfServiceManagement) << "Loading next ServiceObject";
+            loadServiceObject(m_currentSearch);
+        } else {
+            onServiceObjectFailure();
+        }
+    }
+}
+
+void QIfAbstractFeaturePrivate::onServiceObjectFailure()
+{
+    // No available ServiceObjects left
+    if (m_currentSearch == QIfServiceManager::IncludeProductionBackends)
+        qWarning() << "There is no production backend implementing" << m_interface << ".";
+    else
+        qWarning() << "There is no simulation backend implementing" << m_interface << ".";
+
+    if (m_currentSearch == QIfServiceManager::IncludeProductionBackends && m_discoveryMode == QIfAbstractFeature::AutoDiscovery) {
+        // Try again only with simulation backends
+        m_currentServiceHandleIndex = -1;
+        loadServiceObject(QIfServiceManager::IncludeSimulationBackends);
+        return;
+    }
+
+    qWarning() << "No suitable ServiceObject found.";
+    m_currentServiceHandleIndex = -1;
+    m_serviceHandles.clear();
+    setDiscoveryResult(QIfAbstractFeature::ErrorWhileLoading);
 }
 
 /*!
@@ -234,6 +319,10 @@ QIfAbstractFeature::QIfAbstractFeature(const QString &interfaceName, QObject *pa
 {
     Q_D(QIfAbstractFeature);
     d->initialize();
+
+    QObject::connect(QIfServiceManager::instance(), &QIfServiceManager::serviceObjectLoaded, this, [d](QIfServiceObjectHandle handle) {
+        d->onServiceObjectLoaded(handle);
+    });
 }
 
 QIfAbstractFeature::~QIfAbstractFeature()
@@ -269,6 +358,7 @@ QIfAbstractFeature::~QIfAbstractFeature()
 */
 bool QIfAbstractFeature::setServiceObject(QIfServiceObject *so)
 {
+
     Q_D(QIfAbstractFeature);
     if (d->m_serviceObject == so)
         return false;
@@ -581,6 +671,22 @@ void QIfAbstractFeature::setBackendUpdatesEnabled(bool newBackendUpdatesEnabled)
     emit backendUpdatesEnabledChanged(newBackendUpdatesEnabled);
 }
 
+bool QIfAbstractFeature::asynchronousBackendLoading() const
+{
+    Q_D(const QIfAbstractFeature);
+    return d->m_asynchronousBackendLoading;
+}
+
+void QIfAbstractFeature::setAsynchronousBackendLoading(bool asynchronousBackendLoading)
+{
+    Q_D(QIfAbstractFeature);
+
+    if (d->m_asynchronousBackendLoading == asynchronousBackendLoading)
+        return;
+    d->m_asynchronousBackendLoading = asynchronousBackendLoading;
+    emit asynchronousBackendLoadingChanged(asynchronousBackendLoading);
+}
+
 /*!
     Sets \a error with the \a message.
 
@@ -690,66 +796,21 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::startAutoDiscovery()
 {
     Q_D(QIfAbstractFeature);
 
-     // No need to discover a new backend when we already have one
+    // No need to discover a new backend when we already have one
     if (d->m_serviceObject || d->m_discoveryMode == QIfAbstractFeature::NoAutoDiscovery) {
         d->setDiscoveryResult(NoResult);
         return NoResult;
     }
 
-    QIfServiceManager *serviceManager = QIfServiceManager::instance();
-    QList<QIfServiceObject*> serviceObjects;
-    DiscoveryResult result = NoResult;
-    if (d->m_discoveryMode == AutoDiscovery || d->m_discoveryMode == LoadOnlyProductionBackends) {
-        serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeProductionBackends, d->m_preferredBackends);
-        result = ProductionBackendLoaded;
-    }
+    if (d->m_discoveryMode == QIfAbstractFeature::AutoDiscovery ||  d->m_discoveryMode == QIfAbstractFeature::LoadOnlyProductionBackends)
+        d->loadServiceObject(QIfServiceManager::IncludeProductionBackends);
+    else
+        d->loadServiceObject(QIfServiceManager::IncludeSimulationBackends);
 
-    //Check whether we can use the found production backends
-    bool serviceObjectSet = false;
-    for (QIfServiceObject *object : std::as_const(serviceObjects)) {
-        qCDebug(qLcIfServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
-        if (setServiceObject(object)) {
-            serviceObjectSet = true;
-            break;
-        }
-    }
+    if (d->m_asynchronousBackendLoading)
+        return NoResult;
 
-    //If no production backends are found or none of them accepted fall back to the simulation backends
-    if (!serviceObjectSet) {
-
-        if (Q_UNLIKELY(d->m_discoveryMode == AutoDiscovery || d->m_discoveryMode == LoadOnlyProductionBackends))
-            qWarning() << "There is no production backend implementing" << d->m_interface << ".";
-
-        if (d->m_discoveryMode == AutoDiscovery || d->m_discoveryMode == LoadOnlySimulationBackends) {
-            serviceObjects = serviceManager->findServiceByInterface(d->m_interface, QIfServiceManager::IncludeSimulationBackends, d->m_preferredBackends);
-            result = SimulationBackendLoaded;
-            if (Q_UNLIKELY(serviceObjects.isEmpty()))
-                qWarning() << "There is no simulation backend implementing" << d->m_interface << ".";
-
-            for (QIfServiceObject* object : std::as_const(serviceObjects)) {
-                qCDebug(qLcIfServiceManagement) << "Trying to use" << object << "Supported Interfaces:" << object->interfaces();
-                if (setServiceObject(object)) {
-                    serviceObjectSet = true;
-                    break;
-                }
-            }
-        }
-    }
-
-    if (Q_UNLIKELY(serviceObjects.count() > 1)) {
-        qWarning().nospace() << "There is more than one backend implementing " << d->m_interface
-                             << ". Using the first one (enable \"" << qLcIfServiceManagement().categoryName()
-                             << "\" logging to see which are found)";
-    }
-
-    if (Q_UNLIKELY(!serviceObjectSet)) {
-        qWarning() << "No suitable ServiceObject found.";
-        d->setDiscoveryResult(ErrorWhileLoading);
-        return ErrorWhileLoading;
-    }
-
-    d->setDiscoveryResult(result);
-    return result;
+    return d->m_discoveryResult;
 }
 
 QIfAbstractFeature::QIfAbstractFeature(QIfAbstractFeaturePrivate &dd, QObject *parent)
@@ -757,6 +818,10 @@ QIfAbstractFeature::QIfAbstractFeature(QIfAbstractFeaturePrivate &dd, QObject *p
 {
     Q_D(QIfAbstractFeature);
     d->initialize();
+
+    QObject::connect(QIfServiceManager::instance(), &QIfServiceManager::serviceObjectLoaded, this, [d](QIfServiceObjectHandle handle) {
+        d->onServiceObjectLoaded(handle);
+    });
 }
 
 /*!

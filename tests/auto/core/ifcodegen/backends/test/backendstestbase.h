@@ -63,6 +63,7 @@ protected:
     QLocalServer *m_localServer;
     QLocalSocket *m_localSocket;
     bool m_isSimulation;
+    bool m_asyncBackendLoading;
     bool m_isSimulationBackend;
     QString m_serverExecutable;
 };
