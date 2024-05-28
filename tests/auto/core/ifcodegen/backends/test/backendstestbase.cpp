@@ -3,30 +3,18 @@
 // Copyright (C) 2018 Pelagicore AG
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#include "tst_backends.h"
+#include "backendstestbase.h"
 #include "echo.h"
 #include "echozoned.h"
 
 #include <QIfServiceManager>
 #include <QIfConfiguration>
 
-#define WAIT_AND_COMPARE(spy, value) \
-if (spy.count() != value) \
-    spy.wait(); \
-QCOMPARE(spy.count(), value); \
- \
-
 static QString frontLeftZone = QStringLiteral("FrontLeft");
 
 using namespace Qt::StringLiterals;
 
-#ifdef Q_OS_WIN
-static QString exeSuffix = u".exe"_s;
-#else
-static QString exeSuffix;
-#endif
-
-BackendsTest::BackendsTest()
+BackendsTestBase::BackendsTestBase()
     : QObject()
 #if QT_CONFIG(process)
     , m_serverProcess(new QProcess(this))
@@ -54,7 +42,7 @@ BackendsTest::BackendsTest()
     Echomodule::registerTypes();
 }
 
-void BackendsTest::sendCmd(const QByteArray &input)
+void BackendsTestBase::sendCmd(const QByteArray &input)
 {
     if (!m_localSocket)
         return;
@@ -64,7 +52,7 @@ void BackendsTest::sendCmd(const QByteArray &input)
     qApp->processEvents();
 }
 
-void BackendsTest::startServer(QStringList arguments)
+void BackendsTestBase::startServer(QStringList arguments)
 {
 #if QT_CONFIG(process)
     if (!m_serverExecutable.isEmpty()) {
@@ -82,7 +70,7 @@ void BackendsTest::startServer(QStringList arguments)
     sendCmd(QTest::currentTestFunction());
 }
 
-void BackendsTest::ignoreMessage(QtMsgType type, const char *message)
+void BackendsTestBase::ignoreMessage(QtMsgType type, const char *message)
 {
     QRegularExpression expression(u".*"_s + message);
     if (m_isSimulationBackend)
@@ -91,45 +79,7 @@ void BackendsTest::ignoreMessage(QtMsgType type, const char *message)
         QTest::ignoreMessage(QtInfoMsg, expression);
 }
 
-void BackendsTest::initTestCase_data()
-{
-    QDir currentDir = QDir::current();
-    QTest::addColumn<QString>("backend");
-    QTest::addColumn<bool>("isSimulation");
-    QTest::addColumn<QString>("serverExecutable");
-    QTest::newRow("simulation-backend") << "*echo_qtro_simulator*" << true << "";
-
-#if defined(QT_FEATURE_remoteobjects)
-    QTest::newRow("qtro-server") << "echo_backend_qtro" << false << currentDir.absoluteFilePath(u"org-example-echo-qtro-server"_s + exeSuffix);
-    QTest::newRow("qtro-simulation-server") << "echo_backend_qtro" << true << currentDir.absoluteFilePath(u"org-example-echo-qtro-simulation-server"_s + exeSuffix);
-#endif
-}
-
-void BackendsTest::initTestCase()
-{
-    if (!m_localServer->listen("qifcmdsocket")) {
-        QLocalServer::removeServer("qifcmdsocket");
-        QVERIFY2(m_localServer->listen("qifcmdsocket"), qPrintable(m_localServer->errorString()));
-    }
-}
-
-void BackendsTest::init()
-{
-    QFETCH_GLOBAL(QString, backend);
-    QFETCH_GLOBAL(bool, isSimulation);
-    QFETCH_GLOBAL(QString, serverExecutable);
-
-    m_serverExecutable = serverExecutable;
-    m_isSimulation = isSimulation;
-    m_isSimulationBackend = isSimulation && serverExecutable.isEmpty();
-
-    QVERIFY(QIfConfiguration::setDiscoveryMode(u"org.example.echomodule"_s, m_isSimulationBackend ?
-                                                                                QIfAbstractFeature::LoadOnlySimulationBackends :
-                                                                                QIfAbstractFeature::LoadOnlyProductionBackends));
-    QVERIFY(QIfConfiguration::setPreferredBackends(u"org.example.echomodule"_s, {backend}));
-}
-
-void BackendsTest::cleanup()
+void BackendsTestBase::cleanupTestData()
 {
 #if QT_CONFIG(process)
     if (m_serverProcess->state() == QProcess::Running) {
@@ -150,7 +100,43 @@ void BackendsTest::cleanup()
     QIfServiceManager::instance()->unloadAllBackends();
 }
 
-void BackendsTest::testInit()
+void BackendsTestBase::initTestCase_data()
+{
+    QTest::addColumn<QString>("backend");
+    QTest::addColumn<bool>("isSimulation");
+    QTest::addColumn<QString>("serverExecutable");
+}
+
+void BackendsTestBase::initTestCase()
+{
+    if (!m_localServer->listen("qifcmdsocket")) {
+        QLocalServer::removeServer("qifcmdsocket");
+        QVERIFY2(m_localServer->listen("qifcmdsocket"), qPrintable(m_localServer->errorString()));
+    }
+}
+
+void BackendsTestBase::init()
+{
+    QFETCH_GLOBAL(QString, backend);
+    QFETCH_GLOBAL(bool, isSimulation);
+    QFETCH_GLOBAL(QString, serverExecutable);
+
+    m_serverExecutable = serverExecutable;
+    m_isSimulation = isSimulation;
+    m_isSimulationBackend = isSimulation && serverExecutable.isEmpty();
+
+    QVERIFY(QIfConfiguration::setDiscoveryMode(u"org.example.echomodule"_s, m_isSimulationBackend ?
+                                                                                QIfAbstractFeature::LoadOnlySimulationBackends :
+                                                                                QIfAbstractFeature::LoadOnlyProductionBackends));
+    QVERIFY(QIfConfiguration::setPreferredBackends(u"org.example.echomodule"_s, {backend}));
+}
+
+void BackendsTestBase::cleanup()
+{
+    cleanupTestData();
+}
+
+void BackendsTestBase::testInit()
 {
     QTest::failOnWarning(QRegularExpression(u".*Couldn't retrieve MetaObject for enum parsing:.*"_s));
     Echo client;
@@ -237,7 +223,7 @@ void BackendsTest::testInit()
     QCOMPARE(lastMessageChangedSpy.count(), 0);
 }
 
-void BackendsTest::testZonedInit()
+void BackendsTestBase::testZonedInit()
 {
     EchoZoned client;
     QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
@@ -327,7 +313,7 @@ void BackendsTest::testZonedInit()
     QCOMPARE(stringValueChangedSpy.count(), 0);
 }
 
-void BackendsTest::testReconnect()
+void BackendsTestBase::testReconnect()
 {
     if (m_serverExecutable.isEmpty())
         QSKIP("The reconnection test only makes sense with a server process");
@@ -392,7 +378,7 @@ void BackendsTest::testReconnect()
     QCOMPARE(zonedClient.error(), QIfAbstractFeature::NoError);
 }
 
-void BackendsTest::testClient2Server()
+void BackendsTestBase::testClient2Server()
 {
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -477,7 +463,7 @@ void BackendsTest::testClient2Server()
     QCOMPARE(testEnumSpy[0][0].value<Echomodule::TestEnum>(), testEnumTestValue);
 }
 
-void BackendsTest::testZonedClient2Server()
+void BackendsTestBase::testZonedClient2Server()
 {
     EchoZoned client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -560,7 +546,7 @@ void BackendsTest::testZonedClient2Server()
     QCOMPARE(testEnumSpy[0][0].value<Echomodule::TestEnum>(), testEnumTestValue);
 }
 
-void BackendsTest::testServer2Client()
+void BackendsTestBase::testServer2Client()
 {
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -642,7 +628,7 @@ void BackendsTest::testServer2Client()
     QCOMPARE(testEnumSpy[0][0].value<Echomodule::TestEnum>(), testEnumTestValue);
 }
 
-void BackendsTest::testZonedServer2Client()
+void BackendsTestBase::testZonedServer2Client()
 {
     EchoZoned client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -721,7 +707,7 @@ void BackendsTest::testZonedServer2Client()
     QCOMPARE(testEnumSpy[0][0].value<Echomodule::TestEnum>(), testEnumTestValue);
 }
 
-void BackendsTest::testSlots()
+void BackendsTestBase::testSlots()
 {
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -789,7 +775,7 @@ void BackendsTest::testSlots()
     QCOMPARE(enumMethodReply.reply(), enumTestValue);
 }
 
-void BackendsTest::testZonedSlots()
+void BackendsTestBase::testZonedSlots()
 {
     EchoZoned client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -847,7 +833,7 @@ void BackendsTest::testZonedSlots()
     QCOMPARE(enumMethodReply.reply(), enumTestValue);
 }
 
-void BackendsTest::testMultipleSlotCalls()
+void BackendsTestBase::testMultipleSlotCalls()
 {
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -910,7 +896,7 @@ void BackendsTest::testMultipleSlotCalls()
     QCOMPARE(echoZonedReply3.reply(), echoTestValue3);
 }
 
-void BackendsTest::testAsyncSlotResults()
+void BackendsTestBase::testAsyncSlotResults()
 {
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -972,7 +958,7 @@ void BackendsTest::testAsyncSlotResults()
     QCOMPARE(zonedReply.value(), QString());
 }
 
-void BackendsTest::testSignals()
+void BackendsTestBase::testSignals()
 {
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -1037,7 +1023,7 @@ void BackendsTest::testSignals()
     WAIT_AND_COMPARE(zonedSomethingSpy, 1);
 }
 
-void BackendsTest::testModel()
+void BackendsTestBase::testModel()
 {
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
@@ -1084,7 +1070,7 @@ void BackendsTest::testModel()
     QCOMPARE(model->rowCount(), 0);
 }
 
-void BackendsTest::testSimulationData()
+void BackendsTestBase::testSimulationData()
 {
     if (!m_isSimulation)
         QSKIP("This test is only for simulation backend and simulation servers");
@@ -1180,55 +1166,3 @@ void BackendsTest::testSimulationData()
     QCOMPARE(unsupportedValueSpy.count(), 0);
     QCOMPARE(zone->stringValue(), QString());
 }
-
-void BackendsTest::testRemoteObjectsConfig()
-{
-    if (m_isSimulationBackend)
-        QSKIP("This test is only for remoteobject");
-
-    Echo client;
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
-    QVERIFY(initSpy.isValid());
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
-
-    EchoZoned zonedClient;
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
-    QVERIFY(zonedInitSpy.isValid());
-    zonedClient.setServiceObject(client.serviceObject());
-
-    // Test with same URL for all services
-    startServer({"--serverUrl", "local:myTestUrl"});
-    client.serviceObject()->updateServiceSettings(QVariantMap({{QString("connectionUrl"), QVariant("local:myTestUrl")}}));
-
-    //wait until the client has connected and initial values are set
-    WAIT_AND_COMPARE(initSpy, 1);
-    QVERIFY(client.isInitialized());
-
-    WAIT_AND_COMPARE(zonedInitSpy, 1);
-    QVERIFY(zonedClient.isInitialized());
-
-    cleanup();
-    QVERIFY(!client.isInitialized());
-    QVERIFY(!zonedClient.isInitialized());
-    initSpy.clear();
-    zonedInitSpy.clear();
-    QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
-    zonedClient.setServiceObject(client.serviceObject());
-
-    // Test with conf file, which uses different URLs for different services
-    startServer({"--serverConf", QFINDTESTDATA("server.conf")});
-    client.serviceObject()->updateServiceSettings(QVariantMap({
-                                                               {QString("org.example.echomodule.EchoZoned"), QVariantMap({{QString("connectionUrl"), QVariant("local:echozoned")}})},
-                                                               {QString("org.example.echomodule"), QVariantMap({{QString("connectionUrl"), QVariant("local:echomoduleconf")}})}
-                                                              }));
-
-
-    //wait until the client has connected and initial values are set
-    WAIT_AND_COMPARE(initSpy, 1);
-    QVERIFY(client.isInitialized());
-
-    WAIT_AND_COMPARE(zonedInitSpy, 1);
-    QVERIFY(zonedClient.isInitialized());
-}
-
-QTEST_MAIN(BackendsTest)
