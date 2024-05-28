@@ -62,3 +62,17 @@ qt_ifcodegen_add_plugin(addressbook_plugin
     MANUAL_FINALIZATION
 )
 #! [ifcodegen_add_plugin]
+
+#! [ifcodegen_add_qml_module]
+find_package(Qt6 COMPONENTS InterfaceFramework)
+
+# Generates code using the frontend template
+# and registers the library as a QML module
+# The NO_PLUGIN_OPTIONAL option is passed directly
+# to qt_add_qml_module.
+qt_add_qml_module(addressbook
+    IDL_FILES addressbook.qface
+    TEMPLATE frontend
+    NO_PLUGIN_OPTIONAL
+)
+#! [ifcodegen_add_qml_module]
