@@ -30,6 +30,10 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::IfRemoteObjectsHelperPrivate
 )
 
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_PLUGIN_CLASS_NAME
+    {{module.module_name|upperfirst}}RoPlugin
+)
+
 if (TARGET ${CURRENT_TARGET})
     target_sources(${CURRENT_TARGET}
                    PRIVATE

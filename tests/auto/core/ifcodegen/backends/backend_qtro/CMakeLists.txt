@@ -4,17 +4,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-qt_add_plugin(echo_backend_qtro
-    OUTPUT_NAME echo_backend_qtro
-    PLUGIN_TYPE interfaceframework
-)
-set_target_properties(echo_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
-
-# Interface Framework Generator:
-qt6_ifcodegen_extend_target(echo_backend_qtro
+qt6_ifcodegen_add_plugin(echo_backend_qtro
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE backend_qtro
 )
+set_target_properties(echo_backend_qtro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 target_link_libraries(echo_backend_qtro PUBLIC
     echo_qtro_frontend

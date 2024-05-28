@@ -49,3 +49,16 @@ target_link_libraries(AdressBook PUBLIC
     Qt::Quick
 )
 #! [ifcodegen_import_variables]
+
+#! [ifcodegen_add_plugin]
+find_package(Qt6 COMPONENTS InterfaceFramework)
+
+# Generates a plugin using the backend_simulator template
+# and sets the MANUAL_FINALIZATION option, which is passed
+# directly to qt_add_plugin.
+qt_ifcodegen_add_plugin(addressbook_plugin
+    IDL_FILES addressbook.qface
+    TEMPLATE backend_simulator
+    MANUAL_FINALIZATION
+)
+#! [ifcodegen_add_plugin]

@@ -17,6 +17,10 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::InterfaceFramework
 )
 
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_PLUGIN_CLASS_NAME
+    {{module.module_name|upperfirst}}SimulatorPlugin
+)
+
 if (TARGET ${CURRENT_TARGET})
     qt_add_resources(${VAR_PREFIX}_SOURCES
         ${CMAKE_CURRENT_LIST_DIR}/{{module.module_name|lower}}_simulation.qrc
