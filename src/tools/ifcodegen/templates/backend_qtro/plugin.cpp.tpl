@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #}
 {% include "common/generated_comment.cpp.tpl" %}
-{% set class = '{0}RoPlugin'.format(module.module_name) %}
+{% set class = '{0}RoPlugin'.format(module.module_name|upperfirst) %}
 
 #include "{{class|lower}}.h"
 
