@@ -3,8 +3,8 @@
 // Copyright (C) 2018 Pelagicore AG
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
-#ifndef BACKENDSTEST_H
-#define BACKENDSTEST_H
+#ifndef BACKENDSTESTBASE_H
+#define BACKENDSTESTBASE_H
 
 #include <QtTest>
 #include <QLocalServer>
@@ -12,18 +12,33 @@
 
 QT_FORWARD_DECLARE_CLASS(QIfServiceManager);
 
-class BackendsTest : public QObject
+#ifdef Q_OS_WIN
+static QString exeSuffix = QStringLiteral(".exe");
+#else
+static QString exeSuffix;
+#endif
+
+#define WAIT_AND_COMPARE(spy, value) \
+if (spy.count() != value) \
+        spy.wait(); \
+    QCOMPARE(spy.count(), value); \
+ \
+
+class BackendsTestBase : public QObject
 {
     Q_OBJECT
 public:
-    BackendsTest();
+    BackendsTestBase();
 
     void sendCmd(const QByteArray &input);
     void startServer(QStringList arguments = QStringList());
     void ignoreMessage(QtMsgType type, const char *message);
+    void cleanupTestData();
+
+    virtual void initTestCase_data();
+
 private slots:
     void initTestCase();
-    void initTestCase_data();
     void init();
     void cleanup();
     void testInit();
@@ -40,9 +55,8 @@ private slots:
     void testSignals();
     void testModel();
     void testSimulationData();
-    void testRemoteObjectsConfig();
 
-private:
+protected:
 #if QT_CONFIG(process)
     QProcess *m_serverProcess;
 #endif
@@ -53,4 +67,4 @@ private:
     QString m_serverExecutable;
 };
 
-#endif // BACKENDSTEST_H
+#endif // BACKENDSTESTBASE_H

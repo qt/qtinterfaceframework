@@ -151,9 +151,9 @@ QList<QIfServiceObject *> QIfServiceManagerPrivate::findServiceByInterface(const
             QIfServiceObject *serviceObject = nullptr;
             QString identifier = fileInfo.fileName();
 
-            if (identifier.isEmpty() && backend->proxyServiceObject) {
+            if (identifier.isEmpty() && backend->interface) {
                 //static plugin
-                identifier = backend->proxyServiceObject->id();
+                identifier = backend->interface->id();
             }
 
             if (regexp.match(identifier).hasMatch())

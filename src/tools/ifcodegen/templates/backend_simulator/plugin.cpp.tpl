@@ -31,6 +31,9 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
     : QObject(parent)
     , m_simulationEngine(new QIfSimulationEngine(u"{{module.name|lower}}"_s, this))
 {
+#ifdef QT_STATICPLUGIN
+    Q_INIT_RESOURCE({{module.module_name|lower}}_simulation);
+#endif
 {% if module.tags.config.interfaceBuilder %}
     QVector<QIfFeatureInterface *> interfacesList = {{module.tags.config.interfaceBuilder}}(this);
     Q_ASSERT(interfacesList.size() == interfaces().size());
