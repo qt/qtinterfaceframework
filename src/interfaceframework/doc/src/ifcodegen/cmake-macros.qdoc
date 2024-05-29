@@ -92,7 +92,7 @@ variable can be used to specify an extra search path for all ifcodegen function 
 
 Additional annotation files are passed by the \c ANNOTATION_FILES argument.
 
-\c IMPORT_PATH can be used to add to the search paths where IDL files that this one depends on
+\c IDL_IMPORT_PATH can be used to add to the search paths where IDL files that this one depends on
 can be found. The other IDL files still need to be generated and built on their own.
 
 \c OUTPUT_DIR specifies the directory where the generated files will be written to and defaults to
@@ -129,7 +129,7 @@ qt_ifcodegen_extend_target(
     IDL_FILES idl_files
     TEMPLATE template
     [ANNOTATION_FILES ...]
-    [IMPORT_PATH ...]
+    [IDL_IMPORT_PATH ...]
     [OUTPUT_DIR output_dir]
     [EXTRA_HEADERS_OUTPUT_DIR extra_headers_output_dir]
     [EXTRA_TEMPLATE_SEARCH_PATH ...]
@@ -181,7 +181,7 @@ qt_ifcodegen_import_variables(
     IDL_FILES idl_files
     TEMPLATE template
     [ANNOTATION_FILES ...]
-    [IMPORT_PATH ...]
+    [IDL_IMPORT_PATH ...]
     [OUTPUT_DIR output_dir]
     [EXTRA_HEADERS_OUTPUT_DIR extra_headers_output_dir]
     [EXTRA_TEMPLATE_SEARCH_PATH ...]
@@ -232,7 +232,7 @@ qt_ifcodegen_add_plugin(
     IDL_FILES idl_files
     TEMPLATE template
     [ANNOTATION_FILES ...]
-    [IMPORT_PATH ...]
+    [IDL_IMPORT_PATH ...]
     [OUTPUT_DIR output_dir]
     [EXTRA_HEADERS_OUTPUT_DIR extra_headers_output_dir]
     [EXTRA_TEMPLATE_SEARCH_PATH ...]
@@ -284,7 +284,7 @@ qt_ifcodegen_add_qml_module(
     IDL_FILES idl_files
     TEMPLATE template
     [ANNOTATION_FILES ...]
-    [IMPORT_PATH ...]
+    [IDL_IMPORT_PATH ...]
     [OUTPUT_DIR output_dir]
     [EXTRA_HEADERS_OUTPUT_DIR extra_headers_output_dir]
     [EXTRA_TEMPLATE_SEARCH_PATH ...]

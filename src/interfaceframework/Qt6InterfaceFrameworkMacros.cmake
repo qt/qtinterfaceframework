@@ -180,7 +180,7 @@ endmacro()
 # ANNOTATION_FILES: List of additional annotation files, which should be passed
 #   to the generator. (OPTIONAL)
 #
-# IMPORT_PATH: List of additional directories, where included IDL files are
+# IDL_IMPORT_PATH: List of additional directories, where included IDL files are
 #   searched for. (OPTIONAL)
 #
 # OUTPUT_DIR: Overwrite the default output path. By default the generated code
@@ -210,7 +210,7 @@ function(qt6_ifcodegen_generate)
         ARG
         # TARGET and PREFIX are not handled here, but we don't want the UNPARSED_ARGUMENTS error to
         # be triggered when provided (when called through the internal_ifcodegen_import() function
-        "VERBOSE" "IDL_FILES;TEMPLATE;MODULE_NAME;OUTPUT_DIR;EXTRA_HEADERS_OUTPUT_DIR;TARGET;PREFIX" "ANNOTATION_FILES;IMPORT_PATH;EXTRA_TEMPLATE_SEARCH_PATH"
+        "VERBOSE" "IDL_FILES;TEMPLATE;MODULE_NAME;OUTPUT_DIR;EXTRA_HEADERS_OUTPUT_DIR;TARGET;PREFIX" "ANNOTATION_FILES;IMPORT_PATH;IDL_IMPORT_PATH;EXTRA_TEMPLATE_SEARCH_PATH"
     )
 
     if (DEFINED ARG_KEYWORDS_MISSING_VALUES)
@@ -308,11 +308,18 @@ function(qt6_ifcodegen_generate)
         list(APPEND IDE_FILES ${ANNOTATION_PATH})
     endforeach()
 
-    foreach(IMPORT ${ARG_IMPORT_PATH})
-        get_filename_component(IMPORT_PATH "${IMPORT}" REALPATH BASE_DIR)
-        list(APPEND GENERATOR_ARGUMENTS -I ${IMPORT_PATH})
+    if (ARG_IMPORT_PATH)
+        set(ARG_IDL_IMPORT_PATH ${ARG_IMPORT_PATH})
+        message(WARNING
+            "qt_ifcodegen's IMPORT_PATH option is deprecated, and will be "
+            "removed in a future Qt version. Use the IDL_IMPORT_PATH option instead.")
+    endif()
+
+    foreach(IMPORT ${ARG_IDL_IMPORT_PATH})
+        get_filename_component(IDL_IMPORT_PATH "${IMPORT}" REALPATH BASE_DIR)
+        list(APPEND GENERATOR_ARGUMENTS -I ${IDL_IMPORT_PATH})
         # Dependency for regeneration
-        file(GLOB IFCODEGEN_FILES ${IMPORT_PATH}/*.qface)
+        file(GLOB IFCODEGEN_FILES ${IDL_IMPORT_PATH}/*.qface)
         list(APPEND GEN_DEPENDENCIES ${IFCODEGEN_FILES})
     endforeach()
 
@@ -455,7 +462,7 @@ endif()
 # ANNOTATION_FILES: List of additional annotation files, which should be passed
 #   to the generator. (OPTIONAL)
 #
-# IMPORT_PATH: List of additional directories, where included IDL files are
+# IDL_IMPORT_PATH: List of additional directories, where included IDL files are
 #   searched for. (OPTIONAL)
 #
 # OUTPUT_DIR: Overwrite the default output path. By default the generated code
@@ -516,7 +523,7 @@ endif()
 # ANNOTATION_FILES: List of additional annotation files, which should be passed
 #   to the generator. (OPTIONAL)
 #
-# IMPORT_PATH: List of additional directories, where included IDL files are
+# IDL_IMPORT_PATH: List of additional directories, where included IDL files are
 #   searched for. (OPTIONAL)
 #
 # OUTPUT_DIR: Overwrite the default output path. By default the generated code
@@ -569,7 +576,7 @@ endif()
 macro(internal_extract_ifcodegen_vars extraOptions extraOneValueArgs extraMultiValueArgs)
     set(options VERBOSE)
     set(oneValueArgs IDL_FILES TEMPLATE OUTPUT_DIR EXTRA_HEADERS_OUTPUT_DIR)
-    set(multiValueArgs ANNOTATION_FILES IMPORT_PATH EXTRA_TEMPLATE_SEARCH_PATH)
+    set(multiValueArgs ANNOTATION_FILES IDL_IMPORT_PATH EXTRA_TEMPLATE_SEARCH_PATH)
     cmake_parse_arguments(
         PARSE_ARGV 1
         ARG
@@ -608,7 +615,7 @@ endmacro()
 # ANNOTATION_FILES: List of additional annotation files, which should be passed
 #   to the generator. (OPTIONAL)
 #
-# IMPORT_PATH: List of additional directories, where included IDL files are
+# IDL_IMPORT_PATH: List of additional directories, where included IDL files are
 #   searched for. (OPTIONAL)
 #
 # OUTPUT_DIR: Overwrite the default output path. By default the generated code
@@ -675,7 +682,7 @@ endif()
 # ANNOTATION_FILES: List of additional annotation files, which should be passed
 #   to the generator. (OPTIONAL)
 #
-# IMPORT_PATH: List of additional directories, where included IDL files are
+# IDL_IMPORT_PATH: List of additional directories, where included IDL files are
 #   searched for. (OPTIONAL)
 #
 # OUTPUT_DIR: Overwrite the default output path. By default the generated code
