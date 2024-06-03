@@ -150,6 +150,64 @@ function(internal_ifcodegen_import)
    endif()
 endfunction()
 
+macro(internal_check_ifcodegen_ready target)
+    qt_ensure_ifcodegen()
+    if ((QT_IFCODEGEN_VIRTUALENV_PATH
+        AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/activate AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/activate.bat)
+        OR NOT EXISTS ${QT_IFCODEGEN_GENERATOR_PATH})
+        if (NOT "${target}" STREQUAL "")
+            # Create a dummy target instead
+            if (NOT TARGET ${target} AND NOT TEST ${target})
+                if (DEFINED QtInterfaceFramework_BINARY_DIR)
+                    file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
+                    add_library(${target} ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
+                else()
+                    message(FATAL_ERROR "No virtualenv environment to run the ifcodegen")
+                endif()
+            endif()
+        endif()
+        # IMPORTANT
+        # As we are inside a macro, this return() will be executed inside the calling CMakeLists.txt
+        # We only do this in our internal code as the generator is not ready yet to be used at this
+        # point.
+        return()
+    endif()
+endmacro()
+
+# Extracts all known ifcodegen variables from the calling scope and provides them
+# as NEW_ARGS
+# The ARG_UNPARSED_ARGUMENTS variable can be used to access all other parameters
+# The extraOptions extraOneValueArgs and extraMultiValueArgs can be used to filter
+# them from the ARG_UNPARSED_ARGUMENTS and allow special handling
+macro(internal_extract_ifcodegen_vars extraOptions extraOneValueArgs extraMultiValueArgs)
+    set(options VERBOSE)
+    set(oneValueArgs IDL_FILES TEMPLATE OUTPUT_DIR EXTRA_HEADERS_OUTPUT_DIR)
+    set(multiValueArgs ANNOTATION_FILES IDL_IMPORT_PATH EXTRA_TEMPLATE_SEARCH_PATH)
+    cmake_parse_arguments(
+        PARSE_ARGV 1
+        ARG
+        "${options}${extraOptions}" "${oneValueArgs}${extraOneValueArgs}" "${multiValueArgs}${extraMultiValueArgs}"
+    )
+    set(NEW_ARGS "")
+    foreach(I IN LISTS options)
+        if (ARG_${I})
+            list(APPEND NEW_ARGS ${I})
+        endif()
+    endforeach()
+    foreach(I IN LISTS oneValueArgs)
+        if (ARG_${I})
+            list(APPEND NEW_ARGS ${I})
+            list(APPEND NEW_ARGS ${ARG_${I}})
+        endif()
+    endforeach()
+    foreach(I IN LISTS multiValueArgs)
+        if (ARG_${I})
+            list(APPEND NEW_ARGS ${I})
+            list(APPEND NEW_ARGS ${ARG_${I}})
+        endif()
+    endforeach()
+endmacro()
+
 #####################################################################
 ## Public API
 #####################################################################
@@ -483,26 +541,7 @@ endif()
 #
 # Note: this is a macro in order to keep the current variable scope
 macro(qt6_ifcodegen_extend_target target)
-    qt_ensure_ifcodegen()
-
-    if ((QT_IFCODEGEN_VIRTUALENV_PATH
-        AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/activate AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/activate.bat)
-        OR NOT EXISTS ${QT_IFCODEGEN_GENERATOR_PATH})
-        # Create a dummy target instead
-        if (NOT TARGET ${target} AND NOT TEST ${target})
-            if (DEFINED QtInterfaceFramework_BINARY_DIR)
-                file(TOUCH ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
-                add_library(${target} ${CMAKE_CURRENT_BINARY_DIR}/cmake_dummy.cpp)
-            else()
-                message(FATAL_ERROR "No virtualenv environment to run the ifcodegen")
-            endif()
-        endif()
-        # IMPORTANT
-        # As we are inside a macro, this return() will be executed inside the calling CMakeLists.txt
-        # We only do this in our internal code as the generator is not ready yet to be used at this
-        # point.
-        return()
-    endif()
+    internal_check_ifcodegen_ready(${target})
 
     internal_ifcodegen_import(TARGET ${target} ${ARGN})
 endmacro()
@@ -544,19 +583,7 @@ endif()
 #
 # Note: this is a macro in order to keep the current variable scope
 macro(qt6_ifcodegen_import_variables prefix)
-    qt_ensure_ifcodegen()
-
-    if ((QT_IFCODEGEN_VIRTUALENV_PATH
-            AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/bin/activate AND NOT EXISTS ${QT_IFCODEGEN_VIRTUALENV_PATH}/Scripts/activate.bat)
-        OR NOT EXISTS ${QT_IFCODEGEN_GENERATOR_PATH})
-        if (DEFINED QtInterfaceFramework_BINARY_DIR)
-            # IMPORTANT
-            # As we are inside a macro, this return() will be executed inside the calling CMakeLists.txt
-            # We only do this in our internal code as the generator is not ready yet to be used at this
-            # point.
-            return()
-        endif()
-    endif()
+    internal_check_ifcodegen_ready("")
 
     internal_ifcodegen_import(PREFIX ${prefix} ${ARGN})
 endmacro()
@@ -567,40 +594,6 @@ if(NOT QT_NO_CREATE_VERSIONLESS_FUNCTIONS)
         qt6_ifcodegen_import_variables(${ARGV})
     endmacro()
 endif()
-
-# Extracts all known ifcodegen variables from the calling scope and provides them
-# as NEW_ARGS
-# The ARG_UNPARSED_ARGUMENTS variable can be used to access all other parameters
-# The extraOptions extraOneValueArgs and extraMultiValueArgs can be used to filter
-# them from the ARG_UNPARSED_ARGUMENTS and allow special handling
-macro(internal_extract_ifcodegen_vars extraOptions extraOneValueArgs extraMultiValueArgs)
-    set(options VERBOSE)
-    set(oneValueArgs IDL_FILES TEMPLATE OUTPUT_DIR EXTRA_HEADERS_OUTPUT_DIR)
-    set(multiValueArgs ANNOTATION_FILES IDL_IMPORT_PATH EXTRA_TEMPLATE_SEARCH_PATH)
-    cmake_parse_arguments(
-        PARSE_ARGV 1
-        ARG
-        "${options}${extraOptions}" "${oneValueArgs}${extraOneValueArgs}" "${multiValueArgs}${extraMultiValueArgs}"
-    )
-    set(NEW_ARGS "")
-    foreach(I IN LISTS options)
-        if (ARG_${I})
-            list(APPEND NEW_ARGS ${I})
-        endif()
-    endforeach()
-    foreach(I IN LISTS oneValueArgs)
-        if (ARG_${I})
-            list(APPEND NEW_ARGS ${I})
-            list(APPEND NEW_ARGS ${ARG_${I}})
-        endif()
-    endforeach()
-    foreach(I IN LISTS multiValueArgs)
-        if (ARG_${I})
-            list(APPEND NEW_ARGS ${I})
-            list(APPEND NEW_ARGS ${ARG_${I}})
-        endif()
-    endforeach()
-endmacro()
 
 # Adds a plugin target which is generated by ifcodegen.
 #
@@ -631,6 +624,8 @@ endmacro()
 # VERBOSE: Print additional messages during generation. Useful for debugging
 #   purposes. (OPTIONAL)
 function(qt6_ifcodegen_add_plugin target)
+    internal_check_ifcodegen_ready(${target})
+
     # Extracts all ifcodegen variables into NEW_ARGS
     internal_extract_ifcodegen_vars("" ";CLASS_NAME;PLUGIN_TYPE" "")
 
@@ -698,6 +693,8 @@ endif()
 # VERBOSE: Print additional messages during generation. Useful for debugging
 #   purposes. (OPTIONAL)
 function(qt6_ifcodegen_add_qml_module target)
+    internal_check_ifcodegen_ready(${target})
+
     internal_extract_ifcodegen_vars("" ";URI;VERSION" "")
 
     # Debugging helper
