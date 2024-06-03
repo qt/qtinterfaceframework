@@ -454,6 +454,14 @@ function(qt6_ifcodegen_generate)
         endif()
     endforeach()
 
+    # Also check for parameter changes compared to earlier calls.
+    if(EXISTS ${OUTPUT_DIR}/.stamp-ifcodegen)
+        file(READ ${OUTPUT_DIR}/.stamp-ifcodegen ifcodegen_params)
+        if(NOT "${ifcodegen_params}" STREQUAL "${GENERATOR_ARGUMENTS} ${IDL_FILES}")
+            set(RUN_GENERATOR TRUE)
+        endif()
+    endif()
+
     if (RUN_GENERATOR)
         if(NOT IS_DIRECTORY ${QT_IFCODEGEN_GENERATOR_PATH}) # Compiled ifcodegen
             if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
@@ -502,6 +510,20 @@ function(qt6_ifcodegen_generate)
                 ${OUTPUT_DIR}
             )
         list(JOIN GENERATOR_CMD " " GENERATOR_CMD_STR)
+
+        # Remove stamp file in case the new generator run fails, so we will keep trying.
+        file(REMOVE ${OUTPUT_DIR}/.stamp-ifcodegen)
+        # Also remove the contents of the whole output folder to force regeneration,
+        # but only if it is safely in the build folder.
+        get_filename_component(real_outdir "${OUTPUT_DIR}" REALPATH)
+        string(FIND "${real_outdir}" "${CMAKE_CURRENT_BINARY_DIR}" buildir_is_prefix)
+        if("${buildir_is_prefix}" EQUAL 0)
+            file(GLOB old_output_files "${OUTPUT_DIR}/*")
+            if(old_output_files)
+                file(REMOVE_RECURSE ${old_output_files})
+            endif()
+        endif()
+
         execute_process(
                         COMMAND ${GENERATOR_CMD}
                         RESULT_VARIABLE RET_CODE
@@ -521,7 +543,7 @@ function(qt6_ifcodegen_generate)
                 message(WARNING "ifcodegen: ${WARNING_MESSAGE}")
                 message("${FULL_WARNING_MESSAGE}")
             endforeach()
-            execute_process(COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_DIR}/.stamp-ifcodegen)
+            file(WRITE ${OUTPUT_DIR}/.stamp-ifcodegen "${GENERATOR_ARGUMENTS} ${IDL_FILES}")
         else()
             # FATAL_ERROR doesn't print the message as is. Because of that the command cannot
             # be copied into a terminal window anymore. To fix this we report the full
