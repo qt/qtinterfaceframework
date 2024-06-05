@@ -6,15 +6,6 @@ accept_configuration:
     - condition: property
       property: features
       not_contains_value: Disable
-      # Disable building on windows aarch64
-    - condition: or
-      conditions:
-        - condition: property
-          property: host.arch
-          not_equals_value: AARCH64
-        - condition: property
-          property: host.os
-          not_equals_value: Windows
 
 instructions:
   Build:
