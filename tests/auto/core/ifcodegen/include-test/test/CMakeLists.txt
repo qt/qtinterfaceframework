@@ -21,5 +21,5 @@ set_target_properties(tst_qface_include PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
 qt6_ifcodegen_extend_target(tst_qface_include
     IDL_FILES ../../include-test.qface
     TEMPLATE test
-    IMPORT_PATH ../../qface\ imports
+    IDL_IMPORT_PATH ../../qface\ imports
 )

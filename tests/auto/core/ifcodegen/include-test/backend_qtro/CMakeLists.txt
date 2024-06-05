@@ -10,7 +10,7 @@ qt_add_plugin(include_test_qtro)
 qt6_ifcodegen_extend_target(include_test_qtro
     IDL_FILES ../../include-test.qface
     TEMPLATE backend_qtro
-    IMPORT_PATH ../../qface\ imports
+    IDL_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include_test_qtro PUBLIC

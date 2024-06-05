@@ -8,7 +8,7 @@ set(CMAKE_AUTOUIC ON)
 qt6_ifcodegen_import_variables(INCLUDE_TEST
     IDL_FILES ../../include-test.qface
     TEMPLATE qmlplugin
-    IMPORT_PATH ../../qface\ imports
+    IDL_IMPORT_PATH ../../qface\ imports
 )
 
 qt_add_qml_module(include_test_qmlplugin

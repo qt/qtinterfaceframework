@@ -10,7 +10,7 @@ qt_add_executable(include-test-simulation-server)
 qt6_ifcodegen_extend_target(include-test-simulation-server
     IDL_FILES ../../include-test.qface
     TEMPLATE server_qtro_simulator
-    IMPORT_PATH ../../qface\ imports
+    IDL_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include-test-simulation-server PUBLIC

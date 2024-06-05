@@ -11,7 +11,7 @@ set_target_properties(include_test_frontend PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 qt6_ifcodegen_extend_target(include_test_frontend
     IDL_FILES ../../include-test.qface
     TEMPLATE frontend
-    IMPORT_PATH ../../qface\ imports
+    IDL_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include_test_frontend PUBLIC
