@@ -11,7 +11,7 @@ set_target_properties(include_test_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY
 qt6_ifcodegen_extend_target(include_test_simulator
     IDL_FILES ../../include-test.qface
     TEMPLATE backend_simulator
-    IMPORT_PATH ../../qface\ imports
+    IDL_IMPORT_PATH ../../qface\ imports
 )
 
 target_link_libraries(include_test_simulator PUBLIC
