@@ -41,10 +41,10 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
     m_{{interface|lower}}Backend = static_cast<{{interface}}Backend*>(interfacesList.at({{loop.index0}}));
 {%   endfor %}
 {% else %}
-{%   for interface in module.interfaces %}
-    m_{{interface|lower}}Backend = new {{interface}}Backend(m_simulationEngine, this);
     //Register the types for the SimulationEngine
     {{module.module_name|upperfirst}}::registerQmlTypes(u"{{module|qml_type}}.simulation"_s, {{module.majorVersion}}, {{module.minorVersion}});
+{%   for interface in module.interfaces %}
+    m_{{interface|lower}}Backend = new {{interface}}Backend(m_simulationEngine, this);
     m_simulationEngine->registerSimulationInstance(m_{{interface|lower}}Backend, "{{module|qml_type}}.simulation", {{module.majorVersion}}, {{module.minorVersion}}, "{{interface}}Backend");
 {%   endfor %}
 {% if module.tags.config_simulator and module.tags.config_simulator.simulationFile %}
