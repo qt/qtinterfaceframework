@@ -296,6 +296,8 @@ void QIfSimulationEngine::loadSimulationData(const QString &dataFile)
     \endcode
 
     The simulation engine's identifier can be set in its constructor.
+
+    \note Since 6.8 all root objects are reparented automatically to the engine.
 */
 void QIfSimulationEngine::loadSimulation(const QUrl &file)
 {
@@ -308,6 +310,10 @@ void QIfSimulationEngine::loadSimulation(const QUrl &file)
     qCDebug(qLcIfSimulationEngine, "loading simulation for engine %s: %s", qPrintable(m_identifier), qPrintable(filePath.toString()));
 
     load(filePath);
+
+    const auto ros = rootObjects();
+    for (auto obj : ros)
+        obj->setParent(this);
 }
 
 /*!
