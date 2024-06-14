@@ -204,12 +204,17 @@ void QIfServiceManagerPrivate::searchPlugins()
 {
     bool found = false;
 
+    qCDebug(qLcIfServiceManagement) << "Start to search for backend plugins";
+    QElapsedTimer timer;
+    if (qLcIfPerf().isDebugEnabled())
+        timer.start();
     const auto pluginDirs = QCoreApplication::libraryPaths();
     for (const QString &pluginDir : pluginDirs) {
         // Already loaded, skip it...
         if (m_loadedPaths.contains(pluginDir))
             continue;
         m_loadedPaths << pluginDir;
+        qCDebug(qLcIfServiceManagement) << "Checking folder:" << pluginDir;
 
 #ifdef Q_OS_ANDROID
         QString path = pluginDir;
@@ -227,8 +232,11 @@ void QIfServiceManagerPrivate::searchPlugins()
 #endif
                     QDir::Files);
         for (const QString &pluginFileName : plugins) {
-            if (!QLibrary::isLibrary(pluginFileName))
+            if (!QLibrary::isLibrary(pluginFileName)) {
+                qCDebug(qLcIfServiceManagement) << "Skipping:" << pluginFileName;
                 continue;
+            }
+            qCDebug(qLcIfServiceManagement) << "Found:" << pluginFileName;
 
             const QFileInfo info(dir, pluginFileName);
             const QString absFile = info.canonicalFilePath();
@@ -241,12 +249,16 @@ void QIfServiceManagerPrivate::searchPlugins()
 
     // Only load the static plugins once
     if (!m_staticLoaded) {
+        qCDebug(qLcIfServiceManagement) << "Searching for static backend plugins";
         m_staticLoaded = true;
         const auto staticPlugins = QPluginLoader::staticPlugins();
-        for (const QStaticPlugin &plugin : staticPlugins)
+        for (const QStaticPlugin &plugin : staticPlugins) {
+            qCDebug(qLcIfServiceManagement) << "Found static plugin:" << plugin.metaData().value(classNameLiteral).toString();
             registerStaticBackend(plugin);
+        }
     }
 
+    qCDebug(qLcIfServiceManagement) << "Searching for backend plugins done in" << timer.elapsed() << "ms";
     if (Q_UNLIKELY(!found && m_backends.count() == 0))
         qWarning() << "No plugins found in search path: " << QCoreApplication::libraryPaths().join(QLatin1String(":"));
 }
