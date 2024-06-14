@@ -411,7 +411,7 @@ QStringList QIfAbstractFeatureListModel::preferredBackends() const
 
     By default, this property is \c true.
 
-    setUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
+    setBackendUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
     to skip expensive updates while the application is currently not visible on the screen.
 
     This is especially useful when backend upates are triggered over an IPC and received by multiple
@@ -427,7 +427,7 @@ QStringList QIfAbstractFeatureListModel::preferredBackends() const
 
     By default, this property is \c true.
 
-    setUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
+    setBackendUpdatesEnabled() is normally used to disable updates for a short period of time, for instance
     to skip expensive updates while the application is currently not visible on the screen.
 
     This is especially useful when backend upates are triggered over an IPC and received by multiple
