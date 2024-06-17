@@ -13,10 +13,28 @@
 #include <QIfServiceInterface>
 #include <QIfAbstractFeatureListModel>
 #include <QIfServiceManager>
+#include <QQmlIncubationController>
 
 #include "qiffeaturetester.h"
 
 int acceptCounter = 100;
+
+class PeriodicIncubationController : public QObject,
+                                     public QQmlIncubationController
+{
+public:
+    PeriodicIncubationController(QObject *parent = nullptr)
+        : QObject(parent)
+    {
+        startTimer(16);
+    }
+
+protected:
+    void timerEvent(QTimerEvent *) override {
+        incubateFor(5);
+    }
+};
+
 
 class TestFeatureInterface : public QIfFeatureInterface
 {
@@ -269,6 +287,7 @@ private Q_SLOTS:
     void testServiceObjectDestruction();
     void testResetServiceObject();
     void testBackendUpdates();
+    void testLoader();
 
 private:
     QIfFeatureTester *createTester(bool testBaseFunctions = false)
@@ -437,7 +456,7 @@ void BaseTest::testAutoDiscovery_qml()
         qmlRegisterType<TestFeatureListModel>("testfeature", 1, 0, "TestFeature");
     else
         qmlRegisterType<TestFeature>("testfeature", 1, 0, "TestFeature");
-    QQmlComponent component(&engine, QUrl::fromLocalFile(QFINDTESTDATA("testdata/autodiscovery.qml")));
+    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/testdata/autodiscovery.qml")));
     QObject *obj = component.create();
 
     QVERIFY2(obj, qPrintable(component.errorString()));
@@ -631,6 +650,64 @@ void BaseTest::testBackendUpdates()
     secondFeature->startAutoDiscovery();
     QVERIFY(secondFeature->serviceObject());
     QCOMPARE(secondFeature->intProperty(), 0);
+}
+
+void BaseTest::testLoader()
+{
+    TestBackend* backend = new TestBackend();
+    m_manager->registerService(backend, backend->interfaces());
+
+    QQmlEngine engine;
+    engine.setIncubationController(new PeriodicIncubationController(this));
+    if (m_isModel) {
+        qmlRegisterRevision<QIfAbstractFeatureListModel, 8>("testfeature", 1, 0);
+        qmlRegisterType<TestFeatureListModel>("testfeature", 1, 0, "TestFeature");
+    } else {
+        qmlRegisterRevision<QIfAbstractFeature, 8>("testfeature", 1, 0);
+        qmlRegisterType<TestFeature>("testfeature", 1, 0, "TestFeature");
+    }
+    qmlRegisterModuleImport("testfeature", QQmlModuleImportModuleAny,
+                            "QtInterfaceFramework", QQmlModuleImportLatest);
+    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/testdata/loader.qml")));
+    QObject *obj = component.create();
+
+    QVERIFY2(obj, qPrintable(component.errorString()));
+    QIfFeatureTester *inSyncLoader;
+    if (m_isModel)
+        inSyncLoader = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("inSyncLoader"), this);
+    else
+        inSyncLoader = new QIfFeatureTester(obj->findChild<TestFeature*>("inSyncLoader"), this);
+    // The default is false and the loader is synchronous
+    QCOMPARE(inSyncLoader->asynchronousBackendLoading(), false);
+
+    QSignalSpy asyncLoaderSpy(obj, SIGNAL(asyncLoaderLoaded()));
+    QVERIFY(asyncLoaderSpy.isValid());
+    QSignalSpy asyncLoaderOverriddenSpy(obj, SIGNAL(asyncLoaderOverridenLoaded()));
+    QVERIFY(asyncLoaderOverriddenSpy.isValid());
+
+    if (asyncLoaderSpy.count() == 0)
+        asyncLoaderSpy.wait();
+    QVERIFY(asyncLoaderSpy.count() > 0);
+
+    QIfFeatureTester *inAsyncLoader;
+    if (m_isModel)
+        inAsyncLoader = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("inAsyncLoader"), this);
+    else
+        inAsyncLoader = new QIfFeatureTester(obj->findChild<TestFeature*>("inAsyncLoader"), this);
+    // In an asynchronous loader the default is true
+    QCOMPARE(inAsyncLoader->asynchronousBackendLoading(), true);
+
+    if (asyncLoaderOverriddenSpy.count() == 0)
+        asyncLoaderOverriddenSpy.wait();
+    QVERIFY(asyncLoaderOverriddenSpy.count() > 0);
+
+    QIfFeatureTester *inAsyncLoaderOverridden;
+    if (m_isModel)
+        inAsyncLoaderOverridden = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("inAsyncLoaderOverridden"), this);
+    else
+        inAsyncLoaderOverridden = new QIfFeatureTester(obj->findChild<TestFeature*>("inAsyncLoaderOverridden"), this);
+    // Make sure that overriding the default value works
+    QCOMPARE(inAsyncLoaderOverridden->asynchronousBackendLoading(), false);
 }
 
 //This construction is used to run the test twice once for a Feature and once for the FeatureListModel but show the results as separate tests.
