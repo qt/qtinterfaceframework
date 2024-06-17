@@ -29,6 +29,10 @@
                 "$(delta:-)": []
             }
         },
+        "ReportUnclosedRestOfFileComments": {
+            "_active": true,
+            "excludes": ["*/rep_*", "*/qifqueryparser_flex*", "build/include/*/*", "build/*/*-config*.h", "build/*/*_qmltyperegistrations.cpp"]
+        },
         "NextLine": {
             "_active": true
         },
