@@ -20,6 +20,8 @@ class QIfServiceManagerPrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObjectHandle
 {
     Q_GADGET
+    QML_ANONYMOUS
+    QML_ADDED_IN_VERSION(6, 8)
     Q_PROPERTY(bool valid READ isValid FINAL)
     Q_PROPERTY(bool loaded READ isLoaded FINAL)
     Q_PROPERTY(QIfServiceObject *serviceObject READ serviceObject FINAL)
@@ -33,6 +35,7 @@ public:
     bool isLoaded() const;
     QIfServiceObject *serviceObject() const;
 
+    QIfServiceObjectHandle& operator=(const QIfServiceObjectHandle&) = default;
     bool operator==(QIfServiceObjectHandle other) const { return m_handle == other.m_handle; }
     bool operator!=(QIfServiceObjectHandle other) const { return !(*this == other); }
 
@@ -44,7 +47,6 @@ private:
     friend class QIfServiceManager;
 };
 
-// AXIVION Next Line Qt-CtorMissingParentArgument: private ctor
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceManager : public QAbstractListModel
 {
     Q_OBJECT
