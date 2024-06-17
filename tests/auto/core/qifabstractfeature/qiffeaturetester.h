@@ -21,6 +21,7 @@ class QIfFeatureTester : public QObject
     Q_PROPERTY(bool isValid READ isValid NOTIFY isValidChanged)
     Q_PROPERTY(bool isInitialized READ isInitialized NOTIFY isInitializedChanged)
     Q_PROPERTY(QString error READ errorMessage NOTIFY errorChanged)
+    Q_PROPERTY(bool asynchronousBackendLoading READ asynchronousBackendLoading NOTIFY asynchronousBackendLoadingChanged)
 
 public:
     explicit QIfFeatureTester(QIfAbstractFeature *feature, QObject *parent = nullptr)
@@ -34,6 +35,7 @@ public:
         connect(m_feature, &QIfAbstractFeature::isValidChanged, this, &QIfFeatureTester::isValidChanged);
         connect(m_feature, &QIfAbstractFeature::isInitializedChanged, this, &QIfFeatureTester::isInitializedChanged);
         connect(m_feature, &QIfAbstractFeature::errorChanged, this, &QIfFeatureTester::errorChanged);
+        connect(m_feature, &QIfAbstractFeature::asynchronousBackendLoadingChanged, this, &QIfFeatureTester::asynchronousBackendLoadingChanged);
     }
 
     explicit QIfFeatureTester(QIfAbstractFeatureListModel *featureModel, QObject *parent = nullptr)
@@ -47,6 +49,7 @@ public:
         connect(m_featureListModel, &QIfAbstractFeatureListModel::isValidChanged, this, &QIfFeatureTester::isValidChanged);
         connect(m_featureListModel, &QIfAbstractFeatureListModel::isInitializedChanged, this, &QIfFeatureTester::isInitializedChanged);
         connect(m_featureListModel, &QIfAbstractFeatureListModel::errorChanged, this, &QIfFeatureTester::errorChanged);
+        connect(m_featureListModel, &QIfAbstractFeatureListModel::asynchronousBackendLoadingChanged, this, &QIfFeatureTester::asynchronousBackendLoadingChanged);
     }
 
     QIfServiceObject *serviceObject() const
@@ -89,6 +92,11 @@ public:
         return m_feature ? m_feature->errorText() : m_featureListModel->errorText();
     }
 
+    bool asynchronousBackendLoading() const
+    {
+        return m_feature ? m_feature->asynchronousBackendLoading() : m_featureListModel->asynchronousBackendLoading();
+    }
+
     void setBackendUpdatesEnabled(bool backendUpdatesEnabled)
     {
         m_feature ? m_feature->setBackendUpdatesEnabled(backendUpdatesEnabled) : m_featureListModel->setBackendUpdatesEnabled(backendUpdatesEnabled);
@@ -120,6 +128,7 @@ Q_SIGNALS:
     void isValidChanged(bool arg);
     void isInitializedChanged(bool isInitialized);
     void errorChanged(QIfAbstractFeature::Error error, const QString &message);
+    void asynchronousBackendLoadingChanged(bool asynchronousBackendLoading);
 
 private:
     QIfAbstractFeature *m_feature;

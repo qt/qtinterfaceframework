@@ -6,6 +6,9 @@
 #include "qifabstractfeaturelistmodel.h"
 #include "qifabstractfeaturelistmodel_p.h"
 #include "qifconfiguration_p.h"
+#include "qifservicemanager_p.h"
+
+#include <QtQml/private/qqmlincubator_p.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -611,6 +614,15 @@ void QIfAbstractFeatureListModel::classBegin()
 {
     Q_D(QIfAbstractFeatureListModel);
     d->m_feature->ifPrivate()->m_qmlCreation = true;
+
+    // Check if the Feature is created within an Loader which is set to asynchronous
+    // This is done here to allow overwriting the property in QML
+    QQmlRefPointer<QQmlContextData> context = QQmlContextData::get(qmlContext(this));
+    if (context->isValid() && context->incubator() && context->incubator()->isAsynchronous) {
+        qCDebug(qLcIfServiceManagement) << "Detected asynchronous Loader, setting asynchronousBackendLoading"
+                                        << "for" << this << "to true";
+        setAsynchronousBackendLoading(true);
+    }
 }
 
 /*!
