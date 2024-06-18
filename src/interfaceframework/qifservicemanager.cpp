@@ -258,7 +258,7 @@ void QIfServiceManagerPrivate::searchPlugins()
         }
     }
 
-    qCDebug(qLcIfServiceManagement) << "Searching for backend plugins done in" << timer.elapsed() << "ms";
+    qCDebug(qLcIfPerf) << "Searching for backend plugins done in" << timer.elapsed() << "ms";
     if (Q_UNLIKELY(!found && m_backends.count() == 0))
         qWarning() << "No plugins found in search path: " << QCoreApplication::libraryPaths().join(QLatin1String(":"));
 }
