@@ -46,7 +46,7 @@ public:
     bool serviceObjectSet = false;
     QVariantMap serviceSettings;
     bool serviceSettingsSet = false;
-    bool backendUpdatesEnabled = false;
+    bool backendUpdatesEnabled = true;
     bool backendUpdatesEnabledSet = false;
     bool asynchronousBackendLoading = false;
     bool asynchronousBackendLoadingSet = false;
