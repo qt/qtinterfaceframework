@@ -23,6 +23,10 @@ The following environment variables are supported for runtime configurations:
         \li Overrides the preferred backends of all features inside a specific configurationId.
             See \l {Environment Overrides} for more information.
     \row
+        \li QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE
+        \li Overrides the asynchronous backend loading of all features inside a specific configurationId.
+            See \l {Environment Overrides} for more information.
+    \row
         \li QTIF_SIMULATION_OVERRIDE
         \li Overrides the simulation file used by a specific simulation engine.
             See \l {Runtime Override}{QIfSimulationEngine} for more information.

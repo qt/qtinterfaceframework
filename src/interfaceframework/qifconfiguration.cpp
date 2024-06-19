@@ -587,6 +587,16 @@ QIfConfigurationPrivate::QIfConfigurationPrivate(QIfConfiguration *parent)
             \li \l QIfAbstractFeature \l QIfAbstractFeatureListModel
             \li no
             \li -
+        \row
+            \li \l backendUpdatesEnabled
+            \li \l QIfAbstractFeature \l QIfAbstractFeatureListModel
+            \li no
+            \li -
+        \row
+            \li \l asynchronousBackendLoading
+            \li \l QIfAbstractFeature \l QIfAbstractFeatureListModel
+            \li yes
+            \li QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE
     \endtable
 */
 
