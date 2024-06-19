@@ -39,16 +39,30 @@ QIfServiceInterface::~QIfServiceInterface()
 {
 }
 
+/*!
+    Returns the unique ID for the service object instance.
+    \since 6.5
+*/
 QString QIfServiceInterface::id() const
 {
     return QString();
 }
 
+/*!
+    Returns the configuration ID for the service object instance.
+    \since 6.5
+
+    \sa QIfConfiguration
+*/
 QString QIfServiceInterface::configurationId() const
 {
     return QString();
 }
 
+/*!
+    Updates the service settings with the given \a settings.
+    \since 6.5
+*/
 void QIfServiceInterface::updateServiceSettings(const QVariantMap &settings)
 {
     Q_UNUSED(settings);
