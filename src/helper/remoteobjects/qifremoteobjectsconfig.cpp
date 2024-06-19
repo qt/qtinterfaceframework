@@ -217,8 +217,10 @@ QRemoteObjectHost *QIfRemoteObjectsConfig::host(const QUrl &url)
 
     Returns \c true if remoting is successfully enabled for the passed \a object.
 
-    See host() for more information on how the \a module, \a interface and \a fallbackUrl influence
-    the used url.
+    See host() for more information on how \a module, \a interface and \a fallbackUrl influence
+    the effective url.
+
+    \sa enableRemoting
 */
 bool QIfRemoteObjectsConfig::enableRemoting(const QString &module, const QString &interface, const QUrl &fallbackUrl, QObject *object)
 {
@@ -228,6 +230,10 @@ bool QIfRemoteObjectsConfig::enableRemoting(const QString &module, const QString
 /*!
     Enables remoting of the passed \a object using a QRemoteObjectHost instance
     with a preconfigured url.
+
+    Returns \c true if remoting is successfully enabled for the passed \a object.
+
+    See host() for more information on how \a module and \a interface influence the effective url.
 
     \sa enableRemoting
 */
