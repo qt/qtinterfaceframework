@@ -232,7 +232,9 @@ QIfAbstractFeature::DiscoveryMode QIfAbstractFeatureListModel::discoveryMode() c
 
     Available values are:
     \value NoResult
-           Indicates that no auto discovery was started because the feature has already assigned a valid ServiceObject.
+           Indicates that no auto discovery was started because the feature already has a valid
+           \l ServiceObject assigned or no result could be returned as the backend is loaded
+           asynchronously.
     \value ErrorWhileLoading
            An error has happened while searching for a backend with a matching interface.
     \value ProductionBackendLoaded
@@ -445,6 +447,34 @@ bool QIfAbstractFeatureListModel::backendUpdatesEnabled() const
     return d->m_feature->backendUpdatesEnabled();
 }
 
+/*!
+    \qmlproperty bool AbstractFeatureListModel::asynchronousBackendLoading
+    \brief This property holds whether backend loading is asynchronous.
+    \since 6.8
+
+    By default, this property is \c false.
+
+    If set to \c true, the backend loading is asynchronous. This means that the feature
+    will not wait for the backend to complete loading during auto discovery. Instead, the backend
+    loads in the background and the feature will be updated once the backend is ready.
+
+    \note This property defaults to \c true if the AbstractFeatureListModel is
+    created within an asynchronous \l QQmlIncubator (e.g. \l Loader).
+*/
+/*!
+    \property QIfAbstractFeatureListModel::asynchronousBackendLoading
+    \brief This property holds whether backend loading is asynchronous.
+    \since 6.8
+
+    By default, this property is \c false.
+
+    If set to \c true, the backend loading is asynchronous. This means that the feature
+    will not wait for the backend to complete loading during auto discovery. Instead, the backend
+    loads in the background and the feature will be updated once the backend is ready.
+
+    \note This property defaults to \c true if the QIfAbstractFeatureListModel is
+    created within an asynchronous \l QQmlIncubator (e.g. \l Loader).
+*/
 bool QIfAbstractFeatureListModel::asynchronousBackendLoading() const
 {
     Q_D(const QIfAbstractFeatureListModel);
@@ -497,6 +527,8 @@ void QIfAbstractFeatureListModel::setAsynchronousBackendLoading(bool asynchronou
 
 /*!
     \brief Performs an automatic discovery attempt.
+
+    See QIfAbstractFeature::startAutoDiscovery() for more information
 */
 QIfAbstractFeature::DiscoveryResult QIfAbstractFeatureListModel::startAutoDiscovery()
 {

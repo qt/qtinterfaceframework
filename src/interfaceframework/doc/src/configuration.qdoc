@@ -37,4 +37,7 @@ The following environment variables are supported for runtime configurations:
 The \c qt.if.servicemanagement Logging Category can be used to get more information on which
 back ends were considered, when searching for the correct back end for a feature, as well as why that
 back end was chosen.
+
+For performance metrics about backend searching and loading the \c qt.if.servicemanagement.perf
+Logging Category can be used.
 */

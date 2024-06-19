@@ -534,7 +534,36 @@ Backend *QIfServiceManagerPrivate::verifyHandle(void *handle)
     return static_cast<Backend*>(handle);
 }
 
+/*!
+    \class QIfServiceObjectHandle
+    \inmodule QtInterfaceFramework
+    \since 6.8
+    \brief The QIfServiceObjectHandle class is a handle to a ServiceObject.
 
+    The QIfServiceObjectHandle class is a handle to a ServiceObject. It can be used to load the
+    backend asynchronously using the \l {QIfServiceManager::}{loadServiceObject()} function.
+*/
+/*!
+    \qmltype ServiceObjectHandle
+    \instantiates QIfServiceObjectHandle
+    \inqmlmodule QtInterfaceFramework
+    \since 6.8
+    \brief The handle to a ServiceObject.
+
+    The ServiceObjectHandle is a handle to a ServiceObject. It can be used to load the backend
+    asynchronously using the \l {ServiceManager::}{loadServiceObject()} function.
+*/
+
+/*!
+    \qmlproperty bool ServiceObjectHandle::valid
+
+    Returns \c true if the handle is valid; otherwise \c false.
+*/
+/*!
+    \property QIfServiceObjectHandle::valid
+
+    Returns \c true if the handle is valid; otherwise \c false.
+*/
 bool QIfServiceObjectHandle::isValid() const
 {
     if (!m_handle)
@@ -542,11 +571,31 @@ bool QIfServiceObjectHandle::isValid() const
     return QIfServiceManager::instance()->d_ptr->verifyHandle(m_handle);
 }
 
+/*!
+    \qmlproperty bool ServiceObjectHandle::loaded
+
+    Returns \c true if the backend is loaded; otherwise \c false.
+*/
+/*!
+    \property QIfServiceObjectHandle::loaded
+
+    Returns \c true if the backend is loaded; otherwise \c false.
+*/
 bool QIfServiceObjectHandle::isLoaded() const
 {
     return bool(serviceObject());
 }
 
+/*!
+    \qmlproperty ServiceObject ServiceObjectHandle::serviceObject
+
+    Returns the ServiceObject associated with this handle.
+*/
+/*!
+    \property QIfServiceObjectHandle::serviceObject
+
+    Returns the ServiceObject associated with this handle.
+*/
 QIfServiceObject *QIfServiceObjectHandle::serviceObject() const
 {
     if (!m_handle)
@@ -738,6 +787,8 @@ QIfServiceManager::~QIfServiceManager()
     the specified interface.
     The wildcards are applied in order to the found backends. If the wildcard matches some backends
     those backends will be loaded, otherwise the next wildcard is used.
+
+    \sa findServiceHandleByInterface()
 */
 QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QString &interface, SearchFlags searchFlags, const QStringList &preferredBackends)
 {
@@ -754,6 +805,43 @@ QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QStrin
     return serviceObjects;
 }
 
+/*!
+    \qmlmethod list<ServiceObjectHandle> ServiceManager::findServiceHandleByInterface(interface, searchFlags, preferredBackends)
+    \since 6.8
+
+    Returns a list of backend handles implementing the specified \a interface, which can be used to
+    load the backend asynchronously using the \l {QIfServiceManager::}{loadServiceObject()} function.
+
+    The \a searchFlags argument can be used to control which type of backends are included in the
+    search result:
+
+    \value IncludeProductionBackends
+           Include production backends in the search result. See also \l {QIfServiceManager::}{ProductionBackend}
+    \value IncludeSimulationBackends
+           Include simulation backends in the search result. See also \l {QIfServiceManager::}{SimulationBackend}
+    \value IncludeAll
+           Include both production and simulation backends in the search result.
+
+    The \a preferredBackends argument is used to select a backend when multiple backends implement
+    the specified interface.
+    The wildcards are applied in order to the found backends. If the wildcard matches some backends
+    those backends will be returned, otherwise the next wildcard is used.
+*/
+/*!
+    Returns a list of backend handles implementing the specified \a interface, which can be used to
+    load the backend asynchronously using the \l {QIfServiceManager::}{loadServiceObject()} function.
+
+    The \a searchFlags argument can be used to control which type of backends are included in the
+    search result.
+
+    The \a preferredBackends argument is used to select a backend when multiple backends implement
+    the specified interface.
+    The wildcards are applied in order to the found backends. If the wildcard matches some backends
+    those backends will be returned, otherwise the next wildcard is used.
+
+    \since 6.8
+    \sa findServiceByInterface() loadServiceObject()
+*/
 QList<QIfServiceObjectHandle> QIfServiceManager::findServiceHandleByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends)
 {
     Q_D(QIfServiceManager);
@@ -861,6 +949,28 @@ QHash<int, QByteArray> QIfServiceManager::roleNames() const
     return roles;
 }
 
+/*!
+    \qmlmethod void ServiceManager::loadServiceObject(handle, async)
+    \since 6.8
+
+    Loads the backend specified by the \a handle. If \a async is \c true, the backend
+    is loaded asynchronously.
+
+    Emits serviceObjectLoaded() once the backend is loaded successfully or an error occurred.
+
+    \note The signal is always emitted, even if the backend is already loaded or could not be loaded
+    at all.
+*/
+/*!
+    Loads the backend specified by the \a handle. If \a async is \c true, the backend
+    is loaded asynchronously.
+
+    Emits serviceObjectLoaded() once the backend is loaded successfully or an error occurred.
+
+    \since 6.8
+    \note The signal is always emitted, even if the backend is already loaded or could not be loaded
+    at all.
+*/
 void QIfServiceManager::loadServiceObject(QIfServiceObjectHandle handle, bool async)
 {
     Q_D(QIfServiceManager);
@@ -876,6 +986,21 @@ void QIfServiceManager::loadServiceObject(QIfServiceObjectHandle handle, bool as
         emit serviceObjectLoaded(handle);
     }
 }
+
+/*!
+    \qmlsignal ServiceManager::serviceObjectLoaded(handle)
+    \since 6.8
+
+    This signal is emitted when a backend identified by \a handle is loaded successfully or an
+    error occurred as a result of calling loadServiceObject().
+*/
+/*!
+    \fn void QIfServiceManager::serviceObjectLoaded(QIfServiceObjectHandle handle)
+    This signal is emitted when a backend identified by \a handle is loaded successfully or an
+    error occurred as a result of calling loadServiceObject().
+
+    \since 6.8
+*/
 
 QT_END_NAMESPACE
 

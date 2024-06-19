@@ -941,6 +941,32 @@ bool QIfConfiguration::backendUpdatesEnabled() const
     return d->m_settingsObject->backendUpdatesEnabled;
 }
 
+/*!
+    \qmlproperty bool InterfaceFrameworkConfiguration::asynchronousBackendLoading
+    \since 6.8
+
+    Holds the asynchronousBackendLoading setting of the configuration. The value is applied to all
+    AbstractFeature or AbstractFeatureListModel instances with a matching configurationId.
+    The value is applied when a new matching instance is created and
+    it is also applied to all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa AbstractFeature::asynchronousBackendLoading AbstractFeatureListModel::asynchronousBackendLoading
+*/
+/*!
+    \property QIfConfiguration::asynchronousBackendLoading
+    \since 6.8
+
+    Holds the asynchronousBackendLoading setting of the configuration. The value is applied to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+    The value is applied when a new matching instance is created and it is also applied to
+    all existing instances.
+
+    See \l{Settings Overview} for how to provide initial values and overrides.
+
+    \sa QIfAbstractFeature::asynchronousBackendLoading QIfAbstractFeatureListModel::asynchronousBackendLoading
+*/
 bool QIfConfiguration::asynchronousBackendLoading() const
 {
     Q_D(const QIfConfiguration);
@@ -1190,6 +1216,16 @@ bool QIfConfiguration::setBackendUpdatesEnabled(bool backendUpdatesEnabled)
     return false;
 }
 
+/*!
+    Sets the \a asynchronousBackendLoading setting of this configuration and applies it to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the value failed because an override was active, returns \c true
+    otherwise.
+
+    \since 6.8
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setAsynchronousBackendLoading(bool asynchronousBackendLoading)
 {
     Q_D(QIfConfiguration);
@@ -1570,18 +1606,45 @@ bool QIfConfiguration::isBackendUpdatesEnabledSet(const QString &group)
     return so ? so->backendUpdatesEnabledSet : false;
 }
 
+/*!
+    Returns the current value of \c asynchronousBackendLoading setting of the configuration \a group.
+
+    \note The returned value is what is stored inside the configuration, not the current value of all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+    \since 6.8
+*/
 bool QIfConfiguration::asynchronousBackendLoading(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
     return so ? so->asynchronousBackendLoading : false;
 }
 
+/*!
+    Sets the \a asynchronousBackendLoading setting of the configuration \a group and applies it to all
+    QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+
+    Returns \c false if setting the value failed because an override was active, returns \c true
+    otherwise.
+
+    \since 6.8
+    \sa {Environment Overrides}
+*/
 bool QIfConfiguration::setAsynchronousBackendLoading(const QString &group, bool asynchronousBackendLoading)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
     return QIfConfigurationManager::instance()->setAsynchronousBackendLoading(so, asynchronousBackendLoading);
 }
 
+/*!
+    Returns \c true when the \c asynchronousBackendLoading setting has been set in the configuration
+    named \a group and \c false otherwise.
+
+    A value is considered as "set" when the corresponding setter was called, a valid value was set
+    in the global ini file or the corresponding override is active.
+
+    \since 6.8
+    \sa {Settings file}
+*/
 bool QIfConfiguration::isAsynchronousBackendLoadingSet(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
