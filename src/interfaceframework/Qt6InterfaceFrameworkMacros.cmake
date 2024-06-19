@@ -514,10 +514,14 @@ function(qt6_ifcodegen_generate)
         # Remove stamp file in case the new generator run fails, so we will keep trying.
         file(REMOVE ${OUTPUT_DIR}/.stamp-ifcodegen)
         # Also remove the contents of the whole output folder to force regeneration,
-        # but only if it is safely in the build folder.
+        # but only if it is safely in the build folder and has the template's name.
         get_filename_component(real_outdir "${OUTPUT_DIR}" REALPATH)
+        get_filename_component(real_outdir_shortname "${real_outdir}" NAME)
+        get_filename_component(template_shortname "${TEMPLATE}" NAME)
         string(FIND "${real_outdir}" "${CMAKE_CURRENT_BINARY_DIR}" buildir_is_prefix)
-        if("${buildir_is_prefix}" EQUAL 0)
+        if("${buildir_is_prefix}" EQUAL 0
+            AND NOT "${real_outdir}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}"
+            AND "${real_outdir_shortname}" STREQUAL "${template_shortname}")
             file(GLOB old_output_files "${OUTPUT_DIR}/*")
             if(old_output_files)
                 file(REMOVE_RECURSE ${old_output_files})
