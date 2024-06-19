@@ -269,7 +269,8 @@ void QIfAbstractFeaturePrivate::onServiceObjectFailure()
 
     \value NoResult
            Indicates that no auto discovery was started because the feature already has a valid
-           ServiceObject assigned.
+           \l ServiceObject assigned or no result could be returned as the backend is loaded
+           asynchronously.
     \value ErrorWhileLoading
            An error has occurred while searching for a backend with a matching interface.
     \value ProductionBackendLoaded
@@ -510,8 +511,9 @@ QIfAbstractFeature::DiscoveryMode QIfAbstractFeature::discoveryMode() const
 
     Available values are:
     \value NoResult
-           Indicates that no auto discovery was started because the feature has already assigned a
-           valid ServiceObject.
+           Indicates that no auto discovery was started because the feature already has a valid
+           \l ServiceObject assigned or no result could be returned as the backend is loaded
+           asynchronously.
     \value ErrorWhileLoading
            An error has happened while searching for a backend with a matching interface.
     \value ProductionBackendLoaded
@@ -682,6 +684,34 @@ void QIfAbstractFeature::setBackendUpdatesEnabled(bool newBackendUpdatesEnabled)
     emit backendUpdatesEnabledChanged(newBackendUpdatesEnabled);
 }
 
+/*!
+    \qmlproperty bool AbstractFeature::asynchronousBackendLoading
+    \brief This property holds whether backend loading is asynchronous.
+    \since 6.8
+
+    By default, this property is \c false.
+
+    If set to \c true, the backend loading is asynchronous. This means that the feature
+    will not wait for the backend to complete loading during auto discovery. Instead, the backend
+    loads in the background and the feature will be updated once the backend is ready.
+
+    \note This property defaults to \c true if the AbstractFeature is created within
+    an asynchronous \l QQmlIncubator (e.g. \l Loader).
+*/
+/*!
+    \property QIfAbstractFeature::asynchronousBackendLoading
+    \brief This property holds whether backend loading is asynchronous.
+    \since 6.8
+
+    By default, this property is \c false.
+
+    If set to \c true, the backend loading is asynchronous. This means that the feature
+    will not wait for the backend to complete loading during auto discovery. Instead, the backend
+    loads in the background and the feature will be updated once the backend is ready.
+
+    \note This property defaults to \c true if the QIfAbstractFeature is created
+    within an asynchronous \l QQmlIncubator (e.g. \l Loader).
+*/
 bool QIfAbstractFeature::asynchronousBackendLoading() const
 {
     Q_D(const QIfAbstractFeature);
@@ -775,8 +805,9 @@ QString QIfAbstractFeature::errorText() const
 
     Return values are:
     \value NoResult
-           Indicates that no auto discovery was started because the feature already has
-           a valid ServiceObject assigned.
+           Indicates that no auto discovery was started because the feature already has a valid
+           \l ServiceObject assigned or no result could be returned as the backend is loaded
+           asynchronously.
     \value ErrorWhileLoading
            Indicates an error has occurred while searching for a backend with a matching
            interface.
