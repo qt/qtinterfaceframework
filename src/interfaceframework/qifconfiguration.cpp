@@ -910,6 +910,7 @@ QIfServiceObject *QIfConfiguration::serviceObject() const
 
 /*!
     \qmlproperty bool InterfaceFrameworkConfiguration::backendUpdatesEnabled
+    \since 6.8
 
     Holds the backendUpdatesEnabled setting of the configuration. The value is applied to all
     AbstractFeature or AbstractFeatureListModel instances with a matching configurationId.
@@ -922,6 +923,7 @@ QIfServiceObject *QIfConfiguration::serviceObject() const
 */
 /*!
     \property QIfConfiguration::backendUpdatesEnabled
+    \since 6.8
 
     Holds the backendUpdatesEnabled setting of the configuration. The value is applied to all
     QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
@@ -1197,6 +1199,7 @@ bool QIfConfiguration::setServiceObject(QIfServiceObject *serviceObject)
     Returns \c false if setting the value failed because an override was active, returns \c true
     otherwise.
 
+    \since 6.8
     \sa {Environment Overrides}
 */
 bool QIfConfiguration::setBackendUpdatesEnabled(bool backendUpdatesEnabled)
@@ -1341,7 +1344,7 @@ bool QIfConfiguration::setServiceSettings(const QString &group, const QVariantMa
 
 /*!
     Returns \c true when service settings have been set in the configuration named \a group and
-    false otherwise.
+    \c false otherwise.
 
     A value is considered as "set" when the corresponding setter was called, a valid value was set
     in the global ini file or the corresponding override is active.
@@ -1383,7 +1386,7 @@ bool QIfConfiguration::setSimulationFile(const QString &group, const QString &si
 
 /*!
     Returns \c true when the simulation file have been set in the configuration named \a group and
-    false otherwise.
+    \c false otherwise.
 
     A value is considered as "set" when the corresponding setter was called, a valid value was set
     in the global ini file or the corresponding override is active.
@@ -1425,7 +1428,7 @@ bool QIfConfiguration::setSimulationDataFile(const QString &group, const QString
 
 /*!
     Returns \c true when the simulation data file have been set in the configuration named \a group and
-    false otherwise.
+    \c false otherwise.
 
     A value is considered as "set" when the corresponding setter was called, a valid value was set
     in the global ini file or the corresponding override is active.
@@ -1467,7 +1470,7 @@ bool QIfConfiguration::setDiscoveryMode(const QString &group, QIfAbstractFeature
 
 /*!
     Returns \c true when the discovery mode have been set in the configuration named \a group and
-    false otherwise.
+    \c false otherwise.
 
     A value is considered as "set" when the corresponding setter was called, a valid value was set
     in the global ini file or the corresponding override is active.
@@ -1509,7 +1512,7 @@ bool QIfConfiguration::setPreferredBackends(const QString &group, const QStringL
 
 /*!
     Returns \c true when the preferred backends have been set in the configuration named \a group and
-    false otherwise.
+    \c false otherwise.
 
     A value is considered as "set" when the corresponding setter was called, a valid value was set
     in the global ini file or the corresponding override is active.
@@ -1551,7 +1554,7 @@ bool QIfConfiguration::setServiceObject(const QString &group, QIfServiceObject *
 
 /*!
     Returns \c true when the service object have been set in the configuration named \a group and
-    false otherwise.
+    \c false otherwise.
 
     A value is considered as "set" when the corresponding setter was called, a valid value was set
     in the global ini file or the corresponding override is active.
@@ -1569,6 +1572,7 @@ bool QIfConfiguration::isServiceObjectSet(const QString &group)
 
     \note The returned value is what is stored inside the configuration, not the current value of all
     QIfAbstractFeature or QIfAbstractFeatureListModel instances with a matching configurationId.
+    \since 6.8
 */
 bool QIfConfiguration::backendUpdatesEnabled(const QString &group)
 {
@@ -1583,6 +1587,7 @@ bool QIfConfiguration::backendUpdatesEnabled(const QString &group)
     Returns \c false if setting the value failed because an override was active, returns \c true
     otherwise.
 
+    \since 6.8
     \sa {Environment Overrides}
 */
 bool QIfConfiguration::setBackendUpdatesEnabled(const QString &group, bool backendUpdatesEnabled)
@@ -1593,11 +1598,12 @@ bool QIfConfiguration::setBackendUpdatesEnabled(const QString &group, bool backe
 
 /*!
     Returns \c true when the \c backendUpdatesEnabled setting has been set in the configuration
-    named \a group and false otherwise.
+    named \a group and \c false otherwise.
 
     A value is considered as "set" when the corresponding setter was called, a valid value was set
     in the global ini file or the corresponding override is active.
 
+    \since 6.8
     \sa {Settings file}
 */
 bool QIfConfiguration::isBackendUpdatesEnabledSet(const QString &group)
