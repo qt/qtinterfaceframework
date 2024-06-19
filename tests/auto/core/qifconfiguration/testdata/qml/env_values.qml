@@ -13,5 +13,6 @@ QtObject {
         serviceSettings: triggerChange ? {"key":"value"} : {"key2": "value2"}
         preferredBackends: triggerChange ? "*backend" : ["value1", "value2"]
         discoveryMode: triggerChange ? AbstractFeature.LoadOnlyProductionBackends : AbstractFeature.LoadOnlySimulationBackends
+        asynchronousBackendLoading: triggerChange ? false : true
     }
 }
