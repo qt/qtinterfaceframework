@@ -431,6 +431,7 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::discoveryResult() const
 /*!
     \qmlproperty string AbstractFeature::configurationId
     \brief Holds the id to determine which configuration this feature belongs to.
+    \since 6.5
 
     Once the id has been set, it is possible to change certain values using the
     \l InterfaceFrameworkConfiguration API.
@@ -444,6 +445,7 @@ QIfAbstractFeature::DiscoveryResult QIfAbstractFeature::discoveryResult() const
 /*!
     \property QIfAbstractFeature::configurationId
     \brief Holds the id to determine which configuration this feature belongs to.
+    \since 6.5
 
     Once the id has been set, it is possible to change certain values using the
     \l QIfConfiguration API.
@@ -479,6 +481,7 @@ void QIfAbstractFeature::setConfigurationId(const QString &configurationId)
 /*!
     \qmlproperty list<string> AbstractFeature::preferredBackends
     \brief Holds a list of wildcards to load the preferred backend during auto discovery.
+    \since 6.5
 
     The auto discovery mechanism will automatically search for backends which provide a matching
     interface for this feature implementation. See \l startAutoDiscovery() for more information.
@@ -497,6 +500,7 @@ void QIfAbstractFeature::setConfigurationId(const QString &configurationId)
 /*!
     \property QIfAbstractFeature::preferredBackends
     \brief Holds a list of wildcards to load the preferred backend during auto discovery.
+    \since 6.5
 
     The auto discovery mechanism will automatically search for backends which provide a matching
     interface for this feature implementation. See \l startAutoDiscovery() for more information.
