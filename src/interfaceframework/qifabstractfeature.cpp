@@ -635,6 +635,7 @@ void QIfAbstractFeature::setPreferredBackends(const QStringList &preferredBacken
 /*!
     \qmlproperty bool AbstractFeature::backendUpdatesEnabled
     \brief This property holds whether backend updates are enabled
+    \since 6.8
 
     By default, this property is \c true.
 
@@ -651,6 +652,7 @@ void QIfAbstractFeature::setPreferredBackends(const QStringList &preferredBacken
 /*!
     \property QIfAbstractFeature::backendUpdatesEnabled
     \brief This property holds whether backend updates are enabled
+    \since 6.8
 
     By default, this property is \c true.
 

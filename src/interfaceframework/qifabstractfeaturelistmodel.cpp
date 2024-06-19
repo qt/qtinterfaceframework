@@ -413,6 +413,7 @@ QStringList QIfAbstractFeatureListModel::preferredBackends() const
 /*!
     \qmlproperty bool AbstractFeatureListModel::backendUpdatesEnabled
     \brief This property holds whether backend updates are enabled
+    \since 6.8
 
     By default, this property is \c true.
 
@@ -429,6 +430,7 @@ QStringList QIfAbstractFeatureListModel::preferredBackends() const
 /*!
     \property QIfAbstractFeatureListModel::backendUpdatesEnabled
     \brief This property holds whether backend updates are enabled
+    \since 6.8
 
     By default, this property is \c true.
 
