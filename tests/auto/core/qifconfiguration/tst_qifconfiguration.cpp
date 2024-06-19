@@ -506,6 +506,8 @@ void tst_QIfConfiguration::multipleGroupsSettingsFile()
     QVERIFY(QIfConfiguration::exists("group2"));
     QVERIFY(QIfConfiguration::isDiscoveryModeSet("group2"));
     QCOMPARE(QIfConfiguration::discoveryMode("group2"), QIfAbstractFeature::LoadOnlySimulationBackends);
+    QVERIFY(QIfConfiguration::isAsynchronousBackendLoadingSet("group2"));
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("group2"), true);
 }
 
 void tst_QIfConfiguration::invalidSettingsFile()
@@ -527,6 +529,7 @@ void tst_QIfConfiguration::testEnvVariables()
     qputenv("QTIF_SIMULATION_DATA_OVERRIDE", "config1=" + simulationData1.toLocal8Bit() + ";config2=" + simulationData2.toLocal8Bit());
     qputenv("QTIF_DISCOVERY_MODE_OVERRIDE", "config1=LoadOnlyProductionBackends;config2=AutoDiscovery");
     qputenv("QTIF_PREFERRED_BACKENDS_OVERRIDE", "config1=qtro*,*;config2=*simulation*");
+    qputenv("QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE", "config1=true;config2=0");
 
     // parse the settingsFile and the env variables
     QIfConfigurationManager::instance()->readInitialSettings(QFINDTESTDATA("testdata/ini/empty_settings.ini"));
@@ -535,6 +538,7 @@ void tst_QIfConfiguration::testEnvVariables()
     qunsetenv("QTIF_SIMULATION_DATA_OVERRIDE");
     qunsetenv("QTIF_DISCOVERY_MODE_OVERRIDE");
     qunsetenv("QTIF_PREFERRED_BACKENDS_OVERRIDE");
+    qunsetenv("QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE");
 
     QVERIFY(QIfConfiguration::exists("config1"));
     QVERIFY(QIfConfiguration::exists("config2"));
@@ -574,6 +578,15 @@ void tst_QIfConfiguration::testEnvVariables()
     QTest::ignoreMessage(QtWarningMsg, "Changing the preferredBackends is not possible, because the QTIF_PREFERRED_BACKENDS_OVERRIDE env variable has been set.");
     QVERIFY(!QIfConfiguration::setPreferredBackends("config1", QStringList("newValue")));
     QCOMPARE(QIfConfiguration::preferredBackends("config1"), QStringList({"qtro*", "*"}));
+
+    QVERIFY(QIfConfiguration::isAsynchronousBackendLoadingSet("config1"));
+    QVERIFY(QIfConfiguration::isAsynchronousBackendLoadingSet("config2"));
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("config1"), true);
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("config2"), false);
+    // Try to set a new value (which can't be done because of the override)
+    QTest::ignoreMessage(QtWarningMsg, "Changing asynchronousBackendLoading is not possible, because the QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE env variable has been set.");
+    QVERIFY(!QIfConfiguration::setAsynchronousBackendLoading("config1", false));
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("config1"), true);
 }
 
 template <class T> void tst_QIfConfiguration::testFeatureHelper()
@@ -762,6 +775,7 @@ void tst_QIfConfiguration::testEnvVariablesQML()
     qputenv("QTIF_SIMULATION_DATA_OVERRIDE", "config1=" + simulationData1.toLocal8Bit());
     qputenv("QTIF_DISCOVERY_MODE_OVERRIDE", "config1=AutoDiscovery");
     qputenv("QTIF_PREFERRED_BACKENDS_OVERRIDE", "config1=qtro*,*");
+    qputenv("QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE", "config1=true");
 
     // parse the settingsFile and the env variables
     QIfConfigurationManager::instance()->readInitialSettings(QFINDTESTDATA("testdata/ini/empty_settings.ini"));
@@ -770,11 +784,13 @@ void tst_QIfConfiguration::testEnvVariablesQML()
     qunsetenv("QTIF_SIMULATION_DATA_OVERRIDE");
     qunsetenv("QTIF_DISCOVERY_MODE_OVERRIDE");
     qunsetenv("QTIF_PREFERRED_BACKENDS_OVERRIDE");
+    qunsetenv("QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE");
 
     QTest::ignoreMessage(QtWarningMsg, QRegularExpression(".*Changing the simulationFile is not possible, because the QTIF_SIMULATION_OVERRIDE env variable has been set."));
     QTest::ignoreMessage(QtWarningMsg, QRegularExpression(".*Changing the simulationDataFile is not possible, because the QTIF_SIMULATION_DATA_OVERRIDE env variable has been set."));
     QTest::ignoreMessage(QtWarningMsg, QRegularExpression(".*Changing the discoveryMode is not possible, because the QTIF_DISCOVERY_MODE_OVERRIDE env variable has been set."));
     QTest::ignoreMessage(QtWarningMsg, QRegularExpression(".*Changing the preferredBackends is not possible, because the QTIF_PREFERRED_BACKENDS_OVERRIDE env variable has been set."));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression(".*Changing asynchronousBackendLoading is not possible, because the QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE env variable has been set."));
     QQmlApplicationEngine engine;
     engine.load(QFINDTESTDATA("testdata/qml/env_values.qml"));
     QVERIFY(!engine.rootObjects().isEmpty());
@@ -784,11 +800,13 @@ void tst_QIfConfiguration::testEnvVariablesQML()
     QCOMPARE(QIfConfiguration::simulationDataFile("config1"), simulationData1);
     QCOMPARE(QIfConfiguration::preferredBackends("config1"), QStringList({"qtro*", "*"}));
     QCOMPARE(QIfConfiguration::discoveryMode("config1"), QIfAbstractFeature::AutoDiscovery);
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("config1"), true);
 
     QTest::failOnWarning(QRegularExpression(".*Changing the simulationFile is not possible, because the QTIF_SIMULATION_OVERRIDE env variable has been set."));
     QTest::failOnWarning(QRegularExpression(".*Changing the simulationDataFile is not possible, because the QTIF_SIMULATION_DATA_OVERRIDE env variable has been set."));
     QTest::failOnWarning(QRegularExpression(".*Changing the discoveryMode is not possible, because the QTIF_DISCOVERY_MODE_OVERRIDE env variable has been set."));
     QTest::failOnWarning(QRegularExpression(".*Changing the preferredBackends is not possible, because the QTIF_PREFERRED_BACKENDS_OVERRIDE env variable has been set."));
+    QTest::failOnWarning(QRegularExpression(".*Changing asynchronousBackendLoading is not possible, because the QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE env variable has been set."));
     rootObject->setProperty("ignoreOverrideWarnings", true);
     rootObject->setProperty("triggerChange", false);
 }

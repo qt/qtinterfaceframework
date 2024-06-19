@@ -50,6 +50,7 @@ public:
     bool backendUpdatesEnabledSet = false;
     bool asynchronousBackendLoading = false;
     bool asynchronousBackendLoadingSet = false;
+    bool asynchronousBackendLoadingEnvOverride = false;
     QList<QPointer<QIfProxyServiceObject>> serviceObjects;
     QList<QPointer<QIfAbstractFeature>> features;
 };
@@ -74,7 +75,7 @@ public:
     bool setPreferredBackends(QIfConfiguration *obj, QIfSettingsObject *so, const QStringList &preferredBackends);
     bool setServiceObject(QIfSettingsObject *so, QIfServiceObject *serviceObject);
     bool setBackendUpdatesEnabled(QIfSettingsObject *so, bool backendUpdatesEnabled);
-    bool setAsynchronousBackendLoading(QIfSettingsObject *so, bool asynchronousBackendLoading);
+    bool setAsynchronousBackendLoading(QIfConfiguration *config, QIfSettingsObject *so, bool asynchronousBackendLoading);
     bool startAutoDiscovery(QIfSettingsObject *so);
 
     QVariantMap readGroup(QSettings *settings, QAnyStringView group);

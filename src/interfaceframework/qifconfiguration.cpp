@@ -95,6 +95,8 @@ void QIfConfigurationManager::readInitialSettings(const QString &configPath)
         settingsObject->simulationDataFile = settings.value("simulationDataFile").toString();
         settingsObject->preferredBackendsSet = settings.contains("preferredBackends");
         settingsObject->preferredBackends = settings.value("preferredBackends").toStringList();
+        settingsObject->asynchronousBackendLoadingSet = settings.contains("asynchronousBackendLoading");
+        settingsObject->asynchronousBackendLoading = settings.value("asynchronousBackendLoading").toBool();
         QVariant discoveryModeVariant = settings.value("discoveryMode");
 
         if (settings.childGroups().contains("serviceSettings")) {
@@ -162,6 +164,23 @@ void QIfConfigurationManager::readInitialSettings(const QString &configPath)
         so->preferredBackends = preferredBackends;
         so->preferredBackendsSet = true;
         so->preferredBackendsEnvOverride = true;
+    });
+
+    parseEnv(qgetenv("QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE"), [this](const QString &group, const QString& value) {
+        auto *so = settingsObject(group, true);
+        auto asynchronousBackendLoading = false;
+        if (value == u"0"_s || value == u"false"_s) {
+            asynchronousBackendLoading = false;
+        } else if (value == u"1"_s || value == u"true"_s) {
+            asynchronousBackendLoading = true;
+        } else {
+            qCWarning(qLcIfConfig, "Ignoring malformed override: '%s'. Possible values are: '0, 1, true, false'", value.toUtf8().constData());
+            return;
+        }
+
+        so->asynchronousBackendLoading = asynchronousBackendLoading;
+        so->asynchronousBackendLoadingSet = true;
+        so->asynchronousBackendLoadingEnvOverride = true;
     });
 }
 
@@ -353,9 +372,14 @@ bool QIfConfigurationManager::setBackendUpdatesEnabled(QIfSettingsObject *so, bo
     return true;
 }
 
-bool QIfConfigurationManager::setAsynchronousBackendLoading(QIfSettingsObject *so, bool asynchronousBackendLoading)
+bool QIfConfigurationManager::setAsynchronousBackendLoading(QIfConfiguration *config, QIfSettingsObject *so, bool asynchronousBackendLoading)
 {
     Q_ASSERT(so);
+    if (so->asynchronousBackendLoadingEnvOverride) {
+        if (!config || !config->ignoreOverrideWarnings())
+            qtif_qmlOrCppWarning(config, "Changing asynchronousBackendLoading is not possible, because the QTIF_ASYNCHRONOUS_BACKEND_LOADING_OVERRIDE env variable has been set.");
+        return false;
+    }
     so->asynchronousBackendLoading = asynchronousBackendLoading;
     so->asynchronousBackendLoadingSet = true;
 
@@ -1238,7 +1262,7 @@ bool QIfConfiguration::setAsynchronousBackendLoading(bool asynchronousBackendLoa
     if (d->m_settingsObject->asynchronousBackendLoading == asynchronousBackendLoading)
         return false;
 
-    if (QIfConfigurationManager::instance()->setAsynchronousBackendLoading(d->m_settingsObject, asynchronousBackendLoading)) {
+    if (QIfConfigurationManager::instance()->setAsynchronousBackendLoading(this, d->m_settingsObject, asynchronousBackendLoading)) {
         emit asynchronousBackendLoadingChanged(asynchronousBackendLoading);
         return true;
     }
@@ -1640,7 +1664,7 @@ bool QIfConfiguration::asynchronousBackendLoading(const QString &group)
 bool QIfConfiguration::setAsynchronousBackendLoading(const QString &group, bool asynchronousBackendLoading)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group, true);
-    return QIfConfigurationManager::instance()->setAsynchronousBackendLoading(so, asynchronousBackendLoading);
+    return QIfConfigurationManager::instance()->setAsynchronousBackendLoading(nullptr, so, asynchronousBackendLoading);
 }
 
 /*!
