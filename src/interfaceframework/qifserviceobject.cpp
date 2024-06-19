@@ -22,7 +22,18 @@ QT_BEGIN_NAMESPACE
 
     \sa QIfAbstractFeature
 */
+/*!
+    \qmltype ServiceObject
+    \instantiates QIfServiceObject
+    \inqmlmodule QtInterfaceFramework
 
+    \brief Provides the connection point to a Backend Service.
+
+    ServiceObject provides you with a list of interfaces that the Backend implements.
+
+    From QML the object is mainly used to assign it manually to a AbstractFeature derived object or
+    to update the service settings.
+*/
 
 /*!
     Constructor.
@@ -36,6 +47,12 @@ QIfServiceObject::QIfServiceObject(QObject *parent)
 }
 
 /*!
+    \qmlproperty string ServiceObject::id
+    \brief A unique ID for the service object instance.
+
+    Holds the unique ID of the service object
+*/
+/*!
     \property QIfServiceObject::id
     \brief A unique ID for the service object instance.
 
@@ -43,6 +60,19 @@ QIfServiceObject::QIfServiceObject(QObject *parent)
     function can be overloaded to modify how this ID is generated.
 */
 
+/*!
+    \qmlproperty string ServiceObject::configurationId
+    \brief Holds the id to determine which configuration this service object belongs to.
+    \since 6.5
+
+    Once the id has been set, it is possible to change certain values using the
+    \l InterfaceFrameworkConfiguration API.
+
+    \note Values set in the matching \l InterfaceFrameworkConfiguration can override the initial
+    values set during the component creation.
+
+    \sa InterfaceFrameworkConfiguration
+*/
 /*!
     \property QIfServiceObject::configurationId
     \brief Holds the id to determine which configuration this service object belongs to.
@@ -73,11 +103,22 @@ QString QIfServiceObject::id() const
 }
 
 /*!
+    \qmlproperty variant ServiceObject::serviceSettings
+    \brief The settings for the service object instance.
+    \since 6.5
+
+    The serviceSettings property contains a map of settings for the service object instance.
+
+    \sa {Backend specific configuration option}
+*/
+/*!
     \property QIfServiceObject::serviceSettings
     \brief The settings for the service object instance.
     \since 6.5
 
     The serviceSettings property contains a map of settings for the service object instance.
+
+    \sa {Backend specific configuration option}
 */
 const QVariantMap &QIfServiceObject::serviceSettings() const
 {
