@@ -1255,7 +1255,7 @@ bool QIfConfiguration::setAsynchronousBackendLoading(bool asynchronousBackendLoa
     \c true otherwise.
 
     \since 6.8
-    \sa {QIfAbstractFeature::startAutoDiscovery()} {Environment Overrides}
+    \sa QIfAbstractFeature::startAutoDiscovery {Environment Overrides}
 */
 bool QIfConfiguration::startAutoDiscovery()
 {
@@ -1665,7 +1665,7 @@ bool QIfConfiguration::isAsynchronousBackendLoadingSet(const QString &group)
     \c true otherwise.
 
     \since 6.8
-    \sa {QIfAbstractFeature::startAutoDiscovery()} {Environment Overrides}
+    \sa QIfAbstractFeature::startAutoDiscovery {Environment Overrides}
 */
 bool QIfConfiguration::startAutoDiscovery(const QString &group)
 {
