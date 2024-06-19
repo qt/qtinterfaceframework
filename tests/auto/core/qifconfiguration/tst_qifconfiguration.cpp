@@ -169,6 +169,12 @@ void tst_QIfConfiguration::invalidConfiguration()
     QVERIFY(!configuration.setSimulationDataFile("foo"));
     QTest::ignoreMessage(QtWarningMsg, "Configuration Object is not usable until the name has been configured");
     QVERIFY(!configuration.setPreferredBackends({"backend"}));
+    QTest::ignoreMessage(QtWarningMsg, "Configuration Object is not usable until the name has been configured");
+    QVERIFY(!configuration.setBackendUpdatesEnabled(true));
+    QTest::ignoreMessage(QtWarningMsg, "Configuration Object is not usable until the name has been configured");
+    QVERIFY(!configuration.setAsynchronousBackendLoading(true));
+    QTest::ignoreMessage(QtWarningMsg, "Configuration Object is not usable until the name has been configured");
+    QVERIFY(!configuration.startAutoDiscovery());
     ConfigTestBackend backend;
     QIfProxyServiceObject serviceObject(&backend);
     QTest::ignoreMessage(QtWarningMsg, "Configuration Object is not usable until the name has been configured");
@@ -178,6 +184,7 @@ void tst_QIfConfiguration::invalidConfiguration()
 void tst_QIfConfiguration::noNameChange()
 {
     QIfConfiguration configuration("config");
+    QCOMPARE(configuration.name(), "config");
     QVERIFY(configuration.isValid());
     QTest::ignoreMessage(QtWarningMsg, "The name of the Configuration Object can't be changed once it has been set.");
     QVERIFY(!configuration.setName("other_config"));
@@ -204,6 +211,12 @@ void tst_QIfConfiguration::noConfiguration()
 
     QVERIFY(!QIfConfiguration::isServiceObjectSet("test"));
     QCOMPARE(QIfConfiguration::serviceObject("test"), nullptr);
+
+    QVERIFY(!QIfConfiguration::isBackendUpdatesEnabledSet("test"));
+    QCOMPARE(QIfConfiguration::backendUpdatesEnabled("test"), true);
+
+    QVERIFY(!QIfConfiguration::isAsynchronousBackendLoadingSet("test"));
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("test"), false);
 
     // None of the above functions should create a SettingsObject
     QVERIFY(QIfConfigurationManager::instance()->m_configurationHash.isEmpty());
@@ -412,18 +425,18 @@ void tst_QIfConfiguration::backendUpdatesEnabled()
     // Create Configuration and call that method
     QIfConfiguration config("objectGroup");
     QVERIFY(config.isValid());
-    QVERIFY(config.setBackendUpdatesEnabled(true));
-    QCOMPARE(config.backendUpdatesEnabled(), true);
+    QVERIFY(config.setBackendUpdatesEnabled(false));
+    QCOMPARE(config.backendUpdatesEnabled(), false);
     QVERIFY(QIfConfiguration::exists("objectGroup"));
     QVERIFY(QIfConfiguration::isBackendUpdatesEnabledSet("objectGroup"));
 
     // Test the change signal
     QSignalSpy spy(&config, &QIfConfiguration::backendUpdatesEnabledChanged);
     QVERIFY(spy.isValid());
-    QVERIFY(config.setBackendUpdatesEnabled(false));
-    QCOMPARE(config.backendUpdatesEnabled(), false);
+    QVERIFY(config.setBackendUpdatesEnabled(true));
+    QCOMPARE(config.backendUpdatesEnabled(), true);
     QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.data()[0][0], false);
+    QCOMPARE(spy.data()[0][0], true);
 }
 
 void tst_QIfConfiguration::asynchronousBackendLoading()
@@ -725,6 +738,8 @@ void tst_QIfConfiguration::updateValuesQML()
     QCOMPARE(QIfConfiguration::preferredBackends("config1"), QStringList({"*backend"}));
     QCOMPARE(QIfConfiguration::discoveryMode("config1"), QIfAbstractFeature::LoadOnlyProductionBackends);
     QCOMPARE(QIfConfiguration::serviceObject("config1"), &serviceObject1);
+    QCOMPARE(QIfConfiguration::backendUpdatesEnabled("config1"), false);
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("config1"), true);
 
     rootObject->setProperty("triggerChange", false);
 
@@ -734,6 +749,8 @@ void tst_QIfConfiguration::updateValuesQML()
     QCOMPARE(QIfConfiguration::preferredBackends("config1"), QStringList({"value1", "value2"}));
     QCOMPARE(QIfConfiguration::discoveryMode("config1"), QIfAbstractFeature::LoadOnlySimulationBackends);
     QCOMPARE(QIfConfiguration::serviceObject("config1"), &serviceObject2);
+    QCOMPARE(QIfConfiguration::backendUpdatesEnabled("config1"), true);
+    QCOMPARE(QIfConfiguration::asynchronousBackendLoading("config1"), false);
 }
 
 void tst_QIfConfiguration::testEnvVariablesQML()

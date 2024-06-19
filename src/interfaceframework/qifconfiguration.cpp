@@ -938,7 +938,7 @@ bool QIfConfiguration::backendUpdatesEnabled() const
 {
     Q_D(const QIfConfiguration);
 
-    Q_CHECK_SETTINGSOBJECT(false);
+    Q_CHECK_SETTINGSOBJECT(true);
 
     return d->m_settingsObject->backendUpdatesEnabled;
 }
@@ -1295,6 +1295,8 @@ void QIfConfiguration::componentComplete()
     setPreferredBackends(tempSettings->preferredBackends);
     setDiscoveryMode(tempSettings->discoveryMode);
     setServiceObject(tempSettings->serviceObject);
+    setBackendUpdatesEnabled(tempSettings->backendUpdatesEnabled);
+    setAsynchronousBackendLoading(tempSettings->asynchronousBackendLoading);
 }
 
 QIfConfiguration::QIfConfiguration(QIfConfigurationPrivate &dd, QObject *parent)
@@ -1577,7 +1579,7 @@ bool QIfConfiguration::isServiceObjectSet(const QString &group)
 bool QIfConfiguration::backendUpdatesEnabled(const QString &group)
 {
     QIfSettingsObject *so = QIfConfigurationManager::instance()->settingsObject(group);
-    return so ? so->backendUpdatesEnabled : false;
+    return so ? so->backendUpdatesEnabled : true;
 }
 
 /*!
