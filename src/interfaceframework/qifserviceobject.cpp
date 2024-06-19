@@ -44,6 +44,20 @@ QIfServiceObject::QIfServiceObject(QObject *parent)
 */
 
 /*!
+    \property QIfServiceObject::configurationId
+    \brief Holds the id to determine which configuration this service object belongs to.
+    \since 6.5
+
+    Once the id has been set, it is possible to change certain values using the
+    \l QIfConfiguration API.
+
+    \note Values set in the matching \l QIfConfiguration can override the initial values
+    set during the component creation.
+
+    \sa QIfConfiguration
+*/
+
+/*!
     The id() function can be overloaded to modify how the unique ID is generated,
     for use by this service object.
 
@@ -58,6 +72,13 @@ QString QIfServiceObject::id() const
     return m_id;
 }
 
+/*!
+    \property QIfServiceObject::serviceSettings
+    \brief The settings for the service object instance.
+    \since 6.5
+
+    The serviceSettings property contains a map of settings for the service object instance.
+*/
 const QVariantMap &QIfServiceObject::serviceSettings() const
 {
     return m_serviceSettings;
