@@ -228,7 +228,7 @@ QIfSimulationEngine::QIfSimulationEngine(QObject *parent)
     Constructs a new QIfSimulationEngine with the given \a identifier and \a parent.
 
     The \a identifier can be used to override the simulation QML file or the simulation data file.
-    \sa Runtime Override
+    \sa {Runtime Override}
 */
 QIfSimulationEngine::QIfSimulationEngine(const QString &identifier, QObject *parent)
     : QQmlApplicationEngine (parent)
