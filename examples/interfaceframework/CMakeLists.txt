@@ -3,7 +3,7 @@ project(example LANGUAGES CXX)
 
 if(QT_FEATURE_ifcodegen)
     qt_internal_add_example(qface-climate)
-    qt_internal_add_example(qface-addressbook)
+    qt_internal_add_example(addressbook)
 endif()
 if(QT_FEATURE_ifcodegen AND QT_FEATURE_remoteobjects)
     qt_internal_add_example(qface-remote)
