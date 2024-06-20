@@ -35,7 +35,6 @@ class {{class}}Private;
 class {{exportsymbol}} {{class}} : public QIfStandardItem
 {
     Q_GADGET
-    QML_ELEMENT
     QML_ANONYMOUS
 {% for field in struct.fields %}
     {{qtif.property(field, notify=false)}}
