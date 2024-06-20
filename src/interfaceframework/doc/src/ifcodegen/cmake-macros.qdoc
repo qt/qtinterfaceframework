@@ -305,6 +305,8 @@ It accepts the following arguments in addition to all arguments supported by
 
 The \c URI and \c VERSION arguments are automatically extracted from the template file
 if not set explicitly.
+The module \c OUTPUT_DIRECTORY is set to \c URI with dots replaced by forward slashes unless
+you set it explicitly.
 
 \include cmake-macros.qdoc generic-arguments
 
