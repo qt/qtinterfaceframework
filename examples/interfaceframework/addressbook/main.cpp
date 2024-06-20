@@ -6,19 +6,14 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include <addressbookmodule.h>
-
 using namespace Qt::StringLiterals;
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    AddressBookModule::registerTypes();
-    AddressBookModule::registerQmlTypes();
-
     QQmlApplicationEngine engine;
-    engine.load(QUrl(u"qrc:/main.qml"_s));
+    engine.loadFromModule("Example", "Main");
 
     return app.exec();
 }

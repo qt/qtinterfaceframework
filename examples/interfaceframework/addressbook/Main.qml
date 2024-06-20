@@ -14,7 +14,7 @@ Window {
     visible: true
     width: 640
     height: 480
-    title: qsTr("QtIF AddressBook")
+    title: qsTr("Interface Framework Address Book")
 
     UiAddressBook {
         id: addressBook
