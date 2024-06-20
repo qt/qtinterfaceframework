@@ -755,7 +755,7 @@ endif()
 function(qt6_ifcodegen_add_qml_module target)
     internal_check_ifcodegen_ready(${target})
 
-    internal_extract_ifcodegen_vars("" ";URI;VERSION" "")
+    internal_extract_ifcodegen_vars("" ";URI;VERSION;OUTPUT_DIRECTORY" "")
 
     # Debugging helper
     # message("qt6_ifcodegen_import_variables(GEN ${NEW_ARGS})")
@@ -776,10 +776,13 @@ function(qt6_ifcodegen_add_qml_module target)
             set(version VERSION ${GEN_VERSION})
         endif()
     endif()
+    if (NOT DEFINED ARG_OUTPUT_DIRECTORY)
+        string(REPLACE "." "/" ARG_OUTPUT_DIRECTORY ${uri})
+    endif()
 
     # Debugging helper
     # message("qt6_add_qml_module(${target} URI ${uri} ${version} ${ARG_UNPARSED_ARGUMENTS})")
-    qt6_add_qml_module(${target} URI ${uri} ${version} ${ARG_UNPARSED_ARGUMENTS})
+    qt6_add_qml_module(${target} URI ${uri} ${version} OUTPUT_DIRECTORY ${ARG_OUTPUT_DIRECTORY} ${ARG_UNPARSED_ARGUMENTS})
     qt6_ifcodegen_extend_target(${target} ${NEW_ARGS})
 endfunction()
 
