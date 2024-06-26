@@ -17,8 +17,8 @@
 QT_BEGIN_NAMESPACE
 
 Q_DECLARE_LOGGING_CATEGORY(qLcIfSimulationEngine)
-Q_DECLARE_EXPORTED_LOGGING_CATEGORY(qLcIfRecGuard,
-                                    Q_QTINTERFACEFRAMEWORK_EXPORT)
+QT_DECLARE_EXPORTED_QT_LOGGING_CATEGORY(qLcIfRecGuard,
+                                        Q_QTINTERFACEFRAMEWORK_EXPORT)
 
 class QIfSimulationEngine;
 

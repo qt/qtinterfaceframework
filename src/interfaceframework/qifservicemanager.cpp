@@ -27,7 +27,7 @@ using namespace Qt::StringLiterals;
 QT_BEGIN_NAMESPACE
 
 Q_LOGGING_CATEGORY(qLcIfServiceManagement, "qt.if.servicemanagement");
-Q_LOGGING_CATEGORY(qLcIfPerf, "qt.if.servicemanagement.perf");
+Q_STATIC_LOGGING_CATEGORY(qLcIfPerf, "qt.if.servicemanagement.perf");
 
 namespace qtif_helper {
 // AXIVION DISABLE Qt-NonPodGlobalStatic

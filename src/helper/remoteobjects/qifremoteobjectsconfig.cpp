@@ -9,7 +9,8 @@ using namespace Qt::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
-Q_LOGGING_CATEGORY(qLcQtIfRoConfig, "qt.if.remoteobjects.config", QtInfoMsg)
+Q_STATIC_LOGGING_CATEGORY(qLcQtIfRoConfig, "qt.if.remoteobjects.config",
+                          QtInfoMsg)
 
 /*!
     \class QIfRemoteObjectsConfig
