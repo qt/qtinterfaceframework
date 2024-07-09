@@ -1,0 +1,19 @@
+Example.If.ClimateModule.ClimateControl:
+    config_simulator:
+        zones: [ FrontLeft, FrontRight ]
+
+Example.If.ClimateModule.ClimateControl#airConditioning:
+    config_simulator:
+        default: true
+
+Example.If.ClimateModule.ClimateControl#fanSpeedLevel:
+    config_simulator:
+        default:
+            FrontLeft: 2
+            FrontRight: 5
+
+Example.If.ClimateModule.ClimateControl#targetTemperature:
+    config_simulator:
+        default:
+            FrontLeft: 15
+            FrontRight: 21

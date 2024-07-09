@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 project(example LANGUAGES CXX)
 
 if(QT_FEATURE_ifcodegen)
-    qt_internal_add_example(qface-climate)
+    qt_internal_add_example(climate)
     qt_internal_add_example(addressbook)
 endif()
 if(QT_FEATURE_ifcodegen AND QT_FEATURE_remoteobjects)
