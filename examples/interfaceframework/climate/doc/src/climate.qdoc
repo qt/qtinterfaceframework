@@ -1,0 +1,224 @@
+// Copyright (C) 2021 The Qt Company Ltd.
+// Copyright (C) 2019 Luxoft Sweden AB
+// Copyright (C) 2018 Pelagicore AG
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\example interfaceframework/climate
+\meta tag {simulation, ifcodegen, qface-annotations, qface-enums, zoning}
+\brief This Example shows how to use the Qt Interface Framework Generator.
+\ingroup qtinterfaceframework-examples
+\title Qt Interface Framework Generator Climate Example
+\image climate.png
+
+\section1 Introduction
+
+This example shows you how you can use the Qt Interface Framework Generator to
+build a new component. Based on a single QFace Interface Definition Language
+(IDL) file, the example generates:
+
+\list
+    \li a shared library with the front-end code
+    \li a back-end simulator plugin
+\endlist
+
+\section1 The IDL File
+
+The IDL file used in this example represents a simplified climate control
+interface that contains a single interface and some enumerated types.
+
+Let's take a look at a minimal version of the same QFace IDL file:
+
+\code
+module Example.If.ClimateModule 1.0;
+
+interface ClimateControl {
+    bool airConditioning;
+    int fanSpeedLevel;
+    readonly int outsideTemperature;
+    RecirculationMode recirculationMode;
+}
+
+enum RecirculationMode {
+    RecirculationOff = 0x0,
+    RecirculationOn = 0x1,
+    AutoRecirculation = 0x2
+}
+
+\endcode
+
+\section2 Walkthrough
+
+First, we need to define which \c module we want to describe. The \c module acts as a namespace,
+because the IDL file can contain multiple interfaces.
+
+\code
+module Example.If.Climate 1.0;
+\endcode
+
+The most important part of the \c module is its \c interface definition.
+
+\code
+interface ClimateControl {
+    bool airConditioning;
+    int fanSpeedLevel;
+    readonly int outsideTemperature;
+    RecirculationMode recirculationMode;
+}
+\endcode
+
+In this case, we define an \c interface named \b ClimateControl consisting of a few properties it
+should offer. Each property definition must contain at least a type and a name. Most of the
+basic types are built-in and can be found in the \l {QFace IDL syntax}. Each property can also be
+set to be \c readonly, as seen in the \c outsideTemperature property. The last property
+is special as it uses a custom type, that is defined after the \c interface definition.
+
+\code
+enum RecirculationMode {
+    RecirculationOff = 0x0,
+    RecirculationOn = 0x1,
+    AutoRecirculation = 0x2
+}
+\endcode
+
+It defines an \c enumeration with all the values it supports, including the numeric value
+of each individual item.
+
+\section2 Comments and Annotations
+
+Compared to the minimal IDL we saw in the previous section, the full \fileLink
+{examples/interfaceframework/climate/example-climate.qface}{IDL file} contains a lot of
+comments and annotations.
+
+Comments starting with \c /** define documentation statements and can be converted into
+documentation markup like QDoc or Doxygen, by the generation template.
+
+\section3 Annotations
+
+Annotations are used to add additional information to the IDL statements. They are YAML fragments
+that provide a key-value store. The generation template defines the supported annotations.
+
+Here's an overview of all the annotations used in this example and what they do:
+
+\table
+    \header
+        \li Annotation
+        \li Description
+    \row
+        \li \code
+                @config: {zoned: true}
+            \endcode
+        \li Specifies that the interface supports different zones.
+    \row
+        \li \code
+                @config_simulator: { range:[0, 5] }
+            \endcode
+        \li Specifies a range of valid values for numerical properties.
+            \note The \c {range} annotation used here is a shortcut to specify both minimum and
+            maximum values.
+\endtable
+
+In addition to the IDL file, a YAML file with the same base name is used to add extra
+configurations. These configurations may also be added directly into the IDL file, but we choose
+to keep them separate for readability.
+
+Some of these extra configurations are highlighted below:
+
+\table
+    \row
+        \li
+            \code
+            Example.If.Climate.ClimateControl:
+                config_simulator:
+                    zones: { left : FrontLeft, right : FrontRight, rear: Rear }
+            \endcode
+        \li Defines the names for the supported zones.
+    \row
+        \li
+            \code
+            Example.If.ClimateModule.ClimateControl#fanSpeedLevel:
+                config_simulator:
+                    default:
+                        FrontLeft: 2
+                        FrontRight: 5
+            \endcode
+        \li Specifies the default value assigned to a property in the simulator back-end plugin.
+            Each zone can have a different default value.
+\endtable
+
+
+\section1 Front End Library
+
+Now we want to use the Interface Framework Generator to generate a QML module that contains a
+C++ implementation of our IDL file.
+
+In this case, we use the \c frontend template, that generates a class derived from \c
+{QIfAbstractZonedFeature} including all the specified properties. The generated library uses the \l
+{Dynamic Backend System} from QtInterfaceFramework, providing an easy way to change the behavior
+implementations. For more details, see \l {Back End Simulator Plugin}.
+
+To let the autogenerator create a QML module, it needs to be integrated into the build system.
+
+\snippet interfaceframework/climate/CMakeLists.txt 0
+
+Similar to \l {qt_add_qml_module} the call of \l {qt_ifcodegen_add_qml_module} makes sure that the
+generated code can be used from QML. The uri and version is defined by the module statement in the
+IDL file:
+
+\code
+module Example.If.ClimateModule 1.0;
+\endcode
+
+\section1 Back End Simulator Plugin
+
+Since the \c{front-end} library uses the \l {Dynamic Backend System}, we need a corresponding
+\c{back-end} plugin, for the library to provide some functionality. To generate a mock version of
+the back-end plugin called "Simulator Backend", you can use the \c backend_simulator template from
+the same IDL file as the \c{front-end} library. The build system integration works in the similar
+way, but it uses a different generation template.
+
+A plugin is defined and extended by calling the codegenerator, this time with the \c
+backend_simulator template:
+
+\snippet interfaceframework/climate/CMakeLists.txt 1
+
+For the plugin to compile correctly it needs to get the backend interface header from the previously
+created library. However, this header is not part of our source tree but the build tree, because it
+is also generated. We provide this header by adding it to the include path using the following code:
+
+\snippet interfaceframework/climate/CMakeLists.txt 2
+
+The \c backend_simulator template makes use of the \b @config_simulator annotations explained
+\l{Annotations}{above}. This means that the generated back end provides the default values defined
+in the annotations and checks the boundaries of new values using the \c minimum/maximum or \c range
+annotations.
+
+Using the \c zones annotations, the generated back end provides individual values for every zone
+and communicates the available zones to the front-end library.
+
+\section1 Demo Application
+
+The demo application presents a simple QML climate ui which uses the properties of our auto
+generated interface.
+
+Since we set the \c zoned annotation and also provided the available zones for the simulation-backend,
+we can now access the different zones in the QML code. The following code snippet shows how to
+the targetTemperature for the zone \c FrontLeft is accessed:
+
+\snippet interfaceframework/climate/Main.qml 0
+
+Properties which are not zoned can be accessed directly:
+
+\snippet interfaceframework/climate/Main.qml 1
+
+Our application doesn't know about our back-end plugin, so, we need to put this plugin in the
+folder where our application looks for plugins. By default, Qt looks in the \b plugins folder
+within its installation directory or in the application's current working directory. For
+QtInterfaceFramework plugins to be found, they need to be placed within a \b interfaceframework
+sub-folder.
+
+To make sure this is done automatically, we add the following line to the build system file:
+
+\snippet interfaceframework/climate/CMakeLists.txt 3
+
+*/

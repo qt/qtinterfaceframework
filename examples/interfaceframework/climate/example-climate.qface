@@ -1,0 +1,43 @@
+module Example.If.ClimateModule 1.0;
+
+/**
+ * The ClimateControl provides a QML interface to the climate control
+ * of the vehicle.
+ */
+@config: { zoned: true }
+interface ClimateControl {
+    /**
+     * \brief Value is true if the air conditioning is enabled.
+     */
+    bool airConditioning;
+
+    /**
+     * \brief value holds the fan speed level, where the level can be between
+     * 0 (off) to 5 (strongest).
+     */
+    @config_simulator: { range: [0, 5] }
+    int fanSpeedLevel;
+
+    /**
+     * \brief value holds the target temperature of the zone expressed
+     * in centigrades
+     */
+    int targetTemperature;
+
+    /**
+     * \brief value holds the outside temperature of the zone expressed in
+     * centigrades
+     */
+    readonly int outsideTemperature;
+
+    /**
+     * \brief value holds the recirculation mode
+     */
+    RecirculationMode recirculationMode;
+}
+
+enum RecirculationMode {
+    RecirculationOff = 0x0,
+    RecirculationOn = 0x1,
+    AutoRecirculation = 0x2
+}

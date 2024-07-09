@@ -6,19 +6,14 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include <climatemodule.h>
-
 using namespace Qt::StringLiterals;
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    ClimateModule::registerTypes();
-    ClimateModule::registerQmlTypes();
-
     QQmlApplicationEngine engine;
-    engine.load(QUrl(u"qrc:/main.qml"_s));
+    engine.loadFromModule("Example", "Main");
 
     return app.exec();
 }

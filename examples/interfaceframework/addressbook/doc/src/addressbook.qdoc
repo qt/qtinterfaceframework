@@ -18,7 +18,7 @@ Generator.
 
 It will only explain the details on how to use the \e model type and how it works internally. For a
 general introduction to the Qt Interface Framework Generator, please have a look at the
-\l {interfaceframework/qface-climate} {Qt Interface Framework Generator Climate Example}.
+\l {interfaceframework/climate} {Qt Interface Framework Generator Climate Example}.
 
 \section2 Walkthrough
 
