@@ -50,5 +50,6 @@ if (TARGET ${CURRENT_TARGET})
 
     target_include_directories(${CURRENT_TARGET} PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     )
 endif()
