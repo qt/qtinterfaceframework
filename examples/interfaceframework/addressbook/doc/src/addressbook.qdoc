@@ -5,7 +5,7 @@
 
 /*!
 \example interfaceframework/addressbook
-\meta tag {simulation, ifcodegen, model}
+\meta tag {simulation, ifcodegen, qface-models, qface-structs, simulation-behavior}
 \brief This example shows how to generate models using the Qt Interface Framework Generator.
 \ingroup qtinterfaceframework-examples
 \title Qt Interface Framework Generator Addressbook Example
