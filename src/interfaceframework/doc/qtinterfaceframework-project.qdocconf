@@ -71,7 +71,7 @@ macro.fileLink = "\\l {https://code.qt.io/cgit/qt/interfaceframework.git/tree/\1
 
 manifestmeta.filters = interfaceframework
 manifestmeta.interfaceframework.names = *
-manifestmeta.interfaceframework.tags  = interfaceframework qtinterfaceframework qtif qif
+manifestmeta.interfaceframework.tags  = qtif
 
 # Fail the documentation build if there are more warnings than the limit
 warninglimit = 0
