@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(qface-tutorial LANGUAGES CXX)
 
+find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
+
 add_subdirectory(instrument-cluster)
 add_subdirectory(ch1-basics)
 add_subdirectory(ch2-enums-structs)
