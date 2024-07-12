@@ -4,7 +4,7 @@ if(NOT DEFINED INSTALL_EXAMPLESDIR)
     set(INSTALL_EXAMPLESDIR "examples")
 endif()
 
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/ch3-simulation-backend")
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/ch3-simulation-backend/interfaceframework/")
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui InterfaceFramework)
 

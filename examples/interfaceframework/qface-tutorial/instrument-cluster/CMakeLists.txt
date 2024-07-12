@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
 project(instrument-cluster LANGUAGES CXX)
 
+find_package(Qt6 REQUIRED COMPONENTS Core)
+
+qt_standard_project_setup()
+
 set(CMAKE_AUTOMOC ON)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
