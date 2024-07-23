@@ -58,14 +58,14 @@ if(QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen AND QT_FEATURE_compile
     endif()
 
     if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-        set(EXTRA_LINUX_PACKAGES_COMMAND COMMAND pip3 install patchelf)
+        set(EXTRA_LINUX_PACKAGES_COMMAND COMMAND pip3 install -r ${CMAKE_CURRENT_SOURCE_DIR}/tool_requirements_linux.txt)
     endif()
 
     add_custom_command(OUTPUT ${IFCODEGEN_BIN}
                        COMMAND ${VIRTUALENV_ACTIVATE_COMMAND}
                        ${INSTALL_MINIMAL_QFACE_PACKAGES_COMMAND}
                        COMMAND ${PIP3_INSTALL_COMMAND}
-                       COMMAND pip3 install nuitka ordered-set zstandard
+                       COMMAND pip3 install -r ${CMAKE_CURRENT_SOURCE_DIR}/tool_requirements.txt
                        ${EXTRA_LINUX_PACKAGES_COMMAND}
                        DEPENDS ${VIRTUALENV_ACTIVATE}
                                ${IFCODEGEN_SOURCE_DIR}/requirements.txt
