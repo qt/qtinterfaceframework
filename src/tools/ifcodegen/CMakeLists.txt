@@ -60,9 +60,9 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
     endif()
 
     if (${COMPILE_IFCODEGEN})
-        set(INSTALL_NUITKA_COMMAND COMMAND pip3 install nuitka ordered-set zstandard)
+        set(INSTALL_NUITKA_COMMAND COMMAND pip3 install -r ${CMAKE_CURRENT_SOURCE_DIR}/tool_requirements.txt)
         if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-            set(EXTRA_LINUX_PACKAGES_COMMAND COMMAND pip3 install patchelf)
+            set(EXTRA_LINUX_PACKAGES_COMMAND COMMAND pip3 install -r ${CMAKE_CURRENT_SOURCE_DIR}/tool_requirements_linux.txt)
         endif()
     endif()
 
