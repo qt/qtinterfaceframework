@@ -37,6 +37,7 @@ The following environment variables are supported for runtime configurations:
 \endtable
 
 \section2 Logging
+\target logging_configuration
 
 The \c qt.if.servicemanagement Logging Category can be used to get more information on which
 back ends were considered, when searching for the correct back end for a feature, as well as why that

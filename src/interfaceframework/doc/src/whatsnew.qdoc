@@ -4,7 +4,19 @@
 \page whatsnew.html
 \title What's New in the Qt Interface Framework
 
-The following page describes new features by Qt Version:
+The following page describes new features by Qt Version.
+There is a separate page to list all \l {New Classes and Functions by Qt Version}.
+
+\section1 6.8
+
+\list
+    \li New API to trigger an auto discovery from the \l {QIfConfiguration::startAutoDiscovery}{Configuration Management System}
+    \li \l {QIfAbstractFeature::asynchronousBackendLoading}{Support for asynchronous backend loading}
+    \li \l {QIfAbstractFeature::backendUpdatesEnabled}{Ability to disable backend updates per feature}
+    \li Port from python 'virtualenv' to 'venv'
+    \li \l {ifcodegen_cmake_commands}{New CMake API for generating plugins and QML modules}
+    \li \l {logging_configuration}{New logging category for performance metrics}
+\endlist
 
 \section1 6.7
 
@@ -54,4 +66,19 @@ The following page describes new features by Qt Version:
     \li Rename from \l {QtIVI} to Qt Interface Framework
 \endlist
 
+*/
+
+/*!
+    \page newclasses.html
+    \title New Classes and Functions by Qt Version
+    \brief A list of new APIs by Qt Version
+
+    This page contains a comprehensive list of all new classes and functions
+    introduced in the QtInterfaceFramework module
+
+    \section1 6.8
+    \sincelist 6.8
+
+    \section1 6.5
+    \sincelist 6.5
 */
