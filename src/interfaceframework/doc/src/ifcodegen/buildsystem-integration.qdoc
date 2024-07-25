@@ -143,13 +143,23 @@ several ways for generating QML plugins and registering the QML types.
 The preferred way in CMake is to use the new QML Type registration system, which is available in the
 QtInterfaceFramework module from version 6.3 onwards. In that version the generated code is already
 using the new registration macros and provides all the necessary information for CMake to generate
-the rest:
+the rest. Since 6.8 the new convenient CMake macros can be used to generate a QML module:
+
+\badcode
+qt_ifcodegen_add_qml_module(MyModule
+    IDL_FILES mymodule.qface
+    TEMPLATE frontend
+)
+\endcode
+
+\section2 Before 6.8
 
 \badcode
 qt_ifcodegen_extend_target(MyModule
     NO_GENERATE
     PREFIX MYMODULE
     IDL_FILES mymodule.qface
+    TEMPLATE frontend
 )
 
 qt_add_qml_module(MyModule
