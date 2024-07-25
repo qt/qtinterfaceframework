@@ -15,6 +15,8 @@ QT_BEGIN_NAMESPACE
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObject : public QObject, public QIfServiceInterface
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(ServiceObject)
+    QML_UNCREATABLE("ServiceObject needs to be created by IfServiceManager")
     Q_INTERFACES(QIfServiceInterface)
 
     Q_PROPERTY(QString id READ id CONSTANT FINAL)
