@@ -26,6 +26,10 @@ using namespace Qt::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
+#  define Q_STATIC_LOGGING_CATEGORY(cat, rule) Q_LOGGING_CATEGORY(cat, rule)
+#endif
+
 Q_LOGGING_CATEGORY(qLcIfServiceManagement, "qt.if.servicemanagement");
 Q_STATIC_LOGGING_CATEGORY(qLcIfPerf, "qt.if.servicemanagement.perf");
 

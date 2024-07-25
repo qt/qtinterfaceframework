@@ -23,6 +23,10 @@
 
 QT_BEGIN_NAMESPACE
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
+#  define QT_DECLARE_EXPORTED_QT_LOGGING_CATEGORY(cat, dummy) Q_DECLARE_LOGGING_CATEGORY(cat)
+#endif
+
 namespace qtif_private {
     QT_DECLARE_EXPORTED_QT_LOGGING_CATEGORY(qLcQtIfRoHelper,
                                             Q_IFREMOTEOBJECTSHELPER_EXPORT)

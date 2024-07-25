@@ -9,6 +9,10 @@ using namespace Qt::StringLiterals;
 
 QT_BEGIN_NAMESPACE
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 9, 0)
+#  define Q_STATIC_LOGGING_CATEGORY(cat, rule, init) Q_LOGGING_CATEGORY(cat, rule, init)
+#endif
+
 Q_STATIC_LOGGING_CATEGORY(qLcQtIfRoConfig, "qt.if.remoteobjects.config",
                           QtInfoMsg)
 
