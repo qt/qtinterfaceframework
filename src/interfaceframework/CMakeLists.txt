@@ -8,6 +8,8 @@ qt_internal_add_qml_module(InterfaceFramework
     PAST_MAJOR_VERSIONS 1
     CLASS_NAME QtInterfaceFrameworkPlugin
     PLUGIN_TYPES interfaceframework
+    DEPENDENCIES
+        QtQuick/auto
     SOURCES
         qifabstractfeature.cpp qifabstractfeature.h qifabstractfeature_p.h
         qifabstractfeaturelistmodel.cpp qifabstractfeaturelistmodel.h qifabstractfeaturelistmodel_p.h
@@ -47,6 +49,12 @@ qt_internal_add_qml_module(InterfaceFramework
         Qt6InterfaceFrameworkConfigExtras.cmake.in
         Qt6InterfaceFrameworkMacros.cmake
 )
+
+qt_internal_extend_target(InterfaceFramework CONDITION TARGET Qt::QmlModels
+    PUBLIC_LIBRARIES
+        Qt::QmlModels
+)
+
 
 # When the system-qface is used we need to save the location of the used Python3 interpreter in
 # the module pri file, in order to use from qmake
