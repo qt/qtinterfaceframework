@@ -31,7 +31,7 @@ import click
 import logging.config
 import sys
 import yaml
-from path import Path
+from pathlib import Path
 
 from qface.generator import RuleGenerator
 from qface.idl.domain import Module, Interface, Property, Parameter, Field, Struct
