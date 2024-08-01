@@ -10,7 +10,7 @@ import sys
 import fnmatch
 import click
 import logging.config
-from path import Path
+from pathlib import Path
 
 from qface.generator import FileSystem, Generator
 from qface.watch import monitor
@@ -26,7 +26,7 @@ def deep_get(dictionary, keys, default=None):
     return reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
 
 
-here = Path(__file__).dirname()
+here = Path(__file__).parent
 
 log = logging.getLogger(__file__)
 

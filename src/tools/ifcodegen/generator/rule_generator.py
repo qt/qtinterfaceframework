@@ -7,7 +7,7 @@ import click
 import logging.config
 import sys
 import yaml
-from path import Path
+from pathlib import Path
 
 from qface.utils import load_filters
 from qface.generator import RuleGenerator
