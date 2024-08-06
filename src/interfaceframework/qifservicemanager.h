@@ -20,7 +20,7 @@ class QIfServiceManagerPrivate;
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObjectHandle
 {
     Q_GADGET
-    QML_ANONYMOUS
+    QML_VALUE_TYPE(ServiceObjectHandle)
     QML_ADDED_IN_VERSION(6, 8)
     Q_PROPERTY(bool valid READ isValid FINAL)
     Q_PROPERTY(bool loaded READ isLoaded FINAL)
