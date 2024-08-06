@@ -26,6 +26,7 @@
 #include <QtCore/QDataStream>
 #include <QtCore/QDebug>
 #include <QtQml/QQmlEngine>
+#include <QtInterfaceFramework/QIfPendingReply>
 #include <QtInterfaceFramework/QIfStandardItem>
 
 {{ module|begin_namespace }}
@@ -81,6 +82,8 @@ private:
 {{exportsymbol}} QDataStream &operator>>(QDataStream &stream, {{class}} &obj);
 
 {{exportsymbol}} QDebug &operator<<(QDebug &dbg, const {{class}} &obj);
+
+QIF_DECLARE_PENDINGREPLY({{struct}})
 
 {{ module|end_namespace }}
 
