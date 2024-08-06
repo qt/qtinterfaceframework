@@ -39,6 +39,16 @@ private:
     QVariantMap m_serviceSettings;
 };
 
+namespace qtif_private {
+    class ServiceObjectListRegistration
+    {
+        Q_GADGET
+        QML_FOREIGN(QList<QIfServiceObject *>)
+        QML_ANONYMOUS
+        QML_SEQUENTIAL_CONTAINER(QIfServiceObject *)
+    };
+}
+
 QT_END_NAMESPACE
 
 #endif // QIFSERVICEOBJECT_H
