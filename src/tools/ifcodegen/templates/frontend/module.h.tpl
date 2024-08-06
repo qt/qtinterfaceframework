@@ -32,6 +32,7 @@
 {% endfor %}
 
 #include <QtCore/QObject>
+#include <QtInterfaceFramework/QIfPendingReply>
 
 {{ module|begin_namespace }}
 
@@ -64,6 +65,10 @@ public:
 {% for enum in module.enums %}
 {{exportsymbol}} QDataStream &operator<<(QDataStream &out, {{class}}::{{enum|flag_type}} var);
 {{exportsymbol}} QDataStream &operator>>(QDataStream &in, {{class}}::{{enum|flag_type}} &var);
+{% endfor %}
+
+{% for enum in module.enums %}
+QIF_DECLARE_PENDINGREPLY_WITH_NAME({{enum}}, {{class}}::{{enum|flag_type}})
 {% endfor %}
 
 {{ module|end_namespace }}

@@ -862,6 +862,36 @@ void QIfPendingReplyBase::setSuccessNoCheck(const QVariant &value)
     Please see qRegisterMetaType for more information.
 */
 
+/*!
+    \macro  QIF_DECLARE_PENDINGREPLY(TYPE)
+    \relates QIfPendingReply
+    \since 6.8
+
+    Declares the type \a TYPE to be used in a QIfPendingReply. This macro is used to make sure
+    that QIfPendingReply<TYPE> can be used in QML.
+
+    This macro should be used in the header file directly after the definition of the type.
+
+    \sa QIF_DECLARE_PENDINGREPLY_WITH_NAME
+*/
+
+/*!
+    \macro  QIF_DECLARE_PENDINGREPLY_WITH_NAME(NAME, TYPE)
+    \relates QIfPendingReply
+    \since 6.8
+
+    Declares the type \a TYPE to be used in a QIfPendingReply. This macro is used to make sure
+    that QIfPendingReply<TYPE> can be used in QML.
+    The passed \a NAME is part of the struct name used to do the QML registration.
+
+    This macro should be used in the header file directly after the definition of the type.
+
+    \note Most of the time QIF_DECLARE_PENDINGREPLY should be used instead of this macro. This
+    macro is useful for enums or types inside namespaces.
+
+    \sa QIF_DECLARE_PENDINGREPLY
+*/
+
 QT_END_NAMESPACE
 
 #include "moc_qifpendingreply.cpp"

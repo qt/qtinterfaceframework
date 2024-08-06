@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtCore/QDebug>
 #include <QtCore/QMetaEnum>
+#include <QtQml/QQmlEngine>
 
 #include <QtInterfaceFramework/qtifglobal.h>
 
@@ -54,6 +55,7 @@ private:
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyBase
 {
     Q_GADGET
+    QML_VALUE_TYPE(PendingReplyBase)
     Q_PROPERTY(QIfPendingReplyWatcher* watcher READ watcher FINAL)
     Q_PROPERTY(QVariant value READ value FINAL)
     Q_PROPERTY(bool valid READ isValid FINAL)
@@ -250,6 +252,28 @@ template <typename T> Q_INLINE_TEMPLATE typename std::enable_if<!QtPrivate::IsQE
     const char* n = name ? name : QMetaType(qMetaTypeId<T>()).name();
     const QString t_name = QLatin1String("QIfPendingReply<") + QLatin1String(n) + QLatin1String(">");
     qRegisterMetaType<QIfPendingReplyBase>(qPrintable(t_name));
+}
+
+#define QIF_DECLARE_PENDINGREPLY(TYPE) \
+QIF_DECLARE_PENDINGREPLY_WITH_NAME(TYPE, TYPE)
+
+#define QIF_DECLARE_PENDINGREPLY_WITH_NAME(NAME, TYPE) \
+struct PendingReplyRegistration##NAME \
+{ \
+    Q_GADGET \
+    QML_FOREIGN(QIfPendingReply<TYPE>) \
+    QML_USING(QIfPendingReplyBase) \
+}; \
+
+#define QTIF_ADD_QML_REGISTRATION(MetaTypeName, MetaTypeId, AliasingType) \
+QIF_DECLARE_PENDINGREPLY_WITH_NAME(MetaTypeName, AliasingType)
+
+namespace qtif_private {
+    QT_FOR_EACH_STATIC_PRIMITIVE_TYPE(QTIF_ADD_QML_REGISTRATION)
+    QT_FOR_EACH_STATIC_PRIMITIVE_POINTER(QTIF_ADD_QML_REGISTRATION)
+    QT_FOR_EACH_STATIC_CORE_POINTER(QTIF_ADD_QML_REGISTRATION)
+    QT_FOR_EACH_STATIC_CORE_TEMPLATE(QTIF_ADD_QML_REGISTRATION)
+    QT_FOR_EACH_STATIC_CORE_CLASS(QTIF_ADD_QML_REGISTRATION)
 }
 
 QT_END_NAMESPACE
