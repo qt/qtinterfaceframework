@@ -94,11 +94,13 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
                                --company-name="The Qt Company"
                                --product-name="ifcodegen"
                                --product-version="${QT_REPO_MODULE_VERSION}"
+                COMMAND ${QT_BUILD_DIR}/${INSTALL_LIBEXECDIR}/ifcodegen${CMAKE_EXECUTABLE_SUFFIX} --selfcheck
         )
         set(MAKE_IFCODEGEN_MESSAGE "Building a relocatable ifcodegen")
     else()
         set(MAKE_IFCODEGEN_COMMAND
-                COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/verify_generator.py)
+                COMMAND ${CMAKE_COMMAND} -E env IFGENERATOR_CONFIG=${CMAKE_CURRENT_BINARY_DIR}/.config python ${CMAKE_CURRENT_SOURCE_DIR}/generate.py --selfcheck
+        )
         set(MAKE_IFCODEGEN_MESSAGE "Verifying generator")
     endif()
 
