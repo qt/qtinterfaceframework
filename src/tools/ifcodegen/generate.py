@@ -10,6 +10,7 @@ import sys
 import fnmatch
 import click
 import logging.config
+import tempfile
 from pathlib import Path
 
 from qface.generator import FileSystem, Generator
@@ -191,6 +192,86 @@ def run(template_search_paths, template, moduleConfig, annotations, imports, src
         exit(1)
 
 
+def self_check(ctx, param, value):
+    if not value or ctx.resilient_parsing:
+        return
+    click.echo('Running self check')
+
+    try:
+        # Parse the .config file and throw an error in case it doesn't exist or it is invalid
+        builtin_config.parse(here)
+
+        tmpDir = tempfile.TemporaryDirectory()
+        tmp = Path(tmpDir.name)
+        with open(tmp / "test.qface", 'w') as file:
+            # Write content to the file
+            file.write("""
+            module org.selftest 1.0
+
+            interface Echo {
+                string stringProperty
+                bool boolProperty
+                TestEnum enumProperty
+                TestStruct structProperty
+                string echo(string msg);
+            }
+
+            enum TestEnum {
+                value1,
+                value2
+            }
+
+            struct TestStruct {
+                int testInt
+                string testString
+            }
+            """)
+
+        with open(tmp / "selfcheck.yaml", 'w') as file:
+            # Write content to the file
+            file.write("""
+            test:
+                module:
+                    documents:
+                        - "{{srcBase|lower}}": "module.tpl"
+                interface:
+                    documents:
+                        - 'tst_{{interface|lower}}': 'interface.tpl'
+            """)
+
+        os.mkdir(tmp / "selfcheck")
+        with open(tmp / "selfcheck/module.tpl", 'w') as file:
+            # Write content to the file
+            file.write("""
+            {{module.name}}
+            """)
+
+        with open(tmp / "selfcheck/interface.tpl", 'w') as file:
+            # Write content to the file
+            file.write("""
+            {{interface.name}}
+            """)
+
+        run([tmp], 'selfcheck', {"module": "org.selftest", "force": True}, [], [], [tmp / "test.qface"], tmp)
+        click.echo('Self check finished successfully.')
+    except Exception as e:
+        raise SystemExit("""
+              Self check failed!
+
+              This might be caused by a too recent python version or
+              too recent python packages.
+              If this happens when building the qtinterfaceframework,
+              you can try installing older python packages by
+              running configure again with the following option:
+
+              -DQT_USE_MINIMAL_QFACE_PACKAGES=TRUE
+
+              The python error was:
+
+              {}
+              """.format(e))
+    ctx.exit()
+
 @click.command()
 @click.option('--reload/--no-reload', default=False, help=
     'Specifies whether the generator should keep track of the changes in the IDL file and update '
@@ -216,6 +297,9 @@ def run(template_search_paths, template, moduleConfig, annotations, imports, src
     'scanned recursively for QFace files. The QFace files found are then used to resolve '
     'the information required when importing a module; this is similar to how C++ include '
     'paths work.')
+@click.option('--selfcheck', is_flag=True, default=False, callback=self_check, expose_value=False, is_eager=True, help=
+    'Runs a self check using a builtin qface file and template to verify that the generator is '
+    'working correctly. ')
 @click.argument('src', nargs=-1, type=click.Path(exists=True))
 @click.argument('dst', nargs=1, type=click.Path(exists=True))
 
@@ -239,7 +323,6 @@ def app(src, dst, template_search_paths, template, reload, module, force, annota
             "force": force
         }
         run(template_search_paths, template, moduleConfig, annotations, imports, src, dst)
-
 
 if __name__ == '__main__':
     app()
