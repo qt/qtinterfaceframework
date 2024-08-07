@@ -87,6 +87,7 @@ if(QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen AND QT_FEATURE_compile
                                --company-name="The Qt Company"
                                --product-name="ifcodegen"
                                --product-version="${QT_REPO_MODULE_VERSION}"
+                       COMMAND ${QT_BUILD_DIR}/${INSTALL_LIBEXECDIR}/ifcodegen${CMAKE_EXECUTABLE_SUFFIX} --selfcheck
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-generator-verified
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
                        DEPENDS ${IFCODEGEN_BIN}
@@ -206,7 +207,7 @@ elseif(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
 
    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
                              ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
-                      COMMAND ${VIRTUALENV_PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/verify_generator.py
+                      COMMAND ${CMAKE_COMMAND} -E env IFGENERATOR_CONFIG=${CMAKE_CURRENT_BINARY_DIR}/.config ${VIRTUALENV_PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/generate.py --selfcheck
                       COMMAND ${CMAKE_COMMAND} -E touch .stamp-generator-verified
                       COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
