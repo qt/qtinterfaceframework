@@ -36,7 +36,7 @@ class {{class}}Private;
 class {{exportsymbol}} {{class}} : public QIfStandardItem
 {
     Q_GADGET
-    QML_VALUE_TYPE({{class}})
+    QML_VALUE_TYPE({{class|lower_first}})
     QML_STRUCTURED_VALUE
 {% for field in struct.fields %}
     {{qtif.property(field, notify=false)}}

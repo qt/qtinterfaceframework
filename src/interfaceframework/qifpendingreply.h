@@ -55,7 +55,7 @@ private:
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfPendingReplyBase
 {
     Q_GADGET
-    QML_VALUE_TYPE(PendingReplyBase)
+    QML_VALUE_TYPE(pendingReplyBase)
     Q_PROPERTY(QIfPendingReplyWatcher* watcher READ watcher FINAL)
     Q_PROPERTY(QVariant value READ value FINAL)
     Q_PROPERTY(bool valid READ isValid FINAL)
