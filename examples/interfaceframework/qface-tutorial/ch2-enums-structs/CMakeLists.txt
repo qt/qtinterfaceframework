@@ -1,9 +1,15 @@
 cmake_minimum_required(VERSION 3.16)
 project(qface-ch2 LANGUAGES CXX)
 
-find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core InterfaceFramework Qml Quick)
 
-qt_standard_project_setup()
+qt_standard_project_setup(REQUIRES 6.7)
+
+if(NOT DEFINED INSTALL_EXAMPLESDIR)
+    set(INSTALL_EXAMPLESDIR "examples")
+endif()
+
+set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/ch2-enums-structs")
 
 add_subdirectory(instrument-cluster)
 add_subdirectory(frontend)

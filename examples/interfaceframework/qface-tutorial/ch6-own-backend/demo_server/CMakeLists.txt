@@ -1,15 +1,5 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_AUTOMOC ON)
-
-if(NOT DEFINED INSTALL_EXAMPLESDIR)
-    set(INSTALL_EXAMPLESDIR "examples")
-endif()
-
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter6-own-backend")
-
-find_package(Qt6 REQUIRED COMPONENTS Core DBus InterfaceFramework)
-
 set_source_files_properties(instrumentcluster.xml PROPERTIES INCLUDE "")
 set(cluster_SRCS)
 qt_add_dbus_adaptor(cluster_SRCS
@@ -19,7 +9,7 @@ qt_add_dbus_adaptor(cluster_SRCS
     instrumentcluster_adaptor
 )
 
-qt_add_executable(chapter6-demo-server
+qt_add_executable(chapter6-demo-server WIN32
     dbus_conversion.h
     instrumentcluster.cpp instrumentcluster.h
     main.cpp
@@ -27,10 +17,6 @@ qt_add_executable(chapter6-demo-server
 )
 
 set_target_properties(chapter6-demo-server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
-set_target_properties(chapter6-demo-server PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE FALSE
-)
 
 target_link_libraries(chapter6-demo-server PUBLIC
     libIc_chapter6

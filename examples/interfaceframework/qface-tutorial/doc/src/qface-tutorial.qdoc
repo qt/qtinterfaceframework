@@ -106,10 +106,9 @@
 
     \e ch1-basics/frontend/CMakeLists.txt:
     \quotefromfile interfaceframework/qface-tutorial/ch1-basics/frontend/CMakeLists.txt
-    \skipto find_package
+    \skipto qt_add_library
     \printto install
 
-    First \e find_package needs to be used to get all needed libraries into the CMake build system.
     A new library is defined with \l {qt_add_library} and, using CMake target_properties, the
     output name, as well as the output directory are set. As we need to link to this library in the
     future, it is easier to put the file into the upper directory.
@@ -176,6 +175,10 @@
     \quotefromfile interfaceframework/qface-tutorial/ch1-basics/instrument-cluster/main.cpp
     \skipto #include "instrumentclustermodule.h"
     \printuntil }
+
+    \note Since Qt6 the recommended way is to use the new \l{QML Type Registration} mechanism instead
+    and use the \l qt_add_qml_module API. For now this example uses simple resource files for all QML
+    files and images and only introduces the declarative type registration in a following chapter.
 
     All we need now is the actual integration of the InstrumentCluster QML element and connecting
     the \c speed property to the \c leftDial. This is done by instantiating the element first with
@@ -340,18 +343,18 @@
 
     \e ch3-simulation-backend/backend_simulator/CMakeLists.txt
     \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/CMakeLists.txt
-    \skipto find_package
+    \skipto qt_ifcodegen_add_plugin
     \printto target_link_libraries
 
-    Similar to the front-end library, first the used components are imported using \e find_package.
     As we want to build a plugin (dynamic library) which is loaded at runtime instead of linking
-    against it, we use the \l {qt_add_plugin} function instead. One important aspect
+    against it, we use the \l {qt_ifcodegen_add_plugin} function. One important aspect
     here is that the library name ends with "_simulation", which is a way to tell QtInterfaceFramework that this
     is a simulation back end. When a "production" back end is available, it is preferred over the
     "simulation" one. For more information, see \l{Dynamic Backend System}.
 
-    As before, the Interface Framework Generator is called by using the \l{qt_ifcodegen_extend_target}
-    function, this time setting "backend_simulator" as the \c TEMPLATE.
+    The \l {qt_ifcodegen_add_plugin} uses the same \c IDL_FILES and \c TEMPLATE arguments as the
+    \l{qt_ifcodegen_extend_target} function we used previously, but instead of creating a plugin first
+    and extending it, the plugin is created in a single call.
 
     \b qmake:
 
@@ -389,7 +392,7 @@
     \e ch3-simulation-backend/backend_simulator/CMakeLists.txt:
     \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/CMakeLists.txt
     \skipto target_link_libraries
-    \printto install
+    \printuntil target_link_libraries
 
     By defining the front-end library named \e libIc_ch3 as a target link library the include
     path gets updated accordingly.
@@ -429,7 +432,7 @@
 
     \e ch3-simulation-backend/backend_simulator/CMakeLists.txt:
     \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/backend_simulator/CMakeLists.txt
-    \skipuntil qt_add_plugin
+    \skipto set_target_properties
     \printuntil set_target_properties
 
     \b qmake:
@@ -484,25 +487,20 @@
 
     \b CMake:
 
-    \e ch3-simulation-backend/imports/CMakeLists.txt:
-    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/imports/CMakeLists.txt
-    \skipto qt_ifcodegen_import_variables
-    \printto install
+    \e ch3-simulation-backend/frontend/CMakeLists.txt:
+    \quotefromfile interfaceframework/qface-tutorial/ch3-simulation-backend/frontend/CMakeLists.txt
+    \skipto qt_ifcodegen_add_qml_module
+    \printuntil )
 
-    Unlike all our previous generator calls we don't extend a previously defined target, but
-    import the generated code into CMake and pass it to the \l {qt_add_qml_module} function.
-    The \l {qt_ifcodegen_import_variables} function will call the generator and export variables
-    starting with \e CLUSTER as prefix to the current CMake scope.
-    Those variables reference auto-generated code, but also expose other information like the QML
-    import URI.
-    In the next call, the variables are used to define a QML Module with the correct URI and version
-    (as specified in our IDL file). By using the \e OUTPUT_DIRECTORY variable we can make sure that
-    the correct folder structure is generated and we can import the QML plugin directly from within
-    the build folder.
+    In the previous chapters we used \l qt_add_library and \l qt_ifcodegen_extend_target to generate
+    the library.
+    To use the new declarative type registration mechanism and also generate a QML plugin, we use
+    \l qt_ifcodegen_add_qml_module instead.
 
-    \note Instead of generating a QML plugin, the new QML type registration can be used, which was
-    introduced in \b 6.3. In order to use this new mechanism the frontend CMakeLists.txt has to be
-    extended like this:
+    This function calls the generator and export the \e URI and \e VERSION variables from the
+    generated code and feeds it into the \l qt_add_qml_module function.
+
+    Before \b 6.8 the following snippet could be used instead:
 
     \badcode
     qt_ifcodegen_extend_target(libIc_ch3
@@ -556,6 +554,10 @@
 
     What has changed is that we've now added an additional import path with the \c addImportPath
     function, which points to the "imports" folder next to the binary's location.
+
+    \note The additional import path is only needed when building with qmake. In CMake the QML
+    module is linked to the application which produces more optimized code and makes the import
+    path unnecessary.
 
     \target chapter4
     \section1 Chapter 4: Add a Custom Simulation
@@ -735,7 +737,7 @@
 
     \e ch5-ipc/backend_qtro/CMakeLists.txt:
     \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/backend_qtro/CMakeLists.txt
-    \skipto qt_add_plugin
+    \skipto qt_ifcodegen_add_plugin
     \printto install
 
     \e qmake:
@@ -759,7 +761,7 @@
     \e ch5-ipc/simulation_server/CMakeLists.txt:
     \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/simulation_server/CMakeLists.txt
     \skipto qt_add_executable
-    \printto # Resources:
+    \printto qt_add_resources
 
     \b qmake:
 
@@ -789,7 +791,7 @@
 
     \e ch5-ipc/simulation_server/CMakeLists.txt:
     \quotefromfile interfaceframework/qface-tutorial/ch5-ipc/simulation_server/CMakeLists.txt
-    \skipto # Resources:
+    \skipto qt_add_resources
     \printto install
 
     \b qmake:
@@ -1207,7 +1209,7 @@
 
     \e ch7-own-template/backend_dbus/CMakeLists.txt:
     \quotefromfile interfaceframework/qface-tutorial/ch7-own-template/backend_dbus/CMakeLists.txt
-    \skipto qt_ifcodegen_extend_target
+    \skipto qt_ifcodegen_add_plugin
     \printuntil )
 
     \b QMake:
