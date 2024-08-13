@@ -3,9 +3,7 @@ project(instrument-cluster LANGUAGES CXX)
 
 find_package(Qt6 REQUIRED COMPONENTS Core)
 
-qt_standard_project_setup()
-
-set(CMAKE_AUTOMOC ON)
+qt_standard_project_setup(REQUIRES 6.7)
 
 if(NOT DEFINED INSTALL_EXAMPLESDIR)
     set(INSTALL_EXAMPLESDIR "examples")
@@ -15,13 +13,8 @@ set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial
 
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick)
 
-qt_add_executable(instrument-cluster
+qt_add_executable(instrument-cluster WIN32
     main.cpp
-)
-
-set_target_properties(instrument-cluster PROPERTIES
-    WIN32_EXECUTABLE TRUE
-    MACOSX_BUNDLE TRUE
 )
 
 target_link_libraries(instrument-cluster PUBLIC
@@ -31,41 +24,17 @@ target_link_libraries(instrument-cluster PUBLIC
     Qt::Quick
 )
 
-# Resources:
-set(app_resource_files
-    "Cluster.qml"
-    "Dial.qml"
-    "Fuel.qml"
-    "Label.qml"
-    "LeftDial.qml"
-    "RightDial.qml"
-    "Top.qml"
-)
-
 qt_add_resources(instrument-cluster "app"
     PREFIX
         "/"
     FILES
-        ${app_resource_files}
-)
-
-set(images_resource_files
-    "../images/+--.png"
-    "../images/P-R-N-D.png"
-    "../images/dial_cursor.png"
-    "../images/dial_cursor_right.png"
-    "../images/dial_fill_color.png"
-    "../images/dial_fill_color_left.png"
-    "../images/dial_pattern.png"
-    "../images/fuel.png"
-    "../images/fuel_level.png"
-    "../images/fuelsymbol_orange.png"
-    "../images/left_dial.png"
-    "../images/mask_overlay.png"
-    "../images/middle-bkg.png"
-    "../images/middle-circle.png"
-    "../images/right_dial.png"
-    "../images/top_bar.png"
+        "Cluster.qml"
+        "Dial.qml"
+        "Fuel.qml"
+        "Label.qml"
+        "LeftDial.qml"
+        "RightDial.qml"
+        "Top.qml"
 )
 
 qt_add_resources(instrument-cluster "images"
@@ -74,7 +43,22 @@ qt_add_resources(instrument-cluster "images"
     BASE
         "../images"
     FILES
-        ${images_resource_files}
+        "../images/+--.png"
+        "../images/P-R-N-D.png"
+        "../images/dial_cursor.png"
+        "../images/dial_cursor_right.png"
+        "../images/dial_fill_color.png"
+        "../images/dial_fill_color_left.png"
+        "../images/dial_pattern.png"
+        "../images/fuel.png"
+        "../images/fuel_level.png"
+        "../images/fuelsymbol_orange.png"
+        "../images/left_dial.png"
+        "../images/mask_overlay.png"
+        "../images/middle-bkg.png"
+        "../images/middle-circle.png"
+        "../images/right_dial.png"
+        "../images/top_bar.png"
 )
 
 install(TARGETS instrument-cluster

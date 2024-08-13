@@ -12,7 +12,7 @@ Window {
 
     width: 1920
     height: 720
-    title: qsTr("QtIF Instrument Cluster Chapter 6")
+    title: qsTr("QtIF Instrument Cluster Chapter 7")
     visible: true
     color: "#0c0c0c"
 

@@ -16,6 +16,10 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::InterfaceFramework
 )
 
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_PLUGIN_CLASS_NAME
+    {{module.module_name|upperfirst}}DBusPlugin
+)
+
 if (TARGET ${CURRENT_TARGET})
 {% for interface in module.interfaces %}
     set_source_files_properties({{interface.tags.config_dbus.xml}} PROPERTIES INCLUDE dbus_conversion.h)

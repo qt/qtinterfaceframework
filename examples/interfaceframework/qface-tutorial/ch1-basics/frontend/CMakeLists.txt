@@ -1,12 +1,3 @@
-set(CMAKE_AUTOMOC ON)
-
-if(NOT DEFINED INSTALL_EXAMPLESDIR)
-    set(INSTALL_EXAMPLESDIR "examples")
-endif()
-
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/ch1-basics")
-
-find_package(Qt6 REQUIRED COMPONENTS Core InterfaceFramework Qml Quick)
 
 qt_add_library(libIc_ch1)
 set_target_properties(libIc_ch1 PROPERTIES OUTPUT_NAME "InstrumentCluster")

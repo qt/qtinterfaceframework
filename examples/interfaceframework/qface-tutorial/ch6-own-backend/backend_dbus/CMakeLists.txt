@@ -1,15 +1,5 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(CMAKE_AUTOMOC ON)
-
-if(NOT DEFINED INSTALL_EXAMPLESDIR)
-    set(INSTALL_EXAMPLESDIR "examples")
-endif()
-
-set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/interfaceframework/qface-tutorial/chapter6-own-backend/interfaceframework/")
-
-find_package(Qt6 REQUIRED COMPONENTS Core DBus Gui InterfaceFramework)
-
 qt_add_plugin(ic_chapter6_dbus PLUGIN_TYPE interfaceframework)
 set_target_properties(ic_chapter6_dbus PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
@@ -40,7 +30,7 @@ target_link_libraries(ic_chapter6_dbus PUBLIC
 )
 
 install(TARGETS ic_chapter6_dbus
-    RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
-    BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
-    LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
+    RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
+    BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
+    LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
 )
