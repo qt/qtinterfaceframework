@@ -90,7 +90,7 @@ QIfAbstractZonedFeaturePrivate::QIfAbstractZonedFeaturePrivate(const QString &in
 
 /*!
     \qmltype AbstractZonedFeature
-    \instantiates QIfAbstractZonedFeature
+    \nativetype QIfAbstractZonedFeature
     \inqmlmodule QtInterfaceFramework
     \inherits AbstractFeature
     \brief The AbstractZonedFeature is not directly accessible. The QML type provides

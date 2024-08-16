@@ -33,7 +33,7 @@ QObject* qtinterfaceframeworkmodule_singletontype_provider(QQmlEngine*, QJSEngin
 
 /*!
     \qmltype QtInterfaceFramework
-    \instantiates QtInterfaceFrameworkModule
+    \nativetype QtInterfaceFrameworkModule
     \inqmlmodule QtInterfaceFramework
 
     \brief The QtInterfaceFramework singleton holds enums, which are used by multiple Items of the QtInterfaceFramework module.

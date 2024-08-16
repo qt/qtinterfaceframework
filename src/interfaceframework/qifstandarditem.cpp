@@ -26,7 +26,7 @@ public:
 /*!
     \qmltype StandardItem
     \qmlabstract
-    \instantiates QIfStandardItem
+    \nativetype QIfStandardItem
     \inqmlmodule QtInterfaceFramework
     \brief The StandardItem is the base class of a row in the PagingModel and derived models.
 

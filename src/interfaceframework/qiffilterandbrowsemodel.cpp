@@ -304,7 +304,7 @@ void QIfFilterAndBrowseModelPrivate::updateContentType(const QString &contentTyp
 
 /*!
     \qmltype FilterAndBrowseModel
-    \instantiates QIfFilterAndBrowseModel
+    \nativetype QIfFilterAndBrowseModel
     \inqmlmodule QtInterfaceFramework
     \inherits PagingModel
     \brief The FilterAndBrowseModel is a generic model which can be used to search, browse, filter and sort data.

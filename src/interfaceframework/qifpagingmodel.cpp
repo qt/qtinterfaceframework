@@ -310,7 +310,7 @@ QIfPagingModelInterface *QIfPagingModelPrivate::backend() const
 
 /*!
     \qmltype PagingModel
-    \instantiates QIfPagingModel
+    \nativetype QIfPagingModel
     \inqmlmodule QtInterfaceFramework
     \inherits AbstractFeatureListModel
     \brief The PagingModel is a generic model to load its data using the "Paging" aproach.

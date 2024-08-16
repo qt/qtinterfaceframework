@@ -115,7 +115,7 @@ QIfFeatureInterface *QIfAbstractFeatureListModelPrivate::backend() const
 
 /*!
     \qmltype AbstractFeatureListModel
-    \instantiates QIfAbstractFeatureListModel
+    \nativetype QIfAbstractFeatureListModel
     \inqmlmodule QtInterfaceFramework
 
     \brief The QIfAbstractFeatureListModel is the base class for QtInterfaceFramework Features which should act as a model.
