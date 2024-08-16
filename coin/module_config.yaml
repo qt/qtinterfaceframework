@@ -71,6 +71,13 @@ instructions:
       contains_value: lcov
 
   Test:
+    - type: AppendToEnvironmentVariable
+      variableName: COIN_DOC_CMAKE_ARGS
+      variableValue: " -DQT_BUILD_EXAMPLES=ON"
+      enable_if:
+        condition: property
+        property: features
+        contains_value: TestDocs
     - type: Group
       instructions:
         - !include "{{qt/qtbase}}/coin_module_test_template_v3.yaml"
