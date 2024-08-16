@@ -28,7 +28,7 @@ using namespace Qt::StringLiterals;
 
 /*!
     \qmltype {{interface|qml_type}}
-    \instantiates {{interface}}
+    \nativetype {{interface}}
     \inqmlmodule {{module|qml_type}}
 {% if interface.tags.config.zoned %}
     \inherits AbstractZonedFeature

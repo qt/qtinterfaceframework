@@ -549,7 +549,7 @@ Backend *QIfServiceManagerPrivate::verifyHandle(void *handle)
 */
 /*!
     \qmltype ServiceObjectHandle
-    \instantiates QIfServiceObjectHandle
+    \nativetype QIfServiceObjectHandle
     \inqmlmodule QtInterfaceFramework
     \since 6.8
     \brief The handle to a ServiceObject.
@@ -693,7 +693,7 @@ QIfServiceObjectHandle::QIfServiceObjectHandle(void *handle)
 
 /*!
     \qmltype ServiceManager
-    \instantiates QIfServiceManager
+    \nativetype QIfServiceManager
     \inqmlmodule QtInterfaceFramework
     \brief The central instance that loads the backends and provides ServiceObjects.
 

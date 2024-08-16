@@ -138,7 +138,7 @@ void QIfPendingReplyWatcherPrivate::callFailedCallback()
 /*!
     \qmltype PendingReply
     \qmlabstract
-    \instantiates QIfPendingReply
+    \nativetype QIfPendingReply
     \inqmlmodule QtInterfaceFramework
 
     \brief An object representing asynchronous results.

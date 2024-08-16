@@ -20,7 +20,7 @@
 */
 /*!
     \qmltype {{qml_name}}
-    \instantiates {{class}}
+    \nativetype {{class}}
     \inqmlmodule {{module|qml_type}}
 
     \brief The {{qml_name}} singleton holds all the enums defined in the {{module}} module and

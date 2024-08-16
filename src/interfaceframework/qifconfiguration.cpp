@@ -602,7 +602,7 @@ QIfConfigurationPrivate::QIfConfigurationPrivate(QIfConfiguration *parent)
 
 /*!
     \qmltype InterfaceFrameworkConfiguration
-    \instantiates QIfConfiguration
+    \nativetype QIfConfiguration
     \inqmlmodule QtInterfaceFramework
     \since 6.5
 

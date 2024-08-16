@@ -24,7 +24,7 @@ QT_BEGIN_NAMESPACE
 */
 /*!
     \qmltype ServiceObject
-    \instantiates QIfServiceObject
+    \nativetype QIfServiceObject
     \inqmlmodule QtInterfaceFramework
 
     \brief Provides the connection point to a Backend Service.

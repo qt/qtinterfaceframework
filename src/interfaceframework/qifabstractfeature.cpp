@@ -282,7 +282,7 @@ void QIfAbstractFeaturePrivate::onServiceObjectFailure()
 /*!
     \qmltype AbstractFeature
     \qmlabstract
-    \instantiates QIfAbstractFeature
+    \nativetype QIfAbstractFeature
     \inqmlmodule QtInterfaceFramework
 
     \brief The AbstractFeature is not directly accessible. The QML type provides
