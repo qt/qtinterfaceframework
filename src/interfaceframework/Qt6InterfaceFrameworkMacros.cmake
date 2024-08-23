@@ -321,16 +321,9 @@ function(qt6_ifcodegen_generate)
     endif()
 
     # Show qface and annotations in IDE
-    # If the generate function is called directly ${generator_target} is not defined and we will
-    # fallback to the IDL base name
-    set(IDE_PREFIX ${generator_target})
-    if (NOT IDE_PREFIX)
-        set(IDE_PREFIX ${IFCODEGEN_BASE_NAME})
-    endif()
-    if (NOT TARGET ${IDE_PREFIX}_qface_files)
-        add_custom_target(${IDE_PREFIX}_qface_files SOURCES
-            ${IDE_FILES}
-        )
+    if (TARGET ${generator_target})
+        source_group("Ifcodegen Files" FILES ${IDE_FILES})
+        target_sources(${generator_target} PRIVATE ${IDE_FILES})
     endif()
 
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${GEN_DEPENDENCIES})
