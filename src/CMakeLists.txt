@@ -1,6 +1,5 @@
 qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/interfaceframework/configure.cmake")
 
-add_subdirectory(3rdparty)
 if(QT_FEATURE_interfaceframework AND QT_FEATURE_ifcodegen)
     add_subdirectory(tools/ifcodegen)
 endif()
