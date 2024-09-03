@@ -4,7 +4,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-qt6_ifcodegen_add_plugin(echo_backend_simulator_static
+qt_ifcodegen_add_plugin(echo_backend_simulator_static
     STATIC
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE backend_simulator
