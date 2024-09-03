@@ -86,8 +86,28 @@ install(TARGETS remote remote_frontend remote-server
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}"
 )
+
 install(TARGETS remote_backend_qtro
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
+)
+
+if (TARGET remote_frontendplugin)
+    set_target_properties(remote_frontendplugin
+        PROPERTIES
+            INSTALL_RPATH "$ORIGIN/../../../"
+    )
+
+    install(
+        TARGETS remote_frontendplugin
+        LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/RemoteModule"
+        RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/RemoteModule"
+        BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/RemoteModule"
+    )
+endif()
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/Example/If/RemoteModule/qmldir
+    DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/RemoteModule"
 )

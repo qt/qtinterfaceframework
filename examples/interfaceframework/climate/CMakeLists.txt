@@ -81,3 +81,22 @@ install(TARGETS climate_backend_simulator
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
 )
+
+if (TARGET climate_frontendplugin)
+    set_target_properties(climate_frontendplugin
+        PROPERTIES
+            INSTALL_RPATH "$ORIGIN/../../../"
+    )
+
+    install(
+        TARGETS climate_frontendplugin
+        LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/ClimateModule"
+        RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/ClimateModule"
+        BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/ClimateModule"
+    )
+endif()
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/Example/If/ClimateModule/qmldir
+    DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/ClimateModule"
+)
