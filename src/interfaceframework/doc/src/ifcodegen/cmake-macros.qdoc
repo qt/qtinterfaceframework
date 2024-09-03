@@ -20,7 +20,7 @@ find_package(Qt6 REQUIRED COMPONENTS InterfaceFramework)
 \ingroup cmake-commands-qtinterfaceframework
 
 \title qt_set_ifcodegen_variable
-\target qt6_set_ifcodegen_variable
+\keyword qt6_set_ifcodegen_variable
 
 \summary {Sets the variable to the given value within an ifcodegen template.}
 
@@ -48,7 +48,7 @@ are exported to the current scope when using
 \ingroup cmake-commands-qtinterfaceframework
 
 \title qt_ifcodegen_generate
-\target qt6_ifcodegen_generate
+\keyword qt6_ifcodegen_generate
 
 \summary {Generates files from a qface IDL file.}
 
@@ -115,7 +115,7 @@ For more details on the generator's command line arguments, see \l {Use the Gene
 \ingroup cmake-commands-qtinterfaceframework
 
 \title qt_ifcodegen_extend_target
-\target qt6_ifcodegen_extend_target
+\keyword qt6_ifcodegen_extend_target
 
 \summary {Extends a target with files generated from a qface IDL file.}
 
@@ -167,7 +167,7 @@ For more details on the generator's command line arguments, see \l {Use the Gene
 \ingroup cmake-commands-qtinterfaceframework
 
 \title qt_ifcodegen_import_variables
-\target qt6_ifcodegen_import_variables
+\keyword qt6_ifcodegen_import_variables
 
 \summary {Generates files from a qface IDL file and provides variables for use within CMake.}
 
