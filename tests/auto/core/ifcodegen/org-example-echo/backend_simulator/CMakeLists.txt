@@ -8,7 +8,7 @@ qt_add_plugin(echo_simulator)
 set_target_properties(echo_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(echo_simulator
+qt_ifcodegen_extend_target(echo_simulator
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE backend_simulator
 )

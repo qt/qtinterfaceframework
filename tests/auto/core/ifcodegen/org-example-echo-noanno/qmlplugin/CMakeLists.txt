@@ -5,7 +5,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Interface Framework Generator:
-qt6_ifcodegen_import_variables(ECHO_NOANNO
+qt_ifcodegen_import_variables(ECHO_NOANNO
     IDL_FILES ../../org.example.echo.noannotation.qface
     TEMPLATE qmlplugin
 )

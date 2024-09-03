@@ -27,9 +27,9 @@ target_sources(IfRemoteObjectsHelper
   PRIVATE
     qtifremoteobjectshelper_global.h
 )
-qt6_add_repc_sources(IfRemoteObjectsHelper
+qt_add_repc_sources(IfRemoteObjectsHelper
     qifpagingmodel.rep
 )
-qt6_add_repc_replicas(IfRemoteObjectsHelper
+qt_add_repc_replicas(IfRemoteObjectsHelper
     qifpagingmodel.rep
 )

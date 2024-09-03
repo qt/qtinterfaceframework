@@ -16,7 +16,7 @@ target_sources(org-example-echo-qtro-server
 )
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(org-example-echo-qtro-server
+qt_ifcodegen_extend_target(org-example-echo-qtro-server
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE server_qtro
 )

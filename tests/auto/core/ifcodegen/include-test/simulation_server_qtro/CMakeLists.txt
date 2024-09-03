@@ -7,7 +7,7 @@ set(CMAKE_AUTOUIC ON)
 qt_add_executable(include-test-simulation-server)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(include-test-simulation-server
+qt_ifcodegen_extend_target(include-test-simulation-server
     IDL_FILES ../../include-test.qface
     TEMPLATE server_qtro_simulator
     IDL_IMPORT_PATH ../../qface\ imports

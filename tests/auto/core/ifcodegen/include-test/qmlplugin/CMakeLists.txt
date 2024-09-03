@@ -5,7 +5,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Interface Framework Generator:
-qt6_ifcodegen_import_variables(INCLUDE_TEST
+qt_ifcodegen_import_variables(INCLUDE_TEST
     IDL_FILES ../../include-test.qface
     TEMPLATE qmlplugin
     IDL_IMPORT_PATH ../../qface\ imports

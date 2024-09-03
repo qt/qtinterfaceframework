@@ -5,7 +5,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Interface Framework Generator:
-qt6_ifcodegen_import_variables(ECHO_NOPRIVATE
+qt_ifcodegen_import_variables(ECHO_NOPRIVATE
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE qmlplugin
     ANNOTATION_FILES ../../no-private.yaml

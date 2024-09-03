@@ -4,10 +4,10 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-qt6_add_library(echo_flat_frontend)
+qt_add_library(echo_flat_frontend)
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(echo_flat_frontend
+qt_ifcodegen_extend_target(echo_flat_frontend
     IDL_FILES ../org.example.echo.qface
     PREFIX ECHO
     TEMPLATE frontend
@@ -22,7 +22,7 @@ target_sources(echo_flat_simulator PRIVATE
 )
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(echo_flat_simulator
+qt_ifcodegen_extend_target(echo_flat_simulator
     IDL_FILES ../org.example.echo.qface
     TEMPLATE backend_simulator
 )
@@ -45,7 +45,7 @@ qt_internal_add_test(tst_flat-cmake-hierarchy
 )
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(tst_flat-cmake-hierarchy
+qt_ifcodegen_extend_target(tst_flat-cmake-hierarchy
     IDL_FILES ../org.example.echo.qface
     TEMPLATE test
 )

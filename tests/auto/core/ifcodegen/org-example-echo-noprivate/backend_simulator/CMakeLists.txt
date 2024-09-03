@@ -11,7 +11,7 @@ target_sources(echo_noprivate_simulator PRIVATE
 )
 
 # Interface Framework Generator:
-qt6_ifcodegen_extend_target(echo_noprivate_simulator
+qt_ifcodegen_extend_target(echo_noprivate_simulator
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE backend_simulator
     ANNOTATION_FILES ../../no-private.yaml
