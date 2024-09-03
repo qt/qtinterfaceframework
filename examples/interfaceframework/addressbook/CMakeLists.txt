@@ -73,3 +73,22 @@ install(TARGETS addressbook_backend_simulator
     BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
     LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}/interfaceframework"
 )
+
+if (TARGET addressbook_frontendplugin)
+    set_target_properties(addressbook_frontendplugin
+        PROPERTIES
+            INSTALL_RPATH "$ORIGIN/../../../"
+    )
+
+    install(
+        TARGETS addressbook_frontendplugin
+        LIBRARY DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/AddressBookModule"
+        RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/AddressBookModule"
+        BUNDLE DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/AddressBookModule"
+    )
+endif()
+
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/Example/If/AddressBookModule/qmldir
+    DESTINATION "${INSTALL_EXAMPLEDIR}/Example/If/AddressBookModule"
+)
