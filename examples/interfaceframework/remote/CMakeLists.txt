@@ -80,6 +80,8 @@ target_link_libraries(remote-server PRIVATE
 set_property(TARGET remote APPEND PROPERTY QT_ANDROID_EXTRA_PLUGINS
     "${CMAKE_CURRENT_BINARY_DIR}/interfaceframework"
 )
+set(QT_USE_TARGET_ANDROID_BUILD_DIR TRUE CACHE BOOL
+    "Support multiple apk targets in one folder")
 
 install(TARGETS remote remote_frontend remote-server
     RUNTIME DESTINATION "${INSTALL_EXAMPLEDIR}"
