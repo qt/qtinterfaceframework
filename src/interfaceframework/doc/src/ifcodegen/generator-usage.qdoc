@@ -394,7 +394,7 @@
             \target config_simulator_defaultServerMode
             \code
             config_simulator:
-                defaultApplicationMode: "gui"
+                defaultServerMode: "gui"
             \endcode
             \li Accompanying YAML file
             \li Module
