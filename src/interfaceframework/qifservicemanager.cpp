@@ -96,6 +96,13 @@ namespace qtif_helper {
 
 using namespace qtif_helper;
 
+Backend::~Backend()
+{
+    delete interface;
+    delete proxyServiceObject;
+    delete loader;
+}
+
 QIfServiceManagerPrivate::QIfServiceManagerPrivate(QIfServiceManager *parent)
     : QObject(parent)
     , m_staticLoaded(false)
@@ -227,10 +234,6 @@ void QIfServiceManagerPrivate::registerBackend(const QString &fileName, const QJ
     backend->name =  metaData.value(classNameLiteral).toString();
     backend->debug = metaData.value(debugLiteral).toBool();
     backend->metaData = backendMetaData;
-    backend->interface = nullptr;
-    backend->interfaceObject = nullptr;
-    backend->loader = nullptr;
-    backend->proxyServiceObject = nullptr;
     addBackend(backend);
 }
 
@@ -256,9 +259,6 @@ void QIfServiceManagerPrivate::registerStaticBackend(QStaticPlugin plugin)
     backend->debug = plugin.metaData().value(debugLiteral).toBool();
     backend->metaData = backendMetaData;
     backend->interface = backendInterface;
-    backend->interfaceObject = nullptr;
-    backend->loader = nullptr;
-    backend->proxyServiceObject = nullptr;
     addBackend(backend);
 }
 
@@ -282,12 +282,8 @@ bool QIfServiceManagerPrivate::registerBackend(QObject *serviceBackendInterface,
 
     auto *backend = new Backend;
     backend->name = QString::fromLocal8Bit(serviceBackendInterface->metaObject()->className());
-    backend->debug = false;
     backend->metaData = metaData;
     backend->interface = interface;
-    backend->interfaceObject = serviceBackendInterface;
-    backend->loader = nullptr;
-    backend->proxyServiceObject = nullptr;
 
     addBackend(backend);
     return true;
@@ -300,14 +296,6 @@ void QIfServiceManagerPrivate::unloadAllBackends()
     q->beginResetModel();
     for (Backend* backend : qAsConst(m_backends)) {
 
-        //If the Interface is from a Plugin, the Plugin owns it and it will be deleted when unloading.
-        //Otherwise we own the Interface and delete the Pointer.
-        if (backend->loader) {
-            backend->loader->unload();
-            delete backend->loader;
-        }
-        delete backend->interfaceObject;
-        delete backend->proxyServiceObject;
         delete backend;
     }
     m_backends.clear();

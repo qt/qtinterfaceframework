@@ -35,7 +35,7 @@ import sys
 import fnmatch
 import click
 import logging.config
-from path import Path
+from pathlib import Path
 
 from qface.generator import FileSystem, Generator
 from qface.watch import monitor
@@ -46,7 +46,7 @@ import generator.global_functions as global_functions
 from generator.filters import register_filters
 from generator.rule_generator import CustomRuleGenerator
 
-here = Path(__file__).dirname()
+here = Path(__file__).parent
 
 log = logging.getLogger(__file__)
 
