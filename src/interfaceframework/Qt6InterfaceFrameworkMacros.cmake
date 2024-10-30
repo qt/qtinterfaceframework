@@ -429,6 +429,7 @@ function(qt6_ifcodegen_generate)
         list(APPEND GENERATOR_ARGUMENTS --module=${ARG_MODULE_NAME})
     endif()
 
+    list(APPEND GENERATOR_ARGUMENTS --target-platform=${CMAKE_SYSTEM_NAME})
     # Show qface and annotations in IDE
     if (TARGET ${generator_target})
         source_group("Ifcodegen Files" FILES ${IDE_FILES})

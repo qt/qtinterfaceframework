@@ -74,6 +74,11 @@
                 the information required when importing a module; this is similar to how C++ include
                 paths work.
         \row
+            \li -P, --target-platform <target-platform>
+            \li Specifies the target system architecture for generating files, using values compatible with
+                \l {https://cmake.org/cmake/help/latest/variable/CMAKE_SYSTEM_NAME.html}{CMAKE_SYSTEM_NAME}.
+                Possible values include Windows, Linux, Android, iOS, and others as defined by CMake.
+        \row
             \li source
             \li Path or paths to the IDL source files. If there are multiple entries, each one is
                 handled. If a directory path is provided, it's scanned for IDL files.

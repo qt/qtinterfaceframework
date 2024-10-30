@@ -85,7 +85,7 @@ def deprecateAnnotation(type, annotation, sinceVersion):
         'sinceVersion': sinceVersion
     }
 
-def generate(template_search_paths, tplconfig, moduleConfig, annotations, imports, src, dst):
+def generate(template_search_paths, tplconfig, moduleConfig, annotations, imports, src, dst, target_platform):
     log.debug('run {0} {1}'.format(src, dst))
     FileSystem.strict = True
     Generator.strict = True
@@ -116,7 +116,8 @@ def generate(template_search_paths, tplconfig, moduleConfig, annotations, import
        'qtASVersion': builtin_config.config["VERSION"],
        'ifcodegenVersion': builtin_config.config["VERSION"],
        'srcFile': srcFile,
-       'srcBase': srcBase
+       'srcBase': srcBase,
+       'targetPlatform': target_platform  # Add target_platform to context
     }
     search_path = [tplconfig]
     # In case tplconfig is a path, we also want to add the containing folder to the search-path
@@ -170,7 +171,7 @@ def generate(template_search_paths, tplconfig, moduleConfig, annotations, import
     generator.process_rules(os.path.dirname(tplconfig) + '/{0}.yaml'.format(os.path.basename(tplconfig)), system)
 
 
-def run(template_search_paths, template, moduleConfig, annotations, imports, src, dst):
+def run(template_search_paths, template, moduleConfig, annotations, imports, src, dst, target_platform):
     templatePath = template
 
     foundTemplates = {}
@@ -184,7 +185,7 @@ def run(template_search_paths, template, moduleConfig, annotations, imports, src
         templatePath = foundTemplates[template]
 
     if os.path.exists(templatePath):
-        generate(template_search_paths, templatePath, moduleConfig, annotations, imports, src, dst)
+        generate(template_search_paths, templatePath, moduleConfig, annotations, imports, src, dst, target_platform)
     else:
         print('Invalid Template: {0}. It either needs to be one of the templates found in the template'
               'search path or an existing template folder. The following templates have been found: {1}'
@@ -252,7 +253,7 @@ def self_check(ctx, param, value):
             {{interface.name}}
             """)
 
-        run([tmp], 'selfcheck', {"module": "org.selftest", "force": True}, [], [], [tmp / "test.qface"], tmp)
+        run([tmp], 'selfcheck', {"module": "org.selftest", "force": True}, [], [], [tmp / "test.qface"], tmp, "test_platform")
         click.echo('Self check finished successfully.')
     except Exception as e:
         raise SystemExit("""
@@ -300,10 +301,11 @@ def self_check(ctx, param, value):
 @click.option('--selfcheck', is_flag=True, default=False, callback=self_check, expose_value=False, is_eager=True, help=
     'Runs a self check using a builtin qface file and template to verify that the generator is '
     'working correctly. ')
+@click.option('--target-platform', '-P', help='Specify the target platform for the generation.')
 @click.argument('src', nargs=-1, type=click.Path(exists=True))
 @click.argument('dst', nargs=1, type=click.Path(exists=True))
 
-def app(src, dst, template_search_paths, template, reload, module, force, annotations, imports):
+def app(src, dst, template_search_paths, template, reload, module, force, annotations, imports, target_platform):
     """
     The QtInterfaceFramework Autogenerator (ifcodegen)
 
@@ -322,7 +324,7 @@ def app(src, dst, template_search_paths, template, reload, module, force, annota
             "module": module,
             "force": force
         }
-        run(template_search_paths, template, moduleConfig, annotations, imports, src, dst)
+        run(template_search_paths, template, moduleConfig, annotations, imports, src, dst, target_platform)
 
 if __name__ == '__main__':
     app()
