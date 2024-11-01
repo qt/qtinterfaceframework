@@ -59,7 +59,6 @@ configparser.py
 contextlib.py
 crypt.py
 csv.py
-dataclasses.py
 datetime.py
 decimal.py
 difflib.py
