@@ -16,9 +16,14 @@ CmdListener::CmdListener(QObject *parent)
             emit newCmd(cmd);
         }
     });
-    connect(socket, &QLocalSocket::disconnected, [socket]() {
+    m_reconnectingConnection = connect(socket, &QLocalSocket::disconnected, [socket]() {
         socket->connectToServer("qifcmdsocket");
     });
+}
+
+CmdListener::~CmdListener()
+{
+    disconnect(m_reconnectingConnection);
 }
 
 #include "moc_cmdlistener.cpp"
