@@ -15,9 +15,13 @@ class CMDLISTENER_EXPORT CmdListener : public QObject
 
 public:
     explicit CmdListener(QObject *parent = nullptr);
+    virtual ~CmdListener() override;
 
 Q_SIGNALS:
     void newCmd(const QString &cmd);
+
+private:
+    QMetaObject::Connection m_reconnectingConnection;
 };
 
 #endif // CMDLISTENER_H
