@@ -7,7 +7,7 @@ set(CMAKE_AUTOUIC ON)
 function(internal_add_backend_test target sources)
     qt_internal_add_test(${target}
         SOURCES
-            ${sources} backendstestbase.cpp backendstestbase.h
+            ${sources} ${ARGN} backendstestbase.cpp backendstestbase.h
         LIBRARIES
             echo_qtro_frontend
         WORKING_DIRECTORY
@@ -30,8 +30,14 @@ internal_add_backend_test(tst_simulation_backend
 if (QT_FEATURE_remoteobjects)
     internal_add_backend_test(tst_qtro_backend
         tst_qtro_backend.cpp
+        rotestbase.cpp rotestbase.h
     )
-    target_link_libraries(tst_qtro_backend PRIVATE echo_backend_qtro_static)
+
+    internal_add_backend_test(tst_qtro_backend_static
+        tst_qtro_backend_static.cpp
+        rotestbase.cpp rotestbase.h
+    )
+    target_link_libraries(tst_qtro_backend_static PRIVATE echo_backend_qtro_static)
 endif()
 
 add_custom_target(tst_backends_extra_files
