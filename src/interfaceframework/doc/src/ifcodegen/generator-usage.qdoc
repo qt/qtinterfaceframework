@@ -345,6 +345,18 @@
                 interfaces inside that module, but it can be overridden per interface by defining it
                 there as well.
                 Defaults to \c module.name
+        \row
+            \li
+            \target config_defaultServerMode
+            \code
+            @config: { defaultServerMode : "gui" }
+            \endcode
+            \li Main IDL file
+            \li Module
+            \li Defines the default mode used by the server generated from the
+                \l{QtRemoteObjects Simulation Server}{server_qtro_simulator}
+                and {QtRemoteObjects Server} {server_qtro}
+                templates. Valid options are "gui", "headless" (default) or "android" (for the Android target platform).
     \endtable
 
     Annotations that are not logically part of the interface description, but rather the ones used
@@ -394,18 +406,6 @@
             \li Defines which simulation QML file the simulation backend should load. The snippet
                 provided loads the QML file from the resource system, which the developer needs to
                 embed.
-        \row
-            \li
-            \target config_simulator_defaultServerMode
-            \code
-            config_simulator:
-                defaultServerMode: "gui"
-            \endcode
-            \li Accompanying YAML file
-            \li Module
-            \li Defines the default mode used by the server generated from the
-                \l{QtRemoteObjects Simulation Server}{server_qtro_simulator}
-                template. Valid options are "gui" or "headless" (default).
         \row
             \li
             \code
@@ -767,7 +767,7 @@
     By default a QCoreApplication is used in the generated server and enables the server to be
     run headless. To also allow instantiating UI controls inside the simulation QML code, the
     server can be started in GUI mode (--gui option). The default mode can be changed using the
-    \l{config_simulator_defaultServerMode} annotation.
+    \l{config_defaultServerMode} annotation.
 
     \table 100%
         \header

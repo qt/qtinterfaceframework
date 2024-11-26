@@ -17,8 +17,24 @@
 #include <QtIfRemoteObjectsHelper/QIfRemoteObjectsConfig>
 #include <QtInterfaceFramework/QIfSimulationEngine>
 
+{% set defaultMode = "headless" %}
+{% set deprecatedCode = false %}
+{% if module.tags.config and module.tags.config.defaultServerMode %}
+{%   set defaultMode = module.tags.config.defaultServerMode %}
+{% elif module.tags.config_simulator and module.tags.config_simulator.defaultServerMode%}
+{%   set defaultMode = module.tags.config_simulator.defaultServerMode %}
+{%   set deprecatedCode = true %}
+Q_LOGGING_CATEGORY(qLcRO, "{{module|qml_type|lower}}.server.remoteobjects", QtInfoMsg)
+{% endif %}
+{% set validModes = ["headless", "gui"] %}
+{% if targetPlatform == "Android" %}
+{%   set validModes = validModes + ['android'] %}
+#include <QtCore/private/qandroidextras_p.h>
+{% endif %}
+{% if defaultMode not in validModes %}
+{{   error("Unknown value in 'defaultServerMode'. Valid modes are: " ~ validModes|join(', ') ~ ".") }}
+{% endif %}
 using namespace Qt::StringLiterals;
-
 {% set ns = module|namespace %}
 {% if ns|length %}
 using namespace {{ns}};
@@ -26,36 +42,32 @@ using namespace {{ns}};
 
 int main(int argc, char *argv[])
 {
-{% if module.tags.config_simulator and module.tags.config_simulator.defaultServerMode %}
-{%   set defaultMode = module.tags.config_simulator.defaultServerMode %}
-{% else %}
-{%   set defaultMode = "headless" %}
+{% if deprecatedCode %}
+    qCInfo(qLcRO) << "Using config_simulator.defaultServerMode is deprecated and will be removed "
+                     "in future Qt versions.";
+    qCInfo(qLcRO) << "Please use the new config.defaultServerMode annotation to configure default server mode.";
 {% endif %}
-{% if defaultMode == "headless" %}
-    bool gui = false;
-{% elif defaultMode == "gui" %}
-    bool gui = true;
-{% else %}
-{{   error("Unknown value in 'config_simulator.defaultServerMode'. Valid modes are: 'headless', 'gui'")}}
-{% endif %}
-    bool guiOptionSet = false;
-    bool headlessOptionSet = false;
-    for (int i=1; i<argc; i++) {
-        if (qstrcmp(argv[i], "--gui") == 0) {
-            gui = true;
-            guiOptionSet = true;
-        } else if (qstrcmp(argv[i], "--headless") == 0) {
-            gui = false;
-            headlessOptionSet = true;
-        }
-    }
 
-    if (guiOptionSet && headlessOptionSet)
-        qFatal("--gui and --headless can't be used at the same time!");
+    const QStringList validModes = { {% for mode in validModes -%}"{{ mode }}"{% if not loop.last %}, {% endif %}{% endfor %} };
+    QString appType = "{{ defaultMode }}";
+    // Loop through the command-line arguments
+    for (int i = 1; i < argc; i++) {
+        if (qstrncmp(argv[i], "--", 2) == 0) {
+            QString mode = QString(argv[i]).mid(2);
+            if (validModes.contains(mode)) {
+                appType = mode;
+                break;
+            }
+         }
+     }
 
     QScopedPointer<QCoreApplication> app;
-    if (gui)
+    if (appType == "gui")
         app.reset(new QGuiApplication(argc, argv));
+{% if targetPlatform == "Android" %}
+    else if(appType =="android")
+        app.reset(new QAndroidService(argc, argv));
+{% endif %}
     else
         app.reset(new QCoreApplication(argc, argv));
 
@@ -69,6 +81,11 @@ int main(int argc, char *argv[])
                                                       "and does NOT allow instantiating visual elements "
                                                       "in the simulation code"_s);
     parser.addOption(headlessOption);
+{% if targetPlatform == "Android" %}
+    QCommandLineOption androidOption(u"android"_s, u"Android mode. Starts using a QAndroidService "
+                                                      "in the simulation code"_s);
+    parser.addOption(androidOption);
+{% endif %}
 
     QCommandLineOption serverUrlOption(u"serverUrl"_s, u"The serverUrl to use for all Remote Objects hosted in this server"_s, u"url"_s);
     parser.addOption(serverUrlOption);

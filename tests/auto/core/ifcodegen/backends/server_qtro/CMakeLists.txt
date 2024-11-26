@@ -19,6 +19,7 @@ target_sources(org-example-echo-qtro-server
 qt_ifcodegen_extend_target(org-example-echo-qtro-server
     IDL_FILES ../../org.example.echo.qface
     TEMPLATE server_qtro
+    ANNOTATION_FILES annotation.yaml
 )
 
 target_link_libraries(org-example-echo-qtro-server

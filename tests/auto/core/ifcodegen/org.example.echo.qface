@@ -1,7 +1,7 @@
 /**
  * module
  */
-@config_simulator: { defaultServerMode: "gui" }
+@config: { defaultServerMode: "gui" }
 @config_server_qtro: { useGeneratedMain: true }
 module org.example.echomodule 1.0
 

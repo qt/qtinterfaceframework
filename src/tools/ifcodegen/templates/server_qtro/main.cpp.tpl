@@ -11,8 +11,27 @@
 
 #include <QtIfRemoteObjectsHelper/QIfRemoteObjectsConfig>
 
+{% set defaultMode = "headless" %}
+{% set deprecatedCode = false %}
+{% if module.tags.config and module.tags.config.defaultServerMode %}
+{%   set defaultMode = module.tags.config.defaultServerMode %}
+{% elif module.tags.config_simulator and module.tags.config_simulator.defaultServerMode%}
+{%   set defaultMode = module.tags.config_simulator.defaultServerMode %}
+{%   set deprecatedCode = true %}
+Q_LOGGING_CATEGORY(qLcRO, "{{module|qml_type|lower}}.server.remoteobjects", QtInfoMsg)
+{% endif %}
+{% set validModes = ["headless", "gui"] %}
+{% if targetPlatform == "Android" %}
+{%   set validModes = validModes + ['android'] %}
+#include <QtCore/private/qandroidextras_p.h>
+{% endif %}
+{% if defaultMode == "gui" %}
+#include <QGuiApplication>
+{% endif %}
+{% if defaultMode not in validModes %}
+{{  error("Unknown value in 'defaultServerMode'. Valid modes are: " ~ validModes|join(', ') ~ ".") }}
+{% endif %}
 using namespace Qt::StringLiterals;
-
 {% set ns = module|namespace %}
 {% if ns|length %}
 using namespace {{ns}};
@@ -22,7 +41,20 @@ void serverMain(QIfRemoteObjectsConfig &config);
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication app(argc, argv);
+{% if deprecatedCode %}
+    qCInfo(qLcRO) << "Using config_simulator.defaultServerMode is deprecated and will be removed "
+                     "in future Qt versions.";
+    qCInfo(qLcRO) << "Please use the new config.defaultServerMode annotation to configure default server mode.";
+{% endif %}
+
+    QScopedPointer<QCoreApplication> app;
+{% if defaultMode == "gui" %}
+    app.reset(new QGuiApplication(argc, argv));
+{% elif defaultMode == "android" %}
+    app.reset(new QAndroidService(argc, argv));
+{% else %}
+    app.reset(new QCoreApplication(argc, argv));
+{% endif %}
 
     QCommandLineParser parser;
     parser.addHelpOption();
