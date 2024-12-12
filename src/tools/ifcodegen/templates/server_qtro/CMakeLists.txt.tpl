@@ -26,6 +26,7 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::InterfaceFramework
     Qt6::RemoteObjects
     Qt6::IfRemoteObjectsHelper
+    Qt6::Gui
 )
 
 if (TARGET ${CURRENT_TARGET})
