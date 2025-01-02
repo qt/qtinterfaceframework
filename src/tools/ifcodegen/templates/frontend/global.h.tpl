@@ -1,7 +1,7 @@
 {#
 # Copyright (C) 2021 The Qt Company Ltd.
 # Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
-# SPDX-License-Identifier: LicenseRef-Qt-Commercial
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #}
 {% set exportsymbol = '{0}'.format(module|upper|replace('.', '_')) %}
 {% set oncedefine = '{0}GLOBAL_H_'.format(exportsymbol) %}
