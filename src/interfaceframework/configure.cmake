@@ -11,6 +11,9 @@ set_property(CACHE INPUT_qface PROPERTY STRINGS undefined no qt system)
 
 #### Libraries
 
+if(TARGET Python3::Interpreter)
+    qt_internal_disable_find_package_global_promotion(Python3::Interpreter)
+endif()
 qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
 
 #### Tests

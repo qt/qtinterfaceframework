@@ -59,6 +59,9 @@ qt_internal_extend_target(InterfaceFramework CONDITION TARGET Qt::QmlModels
 # When the system-qface is used we need to save the location of the used Python3 interpreter in
 # the module pri file, in order to use from qmake
 if(QT_FEATURE_system_qface)
+    if(TARGET Python3::Interpreter)
+        qt_internal_disable_find_package_global_promotion(Python3::Interpreter)
+    endif()
     qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
     set_target_properties(InterfaceFramework PROPERTIES
         QT_MODULE_PRI_EXTRA_CONTENT
