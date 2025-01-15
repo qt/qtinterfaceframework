@@ -13,6 +13,9 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
                             "Please use Ninja as Generator.")
     endif()
 
+    if(TARGET Python3::Interpreter)
+        qt_internal_disable_find_package_global_promotion(Python3::Interpreter)
+    endif()
     qt_find_package(Python3 PROVIDED_TARGETS Python3::Interpreter MODULE_NAME interfaceframework)
 
     set(VIRTUALENV_NAME ifcodegen_venv)
