@@ -35,12 +35,17 @@ QIfConfigurationManager *QIfConfigurationManager::instance()
     return &s_manager;
 }
 
+QIfConfigurationManager::~QIfConfigurationManager()
+{
+    qDeleteAll(m_settingsHash.constBegin(), m_settingsHash.constEnd());
+}
 
 QIfAbstractFeature::DiscoveryMode discoveryModeFromString(const QString &modeString)
 {
     QMetaEnum me = QMetaEnum::fromType<QIfAbstractFeature::DiscoveryMode>();
+    QByteArray modeStringUtf8 = modeString.toUtf8();
     bool ok = false;
-    int value = me.keyToValue(modeString.toUtf8().constData(), &ok);
+    int value = me.keyToValue(modeStringUtf8, &ok);
     if (ok) {
         return static_cast<QIfAbstractFeature::DiscoveryMode>(value);
     } else {
@@ -61,9 +66,11 @@ QVariantMap QIfConfigurationManager::readGroup(QSettings *settings, QAnyStringVi
 {
     QVariantMap map;
     settings->beginGroup(group);
-    for (const QString& key : settings->childKeys())
+    const auto keys = settings->childKeys();
+    const auto groups = settings->childGroups();
+    for (const QString& key : keys)
         map.insert(key, settings->value(key));
-    for (const QString& group : settings->childGroups())
+    for (const QString& group : groups)
         map.insert(group, readGroup(settings, group));
     settings->endGroup();
     return map;
@@ -75,7 +82,8 @@ void QIfConfigurationManager::readInitialSettings(const QString &configPath)
 
     QSettings settings(configPath, QSettings::IniFormat);
 
-    for (const QString& group : settings.childGroups()) {
+    const auto groups = settings.childGroups();
+    for (const QString& group : groups) {
         auto settingsObject = new QIfSettingsObject;
 
         settings.beginGroup(group);
@@ -95,8 +103,10 @@ void QIfConfigurationManager::readInitialSettings(const QString &configPath)
 
         if (discoveryModeVariant.isValid()) {
             auto discoveryMode = discoveryModeFromString(discoveryModeVariant.toString());
-            if (discoveryMode == QIfAbstractFeature::InvalidAutoDiscovery)
+            if (discoveryMode == QIfAbstractFeature::InvalidAutoDiscovery) {
+                delete settingsObject;
                 return;
+            }
             settingsObject->discoveryMode = discoveryMode;
             settingsObject->discoveryModeSet = true;
         }
@@ -316,7 +326,7 @@ bool QIfConfigurationManager::setServiceObject(QIfSettingsObject *so, QIfService
     return true;
 }
 
-void QIfConfigurationManager::parseEnv(const QByteArray &rulesSrc, std::function<void(const QString &, const QString &)> func)
+void QIfConfigurationManager::parseEnv(const QByteArray &rulesSrc, const std::function<void(const QString &, const QString &)> &func)
 {
     const QString content = QString::fromLocal8Bit(rulesSrc);
     const auto lines = content.split(QLatin1Char(';'));

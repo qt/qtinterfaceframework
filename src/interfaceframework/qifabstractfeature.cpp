@@ -737,9 +737,9 @@ bool QIfAbstractFeature::acceptServiceObject(QIfServiceObject *serviceObject)
 
     When reimplementing please keep in mind to connect all signals before calling this function. e.g.
 
-   /code
+    \code
     void SimpleFeature::connectToServiceObject(QIfServiceObject *serviceObject)
-   {
+    {
         SimpleFeatureBackendInterface *backend = backend(serviceObject);
         if (!backend)
             return;
@@ -752,8 +752,8 @@ bool QIfAbstractFeature::acceptServiceObject(QIfServiceObject *serviceObject)
         QIfAbstractFeature::connectToServiceObject(serviceObject);
 
         // Additional initialization functions can be added here
-   }
-   /endcode
+    }
+    \endcode
 
     \sa acceptServiceObject(), disconnectFromServiceObject(), clearServiceObject()
 */

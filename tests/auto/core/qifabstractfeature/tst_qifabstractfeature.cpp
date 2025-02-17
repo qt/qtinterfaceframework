@@ -218,9 +218,9 @@ private:
     QIfFeatureTester *createTester(bool testBaseFunctions = false)
     {
         if (m_isModel)
-            return new QIfFeatureTester(new TestFeatureListModel(testBaseFunctions));
+            return new QIfFeatureTester(new TestFeatureListModel(testBaseFunctions, this), this);
         else
-            return new QIfFeatureTester(new TestFeature(testBaseFunctions));
+            return new QIfFeatureTester(new TestFeature(testBaseFunctions, this), this);
     }
 
     QIfServiceManager *m_manager;
@@ -387,9 +387,9 @@ void BaseTest::testAutoDiscovery_qml()
     QVERIFY2(obj, qPrintable(component.errorString()));
     QIfFeatureTester *defaultItem;
     if (m_isModel)
-        defaultItem = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("default"));
+        defaultItem = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("default"), this);
     else
-        defaultItem = new QIfFeatureTester(obj->findChild<TestFeature*>("default"));
+        defaultItem = new QIfFeatureTester(obj->findChild<TestFeature*>("default"), this);
     QVERIFY(defaultItem);
     QCOMPARE(defaultItem->discoveryMode(), QIfAbstractFeature::AutoDiscovery);
     QVERIFY(defaultItem->serviceObject());
@@ -397,9 +397,9 @@ void BaseTest::testAutoDiscovery_qml()
 
     QIfFeatureTester *autoDiscoveryDisabledItem;
     if (m_isModel)
-        autoDiscoveryDisabledItem = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("autoDiscoveryDisabled"));
+        autoDiscoveryDisabledItem = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("autoDiscoveryDisabled"), this);
     else
-        autoDiscoveryDisabledItem = new QIfFeatureTester(obj->findChild<TestFeature*>("autoDiscoveryDisabled"));
+        autoDiscoveryDisabledItem = new QIfFeatureTester(obj->findChild<TestFeature*>("autoDiscoveryDisabled"), this);
     QVERIFY(autoDiscoveryDisabledItem);
     QSignalSpy autoDiscoveryChanged(autoDiscoveryDisabledItem, &QIfFeatureTester::discoveryModeChanged);
     QSignalSpy serviceObjectChangedSpy(autoDiscoveryDisabledItem, &QIfFeatureTester::serviceObjectChanged);
@@ -414,6 +414,7 @@ void BaseTest::testAutoDiscovery_qml()
 
     delete defaultItem;
     delete autoDiscoveryDisabledItem;
+    delete obj;
 }
 
 void BaseTest::testProxyServiceObject()

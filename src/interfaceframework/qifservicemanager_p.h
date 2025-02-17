@@ -61,7 +61,7 @@ public:
     QList<QIfServiceObject*> findServiceByInterface(const QString &interface, QIfServiceManager::SearchFlags searchFlags, const QStringList &preferredBackends) const;
 
     void searchPlugins();
-    void registerStaticBackend(QStaticPlugin plugin);
+    void registerStaticBackend(const QStaticPlugin &plugin);
     void registerBackend(const QString &fileName, const QJsonObject &metaData);
     bool registerBackend(QObject *serviceBackendInterface, const QStringList &interfaces, QIfServiceManager::BackendType backendType);
     void addBackend(struct Backend *backend);
