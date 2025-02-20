@@ -203,7 +203,7 @@ QIfZonedFeatureInterface *QIfAbstractZonedFeature::backend(const QString &interf
 */
 
 /*!
-    \qmlproperty QString AbstractZonedFeature::zone
+    \qmlproperty string AbstractZonedFeature::zone
 
     \brief Name of the zone for this zoned feature.
 
@@ -286,7 +286,7 @@ void QIfAbstractZonedFeature::initializeZones(const QStringList &zones)
 }
 
 /*!
-    \qmlproperty QStringList AbstractZonedFeature::availableZones
+    \qmlproperty list<string> AbstractZonedFeature::availableZones
 
     Holds a list of the available zones.
 */
@@ -349,7 +349,7 @@ QVariantMap QIfAbstractZonedFeature::zoneFeatureMap() const
 }
 
 /*!
-    \qmlproperty QVariantList AbstractZonedFeature::zones
+    \qmlproperty list<var> AbstractZonedFeature::zones
 
     Provides access to the feature zones model.
 
