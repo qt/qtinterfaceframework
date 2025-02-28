@@ -6,6 +6,7 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls.Basic
+import QtQuick.Controls.impl
 import QtQuick.Layouts
 import Example.If.ClimateModule
 
