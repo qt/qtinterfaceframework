@@ -689,6 +689,5 @@ void QIfQueryParser::setErrorString(const QString &error)
 
 QT_END_NAMESPACE
 
-
 #endif // QIFQUERYPARSER_P_H
 

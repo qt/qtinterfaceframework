@@ -12,13 +12,6 @@
 
 QT_BEGIN_NAMESPACE
 
-namespace qtif_helper {
-    static const QString valueLiteral = QStringLiteral("value");
-    static const QString typeLiteral = QStringLiteral("type");
-}
-
-using namespace qtif_helper;
-
 void qtif_qmlOrCppWarning(const QObject *obj, const char *errorString)
 {
     qtif_qmlOrCppWarning(obj, QLatin1String(errorString));
@@ -65,6 +58,9 @@ void qtif_qmlOrCppWarning(const QObject *obj, const QString &errorString)
 */
 QVariant qtif_convertFromJSON(const QVariant &value)
 {
+    static const QString valueLiteral = QStringLiteral("value");
+    static const QString typeLiteral = QStringLiteral("type");
+
     QVariant val = value;
     // First try to convert the values to a Map or a List
     // This is needed as it could also store a QStringList or a Hash
@@ -83,7 +79,7 @@ QVariant qtif_convertFromJSON(const QVariant &value)
                 QString enumValue = value.toString();
                 const int lastIndex = enumValue.lastIndexOf(QStringLiteral("::"));
                 const QString className = enumValue.left(lastIndex) + QStringLiteral("*");
-                enumValue = enumValue.right(enumValue.size() - lastIndex - 2);
+                QByteArray enumValueUtf8 = enumValue.right(enumValue.size() - lastIndex - 2).toUtf8();
                 QMetaType metaType = QMetaType::fromName(className.toLatin1());
                 const QMetaObject *mo = metaType.metaObject();
                 if (Q_UNLIKELY(!mo)) {
@@ -96,7 +92,7 @@ QVariant qtif_convertFromJSON(const QVariant &value)
                 for (int i = mo->enumeratorOffset(); i < mo->enumeratorCount(); ++i) {
                     QMetaEnum me = mo->enumerator(i);
                     bool ok = false;
-                    int value = me.keysToValue(enumValue.toLatin1(), &ok);
+                    int value = me.keysToValue(enumValueUtf8, &ok);
                     if (ok) {
                         return QVariant(QMetaType::fromName((QLatin1String(me.scope()) + QStringLiteral("::") + QLatin1String(me.enumName())).toLatin1()), &value);
                     }
@@ -114,6 +110,8 @@ QVariant qtif_convertFromJSON(const QVariant &value)
                 }
 
                 void *gadget = metaType.create();
+                auto cleanup = qScopeGuard([gadget, metaType] { metaType.destroy(gadget); });
+
                 if (!Q_UNLIKELY(gadget)) {
                     qWarning("Couldn't create a new instance of %s", metaType.name());
                     return QVariant();

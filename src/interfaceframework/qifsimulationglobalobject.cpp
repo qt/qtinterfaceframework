@@ -244,7 +244,7 @@ void QIfSimulationGlobalObject::setSimulationData(const QVariant &simulationData
 }
 
 /*!
-    \qmlmethod IfSimulator::findData(object data, string interface)
+    \qmlmethod var IfSimulator::findData(object data, string interface)
 
     Searches for the key \a interface within \a data and returns the stored values. Returns
     undefined if no data was found for this \a interface.
@@ -278,7 +278,7 @@ QVariantMap QIfSimulationGlobalObject::findData(const QVariantMap &data, const Q
 }
 
 /*!
-    \qmlmethod IfSimulator::initializeDefault(object data, QObject* object)
+    \qmlmethod void IfSimulator::initializeDefault(object data, QObject* object)
 
     Applies the default values read from \a data to \a object.
 
@@ -287,15 +287,16 @@ QVariantMap QIfSimulationGlobalObject::findData(const QVariantMap &data, const Q
 void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObject *object)
 {
     for (auto i = data.constBegin(); i != data.constEnd(); ++i) {
+        QByteArray key = i.key().toLatin1();
         const QVariant defVal = defaultValue(i.value().toMap());
         if (defVal.isValid()) {
-            QVariant currentValue = object->property(i.key().toLatin1());
+            QVariant currentValue = object->property(key);
             if (QIfPagingModelInterface *model = currentValue.value<QIfPagingModelInterface*>()) {
                 QVariantList list = defVal.toList();
                 for (auto i = list.crbegin(); i != list.crend(); ++i)
                     QMetaObject::invokeMethod(model, "insert", createArgument(int(0)), createArgument(*i));
             } else {
-                object->setProperty(i.key().toLatin1(), defVal);
+                object->setProperty(key, defVal);
             }
         }
 
@@ -309,14 +310,14 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
             if (defVal.isValid()) {
                 QObject *zoneObject = map->value(zone).value<QObject*>();
                 if (zoneObject)
-                    zoneObject->setProperty(i.key().toLatin1(), defVal);
+                    zoneObject->setProperty(key, defVal);
             }
         }
     }
 }
 
 /*!
-    \qmlmethod IfSimulator::defaultValue(object data, string zone)
+    \qmlmethod var IfSimulator::defaultValue(object data, string zone)
 
     Provides the default value stored in \a data for the given \a zone. If \a zone is undefined or
     the data doesn't provide a default value for the given \a zone, it returns the unzoned default
@@ -330,7 +331,7 @@ QVariant QIfSimulationGlobalObject::defaultValue(const QVariantMap &data, const 
 }
 
 /*!
-    \qmlmethod IfSimulator::constraint(object data, string zone)
+    \qmlmethod string IfSimulator::constraint(object data, string zone)
 
     Searches for all boundary settings in \a data for the given \a zone and returns the constraint
     (which is enforced for newly set values) in a human readable form.
@@ -371,7 +372,7 @@ QString QIfSimulationGlobalObject::constraint(const QVariantMap &data, const QSt
 }
 
 /*!
-    \qmlmethod IfSimulator::checkSettings(object data, var value, string zone)
+    \qmlmethod bool IfSimulator::checkSettings(object data, var value, string zone)
 
     Searches for all boundary settings in \a data for the given \a zone and returns whether the
     provided \a value meets this constraint.
@@ -442,7 +443,7 @@ bool QIfSimulationGlobalObject::checkSettings(const QVariantMap &data, const QVa
 }
 
 /*!
-    \qmlmethod IfSimulator::parseDomainValue(object data, string domain, string zone)
+    \qmlmethod var IfSimulator::parseDomainValue(object data, string domain, string zone)
 
     Search for the \a domain in \a data for the given \a zone. If \a zone is undefined or
     the data doesn't provide this domain for the given \a zone, it returns the unzoned domain

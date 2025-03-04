@@ -37,10 +37,10 @@ public:
 
     void initialize() override;
     void onInitializationDone();
-    void onCapabilitiesChanged(const QUuid &identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities);
-    void onDataFetched(const QUuid &identifier, const QList<QVariant> &items, int start, bool moreAvailable);
-    void onCountChanged(const QUuid &identifier, int new_length);
-    void onDataChanged(const QUuid &identifier, const QList<QVariant> &data, int start, int count);
+    void onCapabilitiesChanged(QUuid identifier, QtInterfaceFrameworkModule::ModelCapabilities capabilities);
+    void onDataFetched(QUuid identifier, const QList<QVariant> &items, int start, bool moreAvailable);
+    void onCountChanged(QUuid identifier, int new_length);
+    void onDataChanged(QUuid identifier, const QList<QVariant> &data, int start, int count);
     void onFetchMoreThresholdReached();
     virtual void resetModel();
     virtual void clearToDefaults();

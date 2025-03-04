@@ -56,6 +56,7 @@ public:
     {{class}}Private(const QString &interface, {{class}} *parent);
 {%   endif %}
 {% endif %}
+    ~{{class}}Private();
 
     static {{class}}Private *get({{class}} *p);
     static const {{class}}Private *get(const {{class}} *p);
