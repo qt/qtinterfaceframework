@@ -20,4 +20,5 @@ qt_add_resources(tst_qifabstractfeature "qml"
     FILES
         testdata/autodiscovery.qml
         testdata/loader.qml
+        testdata/modelloader.qml
 )
