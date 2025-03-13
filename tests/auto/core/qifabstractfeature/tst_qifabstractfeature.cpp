@@ -661,22 +661,31 @@ void BaseTest::testLoader()
     engine.setIncubationController(new PeriodicIncubationController(this));
     if (m_isModel) {
         qmlRegisterRevision<QIfAbstractFeatureListModel, 8>("testfeature", 1, 0);
-        qmlRegisterType<TestFeatureListModel>("testfeature", 1, 0, "TestFeature");
+        qmlRegisterType<TestFeatureListModel>("testfeature", 1, 0, "TestFeatureModel");
     } else {
         qmlRegisterRevision<QIfAbstractFeature, 8>("testfeature", 1, 0);
         qmlRegisterType<TestFeature>("testfeature", 1, 0, "TestFeature");
     }
-    qmlRegisterModuleImport("testfeature", QQmlModuleImportModuleAny,
-                            "QtInterfaceFramework", QQmlModuleImportLatest);
-    QQmlComponent component(&engine, QUrl(QStringLiteral("qrc:/testdata/loader.qml")));
+    static bool once = false;
+    if (!once) {
+        qmlRegisterModuleImport("testfeature", QQmlModuleImportModuleAny,
+                                "QtInterfaceFramework", QQmlModuleImportLatest);
+        once = true;
+    }
+    QQmlComponent component(&engine, QUrl(m_isModel ? "qrc:/testdata/modelloader.qml" : "qrc:/testdata/loader.qml"));
     QObject *obj = component.create();
-
     QVERIFY2(obj, qPrintable(component.errorString()));
     QIfFeatureTester *inSyncLoader;
-    if (m_isModel)
-        inSyncLoader = new QIfFeatureTester(obj->findChild<TestFeatureListModel*>("inSyncLoader"), this);
-    else
-        inSyncLoader = new QIfFeatureTester(obj->findChild<TestFeature*>("inSyncLoader"), this);
+    if (m_isModel) {
+        auto *child = obj->findChild<TestFeatureListModel*>("inSyncLoader");
+        QVERIFY(child);
+        inSyncLoader = new QIfFeatureTester(child, this);
+    } else {
+        auto *child = obj->findChild<TestFeature*>("inSyncLoader");
+        QVERIFY(child);
+        inSyncLoader = new QIfFeatureTester(child, this);
+    }
+
     // The default is false and the loader is synchronous
     QCOMPARE(inSyncLoader->asynchronousBackendLoading(), false);
 
