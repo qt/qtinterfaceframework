@@ -4,6 +4,14 @@
 #}
 {% include "common/generated_comment.cmake.tpl" %}
 
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
+
+{% if not module.tags.config.disablePrivateIF %}
+if (NOT TARGET Qt6::InterfaceFrameworkPrivate)
+    find_package(Qt6 COMPONENTS InterfaceFrameworkPrivate)
+endif()
+{% endif %}
+
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
 {% for interface in module.interfaces %}
     ${CMAKE_CURRENT_LIST_DIR}/{{interface|lower}}.h
@@ -42,10 +50,14 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_VERSION
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::InterfaceFramework
+)
+
+qt6_set_ifcodegen_variable(${VAR_PREFIX}_PRIVATE_LIBRARIES
 {% if not module.tags.config.disablePrivateIF %}
     Qt6::InterfaceFrameworkPrivate
 {% endif %}
 )
+
 
 if (TARGET ${CURRENT_TARGET})
     target_compile_definitions(${CURRENT_TARGET} PRIVATE ${${VAR_PREFIX}_DEFINES})
@@ -62,4 +74,10 @@ if (TARGET ${CURRENT_TARGET})
     target_link_libraries(${CURRENT_TARGET} PUBLIC
         ${${VAR_PREFIX}_LIBRARIES}
     )
+
+{% if not module.tags.config.disablePrivateIF %}
+    target_link_libraries(${CURRENT_TARGET} PRIVATE
+        ${${VAR_PREFIX}_PRIVATE_LIBRARIES}
+    )
+{% endif %}
 endif()

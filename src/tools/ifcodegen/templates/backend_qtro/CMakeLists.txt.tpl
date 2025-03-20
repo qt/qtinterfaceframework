@@ -4,8 +4,10 @@
 #}
 {% include "common/generated_comment.cmake.tpl" %}
 
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
+
 if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelper)
-    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelper)
+    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelper IfRemoteObjectsHelperPrivate)
 endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
