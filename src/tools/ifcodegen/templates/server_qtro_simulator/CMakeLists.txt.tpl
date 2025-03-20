@@ -4,8 +4,17 @@
 #}
 {% include "common/generated_comment.cmake.tpl" %}
 
+set(QT_NO_PRIVATE_MODULE_WARNING ON)
+
 if (NOT TARGET Qt6::RemoteObjects OR NOT TARGET Qt6::IfRemoteObjectsHelper)
-    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelper)
+{% if targetPlatform == "Android" %}
+{%   set extra_dep = 'CorePrivate' %}
+{%   set extra_dep_full = 'Qt6::CorePrivate' %}
+{% else %}
+{%   set extra_dep = '' %}
+{%   set extra_dep_full = '' %}
+{% endif %}
+    find_package(Qt6 COMPONENTS RemoteObjects IfRemoteObjectsHelper IfRemoteObjectsHelperPrivate {{extra_dep}})
 endif()
 
 qt6_set_ifcodegen_variable(${VAR_PREFIX}_SOURCES
@@ -36,6 +45,7 @@ qt6_set_ifcodegen_variable(${VAR_PREFIX}_LIBRARIES
     Qt6::RemoteObjects
     Qt6::IfRemoteObjectsHelper
     Qt6::IfRemoteObjectsHelperPrivate
+    {{extra_dep_full}}
 )
 
 if (TARGET ${CURRENT_TARGET})
