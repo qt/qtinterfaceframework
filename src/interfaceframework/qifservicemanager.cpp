@@ -513,8 +513,8 @@ QIfServiceInterface *QIfServiceManagerPrivate::loadServiceBackendInterface(struc
     For more information about QIfServiceManager and how it works, see its \l{QIfServiceManager}{C++ documentation}.
 */
 
-QIfServiceManager::QIfServiceManager()
-    : QAbstractListModel(nullptr)
+QIfServiceManager::QIfServiceManager(QObject *parent)
+    : QAbstractListModel(parent)
     , d_ptr(new QIfServiceManagerPrivate(this))
 {
     QtInterfaceFrameworkModule::registerTypes();
@@ -526,8 +526,14 @@ QIfServiceManager::QIfServiceManager()
 */
 QIfServiceManager *QIfServiceManager::instance()
 {
-    static auto *instance = new QIfServiceManager();
+    static auto *instance = new QIfServiceManager(qApp);
     return instance;
+}
+
+QIfServiceManager::~QIfServiceManager()
+{
+    unloadAllBackends();
+    delete d_ptr;
 }
 
 /*!
@@ -563,6 +569,8 @@ QList<QIfServiceObject *> QIfServiceManager::findServiceByInterface(const QStrin
     QIfServiceInterface, otherwise the registration will fail. \a interfaces is a list of at least
     one interface, supported by the backend. The \a backendType indicates the type of the backend
     and influences whether the backend can be found by the Feature's auto discovery option.
+
+    The ownership of \a serviceBackendInterface is transferred to the QIfServiceManager.
 
     Returns \c true if the backend was successfully registered; otherwise \c false.
 

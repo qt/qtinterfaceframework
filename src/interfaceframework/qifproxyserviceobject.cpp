@@ -101,6 +101,11 @@ QIfProxyServiceObject::QIfProxyServiceObject(const QHash<QString, QIfFeatureInte
 {
 }
 
+QIfProxyServiceObject::~QIfProxyServiceObject()
+{
+    delete d_ptr;
+}
+
 /*!
     \reimp
 */
