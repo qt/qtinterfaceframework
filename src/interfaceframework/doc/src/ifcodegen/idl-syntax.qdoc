@@ -159,7 +159,7 @@ import common 1.0
 
 interface Tuner {
     // property currentStation
-    readonly Station currentStation;
+    readonly common.Station currentStation;
     // operation nextStation
     void nextStation();
     // operation previousStation
@@ -168,9 +168,9 @@ interface Tuner {
     void updateCurrentStation(int stationId);
 
     list<int> primitiveList;
-    list<Station> complexList;
+    list<common.Station> complexList;
     model<int> primitiveModel;
-    model<Station> complexModel;
+    model<common.Station> complexModel;
 }
 \endcode
 
