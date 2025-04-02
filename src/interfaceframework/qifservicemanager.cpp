@@ -14,6 +14,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QJsonObject>
 #include <QLibrary>
 #include <QModelIndex>
