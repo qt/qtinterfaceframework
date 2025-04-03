@@ -3,8 +3,8 @@
 ## Virtual env creation
 #####################################################################
 
-qt_path_join(ifcodegen_install_dir "${QT_INSTALL_DIR}" "${INSTALL_LIBEXECDIR}/ifcodegen")
-qt_path_join(templates_install_dir "${QT_INSTALL_DIR}" "${INSTALL_DATADIR}/ifcodegen-templates")
+qt_path_join(ifcodegen_install_dir "${QT_INSTALL_DIR}" "${INSTALL_LIBEXECDIR}" "ifcodegen")
+qt_path_join(templates_install_dir "${QT_INSTALL_DIR}" "${INSTALL_DATADIR}" "ifcodegen-templates")
 
 set(COMPILE_IFCODEGEN QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen AND QT_FEATURE_compiled_ifcodegen)
 if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qface))
