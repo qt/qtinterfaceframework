@@ -509,7 +509,7 @@ std::tuple<QIfServiceInterface *, QPluginLoader*> QIfServiceManagerPrivate::load
     loader->load();
     if (elapsedTimer.isValid()) {
         qCDebug(qLcIfPerf) << "Loaded " << pluginFile << "in" << elapsedTimer.elapsed() << "ms";
-        elapsedTimer.restart();
+        elapsedTimer.start();
     }
 
     QObject *plugin = loader->instance();
