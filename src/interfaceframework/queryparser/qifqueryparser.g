@@ -1,6 +1,6 @@
 -- Copyright (C) 2021 The Qt Company Ltd.
 -- Copyright (C) 2018 Pelagicore AG
--- SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+-- SPDX-License-Identifier: LicenseRef-Qt-Commercial
 -- Qt-Security score:critical reason:data-parser
 
 --
@@ -50,7 +50,7 @@
 
 /:// Copyright (C) 2023 The Qt Company Ltd.
 // Copyright (C) 2018 Pelagicore AG
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial
 
 #ifndef QTIFQUERYPARSER_P_H
 #define QTIFQUERYPARSER_P_H
@@ -159,7 +159,7 @@ QT_END_NAMESPACE
 
 /.// Copyright (C) 2023 The Qt Company Ltd.
 // Copyright (C) 2018 Pelagicore AG
-// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial
 
 #include "qifqueryparser_p.h"
 
