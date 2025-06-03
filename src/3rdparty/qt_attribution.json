@@ -8,6 +8,10 @@
     "Description": "QFace is a generator framework based on a modern IDL.",
     "Homepage": "https://pelagicore.github.io/qface",
     "Version": "2.0.11",
+    "PURL": [
+        "pkg:github/Pelagicore/qface@$<VERSION>"
+    ],
+    "Comment": "No relevant CPE found",
 
     "License": "MIT License",
     "LicenseId": "MIT",
