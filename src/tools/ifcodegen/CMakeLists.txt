@@ -6,6 +6,15 @@
 qt_path_join(ifcodegen_install_dir "${QT_INSTALL_DIR}" "${INSTALL_LIBEXECDIR}" "ifcodegen")
 qt_path_join(templates_install_dir "${QT_INSTALL_DIR}" "${INSTALL_DATADIR}" "ifcodegen-templates")
 
+qt_internal_add_sbom(qtifcodegen
+    TYPE "QT_TOOL"
+    CREATE_SBOM_FOR_EACH_ATTRIBUTION
+    ATTRIBUTION_FILE_DIR_PATHS
+        ../../../src/3rdparty
+    ATTRIBUTION_IDS
+        qface
+)
+
 set(COMPILE_IFCODEGEN QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen AND QT_FEATURE_compiled_ifcodegen)
 if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qface))
     if (NOT CMAKE_GENERATOR MATCHES "^Ninja")
@@ -136,6 +145,11 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
     if (${COMPILE_IFCODEGEN})
         qt_copy_or_install(PROGRAMS "${QT_BUILD_DIR}/${INSTALL_LIBEXECDIR}/ifcodegen${CMAKE_EXECUTABLE_SUFFIX}"
                            DESTINATION "${INSTALL_LIBEXECDIR}")
+        qt_internal_sbom_add_files(qtifcodegen
+            FILES "ifcodegen${CMAKE_EXECUTABLE_SUFFIX}"
+            FILE_TYPE "BINARY"
+            INSTALL_PATH "${INSTALL_LIBEXECDIR}"
+        )
     else()
         #####################################################################
         ## clean target
@@ -311,6 +325,12 @@ if ("${QT_HOST_PATH}" STREQUAL "" OR (CMAKE_CROSSCOMPILING AND QT_FORCE_BUILD_TO
         ${CMAKE_CURRENT_BINARY_DIR}/.config
         DESTINATION "${ifcodegen_install_dir}"
         )
+
+    qt_internal_sbom_add_files(qtifcodegen
+        FILES "generate.py"
+        FILE_TYPE "BINARY"
+        INSTALL_PATH "${ifcodegen_install_dir}"
+    )
 endif()
 
 
