@@ -7,6 +7,15 @@
 The following page describes new features by Qt Version.
 There is a separate page to list all \l {New Classes and Functions by Qt Version}.
 
+\section1 6.10
+
+\list
+    \li Update to qface 2.0.13
+    \list
+        \li Improve error handling for invalid annotations
+    \endlist
+\endlist
+
 \section1 6.9
 
 \list
