@@ -7,6 +7,13 @@
 The following page describes new features by Qt Version.
 There is a separate page to list all \l {New Classes and Functions by Qt Version}.
 
+\section1 6.9
+
+\list
+    \li Allow code generation templates to check for the target platform
+    \li Adds a new option 'android' for the \l{config_defaultServerMode}{defaultServerMode annotation}
+\endlist
+
 \section1 6.8
 
 \list
