@@ -22,11 +22,13 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
     if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
         set(VIRTUALENV_ACTIVATE ${VIRTUALENV_PATH}/Scripts/activate.bat)
         set(VIRTUALENV_ACTIVATE_COMMAND ${VIRTUALENV_ACTIVATE})
+        set(VIRTUALENV_PYTHON ${VIRTUALENV_PATH}/Scripts/python.exe)
         set(IFCODEGEN_BIN ${VIRTUALENV_PATH}/Scripts/qface.exe)
         set(DEPLOY_VIRTUALENV ${CMAKE_CURRENT_SOURCE_DIR}/deploy-virtualenv.bat)
     else()
         set(VIRTUALENV_ACTIVATE ${VIRTUALENV_PATH}/bin/activate)
         set(VIRTUALENV_ACTIVATE_COMMAND . ${VIRTUALENV_ACTIVATE})
+        set(VIRTUALENV_PYTHON ${VIRTUALENV_PATH}/bin/python)
         set(IFCODEGEN_BIN ${VIRTUALENV_PATH}/bin/qface)
         set(DEPLOY_VIRTUALENV ${CMAKE_CURRENT_SOURCE_DIR}/deploy-virtualenv.sh)
     endif()
@@ -82,16 +84,23 @@ if(QT_FEATURE_python3_virtualenv AND NOT QT_FEATURE_system_qface)
                        )
 
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
-                              ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
                        COMMAND ${DEPLOY_VIRTUALENV} qtif_qface_virtualenv
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-deploy_virtualenv
-                       COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
                        DEPENDS ${IFCODEGEN_BIN}
+                      )
+
+   add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
+                             ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
+                      COMMAND ${CMAKE_COMMAND} -E env IFGENERATOR_CONFIG=${CMAKE_CURRENT_BINARY_DIR}/.config ${VIRTUALENV_PYTHON} ${CMAKE_CURRENT_SOURCE_DIR}/generate.py --selfcheck
+                      COMMAND ${CMAKE_COMMAND} -E touch .stamp-generator-verified
+                      COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
+                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
+                      COMMENT "Verifying generator"
                       )
 
     # main target which just relies on the stamp file to be uptodate
     add_custom_target(ifcodegen ALL
-                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-deploy_virtualenv
+                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
                       )
     # Create the rerun cmake stamp file here to be able to add cmake configure dependency
