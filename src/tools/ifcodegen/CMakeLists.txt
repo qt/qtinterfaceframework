@@ -53,6 +53,8 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
     # someone is working on the qface sources
     file(GLOB_RECURSE IFCODEGEN_SOURCE_FILES ${IFCODEGEN_SOURCE_DIR}/*.py)
 
+    set(PIP3_UPGRADE_COMMAND python -m pip install --upgrade pip)
+
     # If the upstream python packages introduce a regression this option can be used to install
     # the minimum version for all required python package and produce a working setup
     # Those packages might be outdated and may contain security holes, but they are known to be
@@ -80,6 +82,7 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
 
     add_custom_command(OUTPUT ${IFCODEGEN_BIN}
                        COMMAND ${VIRTUALENV_ACTIVATE_COMMAND}
+                       COMMAND ${PIP3_UPGRADE_COMMAND}
                        ${INSTALL_MINIMAL_QFACE_PACKAGES_COMMAND}
                        COMMAND ${PIP3_INSTALL_COMMAND}
                        ${INSTALL_NUITKA_COMMAND}
