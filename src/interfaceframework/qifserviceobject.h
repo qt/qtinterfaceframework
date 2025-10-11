@@ -15,6 +15,8 @@ QT_BEGIN_NAMESPACE
 class Q_QTINTERFACEFRAMEWORK_EXPORT QIfServiceObject : public QObject, public QIfServiceInterface
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(ServiceObject)
+    QML_UNCREATABLE("ServiceObject needs to be created by IfServiceManager")
     Q_INTERFACES(QIfServiceInterface)
 
     Q_PROPERTY(QString id READ id CONSTANT)
@@ -36,6 +38,16 @@ private:
     QString m_id;
     QVariantMap m_serviceSettings;
 };
+
+namespace qtif_private {
+    class ServiceObjectListRegistration
+    {
+        Q_GADGET
+        QML_FOREIGN(QList<QIfServiceObject *>)
+        QML_ANONYMOUS
+        QML_SEQUENTIAL_CONTAINER(QIfServiceObject *)
+    };
+}
 
 QT_END_NAMESPACE
 
