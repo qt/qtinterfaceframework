@@ -9,6 +9,7 @@
 #include <QtTest>
 #include <QLocalServer>
 #include <QLocalSocket>
+#include <QString>
 
 QT_FORWARD_DECLARE_CLASS(QIfServiceManager);
 
@@ -24,6 +25,10 @@ if (spy.count() != value) \
     QCOMPARE(spy.count(), value); \
  \
 
+#define CHECK_SKIP() \
+if (skippedTests().contains(__FUNCTION__)) \
+    QSKIP(skippedTests().value(__FUNCTION__).toLatin1()) \
+
 class BackendsTestBase : public QObject
 {
     Q_OBJECT
@@ -34,6 +39,8 @@ public:
     void startServer(QStringList arguments = QStringList());
     void ignoreMessage(QtMsgType type, const char *message);
     void cleanupTestData();
+    void setSkippedTests(QMap<QString, QString> skipMap);
+    QMap<QString, QString> skippedTests() const;
 
     virtual void initTestCase_data();
 
@@ -51,10 +58,14 @@ private slots:
     void testSlots();
     void testZonedSlots();
     void testMultipleSlotCalls();
+    void testMultipleZonedSlotCalls();
     void testAsyncSlotResults();
+    void testAsyncZonedSlotResults();
     void testSignals();
+    void testZonedSignals();
     void testModel();
     void testSimulationData();
+    void testZonedSimulationData();
 
 protected:
 #if QT_CONFIG(process)
@@ -66,6 +77,7 @@ protected:
     bool m_asyncBackendLoading;
     bool m_isSimulationBackend;
     QString m_serverExecutable;
+    QMap<QString, QString> m_skipMap;
 };
 
 #endif // BACKENDSTESTBASE_H

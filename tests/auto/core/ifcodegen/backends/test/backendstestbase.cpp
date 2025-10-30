@@ -103,6 +103,16 @@ void BackendsTestBase::cleanupTestData()
     QIfServiceManager::instance()->unloadAllBackends();
 }
 
+void BackendsTestBase::setSkippedTests(QMap<QString, QString> skipMap)
+{
+    m_skipMap = skipMap;
+}
+
+QMap<QString, QString> BackendsTestBase::skippedTests() const
+{
+    return m_skipMap;
+}
+
 void BackendsTestBase::initTestCase_data()
 {
     QTest::addColumn<QString>("backend");
@@ -121,6 +131,8 @@ void BackendsTestBase::initTestCase()
 
 void BackendsTestBase::init()
 {
+    CHECK_SKIP();
+
     QFETCH_GLOBAL(QString, backend);
     QFETCH_GLOBAL(bool, isSimulation);
     QFETCH_GLOBAL(bool, asyncBackendLoading);
@@ -144,6 +156,8 @@ void BackendsTestBase::cleanup()
 
 void BackendsTestBase::testInit()
 {
+    CHECK_SKIP();
+
     QTest::failOnWarning(QRegularExpression(u".*Couldn't retrieve MetaObject for enum parsing:.*"_s));
 
     Echo client;
@@ -235,6 +249,8 @@ void BackendsTestBase::testInit()
 
 void BackendsTestBase::testZonedInit()
 {
+    CHECK_SKIP();
+
     EchoZoned client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
@@ -328,6 +344,8 @@ void BackendsTestBase::testZonedInit()
 
 void BackendsTestBase::testReconnect()
 {
+    CHECK_SKIP();
+
     if (m_serverExecutable.isEmpty())
         QSKIP("The reconnection test only makes sense with a server process");
 
@@ -393,6 +411,8 @@ void BackendsTestBase::testReconnect()
 
 void BackendsTestBase::testClient2Server()
 {
+    CHECK_SKIP();
+
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
@@ -481,6 +501,8 @@ void BackendsTestBase::testClient2Server()
 
 void BackendsTestBase::testZonedClient2Server()
 {
+    CHECK_SKIP();
+
     EchoZoned client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
@@ -567,6 +589,8 @@ void BackendsTestBase::testZonedClient2Server()
 
 void BackendsTestBase::testServer2Client()
 {
+    CHECK_SKIP();
+
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
@@ -652,6 +676,8 @@ void BackendsTestBase::testServer2Client()
 
 void BackendsTestBase::testZonedServer2Client()
 {
+    CHECK_SKIP();
+
     EchoZoned client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
@@ -734,6 +760,8 @@ void BackendsTestBase::testZonedServer2Client()
 
 void BackendsTestBase::testSlots()
 {
+    CHECK_SKIP();
+
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
@@ -805,6 +833,8 @@ void BackendsTestBase::testSlots()
 
 void BackendsTestBase::testZonedSlots()
 {
+    CHECK_SKIP();
+
     EchoZoned client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
@@ -866,6 +896,8 @@ void BackendsTestBase::testZonedSlots()
 
 void BackendsTestBase::testMultipleSlotCalls()
 {
+    CHECK_SKIP();
+
     Echo client;
     QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(initSpy.isValid());
@@ -897,11 +929,18 @@ void BackendsTestBase::testMultipleSlotCalls()
     QCOMPARE(echoReply.reply(), echoTestValue);
     QCOMPARE(echoReply2.reply(), echoTestValue2);
     QCOMPARE(echoReply3.reply(), echoTestValue3);
+}
+
+void BackendsTestBase::testMultipleZonedSlotCalls()
+{
+    CHECK_SKIP();
 
     EchoZoned zonedClient;
     QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(zonedInitSpy.isValid());
     QVERIFY(zonedClient.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+
+    startServer();
 
     //wait until the client has connected and initial values are set
     WAIT_AND_COMPARE(zonedInitSpy, 1);
@@ -910,6 +949,10 @@ void BackendsTestBase::testMultipleSlotCalls()
     EchoZoned *zone = qobject_cast<EchoZoned*>(zonedClient.zoneAt(frontLeftZone));
     QVERIFY(zone);
 
+    //test the pending replies by calling the same slot with 3 different values
+    QLatin1String echoTestValue("first");
+    QLatin1String echoTestValue2("second");
+    QLatin1String echoTestValue3("third");
     QIfPendingReply<QString> echoZonedReply = zone->echo(echoTestValue);
     QIfPendingReply<QString> echoZonedReply2 = zone->echo(echoTestValue2);
     QIfPendingReply<QString> echoZonedReply3 = zone->echo(echoTestValue3);
@@ -929,6 +972,8 @@ void BackendsTestBase::testMultipleSlotCalls()
 
 void BackendsTestBase::testAsyncSlotResults()
 {
+    CHECK_SKIP();
+
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
@@ -959,11 +1004,21 @@ void BackendsTestBase::testAsyncSlotResults()
     echoReplySpy.wait();
     QCOMPARE(echoReplySpy2.count(), 1);
     QCOMPARE(echoReplySpy.count(), 1);
+}
+
+void BackendsTestBase::testAsyncZonedSlotResults()
+{
+    CHECK_SKIP();
 
     EchoZoned zonedClient;
+    zonedClient.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&zonedClient, &Echo::serviceObjectChanged);
     QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(zonedInitSpy.isValid());
-    QVERIFY(zonedClient.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    zonedClient.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
+
+    startServer();
 
     //wait until the client has connected and initial values are set
     WAIT_AND_COMPARE(zonedInitSpy, 1);
@@ -994,6 +1049,8 @@ void BackendsTestBase::testAsyncSlotResults()
 
 void BackendsTestBase::testSignals()
 {
+    CHECK_SKIP();
+
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
@@ -1008,28 +1065,10 @@ void BackendsTestBase::testSignals()
     WAIT_AND_COMPARE(initSpy, 1);
     QVERIFY(client.isInitialized());
 
-    EchoZoned zonedClient;
-
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
-    QVERIFY(zonedInitSpy.isValid());
-    QVERIFY(zonedClient.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
-
-    //wait until the client has connected and initial values are set
-    WAIT_AND_COMPARE(zonedInitSpy, 1);
-    QVERIFY(zonedClient.isInitialized());
-
-    EchoZoned *zone = qobject_cast<EchoZoned*>(zonedClient.zoneAt(frontLeftZone));
-    QVERIFY(zone);
-
     //test custom signals (other than property notifiers) from server to client
     QSignalSpy anotherChangedSpy(&client, SIGNAL(anotherChanged(AnotherStruct)));
     QSignalSpy foobarSpy(&client, SIGNAL(foobar(QString)));
     QSignalSpy somethingSpy(&client, SIGNAL(somethingHappened()));
-    QSignalSpy zonedAnotherChangedSpy(&zonedClient, SIGNAL(anotherChanged(AnotherStruct)));
-    QSignalSpy zonedFoobarSpy(zone, SIGNAL(foobar(QString)));
-    QSignalSpy zonedSomethingSpy(zone, SIGNAL(somethingHappened()));
-
-    zonedClient.setIntValue(1234);
 
     // Send a signal to the server that new values should be published
     sendCmd("emitSignals");
@@ -1046,13 +1085,46 @@ void BackendsTestBase::testSignals()
 
     QVERIFY(somethingSpy.isValid());;
     WAIT_AND_COMPARE(somethingSpy, 1);
+}
+
+void BackendsTestBase::testZonedSignals()
+{
+    CHECK_SKIP();
+
+    EchoZoned zonedClient;
+    zonedClient.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&zonedClient, &Echo::serviceObjectChanged);
+    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QVERIFY(zonedInitSpy.isValid());
+    zonedClient.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
+
+    startServer();
+
+    //wait until the client has connected and initial values are set
+    WAIT_AND_COMPARE(zonedInitSpy, 1);
+    QVERIFY(zonedClient.isInitialized());
+
+    EchoZoned *zone = qobject_cast<EchoZoned*>(zonedClient.zoneAt(frontLeftZone));
+    QVERIFY(zone);
+
+    //test custom signals (other than property notifiers) from server to client
+    QSignalSpy zonedAnotherChangedSpy(&zonedClient, SIGNAL(anotherChanged(AnotherStruct)));
+    QSignalSpy zonedFoobarSpy(zone, SIGNAL(foobar(QString)));
+    QSignalSpy zonedSomethingSpy(zone, SIGNAL(somethingHappened()));
+
+    zonedClient.setIntValue(1234);
+
+    // Send a signal to the server that new values should be published
+    sendCmd("emitSignals");
 
     QVERIFY(zonedAnotherChangedSpy.isValid());
+    AnotherStruct anotherTestValue(7);
     WAIT_AND_COMPARE(zonedAnotherChangedSpy, 1);
     QCOMPARE(zonedAnotherChangedSpy[0][0].value<AnotherStruct>(), anotherTestValue);
 
-
     QVERIFY(zonedFoobarSpy.isValid());
+     QLatin1String foobarTestValue("foo and bar");
     WAIT_AND_COMPARE(zonedFoobarSpy, 1);
     QCOMPARE(zonedFoobarSpy[0][0].toString(), foobarTestValue);
 
@@ -1062,6 +1134,8 @@ void BackendsTestBase::testSignals()
 
 void BackendsTestBase::testModel()
 {
+    CHECK_SKIP();
+
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
@@ -1112,6 +1186,8 @@ void BackendsTestBase::testModel()
 
 void BackendsTestBase::testSimulationData()
 {
+    CHECK_SKIP();
+
     if (!m_isSimulation)
         QSKIP("This test is only for simulation backend and simulation servers");
 
@@ -1146,12 +1222,24 @@ void BackendsTestBase::testSimulationData()
     floatValue2Spy.wait(500);
     QCOMPARE(floatValue2Spy.count(), 0);
     QCOMPARE(client.floatValue2(), 0);
+}
 
+void BackendsTestBase::testZonedSimulationData()
+{
+    CHECK_SKIP();
+
+    if (!m_isSimulation)
+        QSKIP("This test is only for simulation backend and simulation servers");
 
     EchoZoned zonedClient;
+    zonedClient.setAsynchronousBackendLoading(m_asyncBackendLoading);
+    QSignalSpy serviceObjectChangedSpy(&zonedClient, &Echo::serviceObjectChanged);
     QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
     QVERIFY(zonedInitSpy.isValid());
-    QVERIFY(zonedClient.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
+    zonedClient.startAutoDiscovery();
+    WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
+
+    startServer();
 
     //wait until the client has connected and initial values are set
     WAIT_AND_COMPARE(zonedInitSpy, 1);

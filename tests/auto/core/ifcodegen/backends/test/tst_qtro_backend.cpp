@@ -15,9 +15,9 @@ private slots:
         BackendsTestBase::initTestCase_data();
         QDir currentDir = QDir::current();
 
-        QTest::newRow("qtro-server") << "echo_backend_qtro" << false << false << currentDir.absoluteFilePath(u"org-example-echo-qtro-server"_s + exeSuffix);
-        QTest::newRow("qtro-server asyncBackendLoading") << "echo_backend_qtro" << false << true << currentDir.absoluteFilePath(u"org-example-echo-qtro-server"_s + exeSuffix);
-        QTest::newRow("qtro-simulation-server") << "echo_backend_qtro" << true << false << currentDir.absoluteFilePath(u"org-example-echo-qtro-simulation-server"_s + exeSuffix);
+        QTest::newRow("qtro-server") << "*echo_backend_qtro*" << false << false << currentDir.absoluteFilePath(u"org-example-echo-qtro-server"_s + exeSuffix);
+        QTest::newRow("qtro-server asyncBackendLoading") << "*echo_backend_qtro*" << false << true << currentDir.absoluteFilePath(u"org-example-echo-qtro-server"_s + exeSuffix);
+        QTest::newRow("qtro-simulation-server") << "*echo_backend_qtro*" << true << false << currentDir.absoluteFilePath(u"org-example-echo-qtro-simulation-server"_s + exeSuffix);
     }
 };
 
