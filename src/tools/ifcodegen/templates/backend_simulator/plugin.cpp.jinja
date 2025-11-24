@@ -46,6 +46,10 @@ extern {{class}}::InterfaceBuilder {{module.tags.config.interfaceBuilder}};
 {%   for interface in module.interfaces %}
     m_{{interface|lower}}Backend = new {{interface}}Backend(m_simulationEngine, this);
     m_simulationEngine->registerSimulationInstance(m_{{interface|lower}}Backend, "{{module|qml_type}}.simulation", {{module.majorVersion}}, {{module.minorVersion}}, "{{interface}}Backend");
+{%     if interface|is_zoned %}
+{%       set zoneObject = interface|string + "Zone" %}
+    qmlRegisterType<{{zoneObject}}>("{{module|qml_type}}.simulation", {{module.majorVersion}}, {{module.minorVersion}}, "{{zoneObject}}");
+{%     endif %}
 {%   endfor %}
 {% if module.tags.config_simulator and module.tags.config_simulator.simulationFile %}
 {%   set simulationFile = module.tags.config_simulator.simulationFile %}

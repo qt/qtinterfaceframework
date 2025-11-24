@@ -11,7 +11,6 @@
 {% set zone_class = '{0}Zone'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 #include "{{class|lower}}.h"
-
 #include <QDebug>
 #include <QtInterfaceFramework/QIfSimulationEngine>
 

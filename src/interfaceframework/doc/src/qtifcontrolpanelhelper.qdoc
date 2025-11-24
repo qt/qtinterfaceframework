@@ -1,0 +1,20 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \qmlmodule QtInterfaceFramework.ControlPanelHelper 1.0
+    \title Qt Interface Framework Control Panel Helper QML Types
+    \ingroup qmlmodules
+    \ingroup qtif_helper_modules
+    \brief Provides reusable QML components for Qt InterfaceFramework Control Panel.
+
+    The QtInterfaceFramework.ControlPanelHelper module provides a collection of
+    reusable QML components for building control panel user interfaces.
+
+    To use the Qt Interface Framework Control Panel Helper QML types in your
+    application, import the module with the following statement:
+
+    \qml
+    import QtInterfaceFramework.ControlPanelHelper 1.0
+    \endqml
+*/

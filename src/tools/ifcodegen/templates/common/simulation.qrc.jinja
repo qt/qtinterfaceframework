@@ -8,6 +8,11 @@
     <qresource prefix="/simulation">
         <file>{{module.module_name|lower}}_simulation_data.json</file>
         <file>{{module.module_name|lower}}_simulation.qml</file>
+{% if module.tags.config_simulator and module.tags.config_simulator.controlPanel %}
+        <file>{{module.module_name|lower}}_controlpanel.qml</file>
+        <file>{{module.module_name|upperfirst}}ControlPanelBase.qml</file>
+        <file>{{module.module_name|upperfirst}}ControlPanelLoader.qml</file>
+{% endif %}
 {% for iface in module.interfaces %}
         <file>{{iface|upperfirst}}Simulation.qml</file>
 {% endfor %}

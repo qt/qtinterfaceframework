@@ -1,0 +1,314 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+{% include "common/generated_comment.qml.jinja" %}
+{% from "common/controlpanel_macros.qml.jinja" import render_property %}
+
+pragma ComponentBehavior: Bound
+import QtQuick
+import QtQuick.Controls.Basic
+import QtQuick.Layouts
+import {{module|qml_type}}.simulation
+import QtInterfaceFramework.ControlPanelHelper
+
+ApplicationWindow {
+    id: simulationWindow
+    visible: true
+    width: 1200
+    height: 800
+    title: "Qt IF Simulation Control Panel"
+
+    // BACKEND INSTANCES (All interfaces)
+{% for interface in module.interfaces %}
+    property var {{interface|lower}}Backend: null
+{% endfor %}
+
+    Component.onCompleted: {
+{% for interface in module.interfaces %}
+{%   if interface.tags.config_simulator and interface.tags.config_simulator.zones %}
+        var zones = [{% for zone in interface.tags.config_simulator.zones %}"{{zone}}"{% if not loop.last %}, {% endif %}{% endfor %}]
+        simulationWindow.registerInterface("{{interface.name}}", {{interface|lower}}Backend, {{(interface|is_zoned)|lower}}, zones)
+{%   else %}
+        simulationWindow.registerInterface("{{interface.name}}", {{interface|lower}}Backend, {{(interface|is_zoned)|lower}}, "")
+{%   endif %}
+{% endfor %}
+
+        Qt.callLater(function() {
+            if (simulationWindow.interfaces.length > 0) {
+                simulationWindow.currentInterfaceIndex = 0
+            }
+        })
+    }
+
+    property bool backendReady: true  // TODO : Need to handle when backend is not ready.
+
+{% for interface in module.interfaces %}
+{%   for property in interface.properties %}
+    property Component custom{{interface|upperfirst}}{{property.name|capitalize}}Component: null
+{%   endfor %}
+{% endfor %}
+
+    property var interfaces: []
+    property int currentInterfaceIndex: -1
+    property string currentInterfaceName: ""
+    property var currentBackend: null
+    property bool currentIsZoned: false
+    property var availableZones: []
+    property int currentZoneIndex: -1
+    property string currentZone: ""
+    property int propertyFilter: 0  // 0=All, 1=Non-Zoned, 2=Zoned
+
+    property string interfaceSearchText: ""
+    property string propertySearchText: ""
+
+    signal propertyChanged(string propertyName, var newValue)
+    signal interfaceChanged(string interfaceName)
+    signal zoneChanged(string newZone)
+
+    function registerInterface(name, backend, isZoned, zones) {
+        interfaces = interfaces.concat([{
+            name: name,
+            backend: backend,
+            isZoned: isZoned,
+            zones: zones || []
+        }])
+    }
+
+    function matchesSearch(text, searchText) {
+        if (!searchText || searchText.length === 0) return true
+        return text.toLowerCase().indexOf(searchText.toLowerCase()) !== -1
+    }
+
+    property var filteredInterfaces: {
+        if (!interfaceSearchText || interfaceSearchText.length === 0) {
+            return interfaces
+        }
+        var filtered = []
+        for (var i = 0; i < interfaces.length; i++) {
+            if (matchesSearch(interfaces[i].name, interfaceSearchText)) {
+                filtered.push(interfaces[i])
+            }
+        }
+        return filtered
+    }
+
+    onCurrentInterfaceIndexChanged: {
+        if (currentInterfaceIndex >= 0 && currentInterfaceIndex < interfaces.length) {
+            var iface = interfaces[currentInterfaceIndex]
+
+            currentInterfaceName = iface.name
+            currentBackend = iface.backend
+            currentIsZoned = iface.isZoned
+
+            if (currentIsZoned) {
+                availableZones = iface.zones
+                if (availableZones.length > 0) {
+                    currentZoneIndex = 0
+                    currentZone = availableZones[0]
+                } else {
+                    currentZoneIndex = -1
+                    currentZone = ""
+                }
+            } else {
+                availableZones = []
+                currentZoneIndex = -1
+                currentZone = ""
+            }
+
+            propertyFilter = 0
+            interfaceChanged(currentInterfaceName)
+        } else {
+            currentInterfaceName = ""
+            currentBackend = null
+            currentIsZoned = false
+            availableZones = []
+            currentZoneIndex = -1
+            currentZone = ""
+        }
+    }
+    onCurrentZoneIndexChanged: {
+        if (availableZones.length > 0) {
+            currentZone = availableZones[currentZoneIndex]
+            zoneChanged(currentZone)
+        } else {
+            currentZone = ""
+        }
+    }
+
+{% for enum in module.enums %}
+    ListModel {
+        id: {{enum|lower}}model
+{%   for member in enum.members %}
+        ListElement { name: "{{member.name}}"; value: {{member.value}} }
+{%   endfor %}
+    }
+{% endfor %}
+
+    // MAIN LAYOUT
+    RowLayout {
+        anchors.fill: parent
+        spacing: 0
+
+        // ========================================
+        // LEFT PANEL: INTERFACE SELECTOR
+        // ========================================
+        InterfaceSelector {
+            Layout.preferredWidth: 220
+            Layout.fillHeight: true
+
+            interfaces: simulationWindow.interfaces
+            currentInterfaceIndex: simulationWindow.currentInterfaceIndex
+            searchText: simulationWindow.interfaceSearchText
+
+            onInterfaceSelected: function(index) {
+                simulationWindow.currentInterfaceIndex = index
+            }
+
+            onSearchTextChanged: {
+                simulationWindow.interfaceSearchText = searchText
+            }
+        }
+
+        // RIGHT PANEL: PROPERTIES
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 0
+
+            // TOP BAR
+            TopBar {
+                Layout.fillWidth: true
+
+                interfaceName: simulationWindow.currentInterfaceName
+                isZoned: simulationWindow.currentIsZoned
+                availableZones: simulationWindow.availableZones
+                currentZoneIndex: simulationWindow.currentZoneIndex
+                propertySearchText: simulationWindow.propertySearchText
+                propertyFilter: simulationWindow.propertyFilter
+
+                onZoneChanged: function(index) {
+                    simulationWindow.currentZoneIndex = index
+                }
+
+                onPropertySearchTextChanged: {
+                    simulationWindow.propertySearchText = propertySearchText
+                }
+
+                onPropertyFilterChanged: {
+                    simulationWindow.propertyFilter = propertyFilter
+                }
+            }
+
+            // PROPERTIES AREA
+            ScrollView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+
+                ColumnLayout {
+                    width: parent.parent.width - 32
+                    x: 16
+                    y: 16
+                    spacing: 12
+
+{% for interface in module.interfaces %}
+{%   set interface_zoned = interface|is_zoned %}
+{#   Properties for {{interface}} #}
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 12
+                        visible: simulationWindow.currentInterfaceName === "{{interface}}"
+{%   if interface_zoned %}
+{#     Zoned interface - Non-zoned properties section #}
+                        PropertySection {
+                            title: "NON-ZONED PROPERTIES"
+                            visible: simulationWindow.propertyFilter === 0 || simulationWindow.propertyFilter === 1
+{%     for property in interface.properties %}
+{%       if not property|is_zoned %}
+{{         render_property(property, interface, false, interface|lower ~ "_nz_" ~ loop.index) | indent(28) }}
+{%       endif %}
+{%     endfor %}
+                        }
+
+{#     Zoned interface - Zoned properties section #}
+                        PropertySection {
+                            title: simulationWindow.currentZone.toUpperCase() + " ZONE PROPERTIES"
+                            Layout.topMargin: simulationWindow.propertyFilter === 0 ? 16 : 0
+                            visible: simulationWindow.propertyFilter === 0 || simulationWindow.propertyFilter === 2
+{%     for property in interface.properties %}
+{%       if property|is_zoned %}
+{{         render_property(property, interface, true, interface|lower ~ "_z_" ~ loop.index) | indent(28) }}
+{%       endif %}
+{%     endfor %}
+                        }
+
+{%   else %}
+{#     Non-zoned interface - all properties #}
+                        PropertySection {
+                            title: "PROPERTIES"
+{%     for property in interface.properties %}
+{{       render_property(property, interface, false, interface|lower ~ "_" ~ loop.index) | indent(28) }}
+{%     endfor %}
+                        }
+{%   endif %}
+                    }
+
+{% endfor %}
+
+                    // No results message for property search
+                    NoResultsFound {
+                        Layout.fillWidth: true
+                        searchText: simulationWindow.propertySearchText
+                        itemType: "properties"
+                        visible: {
+                            if (!simulationWindow.propertySearchText || simulationWindow.propertySearchText.length === 0) return false
+                            if (simulationWindow.currentInterfaceName === "") return false
+
+                            var hasVisibleProperties = false
+{% for interface in module.interfaces %}
+                            if (simulationWindow.currentInterfaceName === "{{interface}}") {
+{%   for property in interface.properties %}
+                                if (simulationWindow.matchesSearch("{{property.name}}", simulationWindow.propertySearchText)) {
+                                    hasVisibleProperties = true
+                                }
+{%   endfor %}
+                            }
+{% endfor %}
+                            return !hasVisibleProperties
+                        }
+                    }
+                }
+            }
+
+            // FOOTER
+            Footer {
+                Layout.fillWidth: true
+                connected: simulationWindow.backendReady
+                interfaceName: simulationWindow.currentInterfaceName
+                isZoned: simulationWindow.currentIsZoned
+                currentZone: simulationWindow.currentZone
+                moduleName: "{{module|qml_type}}"
+            }
+        }
+    }
+
+{% for interface in module.interfaces %}
+{%   if interface|is_zoned %}
+    Connections {
+        target: {{interface|lower}}Backend
+        function onInitializationDone() {
+            if (simulationWindow.currentInterfaceName === "{{interface}}") {
+                // Only use backend zones if no annotation zones were provided
+                if (simulationWindow.availableZones.length === 0) {
+                    simulationWindow.availableZones = {{interface|lower}}Backend.availableZones()
+                    if (simulationWindow.availableZones.length > 0) {
+                        simulationWindow.currentZoneIndex = 0
+                        simulationWindow.currentZone = simulationWindow.availableZones[0]
+                    }
+                }
+            }
+        }
+    }
+{%   endif %}
+{% endfor %}
+}

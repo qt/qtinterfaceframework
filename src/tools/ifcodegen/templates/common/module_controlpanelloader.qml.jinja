@@ -1,0 +1,70 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+{% include "common/generated_comment.qml.jinja" %}
+
+import QtQuick
+
+/**
+ * \brief Control Panel Loader for {{module}}
+ *
+ * Automatically loads the control panel and connects all backends.
+ * Can be reused even if module_simulation.qml is customized.
+ *
+ * Usage:
+ *   ControlPanelLoader {
+ *       climateBackend: climateSimulation
+ *       mediaBackend: mediaSimulation
+ *   }
+ */
+QtObject {
+    id: root
+{% for iface in module.interfaces %}
+    required property var {{iface|lower}}Backend
+{% endfor %}
+
+    property var controlPanel: null
+
+    /**
+     * \brief Control panel file path
+     * Can be overridden to load custom control panel
+     */
+{% if module.tags.config_simulator and module.tags.config_simulator.controlPanelFile %}
+    property string controlPanelFile: "{{module.tags.config_simulator.controlPanelFile}}"
+{% else %}
+    property string controlPanelFile: "qrc:///simulation/{{module.module_name|lower}}_controlpanel.qml"
+{% endif %}
+
+    // ========================================
+    // LOADING LOGIC
+    // ========================================
+
+    Component.onCompleted: {
+        loadControlPanel()
+    }
+
+    /**
+     * \brief Load the control panel and connect backends
+     */
+    function loadControlPanel() {
+        var component = Qt.createComponent(controlPanelFile)
+
+        if (component.status === Component.Ready) {
+            controlPanel = component.createObject(root, {
+{% for iface in module.interfaces %}
+                "{{iface|lower}}Backend": root.{{iface|lower}}Backend{{ "," if not loop.last else "" }}
+{% endfor %}
+            })
+
+            if (controlPanel) {
+                console.log("Control panel loaded successfully with all backends.")
+            } else {
+                console.error("Failed to create control panel instance")
+            }
+        } else if (component.status === Component.Error) {
+            console.error("Error loading control panel:", component.errorString())
+        } else {
+            console.warn("Control panel component not ready")
+        }
+    }
+}

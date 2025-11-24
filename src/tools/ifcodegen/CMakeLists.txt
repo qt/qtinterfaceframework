@@ -283,6 +283,10 @@ qt_copy_or_install(
     templates/common/simulation_data.json.jinja
     templates/common/simulation.qrc.jinja
     templates/common/module_simulation.qml.jinja
+    templates/common/controlpanel_macros.qml.jinja
+    templates/common/module_controlpanel_base.qml.jinja
+    templates/common/module_controlpanelloader.qml.jinja
+    templates/common/module_controlpanel.qml.jinja
     templates/common/backend_simulation.cpp.jinja
     templates/common/backend_simulation.h.jinja
     templates/common/backend_simulation.qml.jinja

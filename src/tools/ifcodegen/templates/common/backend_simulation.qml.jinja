@@ -32,6 +32,10 @@ import {{module|qml_type}}.simulation
         Base.initialize()
     }
 
+    function getSettings() {
+        return d.settings;
+    }
+
 {% if interface_zoned %}
     function availableZones() {
         return d.settings.zones;

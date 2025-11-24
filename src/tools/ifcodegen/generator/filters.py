@@ -8,7 +8,7 @@
 import json
 import inspect
 
-from qface.idl.domain import Module, Interface, Property, Parameter, Field, Struct
+from qface.idl.domain import Module, Interface, Property, Parameter, Field, Struct, Operation, Signal
 from qface.helper.generic import lower_first, upper_first
 from qface.helper.qtcpp import Filters
 
@@ -285,6 +285,35 @@ def setter_name(symbol):
     return 'set' + symbol.name[0].upper() + symbol.name[1:]
 
 
+def is_zoned(symbol):
+    """
+    Returns if property, interface, operation or signal is zoned
+    """
+    if type(symbol) is Interface:
+        zoned = symbol.tags.get('config', {}).get('zoned', False)
+        return zoned if isinstance(zoned, bool) else False
+
+    elif isinstance(symbol, (Property, Operation, Signal)):
+        interface_zoned = isinstance(
+                symbol.interface.tags.get('config', {}).get('zoned'), bool
+            ) and symbol.interface.tags['config']['zoned']
+        symbol_zoned = (
+            symbol.tags.get('config_simulator', {}).get('zoned', None)
+        )
+        if symbol_zoned is True and not interface_zoned:
+             jinja_error(
+                'Warning: Its not possible to have zoned member {0} in a '
+                'non-zoned interface'.format(symbol)
+            )
+        return symbol_zoned if isinstance(symbol_zoned, bool) else interface_zoned
+    else:
+        jinja_error(
+            'is_zoned: {0} can be a interface, property, operation or '
+            'signal'.format(symbol)
+        )
+        return False
+
+
 def strip_QT(s):
     """
     If the given string starts with QT, stip it away.
@@ -536,6 +565,7 @@ def register_filters(generator):
     generator.register_filter('parameter_type', parameter_type)
     generator.register_filter('getter_name', getter_name)
     generator.register_filter('setter_name', setter_name)
+    generator.register_filter('is_zoned', is_zoned)
     generator.register_filter('test_type_value', test_type_value)
     generator.register_filter('default_type_value', default_type_value)
     generator.register_filter('flag_type', flag_type)
