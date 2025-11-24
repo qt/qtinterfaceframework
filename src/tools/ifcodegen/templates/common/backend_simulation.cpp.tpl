@@ -74,7 +74,7 @@
 {%       endif %}
 {% endfor %}
 {% if interface_zoned %}
-    , m_zones(new QQmlPropertyMap(this))
+    , m_zones(QQmlPropertyMap::create(this))
 {% endif %}
 {
     //In some cases the engine is unused, this doesn't do any harm if it is still used

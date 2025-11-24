@@ -206,7 +206,7 @@ public:
     QQmlPropertyMap *zones() const { return m_zones; }
 
 public:
-    QQmlPropertyMap *m_zones = new QQmlPropertyMap(this);
+    QQmlPropertyMap *m_zones = QQmlPropertyMap::create(this);
 };
 
 class tst_QIfSimulationGlobalObject : public QObject
