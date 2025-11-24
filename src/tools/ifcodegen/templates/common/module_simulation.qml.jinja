@@ -10,9 +10,21 @@ import QtQuick
 import {{module|qml_type}}.simulation
 
 QtObject {
+    id: simulationRoot
+
 {% for iface in module.interfaces %}
     property var {{iface|lower}} : {{iface|upperfirst}}Simulation {
         id: {{iface|lower}}
     }
 {% endfor %}
+
+{% if module.tags.config_simulator and module.tags.config_simulator.controlPanel %}
+    property var controlPanelLoader: {{module.module_name|upperfirst}}ControlPanelLoader {
+{% for iface in module.interfaces %}
+        {{iface|lower}}Backend: {{iface|lower}}
+{% endfor %}
+    }
+
+    readonly property var controlPanel: controlPanelLoader.controlPanel
+{% endif %}
 }

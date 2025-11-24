@@ -1,0 +1,171 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+
+{# MACRO: Render a single property card #}
+{% macro render_property(property, interface, is_zoned, unique_id) -%}
+{%   set interface_zoned = interface|is_zoned %}
+{%   set interface_name = interface|string %}
+{%   set prop_access = (interface|lower) + "Backend" + (".zoneAt(simulationWindow.currentZone)." if is_zoned else ".") + property.name %}
+{%   if is_zoned %}
+{%     set prop_access_condition = "simulationWindow.currentInterfaceName === \"" ~ interface_name ~ "\" && simulationWindow.currentZone !== \"\" && " ~ (interface|lower) ~ "Backend.zoneAt(simulationWindow.currentZone)" %}
+{%   else %}
+{%     set prop_access_condition = "simulationWindow.currentInterfaceName === \"" ~ interface_name ~ "\"" %}
+{%   endif %}
+
+{%   if interface_zoned %}
+{%     set setter_zone = "simulationWindow.currentZone" if is_zoned else '""' %}
+{%   endif %}
+{%   set setter_name = property|setter_name %}
+{# Override Loader - user can replace entire property UI #}
+Loader {
+    id: {{interface|lower}}Custom{{property.name|capitalize}}Loader
+    Layout.fillWidth: true
+    visible: simulationWindow.matchesSearch("{{property.name}}", simulationWindow.propertySearchText)
+    active: simulationWindow.backendReady &&
+            simulationWindow.custom{{interface|upperfirst}}{{property.name|capitalize}}Component !== null &&
+            simulationWindow.currentInterfaceName === "{{interface}}"
+    sourceComponent: simulationWindow.custom{{interface|upperfirst}}{{property.name|capitalize}}Component
+
+    onLoaded: {
+        // Verify custom component inherits from CustomControlPanelComponent
+        if (!(item instanceof CustomControlPanelComponent)) {
+            console.error("Custom component for {{interface}}.{{property.name}} must inherit from CustomControlPanelComponent")
+            return
+        }
+        item.backendObject = {{interface|lower}}Backend
+        item.propertyName = "{{property.name}}"
+        item.setterFunction = "{{setter_name}}"
+{%   if interface_zoned %}
+        item.isZoned = {{is_zoned|lower}}
+        item.currentZone = {% if is_zoned %}simulationWindow.currentZone{% else %}""{% endif %}
+{%   endif %}
+    }
+
+    Binding {
+        target: {{interface|lower}}Custom{{property.name|capitalize}}Loader.item
+        property: "backendProperty"
+        value: {{prop_access_condition}} && {{interface|lower}}Custom{{property.name|capitalize}}Loader.item
+               ? {{prop_access}}
+               : ({{interface|lower}}Custom{{property.name|capitalize}}Loader.item ? {{interface|lower}}Custom{{property.name|capitalize}}Loader.item.backendProperty : undefined)
+        when: {{interface|lower}}Custom{{property.name|capitalize}}Loader.item !== null
+
+        restoreMode: Binding.RestoreBinding
+    }
+
+{%     if is_zoned %}
+    Connections {
+        target: simulationWindow
+        function onCurrentZoneChanged() {
+            if ({{interface|lower}}Custom{{property.name|capitalize}}Loader.item && {{interface|lower}}Custom{{property.name|capitalize}}Loader.item instanceof CustomControlPanelComponent) {
+                {{interface|lower}}Custom{{property.name|capitalize}}Loader.item.currentZone = simulationWindow.currentZone
+            }
+        }
+    }
+{%     endif %}
+}
+{# Default Implementation #}
+PropertyCard {
+    id: {{interface|lower}}{{property.name|capitalize}}DefaultCard
+    visible: !{{interface|lower}}Custom{{property.name|capitalize}}Loader.active &&
+             simulationWindow.currentInterfaceName === "{{interface}}" &&
+             simulationWindow.matchesSearch("{{property.name}}", simulationWindow.propertySearchText)
+
+    propertyName: "{{property}}"
+    nonZonedBadge: {{(interface_zoned and not is_zoned)|lower}}
+
+    content: Component {
+{%   if property.tags.config_simulator and property.tags.config_simulator.unsupported %}
+{#   UNSUPPORTED #}
+                UnsupportedControl {
+                }
+
+{%   elif property.type.is_enum or property.type.is_flag %}
+{#   ENUM/FLAG - ComboBox #}
+                ComboBoxControl {
+                    Layout.fillWidth: true
+                    valueModel: {{property.type|lower}}model
+                    value: {{prop_access_condition}} ? {{prop_access}} : value
+                    isEnumModel: true
+
+                    onValueActivated: function(value) {
+                        {{interface|lower}}Backend.{{setter_name}}(value{% if is_zoned %}, {{setter_zone}}{% endif %})
+                        simulationWindow.propertyChanged("{{property.name}}", value)
+                    }
+                }
+
+{%   elif property.tags.config_simulator and property.tags.config_simulator.domain %}
+{#   DOMAIN (Discrete Values) - ComboBox #}
+                ComboBoxControl {
+                    Layout.fillWidth: true
+                    property var propertySettings: {{interface|lower}}Backend.getSettings().{{property.name}}
+                    valueModel: IfSimulator.parseDomainValue(propertySettings, "domain"{% if is_zoned %}, {{setter_zone}}{% endif %})
+                    value: {{prop_access_condition}} ? {{prop_access}} : value
+
+                    onValueActivated: function(value) {
+                        {{interface|lower}}Backend.{{setter_name}}(value{% if is_zoned %}, {{setter_zone}}{% endif %})
+                        simulationWindow.propertyChanged("{{property.name}}", value)
+                    }
+                }
+
+{%   elif property|return_type == "bool" %}
+{#   BOOLEAN - Use BooleanControl from ControlPanelHelper #}
+                BooleanControl {
+                    checked: {{prop_access_condition}} ? {{prop_access}} : checked
+
+                    onToggled: function(checked) {
+                        {{interface|lower}}Backend.{{setter_name}}(checked{% if is_zoned %}, {{setter_zone}}{% endif %})
+                        simulationWindow.propertyChanged("{{property.name}}", checked)
+                    }
+                }
+
+{%   elif property.tags.config_simulator and property.tags.config_simulator.range %}
+{#   RANGE - Slider #}
+                SpinControl {
+                    width: parent ? parent.width : 200
+                    property var propertySettings: {{interface|lower}}Backend.getSettings().{{property.name}}
+                    property var rangeValue: IfSimulator.parseDomainValue(propertySettings, "range"{% if is_zoned %}, {{setter_zone}}{% endif %})
+
+                    from: (rangeValue && rangeValue[0] !== undefined) ? rangeValue[0] : ControlPanelStyle.minInt32
+                    to: (rangeValue && rangeValue[1] !== undefined) ? rangeValue[1] : ControlPanelStyle.maxInt32
+                    value: {{prop_access_condition}} ? {{prop_access}} : value
+
+                    onValueModified: function(val) {
+                        {{interface|lower}}Backend.{{setter_name}}(val{% if is_zoned %}, {{setter_zone}}{% endif %})
+                        simulationWindow.propertyChanged("{{property.name}}", val)
+                    }
+                }
+
+{%   elif property.tags.config_simulator and (property.tags.config_simulator.minimum or property.tags.config_simulator.maximum) %}
+{#   MINIMUM/MAXIMUM Only - SpinBox #}
+                SpinControl {
+                    width: parent ? parent.width : 200
+                    property var propertySettings: {{interface|lower}}Backend.getSettings().{{property.name}}
+                    property var minValue: IfSimulator.parseDomainValue(propertySettings, "minimum"{% if is_zoned %}, {{setter_zone}}{% endif %})
+                    property var maxValue: IfSimulator.parseDomainValue(propertySettings, "maximum"{% if is_zoned %}, {{setter_zone}}{% endif %})
+
+                    from: minValue !== null ? minValue : ControlPanelStyle.minInt32
+                    to: maxValue !== null ? maxValue : ControlPanelStyle.maxInt32
+                    value: {{prop_access_condition}} ? {{prop_access}} : value
+
+                    onValueModified: function(val) {
+                        {{interface|lower}}Backend.{{setter_name}}(val{% if is_zoned %}, {{setter_zone}}{% endif %})
+                        simulationWindow.propertyChanged("{{property.name}}", val)
+                    }
+                }
+
+{%   else %}
+{#   DEFAULT - TextField #}
+                TextControl {
+                    width: parent ? parent.width : 200
+                    text: {{prop_access_condition}} ? {{prop_access}} : text
+
+                    onEditingFinished: {
+                        {{interface|lower}}Backend.{{setter_name}}(text{% if is_zoned %}, {{setter_zone}}{% endif %})
+                        simulationWindow.propertyChanged("{{property.name}}", text)
+                    }
+                }
+
+{%   endif %}
+        }
+}
+{%- endmacro %}
