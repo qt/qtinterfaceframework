@@ -6,8 +6,8 @@
 #}
 {% set class = '{0}'.format(module.module_name|upperfirst) %}
 {% set qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
-{% include 'common/generated_comment.cpp.tpl' %}
-{% import 'common/qtif_macros.j2' as qtif %}
+{% include 'common/generated_comment.cpp.jinja' %}
+{% import 'common/qtif_macros.jinja' as qtif %}
 
 #include "{{class|lower}}.h"
 #include "{{class|lower}}factory.h"

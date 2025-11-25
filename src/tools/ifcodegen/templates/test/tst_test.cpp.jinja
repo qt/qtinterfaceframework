@@ -4,8 +4,8 @@
 # Copyright (C) 2018 Pelagicore AG
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #}
-{% import 'common/qtif_macros.j2' as qtif %}
-{% include "common/generated_comment.cpp.tpl" %}
+{% import 'common/qtif_macros.jinja' as qtif %}
+{% include "common/generated_comment.cpp.jinja" %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned  %}
 {% set testModels = false %}
 {% for property in interface.properties if not once %}
@@ -27,7 +27,7 @@ using namespace Qt::StringLiterals;
 
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-{% include "pagingmodel.h.tpl" %}
+{% include "pagingmodel.h.jinja" %}
 {%   endif %}
 {% endfor %}
 

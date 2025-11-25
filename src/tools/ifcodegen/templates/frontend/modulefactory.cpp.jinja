@@ -6,7 +6,7 @@
 #}
 {% set class = '{0}Factory'.format(module.module_name|upperfirst) %}
 {% set qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
-{% include 'common/generated_comment.cpp.tpl' %}
+{% include 'common/generated_comment.cpp.jinja' %}
 
 #include "{{class|lower}}.h"
 

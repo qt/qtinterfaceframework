@@ -4,8 +4,8 @@
 # Copyright (C) 2018 Pelagicore AG
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #}
-{% import 'common/qtif_macros.j2' as qtif %}
-{% include "common/generated_comment.cpp.tpl" %}
+{% import 'common/qtif_macros.jinja' as qtif %}
+{% include "common/generated_comment.cpp.jinja" %}
 {% set class = '{0}RoBackend'.format(interface) %}
 {% set zone_class = '{0}RoZone'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
@@ -25,7 +25,7 @@ Q_LOGGING_CATEGORY(qLcRO{{interface}}, "{{module|qml_type|lower}}.{{interface|lo
 
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-{% include "pagingmodel.cpp.tpl" %}
+{% include "pagingmodel.cpp.jinja" %}
 {%   endif %}
 {% endfor %}
 

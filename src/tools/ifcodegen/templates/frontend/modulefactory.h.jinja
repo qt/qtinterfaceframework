@@ -8,7 +8,7 @@
 {% set class = '{0}Factory'.format(module.module_name|upperfirst) %}
 {% set qml_name = (module|qml_type).split('.')[-1]|upperfirst %}
 {% set oncedefine = '{0}_H_'.format(class|upper) %}
-{% include 'common/generated_comment.cpp.tpl' %}
+{% include 'common/generated_comment.cpp.jinja' %}
 
 #ifndef {{oncedefine}}
 #define {{oncedefine}}
