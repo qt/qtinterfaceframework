@@ -2,7 +2,7 @@ custom_test:
     extra_filters: [ "extra-filter/filters.py" ]
     module:
         documents:
-            - "{{srcBase|lower}}.pri": "module.pri.tpl"
-            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.tpl'
-            - 'tst_custom.cpp': 'tst_custom.cpp.tpl'
-            - 'tst_custom.h': 'tst_custom.h.tpl'
+            - "{{srcBase|lower}}.pri": "module.pri.jinja"
+            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.jinja'
+            - 'tst_custom.cpp': 'tst_custom.cpp.jinja'
+            - 'tst_custom.h': 'tst_custom.h.jinja'

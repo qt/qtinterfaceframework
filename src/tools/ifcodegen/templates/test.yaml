@@ -1,10 +1,10 @@
 test:
     module:
         documents:
-            - "{{srcBase|lower}}.pri": "module.pri.tpl"
-            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.tpl'
-            - 'main.cpp': 'main.cpp.tpl'
+            - "{{srcBase|lower}}.pri": "module.pri.jinja"
+            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.jinja'
+            - 'main.cpp': 'main.cpp.jinja'
     interface:
         documents:
-            - 'tst_{{interface|lower}}.cpp': 'tst_test.cpp.tpl'
-            - 'tst_{{interface|lower}}.h': 'tst_test.h.tpl'
+            - 'tst_{{interface|lower}}.cpp': 'tst_test.cpp.jinja'
+            - 'tst_{{interface|lower}}.h': 'tst_test.h.jinja'
