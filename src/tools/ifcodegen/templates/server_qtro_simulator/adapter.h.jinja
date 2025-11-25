@@ -3,8 +3,8 @@
 # Copyright (C) 2019 Luxoft Sweden AB
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #}
-{% import 'common/qtif_macros.j2' as qtif %}
-{% include "common/generated_comment.cpp.tpl" %}
+{% import 'common/qtif_macros.jinja' as qtif %}
+{% include "common/generated_comment.cpp.jinja" %}
 {% set class = '{0}QtRoAdapter'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
 {% set oncedefine = '{0}_{1}_H_'.format(module.module_name|upper, class|upper) %}

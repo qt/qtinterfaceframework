@@ -5,7 +5,7 @@
 #}
 {% set exportsymbol = '{0}'.format(module|upper|replace('.', '_')) %}
 {% set oncedefine = '{0}GLOBAL_H_'.format(exportsymbol) %}
-{% include 'common/generated_comment.cpp.tpl' %}
+{% include 'common/generated_comment.cpp.jinja' %}
 
 #ifndef {{oncedefine}}
 #define {{oncedefine}}

@@ -228,75 +228,75 @@ add_custom_target(generator SOURCES
 
 qt_copy_or_install(
     FILES
-    templates/common/generated_comment.cpp.tpl
-    templates/common/generated_comment.cmake.tpl
-    templates/common/generated_comment.qmake.tpl
-    templates/common/generated_comment.qml.tpl
-    templates/common/generated_comment.rep.tpl
-    templates/common/qtif_macros.j2
-    templates/common/simulation.qmltypes.tpl
-    templates/common/plugins.qmltypes.tpl
-    templates/common/designer.metainfo.tpl
-    templates/common/qmldir.tpl
-    templates/common/interface.rep.tpl
-    templates/common/simulation_data.json.tpl
-    templates/common/simulation.qrc.tpl
-    templates/common/module_simulation.qml.tpl
-    templates/common/backend_simulation.cpp.tpl
-    templates/common/backend_simulation.h.tpl
-    templates/common/backend_simulation.qml.tpl
-    templates/common/pagingmodel_simulation.h.tpl
-    templates/common/pagingmodel_simulation.cpp.tpl
+    templates/common/generated_comment.cpp.jinja
+    templates/common/generated_comment.cmake.jinja
+    templates/common/generated_comment.qmake.jinja
+    templates/common/generated_comment.qml.jinja
+    templates/common/generated_comment.rep.jinja
+    templates/common/qtif_macros.jinja
+    templates/common/simulation.qmltypes.jinja
+    templates/common/plugins.qmltypes.jinja
+    templates/common/designer.metainfo.jinja
+    templates/common/qmldir.jinja
+    templates/common/interface.rep.jinja
+    templates/common/simulation_data.json.jinja
+    templates/common/simulation.qrc.jinja
+    templates/common/module_simulation.qml.jinja
+    templates/common/backend_simulation.cpp.jinja
+    templates/common/backend_simulation.h.jinja
+    templates/common/backend_simulation.qml.jinja
+    templates/common/pagingmodel_simulation.h.jinja
+    templates/common/pagingmodel_simulation.cpp.jinja
     DESTINATION "${templates_install_dir}/common"
     )
 
 qt_copy_or_install(
     FILES
-    templates/frontend/backendinterface.cpp.tpl
-    templates/frontend/backendinterface.h.tpl
-    templates/frontend/global.h.tpl
-    templates/frontend/interface.cpp.tpl
-    templates/frontend/interface.h.tpl
-    templates/frontend/interface_p.h.tpl
-    templates/frontend/module.cpp.tpl
-    templates/frontend/module.h.tpl
-    templates/frontend/module_qml_enum.qdocinc.tpl
-    templates/frontend/module.pri.tpl
-    templates/frontend/modulefactory.cpp.tpl
-    templates/frontend/modulefactory.h.tpl
-    templates/frontend/struct.cpp.tpl
-    templates/frontend/struct.h.tpl
-    templates/frontend/CMakeLists.txt.tpl
+    templates/frontend/backendinterface.cpp.jinja
+    templates/frontend/backendinterface.h.jinja
+    templates/frontend/global.h.jinja
+    templates/frontend/interface.cpp.jinja
+    templates/frontend/interface.h.jinja
+    templates/frontend/interface_p.h.jinja
+    templates/frontend/module.cpp.jinja
+    templates/frontend/module.h.jinja
+    templates/frontend/module_qml_enum.qdocinc.jinja
+    templates/frontend/module.pri.jinja
+    templates/frontend/modulefactory.cpp.jinja
+    templates/frontend/modulefactory.h.jinja
+    templates/frontend/struct.cpp.jinja
+    templates/frontend/struct.h.jinja
+    templates/frontend/CMakeLists.txt.jinja
     DESTINATION "${templates_install_dir}/frontend"
     )
 
 qt_copy_or_install(
     FILES
-    templates/qmlplugin/module.pri.tpl
-    templates/qmlplugin/plugin.cpp.tpl
-    templates/qmlplugin/qmldir_plugin.tpl
-    templates/qmlplugin/CMakeLists.txt.tpl
+    templates/qmlplugin/module.pri.jinja
+    templates/qmlplugin/plugin.cpp.jinja
+    templates/qmlplugin/qmldir_plugin.jinja
+    templates/qmlplugin/CMakeLists.txt.jinja
     DESTINATION "${templates_install_dir}/qmlplugin"
     )
 
 qt_copy_or_install(
     FILES
-    templates/backend_simulator/plugin.cpp.tpl
-    templates/backend_simulator/plugin.h.tpl
-    templates/backend_simulator/plugin.json
-    templates/backend_simulator/plugin.pri.tpl
-    templates/backend_simulator/CMakeLists.txt.tpl
+    templates/backend_simulator/plugin.cpp.jinja
+    templates/backend_simulator/plugin.h.jinja
+    templates/backend_simulator/plugin.json.jinja
+    templates/backend_simulator/plugin.pri.jinja
+    templates/backend_simulator/CMakeLists.txt.jinja
     DESTINATION "${templates_install_dir}/backend_simulator"
     )
 
 qt_copy_or_install(
     FILES
-    templates/test/tst_test.h.tpl
-    templates/test/tst_test.cpp.tpl
-    templates/test/module.pri.tpl
-    templates/test/main.cpp.tpl
-    templates/test/pagingmodel.h.tpl
-    templates/test/CMakeLists.txt.tpl
+    templates/test/tst_test.h.jinja
+    templates/test/tst_test.cpp.jinja
+    templates/test/module.pri.jinja
+    templates/test/main.cpp.jinja
+    templates/test/pagingmodel.h.jinja
+    templates/test/CMakeLists.txt.jinja
     DESTINATION "${templates_install_dir}/test"
     )
 
@@ -314,7 +314,7 @@ if ("${QT_HOST_PATH}" STREQUAL "" OR (CMAKE_CROSSCOMPILING AND QT_FORCE_BUILD_TO
         AND NOT QT_FEATURE_compiled_ifcodegen)
     qt_copy_or_install(
         FILES
-        templates/backend_qtro/backend.cpp.tpl
+        templates/backend_qtro/backend.cpp.jinja
         generator/global_functions.py
         generator/builtin_config.py
         generator/filters.py
@@ -340,37 +340,37 @@ endif()
 if (QT_FEATURE_remoteobjects)
     qt_copy_or_install(
         FILES
-        templates/backend_qtro/backend.cpp.tpl
-        templates/backend_qtro/backend.h.tpl
-        templates/backend_qtro/pagingmodel.h.tpl
-        templates/backend_qtro/pagingmodel.cpp.tpl
-        templates/backend_qtro/plugin.cpp.tpl
-        templates/backend_qtro/plugin.h.tpl
-        templates/backend_qtro/plugin.json
-        templates/backend_qtro/plugin.pri.tpl
-        templates/backend_qtro/CMakeLists.txt.tpl
+        templates/backend_qtro/backend.cpp.jinja
+        templates/backend_qtro/backend.h.jinja
+        templates/backend_qtro/pagingmodel.h.jinja
+        templates/backend_qtro/pagingmodel.cpp.jinja
+        templates/backend_qtro/plugin.cpp.jinja
+        templates/backend_qtro/plugin.h.jinja
+        templates/backend_qtro/plugin.json.jinja
+        templates/backend_qtro/plugin.pri.jinja
+        templates/backend_qtro/CMakeLists.txt.jinja
         DESTINATION "${templates_install_dir}/backend_qtro"
         )
 
     qt_copy_or_install(
         FILES
-        templates/server_qtro/core.cpp.tpl
-        templates/server_qtro/core.h.tpl
-        templates/server_qtro/main.cpp.tpl
-        templates/server_qtro/server.pri.tpl
-        templates/server_qtro/CMakeLists.txt.tpl
+        templates/server_qtro/core.cpp.jinja
+        templates/server_qtro/core.h.jinja
+        templates/server_qtro/main.cpp.jinja
+        templates/server_qtro/server.pri.jinja
+        templates/server_qtro/CMakeLists.txt.jinja
         DESTINATION "${templates_install_dir}/server_qtro"
         )
 
     qt_copy_or_install(
         FILES
-        templates/server_qtro_simulator/core.cpp.tpl
-        templates/server_qtro_simulator/core.h.tpl
-        templates/server_qtro_simulator/adapter.cpp.tpl
-        templates/server_qtro_simulator/adapter.h.tpl
-        templates/server_qtro_simulator/main.cpp.tpl
-        templates/server_qtro_simulator/server.pri.tpl
-        templates/server_qtro_simulator/CMakeLists.txt.tpl
+        templates/server_qtro_simulator/core.cpp.jinja
+        templates/server_qtro_simulator/core.h.jinja
+        templates/server_qtro_simulator/adapter.cpp.jinja
+        templates/server_qtro_simulator/adapter.h.jinja
+        templates/server_qtro_simulator/main.cpp.jinja
+        templates/server_qtro_simulator/server.pri.jinja
+        templates/server_qtro_simulator/CMakeLists.txt.jinja
         DESTINATION "${templates_install_dir}/server_qtro_simulator"
         )
 

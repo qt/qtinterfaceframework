@@ -5,8 +5,8 @@
 # Copyright (C) 2017 Klaralvdalens Datakonsult AB (KDAB).
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 #}
-{% import 'common/qtif_macros.j2' as qtif %}
-{% include "common/generated_comment.cpp.tpl" %}
+{% import 'common/qtif_macros.jinja' as qtif %}
+{% include "common/generated_comment.cpp.jinja" %}
 {% set class = '{0}Backend'.format(interface) %}
 {% set zone_class = '{0}Zone'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
@@ -17,7 +17,7 @@
 
 {% for property in interface.properties %}
 {%   if property.type.is_model %}
-{% include "common/pagingmodel_simulation.cpp.tpl" %}
+{% include "common/pagingmodel_simulation.cpp.jinja" %}
 {%   endif %}
 {% endfor %}
 

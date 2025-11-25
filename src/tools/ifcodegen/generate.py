@@ -234,20 +234,20 @@ def self_check(ctx, param, value):
             test:
                 module:
                     documents:
-                        - "{{srcBase|lower}}": "module.tpl"
+                        - "{{srcBase|lower}}": "module.jinja"
                 interface:
                     documents:
-                        - 'tst_{{interface|lower}}': 'interface.tpl'
+                        - 'tst_{{interface|lower}}': 'interface.jinja'
             """)
 
         os.mkdir(tmp / "selfcheck")
-        with open(tmp / "selfcheck/module.tpl", 'w') as file:
+        with open(tmp / "selfcheck/module.jinja", 'w') as file:
             # Write content to the file
             file.write("""
             {{module.name}}
             """)
 
-        with open(tmp / "selfcheck/interface.tpl", 'w') as file:
+        with open(tmp / "selfcheck/interface.jinja", 'w') as file:
             # Write content to the file
             file.write("""
             {{interface.name}}

@@ -156,10 +156,10 @@
     frontend:
         module:
             documents:
-                - "{{module.module_name|lower}}plugin.h": "plugin.h.tpl"
+                - "{{module.module_name|lower}}plugin.h": "plugin.h.jinja"
         interface:
             documents:
-                - '{{interface|lower}}backend.h': 'backend.h.tpl'
+                - '{{interface|lower}}backend.h': 'backend.h.jinja'
     \endcode
 
     For every entity, there's a list of templates that must be called, when traversing this entity
@@ -193,7 +193,7 @@
         extra_filters: [ "extra-filter/filters.py" ]
         module:
             documents:
-                - "{{module.module_name|lower}}plugin.h": "plugin.h.tpl"
+                - "{{module.module_name|lower}}plugin.h": "plugin.h.jinja"
     \endcode
 
     \section2 Annotations YAML
