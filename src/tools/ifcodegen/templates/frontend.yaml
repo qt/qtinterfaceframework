@@ -1,25 +1,25 @@
 frontend:
     module:
         documents:
-            - '{{module.module_name|lower}}global.h': 'global.h.tpl'
-            - '{{module.module_name|lower}}.h': 'module.h.tpl'
-            - '{{module.module_name|lower}}.cpp': 'module.cpp.tpl'
-            - '{{module.module_name|lower}}module_enum.qdocinc': 'module_qml_enum.qdocinc.tpl'
-            - '{{module.module_name|lower}}factory.h': 'modulefactory.h.tpl'
-            - '{{module.module_name|lower}}factory.cpp': 'modulefactory.cpp.tpl'
-            - '{{srcBase|lower}}.pri': 'module.pri.tpl'
-            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.tpl'
-            - 'qml/{{module|qml_type|replace(".", "/")}}/plugins.qmltypes': 'common/plugins.qmltypes.tpl'
-            - "qml/{{module|qml_type|replace('.', '/')}}/designer/{{module.module_name|lower}}.metainfo": "common/designer.metainfo.tpl"
-            - 'qml/{{module|qml_type|replace(".", "/")}}/qmldir': 'common/qmldir.tpl'
+            - '{{module.module_name|lower}}global.h': 'global.h.jinja'
+            - '{{module.module_name|lower}}.h': 'module.h.jinja'
+            - '{{module.module_name|lower}}.cpp': 'module.cpp.jinja'
+            - '{{module.module_name|lower}}module_enum.qdocinc': 'module_qml_enum.qdocinc.jinja'
+            - '{{module.module_name|lower}}factory.h': 'modulefactory.h.jinja'
+            - '{{module.module_name|lower}}factory.cpp': 'modulefactory.cpp.jinja'
+            - '{{srcBase|lower}}.pri': 'module.pri.jinja'
+            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.jinja'
+            - 'qml/{{module|qml_type|replace(".", "/")}}/plugins.qmltypes': 'common/plugins.qmltypes.jinja'
+            - "qml/{{module|qml_type|replace('.', '/')}}/designer/{{module.module_name|lower}}.metainfo": "common/designer.metainfo.jinja"
+            - 'qml/{{module|qml_type|replace(".", "/")}}/qmldir': 'common/qmldir.jinja'
     interface:
         documents:
-            - '{{interface|lower}}backendinterface.h': 'backendinterface.h.tpl'
-            - '{{interface|lower}}backendinterface.cpp': 'backendinterface.cpp.tpl'
-            - '{{interface|lower}}.h': 'interface.h.tpl'
-            - '{{interface|lower}}_p.h': 'interface_p.h.tpl'
-            - '{{interface|lower}}.cpp': 'interface.cpp.tpl'
+            - '{{interface|lower}}backendinterface.h': 'backendinterface.h.jinja'
+            - '{{interface|lower}}backendinterface.cpp': 'backendinterface.cpp.jinja'
+            - '{{interface|lower}}.h': 'interface.h.jinja'
+            - '{{interface|lower}}_p.h': 'interface_p.h.jinja'
+            - '{{interface|lower}}.cpp': 'interface.cpp.jinja'
     struct:
         documents:
-            - '{{struct|lower}}.h': 'struct.h.tpl'
-            - '{{struct|lower}}.cpp': 'struct.cpp.tpl'
+            - '{{struct|lower}}.h': 'struct.h.jinja'
+            - '{{struct|lower}}.cpp': 'struct.cpp.jinja'

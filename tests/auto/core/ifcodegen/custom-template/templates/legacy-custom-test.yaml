@@ -1,12 +1,12 @@
 generate_rules:
     module_rules:
         - dest_file:  "{{srcBase|lower}}.pri"
-          template_file:  "module.pri.tpl"
+          template_file:  "module.pri.jinja"
         - dest_file:  '{{srcBase|lower}}.cmake'
-          template_file:  'CMakeLists.txt.tpl'
+          template_file:  'CMakeLists.txt.jinja'
         - dest_file: 'tst_custom.cpp'
-          template_file: 'tst_custom.cpp.tpl'
+          template_file: 'tst_custom.cpp.jinja'
         - dest_file: 'tst_custom.h'
-          template_file: 'tst_custom.h.tpl'
+          template_file: 'tst_custom.h.jinja'
     interface_rules:
     struct_rules:

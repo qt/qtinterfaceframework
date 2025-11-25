@@ -1,24 +1,24 @@
 server_qtro_simulator:
     module:
         documents:
-            - "core.cpp": "core.cpp.tpl"
-            - "core.h": "core.h.tpl"
-            - "{{srcBase|lower}}.pri": "server.pri.tpl"
-            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.tpl'
-            - "main.cpp": "main.cpp.tpl"
-            - "{{module.module_name|lower}}_simulation.qml": "common/module_simulation.qml.tpl"
-            - "{{module.module_name|lower}}_simulation_data.json": "common/simulation_data.json.tpl"
-            - "{{module.module_name|lower}}_simulation.qrc": "common/simulation.qrc.tpl"
-            - "qml/{{module|qml_type|replace('.', '/')}}/simulation/plugins.qmltypes": "common/simulation.qmltypes.tpl"
-            - "qml/{{module|qml_type|replace('.', '/')}}/simulation/qmldir": "common/qmldir.tpl"
-            - "qml/{{module|qml_type|replace('.', '/')}}/plugins.qmltypes": "common/plugins.qmltypes.tpl"
-            - "qml/{{module|qml_type|replace('.', '/')}}/designer/{{module.module_name|lower}}.metainfo": "common/designer.metainfo.tpl"
-            - "qml/{{module|qml_type|replace('.', '/')}}/qmldir": "common/qmldir.tpl"
+            - "core.cpp": "core.cpp.jinja"
+            - "core.h": "core.h.jinja"
+            - "{{srcBase|lower}}.pri": "server.pri.jinja"
+            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.jinja'
+            - "main.cpp": "main.cpp.jinja"
+            - "{{module.module_name|lower}}_simulation.qml": "common/module_simulation.qml.jinja"
+            - "{{module.module_name|lower}}_simulation_data.json": "common/simulation_data.json.jinja"
+            - "{{module.module_name|lower}}_simulation.qrc": "common/simulation.qrc.jinja"
+            - "qml/{{module|qml_type|replace('.', '/')}}/simulation/plugins.qmltypes": "common/simulation.qmltypes.jinja"
+            - "qml/{{module|qml_type|replace('.', '/')}}/simulation/qmldir": "common/qmldir.jinja"
+            - "qml/{{module|qml_type|replace('.', '/')}}/plugins.qmltypes": "common/plugins.qmltypes.jinja"
+            - "qml/{{module|qml_type|replace('.', '/')}}/designer/{{module.module_name|lower}}.metainfo": "common/designer.metainfo.jinja"
+            - "qml/{{module|qml_type|replace('.', '/')}}/qmldir": "common/qmldir.jinja"
     interface:
         documents:
-            - "{{interface|lower}}.rep": "common/interface.rep.tpl"
-            - '{{interface|lower}}adapter.h': 'adapter.h.tpl'
-            - '{{interface|lower}}adapter.cpp': 'adapter.cpp.tpl'
-            - '{{interface|lower}}backend.h': 'common/backend_simulation.h.tpl'
-            - '{{interface|lower}}backend.cpp': 'common/backend_simulation.cpp.tpl'
-            - '{{interface|upperfirst}}Simulation.qml': 'common/backend_simulation.qml.tpl'
+            - "{{interface|lower}}.rep": "common/interface.rep.jinja"
+            - '{{interface|lower}}adapter.h': 'adapter.h.jinja'
+            - '{{interface|lower}}adapter.cpp': 'adapter.cpp.jinja'
+            - '{{interface|lower}}backend.h': 'common/backend_simulation.h.jinja'
+            - '{{interface|lower}}backend.cpp': 'common/backend_simulation.cpp.jinja'
+            - '{{interface|upperfirst}}Simulation.qml': 'common/backend_simulation.qml.jinja'

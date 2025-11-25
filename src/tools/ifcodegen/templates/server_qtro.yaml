@@ -1,11 +1,11 @@
 server_qtro:
     module:
         documents:
-            - "core.cpp": "core.cpp.tpl"
-            - "core.h": "core.h.tpl"
-            - "main.cpp": "main.cpp.tpl"
-            - "{{srcBase|lower}}.pri": "server.pri.tpl"
-            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.tpl'
+            - "core.cpp": "core.cpp.jinja"
+            - "core.h": "core.h.jinja"
+            - "main.cpp": "main.cpp.jinja"
+            - "{{srcBase|lower}}.pri": "server.pri.jinja"
+            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.jinja'
     interface:
         documents:
-            - "{{interface|lower}}.rep": "common/interface.rep.tpl"
+            - "{{interface|lower}}.rep": "common/interface.rep.jinja"
