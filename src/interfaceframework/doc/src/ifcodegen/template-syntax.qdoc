@@ -14,7 +14,7 @@
 \nextpage Use the Generator
 
 This page is about the Jinja template engine. While the most detailed description of the template
-language can be found in the \l {https://jinja.palletsprojects.com/en/3.1.x/templates/}{Jinja documentation},
+language can be found in the \l {https://jinja.palletsprojects.com/en/stable/templates/}{Jinja documentation},
 some basic concepts are given in this article.
 
 
@@ -121,7 +121,7 @@ Inside of a for-loop block some special variables are available:
         \li The number of items in the sequence.
 \endtable
 
-See for more \l{http://jinja.pocoo.org/docs/2.9/templates/#list-of-control-structures}{Jinja
+See for more \l{https://jinja.palletsprojects.com/en/stable/templates/#list-of-control-structures}{Jinja
 documentation}
 
 
@@ -222,8 +222,8 @@ parentheses. For example, the following two expressions do the same thing:
 {% if loop.index is divisibleby(3) %}
 \endcode
 
-The List of builtin tests can be found on the \l{http://jinja.pocoo.org/docs/2.9/
-templates/#builtin-tests}{Jinja documentation page}.
+The List of builtin tests can be found on the
+\l{https://jinja.palletsprojects.com/en/stable/templates/#builtin-tests}{Jinja documentation page}.
 \section2 Filters
 
 Variables can be modified by functions called filters. Filters are separated from the variable by
