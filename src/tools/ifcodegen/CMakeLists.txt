@@ -237,6 +237,31 @@ add_custom_target(generator SOURCES
 ## INSTALL Targets
 #####################################################################
 
+# Combatibility layer for deprecated file with .tpl extension
+qt_copy_or_install(
+    FILES
+    templates/common/generated_comment.cpp.tpl
+    templates/common/generated_comment.cmake.tpl
+    templates/common/generated_comment.qmake.tpl
+    templates/common/generated_comment.qml.tpl
+    templates/common/generated_comment.rep.tpl
+    templates/common/qtif_macros.j2
+    templates/common/simulation.qmltypes.tpl
+    templates/common/plugins.qmltypes.tpl
+    templates/common/designer.metainfo.tpl
+    templates/common/qmldir.tpl
+    templates/common/interface.rep.tpl
+    templates/common/simulation_data.json.tpl
+    templates/common/simulation.qrc.tpl
+    templates/common/module_simulation.qml.tpl
+    templates/common/backend_simulation.cpp.tpl
+    templates/common/backend_simulation.h.tpl
+    templates/common/backend_simulation.qml.tpl
+    templates/common/pagingmodel_simulation.h.tpl
+    templates/common/pagingmodel_simulation.cpp.tpl
+    DESTINATION "${templates_install_dir}/common"
+    )
+
 qt_copy_or_install(
     FILES
     templates/common/generated_comment.cpp.jinja

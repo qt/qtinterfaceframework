@@ -4,7 +4,11 @@
 # Copyright (C) 2018 Pelagicore AG
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 #}
-{% include "common/generated_comment.cpp.jinja" %}
+{#
+This one is intentionally left with legacy extension to trigger the removal of
+deprecated .tpl files from templates/common in Qt 7.
+#}
+{% include "common/generated_comment.cpp.tpl" %}
 
 #include <QTest>
 
