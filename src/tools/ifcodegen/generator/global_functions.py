@@ -10,7 +10,10 @@ import click
 
 from jinja2 import TemplateAssertionError
 
+from . import builtin_config
+
 currentSrcFile = ""
+
 
 def jinjaTrace():
     """
@@ -25,6 +28,7 @@ def jinjaTrace():
                           template.get_corresponding_lineno(frame.f_lineno)))
         frame = frame.f_back
     return infos
+
 
 def jinja_error(msg):
     """
@@ -57,6 +61,72 @@ def jinja_warning(msg):
     click.secho(message, fg='yellow', err=True)
 
 
+def deprecate_helper(version, removal, message):
+    """
+    Handle deprecation similarly to Qt deprecation rules.
+    """
+
+    def version_to_int(version_string):
+        version_val = 0
+        i = 0
+        for ver in version_string.split('.'):
+            version_val = version_val << 8 | int(ver)
+            i += 1
+            if i >= 3:
+                break
+        for _ in range(i, 3):
+            version_val <<= 8
+        return version_val
+
+    deprecate_version = version_to_int(version)
+    qt_version = version_to_int(builtin_config.config['VERSION'])
+    if qt_version < deprecate_version:
+        return
+
+    removal_version = removal << 16
+    qt_disable_version = version_to_int(
+            builtin_config.config['QT_DISABLE_DEPRECATED_UP_TO'])
+    if qt_disable_version >= deprecate_version or \
+            qt_version >= removal_version:
+        message = 'Using deprecated construct which has to be removed.' \
+                  if message is None \
+                  else 'Deprecated usage to be removed: ' + message
+        jinja_error(message)
+        return
+
+    qt_warn_version = version_to_int(
+            builtin_config.config['QT_WARN_DEPRECATED_UP_TO'])
+    if qt_warn_version >= deprecate_version:
+        message = 'Using deprecated construct.' if message is None \
+                  else 'Deprecated usage: ' + message
+        jinja_warning(message)
+        return
+
+    return
+
+
+def jinja_deprecate_with_qt7_removal(version, reason=None):
+    """
+    Deprecate current filter or template in given Qt version and targets
+    removal in Qt 7, optionally giving information about the deprecation.
+    """
+    deprecate_helper(version, 7, reason)
+    return ''
+
+
+def jinja_deprecate_with_qt8_removal(version, reason=None):
+    """
+    Deprecate current filter or template in given Qt version and targets
+    removal in Qt 8, optionally giving information about the deprecation.
+    """
+    deprecate_helper(version, 8, reason)
+    return ''
+
+
 def register_global_functions(generator):
     generator.env.globals["error"] = jinja_error
     generator.env.globals["warning"] = jinja_warning
+    generator.env.globals["deprecate_with_qt7_removal"] = \
+        jinja_deprecate_with_qt7_removal
+    generator.env.globals["deprecate_with_qt8_removal"] = \
+        jinja_deprecate_with_qt8_removal
