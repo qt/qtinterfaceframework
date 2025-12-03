@@ -6,21 +6,12 @@
 # SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
 
 import json
-import inspect
 
 from qface.idl.domain import Module, Interface, Property, Parameter, Field, Struct
 from qface.helper.generic import lower_first, upper_first
 from qface.helper.qtcpp import Filters
 
 from .global_functions import jinja_error, jinja_warning
-from . import builtin_config
-
-
-def deprecated_filter(name=None):
-    if not name:
-        name = inspect.stack()[1][3]
-    jinja_warning("The '{0}' filter is deprecated and will be removed in future Qt "
-                  "versions".format(name))
 
 
 def enum_value_to_cppliteral(value, module_name):

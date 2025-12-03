@@ -159,10 +159,26 @@ The namespace is read from the annotation of the module the symbol is part of.
 
 \target error(msg)
 \section2 error(msg)
+
 Throws an error with the given msg
 
 \target warning(msg)
 \section2 warning(msg)
+
 Reports a warning with the given msg
+
+\target deprecate_with_qt7_removal(version, reason)
+\section2 deprecate_with_qt7_removal(version, reason=None)
+
+Deprecates current filter or template in the given Qt version (e.g. '6.11').
+Targets the removal of this API in Qt 7.
+Optionally gives the reason for deprecation.
+
+\target deprecate_with_qt8_removal(version, reason)
+\section2 deprecate_with_qt8_removal(version, reason=None)
+
+Deprecates current filter or template in the given Qt version (e.g. '6.11').
+Targets the removal of this API in Qt 8.
+Optionally gives the reason for deprecation.
 
 */

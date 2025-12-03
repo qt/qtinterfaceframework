@@ -202,6 +202,17 @@ endif()
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.config "---\n")
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "VERSION: \"${QT_REPO_MODULE_VERSION}\"\n")
+
+if(NOT DEFINED QT_DISABLE_DEPRECATED_UP_TO)
+    set(QT_DISABLE_DEPRECATED_UP_TO 5.0.0 CACHE STRING "Give error for using deprecated up to this Qt version.")
+endif()
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "QT_DISABLE_DEPRECATED_UP_TO: \"${QT_DISABLE_DEPRECATED_UP_TO}\"\n")
+
+if(NOT DEFINED QT_WARN_DEPRECATED_UP_TO)
+    set(QT_WARN_DEPRECATED_UP_TO ${QT_REPO_MODULE_VERSION} CACHE STRING "Warn for using deprecated up to this Qt version.")
+endif()
+file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "QT_WARN_DEPRECATED_UP_TO: \"${QT_WARN_DEPRECATED_UP_TO}\"\n")
+
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "FEATURES:\n")
 # With qmake we only added the features of interfaceframework. Now we have to add all of the complete repository
 foreach(feature IN LISTS QT_KNOWN_FEATURES)
