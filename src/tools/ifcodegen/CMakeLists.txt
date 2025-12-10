@@ -204,7 +204,7 @@ file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.config "---\n")
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "VERSION: \"${QT_REPO_MODULE_VERSION}\"\n")
 
 if(NOT DEFINED QT_DISABLE_DEPRECATED_UP_TO)
-    set(QT_DISABLE_DEPRECATED_UP_TO 5.0.0 CACHE STRING "Give error for using deprecated up to this Qt version.")
+    set(QT_DISABLE_DEPRECATED_UP_TO "0x050000" CACHE STRING "Give error for using deprecated up to this Qt version.")
 endif()
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "QT_DISABLE_DEPRECATED_UP_TO: \"${QT_DISABLE_DEPRECATED_UP_TO}\"\n")
 
