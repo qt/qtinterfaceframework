@@ -5,6 +5,9 @@ dependencies:
   ../qtremoteobjects:
     ref: 1f4b8f9f3429aae7e5d918e186c58d6def5ef7b3
     required: true
+  ../qtmqtt:
+    ref: b403bae36166d7aa499f6f8156961e842af258af
+    required: true
   ../qttools:
     ref: 306763cba1a98ac148a5e8182e242d176b3f8d52
     required: false
