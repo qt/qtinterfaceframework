@@ -1,2 +1,205 @@
-{% include 'common/qtif_macros.jinja' %}
+# Copyright (C) 2021 The Qt Company Ltd.
+# Copyright (C) 2019 Luxoft Sweden AB
+# Copyright (C) 2018 Pelagicore AG
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#}
+
 {{ deprecate_with_qt7_removal('6.11', 'Use .jinja extension instead of the deprecated .j2 extension for this file.') }}
+
+{# these macros can be used to generate content for QtInterfaceFramework code. The macros
+# provide snippets that are commonly found in multiple templates and are not
+# too template specific.
+# Function macros do not generate the whole body of the function, but just
+# the header line, so remember to add potential virtuals, overrides,
+# semicolons etc. yourself!
+#}
+
+{# join operation parameters, with type and name, into a comma separated list,
+# optionally including the zone.
+#}
+{% macro join_params(operation, zoned = false, default_values = false) %}
+{%   if  default_values %}
+{%     set params = operation.parameters|map('parameter_type_default')|join(', ') %}
+{%   else %}
+{%     set params = operation.parameters|map('parameter_type')|join(', ') %}
+{%   endif %}
+{%   if zoned %}
+{%     if params|length %}
+{%       set params = params + ', const QString &zone' %}
+{%     else %}
+{%       set params = 'const QString &zone' %}
+{%     endif %}
+{%   endif %}
+{{params}}
+{%- endmacro %}
+
+{# function header for a custom slot. pass the class parameter in order to add
+# the scope:: -specifier. use zoned to add the zone-specifier
+#}
+{% macro operation(operation, class = '', zoned = false) %}
+{%   if  class|count %}
+{%     set scope = class+'::' %}
+{%   else %}
+{%     set scope = '' %}
+{%   endif %}
+{%   if operation.const %}
+{%     set const = ' const' %}
+{%   else%}
+{%     set const = '' %}
+{%   endif %}
+QIfPendingReply<{{operation|return_type}}> {{scope}}{{operation}}({{join_params(operation, zoned)}}){{const}}
+{%- endmacro %}
+
+
+{# property declaration, Q_PROPERTY(...) #}
+{% macro property(property, notify = true) %}
+{%   if property.readonly or property.const or property.type.is_model %}
+{%     set write = '' %}
+{%   else %}
+{%     set write = ' WRITE ' + property|setter_name %}
+{%   endif %}
+{%   if notify %}
+{%     set _notify = ' NOTIFY ' + property.name + 'Changed' %}
+{%   else %}
+{%     set _notify = ''%}
+{%   endif %}
+Q_PROPERTY({{property|return_type}} {{property}} READ {{property|getter_name}}{{write}}{{_notify}} FINAL)
+{%- endmacro %}
+
+
+{# function header for a property setter: setProperty(...)
+# pass the class parameter in order to add the scope:: -specifier.
+# use zoned to add the zone-specifier
+#}
+{% macro prop_setter(property, class = '', zoned = false, model_interface = false, default_zone = false) %}
+{%   if  class|count %}
+{%     set scope = class+'::' %}
+{%   else %}
+{%     set scope = '' %}
+{%   endif %}
+{%   if zoned %}
+{%     if default_zone %}
+{%       set zone = ', const QString &zone = QString()' %}
+{%     else %}
+{%       set zone = ', const QString &zone' %}
+{%     endif %}
+{%   else %}
+{%     set zone = '' %}
+{%   endif %}
+{%   if property.type.is_model and model_interface %}
+{%     set type = 'QIfPagingModelInterface *'+property.name %}
+{%   else %}
+{%     set type = property|parameter_type %}
+{%   endif %}
+void {{scope}}{{property|setter_name}}({{type}}{{zone}})
+{%- endmacro %}
+
+
+{# function header for a property getter.
+# pass the class parameter in order to add the scope:: -specifier.
+#}
+{% macro prop_getter(property, class = '', model_interface = false) %}
+{%   if  class|count %}
+{%     set scope = class+'::' %}
+{%   else %}
+{%     set scope = '' %}
+{%   endif %}
+{%   if property.type.is_model and model_interface %}
+{%     set type = 'QIfPagingModelInterface *' %}
+{%   else %}
+{%     set type = property|return_type %}
+{%   endif %}
+{{type}} {{scope}}{{property|getter_name}}() const
+{%- endmacro %}
+
+
+{# helper macro for defining a property notifier and a corresponding callback.
+# This is an internal function and not intended to be used inside a template.
+#}
+{% macro _prop_notify(property, class, zoned, prefix, model_interface, default_values = false) %}
+{%   if prefix|count %}
+{%     set prop = prefix + property|upperfirst %}
+{%   else %}
+{%     set prop = property %}
+{%   endif %}
+{%   if class|count %}
+{%     set scope = class+'::' %}
+{%   else %}
+{%     set scope = '' %}
+{%   endif %}
+{%   if zoned %}
+{%     if default_values %}
+{%       set zone = ', const QString &zone=QString()' %}
+{%     else %}
+{%       set zone = ', const QString &zone' %}
+{%     endif %}
+{%   else %}
+{%     set zone = '' %}
+{%   endif %}
+{%   if property.type.is_model and model_interface %}
+{%     set type = 'QIfPagingModelInterface *'+property.name %}
+{%     set default_value = type + '=nullptr'%}
+{%   else %}
+{%     set type = property|parameter_type %}
+{%     set default_value = property|parameter_type_default %}
+{%   endif %}
+{%   if default_values %}
+{%     set type = default_value %}
+{%   endif %}
+void {{scope}}{{prop}}Changed({{type}}{{zone}})
+{%- endmacro %}
+
+{# signal declaration for property notifier.
+# pass the class parameter in order to add the scope:: -specifier.
+# use zoned to add the zone-specifier
+#}
+{% macro prop_notify(property, class = '', zoned = false, model_interface = false, default_values = false) %}
+{{_prop_notify(property, class, zoned, '', model_interface, default_values)}}
+{%- endmacro %}
+
+{# callback slot declaration for property notifier.
+# pass the class parameter in order to add the scope:: -specifier.
+# use zoned to add the zone-specifier
+#}
+{% macro on_prop_changed(property, class = '', zoned = false, model_interface = false) %}
+{{_prop_notify(property, class, zoned, 'on', model_interface)}}
+{%- endmacro %}
+
+
+{# helper macro for defining a signal and a corresponding callback.
+# This is an internal function and not intended to be used inside a template.
+#}
+{% macro _signal(signal, class, zoned, prefix, default_values = false) %}
+{%   if prefix|count %}
+{%     set sig = prefix + signal|upperfirst %}
+{%   else %}
+{%     set sig = signal %}
+{%   endif %}
+{%   if  class|count %}
+{%     set scope = class+'::' %}
+{%   else %}
+{%     set scope = '' %}
+{%   endif %}
+void {{scope}}{{sig}}({{join_params(signal, zoned, default_values)}})
+{%- endmacro %}
+
+{# custom signal declaration
+# pass the class parameter in order to add the scope:: -specifier.
+# use zoned to add the zone-specifier
+#}
+{% macro signal(signal, class = '', zoned = false) %}
+{{_signal(signal, class, zoned, '')}}
+{%- endmacro %}
+
+{# custom signal callback declaration
+# pass the class parameter in order to add the scope:: -specifier.
+# use zoned to add the zone-specifier
+#}
+{% macro on_signal(signal, class = '', zoned = false) %}
+{{_signal(signal, class, zoned, 'on')}}
+{%- endmacro %}
+
+
+{% macro format_comments(comments) -%}
+{{comments|comment_text|join('\n    ')}}
+{% endmacro -%}
