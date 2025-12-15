@@ -206,7 +206,11 @@ public:
     QQmlPropertyMap *zones() const { return m_zones; }
 
 public:
+#if QT_VERSION < QT_VERSION_CHECK(6, 11, 0)
+    QQmlPropertyMap *m_zones = new QQmlPropertyMap(this);
+#else
     QQmlPropertyMap *m_zones = QQmlPropertyMap::create(this);
+#endif
 };
 
 class tst_QIfSimulationGlobalObject : public QObject

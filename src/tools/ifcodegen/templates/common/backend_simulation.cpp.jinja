@@ -74,7 +74,11 @@
 {%       endif %}
 {% endfor %}
 {% if interface_zoned %}
+#if QT_VERSION < QT_VERSION_CHECK(6, 11, 0)
+    , m_zones(new QQmlPropertyMap(this))
+#else
     , m_zones(QQmlPropertyMap::create(this))
+#endif
 {% endif %}
 {
     //In some cases the engine is unused, this doesn't do any harm if it is still used
