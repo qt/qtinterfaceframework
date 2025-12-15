@@ -209,7 +209,12 @@ endif()
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "QT_DISABLE_DEPRECATED_UP_TO: \"${QT_DISABLE_DEPRECATED_UP_TO}\"\n")
 
 if(NOT DEFINED QT_WARN_DEPRECATED_UP_TO)
-    set(QT_WARN_DEPRECATED_UP_TO ${QT_REPO_MODULE_VERSION} CACHE STRING "Warn for using deprecated up to this Qt version.")
+    if(${QT_REPO_MODULE_VERSION} MATCHES "([0-9]+)\.([0-9]+)\.([0-9]+)")
+        math(EXPR REPO_VERSION_HEX "(${CMAKE_MATCH_1} << 16) + (${CMAKE_MATCH_2} << 8) + ${CMAKE_MATCH_3}" OUTPUT_FORMAT HEXADECIMAL)
+    else()
+        set(REPO_VERSION_HEX "0x060000")
+    endif()
+    set(QT_WARN_DEPRECATED_UP_TO ${REPO_VERSION_HEX} CACHE STRING "Warn for using deprecated up to this Qt version.")
 endif()
 file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/.config "QT_WARN_DEPRECATED_UP_TO: \"${QT_WARN_DEPRECATED_UP_TO}\"\n")
 

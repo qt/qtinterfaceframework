@@ -67,6 +67,8 @@ def deprecate_helper(version, removal, message):
     """
 
     def version_to_int(version_string):
+        if version_string.find('.') == -1:
+            return int(version_string, 0)
         version_val = 0
         i = 0
         for ver in version_string.split('.'):
