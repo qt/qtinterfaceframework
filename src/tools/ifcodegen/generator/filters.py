@@ -450,7 +450,7 @@ def comment_text(comment):
 
 def add_namespace_prefix(symbol, module = None):
     """
-    Appends the string retrieved from \l namespace_prefix to the provided symbol.
+    Appends the string retrieved from namespace_prefix to the provided symbol.
     """
     if isinstance(symbol, Module):
         module = symbol
