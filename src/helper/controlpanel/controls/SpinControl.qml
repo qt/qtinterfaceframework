@@ -18,7 +18,6 @@ ColumnLayout {
     property int from: ControlPanelStyle.minInt32
     property int to: ControlPanelStyle.maxInt32
     property int value: 0
-    property alias enabled: spinBox.enabled
     property alias editable: spinBox.editable
     property bool showMinMaxLabels: true
     signal valueModified(int value)

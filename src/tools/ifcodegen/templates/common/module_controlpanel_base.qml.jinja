@@ -225,7 +225,7 @@ ApplicationWindow {
                             visible: simulationWindow.propertyFilter === 0 || simulationWindow.propertyFilter === 1
 {%     for property in interface.properties %}
 {%       if not property|is_zoned %}
-{{         render_property(property, interface, false, interface|lower ~ "_nz_" ~ loop.index) | indent(28) }}
+{{         render_property(property, module, interface, false, interface|lower ~ "_nz_" ~ loop.index) | indent(28) }}
 {%       endif %}
 {%     endfor %}
                         }
@@ -237,7 +237,7 @@ ApplicationWindow {
                             visible: simulationWindow.propertyFilter === 0 || simulationWindow.propertyFilter === 2
 {%     for property in interface.properties %}
 {%       if property|is_zoned %}
-{{         render_property(property, interface, true, interface|lower ~ "_z_" ~ loop.index) | indent(28) }}
+{{         render_property(property, module, interface, true, interface|lower ~ "_z_" ~ loop.index) | indent(28) }}
 {%       endif %}
 {%     endfor %}
                         }
@@ -247,7 +247,7 @@ ApplicationWindow {
                         PropertySection {
                             title: "PROPERTIES"
 {%     for property in interface.properties %}
-{{       render_property(property, interface, false, interface|lower ~ "_" ~ loop.index) | indent(28) }}
+{{       render_property(property, module, interface, false, interface|lower ~ "_" ~ loop.index) | indent(28) }}
 {%     endfor %}
                         }
 {%   endif %}
