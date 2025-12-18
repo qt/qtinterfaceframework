@@ -3,6 +3,7 @@
 
 set_source_files_properties(
     ${CMAKE_CURRENT_SOURCE_DIR}/ControlPanelStyle.qml
+    ${CMAKE_CURRENT_SOURCE_DIR}/ControlPanelUtils.qml
     PROPERTIES
         QT_QML_SINGLETON_TYPE TRUE
 )
@@ -16,6 +17,7 @@ qt_internal_add_qml_module(IfControlPanelHelper
     QML_FILES
         # Singleton
         ControlPanelStyle.qml
+        ControlPanelUtils.qml
 
         # Input Controls
         controls/BooleanControl.qml
@@ -24,6 +26,11 @@ qt_internal_add_qml_module(IfControlPanelHelper
         controls/SpinControl.qml
         controls/TextControl.qml
         controls/UnsupportedControl.qml
+        controls/ModelControl.qml
+        controls/StructField.qml
+        controls/StructControl.qml
+        controls/ListControl.qml
+        controls/ButtonControl.qml
 
         # Composite Widgets
         components/PropertyCard.qml

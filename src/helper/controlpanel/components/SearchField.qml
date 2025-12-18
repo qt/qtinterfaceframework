@@ -19,7 +19,6 @@ Rectangle {
     id: root
     property alias text: searchInput.text
     property alias placeholderText: searchInput.placeholderText
-    property alias enabled: searchInput.enabled
 
     implicitHeight: 34
     color: ControlPanelStyle.backgroundWhite

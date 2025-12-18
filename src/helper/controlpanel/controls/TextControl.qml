@@ -15,6 +15,9 @@ import QtInterfaceFramework.ControlPanelHelper
 TextField {
     id: root
 
+    property string valueType: "string"  // "string", "int", "real"
+    property var typedValue: ControlPanelUtils.parseValue(text, valueType)
+
     implicitHeight: ControlPanelStyle.controlHeight
     font.pixelSize: ControlPanelStyle.fontSizeBody
     color: ControlPanelStyle.textPrimary
@@ -36,4 +39,26 @@ TextField {
 
     leftPadding: ControlPanelStyle.spacingLarge
     rightPadding: ControlPanelStyle.spacingLarge
+
+     // Input validation based on type
+    validator: {
+        switch (valueType) {
+            case "int":
+                return intValidator;
+            case "real":
+                return doubleValidator;
+            case "string":
+            default:
+                return null;
+        }
+    }
+
+    IntValidator {
+        id: intValidator
+    }
+
+    DoubleValidator {
+        id: doubleValidator
+        notation: DoubleValidator.StandardNotation
+    }
 }
