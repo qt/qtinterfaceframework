@@ -19,7 +19,6 @@ ColumnLayout {
     property real to: ControlPanelStyle.maxInt32
     property real value: 0
     property real stepSize: 1
-    property alias enabled: slider.enabled
     signal moved(real value)
     spacing: 6
     implicitHeight: childrenRect.height

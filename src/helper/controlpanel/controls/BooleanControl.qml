@@ -16,7 +16,6 @@ import QtInterfaceFramework.ControlPanelHelper
 RowLayout {
     id: root
     property bool checked: false
-    property alias enabled: switchControl.enabled
     signal toggled(bool checked)
     spacing: ControlPanelStyle.spacingMedium
 
