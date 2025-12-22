@@ -18,7 +18,11 @@ QT_BEGIN_NAMESPACE
 Q_QTINTERFACEFRAMEWORK_EXPORT void qtif_qmlOrCppWarning(const QObject *obj, const char *errorString);
 Q_QTINTERFACEFRAMEWORK_EXPORT void qtif_qmlOrCppWarning(const QObject *obj, const QString& errorString);
 
+#if QT_REMOVAL_QT7_DEPRECATED_SINCE(6, 11)
+QT_DEPRECATED_VERSION_X_6_11("Please use qtif_convertFromVariant instead.")
 Q_QTINTERFACEFRAMEWORK_EXPORT QVariant qtif_convertFromJSON(const QVariant &val);
+#endif
+Q_QTINTERFACEFRAMEWORK_EXPORT QVariant qtif_convertFromVariant(const QVariant &val);
 
 template <typename T>  QVariant qtif_convertValue(const T &val)
 {

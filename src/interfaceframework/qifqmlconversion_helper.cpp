@@ -58,7 +58,7 @@ void qtif_qmlOrCppWarning(const QObject *obj, const QString &errorString)
     The provided JSON value needs to follow the \l{IfSimulatorDataFormat}{IfSimulator Data
     Format}.
 */
-QVariant qtif_convertFromJSON(const QVariant &value)
+QVariant qtif_convertFromVariant(const QVariant &value)
 {
     static const QString valueLiteral = u"value"_s;
     static const QString typeLiteral = u"type"_s;
@@ -124,13 +124,16 @@ QVariant qtif_convertFromJSON(const QVariant &value)
                         qDebug() << mo->method(i).methodSignature();
                 */
 
-                int moIdx = mo->indexOfMethod("fromJSON(QVariant)");
+                int moIdx = mo->indexOfMethod("fromVariant(QVariant)");
                 if (Q_UNLIKELY(moIdx == -1)) {
-                    qWarning("Couldn't find method: %s::fromJSON(QVariant)\n"
-                             "If your are using code created by the ifcodegen, please regenerate"
-                             "your frontend code. See AUTOSUITE-1374 for why this is needed",
-                             metaType.name());
-                    return QVariant();
+                    moIdx = mo->indexOfMethod("fromJSON(QVariant)");
+                    if (Q_UNLIKELY(moIdx == -1)) {
+                        qWarning("Couldn't find method: %s::fromVariant(QVariant) or %s::fromJSON(QVariant)\n"
+                                 "If your are using code created by the ifcodegen, please regenerate"
+                                 "your frontend code. See AUTOSUITE-1374 for why this is needed",
+                                 metaType.name(), metaType.name());
+                        return QVariant();
+                    }
                 }
 
                 mo->method(moIdx).invokeOnGadget(gadget, Q_ARG(QVariant, QVariant(value)));
@@ -140,17 +143,34 @@ QVariant qtif_convertFromJSON(const QVariant &value)
 
         QVariantMap convertedValues;
         for (auto i = map.constBegin(); i != map.constEnd(); ++i)
-            convertedValues.insert(i.key(), qtif_convertFromJSON(i.value()));
+            convertedValues.insert(i.key(), qtif_convertFromVariant(i.value()));
         return convertedValues;
     } else if (val.metaType() == QMetaType::fromType<QVariantList>()) {
         QVariantList values = val.toList();
         for (auto i = values.begin(); i != values.end(); ++i)
-            *i = qtif_convertFromJSON(*i);
+            *i = qtif_convertFromVariant(*i);
         return values;
     }
 
     return val;
 }
+
+#if QT_REMOVAL_QT7_DEPRECATED_SINCE(6, 11)
+/*!
+    \relates QIfSimulationEngine
+
+    Converts \a value from JSON to valid C++ types.
+
+    The provided JSON value needs to follow the \l{IfSimulatorDataFormat}{IfSimulator Data
+    Format}.
+
+    \deprecated [6.11] Use qtif_convertFromVariant() isntead.
+*/
+QVariant qtif_convertFromJSON(const QVariant &value)
+{
+    return qtif_convertFromVariant(value);
+}
+#endif
 
 QT_END_NAMESPACE
 

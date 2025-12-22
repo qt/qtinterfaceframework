@@ -66,8 +66,12 @@ public:
 {%   endif %}
 {% endfor %}
 
-protected:
+#if QT_REMOVAL_QT7_DEPRECATED_SINCE(6, 11)
+    QT_DEPRECATED_VERSION_X_6_11("Please use fromVariant instead.")
     Q_INVOKABLE void fromJSON(const QVariant &variant);
+#endif
+    Q_INVOKABLE void fromVariant(const QVariant &variant);
+    Q_INVOKABLE QVariant toVariant() const;
 
 private:
     QSharedDataPointer<{{class}}Private> d;
@@ -81,7 +85,7 @@ private:
 {{exportsymbol}} QDataStream &operator<<(QDataStream &stream, const {{class}} &obj);
 {{exportsymbol}} QDataStream &operator>>(QDataStream &stream, {{class}} &obj);
 
-{{exportsymbol}} QDebug &operator<<(QDebug &dbg, const {{class}} &obj);
+{{exportsymbol}} QDebug operator<<(QDebug dbg, const {{class}} &obj);
 
 QIF_DECLARE_PENDINGREPLY({{struct}})
 

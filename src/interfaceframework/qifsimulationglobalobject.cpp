@@ -466,10 +466,10 @@ QVariant QIfSimulationGlobalObject::parseDomainValue(const QVariantMap &data, co
             z = u"="_s;
 
         if (domainMap.contains(z))
-            return qtif_convertFromJSON(domainMap.value(z));
+            return qtif_convertFromVariant(domainMap.value(z));
     }
 
-    return qtif_convertFromJSON(domainData);
+    return qtif_convertFromVariant(domainData);
 }
 
 QGenericArgument QIfSimulationGlobalObject::createArgument(const QVariant &variant)
