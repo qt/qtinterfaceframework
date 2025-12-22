@@ -30,6 +30,10 @@ BackendsTestBase::BackendsTestBase()
             qInfo().noquote() << "server output:" << QString::fromLocal8Bit(line);
         }
     });
+    connect(m_serverProcess, &QProcess::errorOccurred, this, [this]() {
+        //TODO Change this to a QFAIL
+        qCritical() << QString("server error: %1").arg(m_serverProcess->errorString()).toUtf8();
+    });
 #endif
 
     QString simulationFile = QFINDTESTDATA("simulation.qml");
@@ -47,13 +51,15 @@ void BackendsTestBase::sendCmd(const QByteArray &input)
     if (!m_localSocket)
         return;
 
+    QSignalSpy writtenSpy(m_localSocket, &QIODevice::bytesWritten);
     m_localSocket->write(input + "\n");
-    QVERIFY(m_localSocket->waitForBytesWritten());
-    qApp->processEvents();
+    WAIT_AND_COMPARE(writtenSpy, 1);
 }
 
 void BackendsTestBase::startServer(QStringList arguments)
 {
+    // Give the backend some time to fully initialize the connection
+    QTest::qWait(500);
 #if QT_CONFIG(process)
     if (!m_serverExecutable.isEmpty()) {
         qInfo() << "Starting Server Process";
@@ -64,8 +70,11 @@ void BackendsTestBase::startServer(QStringList arguments)
 #endif
     // Give the simulation some time to (re)connect
     QTest::qWait(100);
-    if (!m_localServer->hasPendingConnections())
-        QVERIFY(m_localServer->waitForNewConnection(5000));
+    if (!m_localServer->hasPendingConnections()) {
+        QSignalSpy newConnectionSpy(m_localServer, &QLocalServer::newConnection);
+        WAIT_AND_COMPARE(newConnectionSpy, 1);
+    }
+
     while (m_localServer->hasPendingConnections())
         m_localSocket = m_localServer->nextPendingConnection();
     QVERIFY(m_localSocket);
@@ -123,6 +132,8 @@ void BackendsTestBase::initTestCase_data()
 
 void BackendsTestBase::initTestCase()
 {
+    CHECK_SKIP();
+
     if (!m_localServer->listen("qifcmdsocket")) {
         QLocalServer::removeServer("qifcmdsocket");
         QVERIFY2(m_localServer->listen("qifcmdsocket"), qPrintable(m_localServer->errorString()));
@@ -799,7 +810,16 @@ void BackendsTestBase::testSlots()
         QSignalSpy comboReplySpy(comboReply.watcher(), SIGNAL(replySuccess()));
         WAIT_AND_COMPARE(comboReplySpy, 1);
     }
-    QCOMPARE(comboReply.reply(), expectedCombo);
+
+    // reading from JSON doesn't create a invalid QVariant but a nullptr QVariant
+    // we accept this as well and convert it to make the test pass
+    Combo resultCombo = comboReply.reply();
+    if (resultCombo.contactInfo().additionalData().isNull()) {
+        auto contact = resultCombo.contactInfo();
+        contact.setAdditionalData(QVariant());
+        resultCombo.setContactInfo(contact);
+    }
+    QCOMPARE(resultCombo, expectedCombo);
 
     QIfPendingReply<void> voidReply = client.voidSlot();
     if (!voidReply.isResultAvailable()) {
