@@ -113,9 +113,16 @@ QString {{class}}::type() const
 
 {% endfor %}
 
+#if QT_REMOVAL_QT7_DEPRECATED_SINCE(6, 11)
 void {{class}}::fromJSON(const QVariant &variant)
 {
-    QVariant value = qtif_convertFromJSON(variant);
+    {{class}}::fromVariant(variant);
+}
+#endif
+
+void {{class}}::fromVariant(const QVariant &variant)
+{
+    QVariant value = qtif_convertFromVariant(variant);
     // First try to convert the values to a Map or a List
     // This is needed as it could also store a QStringList or a Hash
     if (value.canConvert(QMetaType::fromType<QVariantMap>()))
@@ -126,8 +133,20 @@ void {{class}}::fromJSON(const QVariant &variant)
     if (value.metaType() == QMetaType::fromType<QVariantMap>()) {
         QVariantMap map = value.toMap();
 {% for field in struct.fields %}
-        if (map.contains(u"{{field}}"_s))
+        if (map.contains(u"{{field}}"_s)) {
+{%   if field.type.is_struct %}
+            QVariant {{field}}Variant = map.value(u"{{field}}"_s);
+            if ({{field}}Variant.canConvert(QMetaType::fromType<{{field|return_type}}>())) {
+                d->m_{{field}} = {{field}}Variant.value<{{field|return_type}}>();
+            } else {
+                {{field|return_type}} {{field}};
+                {{field}}.fromVariant({{field}}Variant);
+                d->m_{{field}} = {{field}};
+            }
+{%   else %}
             d->m_{{field}} = map.value(u"{{field}}"_s).value<{{field|return_type}}>();
+{%   endif %}
+        }
 {% endfor %}
     } else if (value.metaType() == QMetaType::fromType<QVariantList>()) {
         QVariantList values = value.toList();
@@ -135,6 +154,21 @@ void {{class}}::fromJSON(const QVariant &variant)
         d->m_{{field}} = values.value({{loop.index0}}).value<{{field|return_type}}>();
 {% endfor %}
     }
+}
+
+QVariant {{class}}::toVariant() const
+{
+    QVariantMap map;
+{% for field in struct.fields %}
+{%   if field.type.is_struct %}
+    map[u"{{field}}"_s] = d->m_{{field}}.toVariant();
+{%   elif field.type.is_enum or field.type.is_flag %}
+    map[u"{{field}}"_s] = static_cast<int>(d->m_{{field}});
+{%   else %}
+    map[u"{{field}}"_s] = d->m_{{field}};
+{%   endif %}
+{% endfor %}
+    return map;
 }
 
 bool operator==(const {{class}} &left, const {{class}} &right) Q_DECL_NOTHROW
@@ -170,7 +204,7 @@ QDataStream &operator>>(QDataStream &stream, {{class}} &obj)
     return stream;
 }
 
-QDebug &operator<<(QDebug &dbg, const {{class}} &obj)
+QDebug operator<<(QDebug dbg, const {{class}} &obj)
 {
     QDebugStateSaver saver(dbg);
     dbg.nospace() << "{{class}}"

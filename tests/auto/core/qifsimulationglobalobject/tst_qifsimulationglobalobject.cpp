@@ -54,8 +54,8 @@ public:
     }
 
 protected:
-    Q_INVOKABLE void fromJSON(const QVariant &variant) {
-        QVariant value = qtif_convertFromJSON(variant);
+    Q_INVOKABLE void fromVariant(const QVariant &variant) {
+        QVariant value = qtif_convertFromVariant(variant);
         // First try to convert the values to a Map or a List
         // This is needed as it could also store a QStringList or a Hash
         if (value.canConvert(QMetaType::fromType<QVariantMap>()))
@@ -283,8 +283,8 @@ void tst_QIfSimulationGlobalObject::testConvertFromJSONErrors_data()
                                        QStringList({"Couldn't retrieve MetaObject for struct parsing: *",
                                                     "Please make sure InvalidStruct is registered in *"});
 
-    QTest::newRow("no fromJSON") << "{ \"type\": \"InvalidStruct2\", \"value\": [ 100, true ] }" <<
-                                    QStringList("Couldn't find method: InvalidStruct2::fromJSON(QVariant)*");
+    QTest::newRow("no fromVariant") << "{ \"type\": \"InvalidStruct2\", \"value\": [ 100, true ] }" <<
+                                    QStringList("Couldn't find method: InvalidStruct2::fromVariant(QVariant)*");
 
     QTest::newRow("invalid Enum") << "{ \"type\": \"enum\", \"value\": \"InvalidEnum::Foo\" }" <<
                                        QStringList({"Couldn't retrieve MetaObject for enum parsing: *",
@@ -305,7 +305,7 @@ void tst_QIfSimulationGlobalObject::testConvertFromJSONErrors()
 
     for (const QString &warning : warnings)
         QTest::ignoreMessage(QtWarningMsg, QRegularExpression(warning));
-    QVariant result = qtif_convertFromJSON(data);
+    QVariant result = qtif_convertFromVariant(data);
 }
 
 void tst_QIfSimulationGlobalObject::testParseDomainValue_data()
