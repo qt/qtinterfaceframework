@@ -1,0 +1,44 @@
+{#
+# Copyright (C) 2025 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#}
+{% include "common/generated_comment.cpp.jinja" %}
+{% set class = '{0}MqttPlugin'.format(module.module_name|upperfirst) %}
+{% set oncedefine = '{0}_{1}_H_'.format(module.module_name|upper, class|upper) %}
+
+#ifndef {{oncedefine}}
+#define {{oncedefine}}
+
+#include <QtInterfaceFramework/QIfServiceInterface>
+
+{% for interface in module.interfaces %}
+#include "{{interface|lower}}mqttbackend.h"
+{% endfor %}
+
+{{ module|begin_namespace }}
+
+class {{class}} : public QObject, QIfServiceInterface
+{
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID QIfServiceInterface_iid FILE "{{module.module_name|lower}}.json")
+    Q_INTERFACES(QIfServiceInterface)
+
+public:
+    explicit {{class}}(QObject *parent = nullptr);
+
+    QStringList interfaces() const override;
+    QIfFeatureInterface* interfaceInstance(const QString& interface) const override;
+
+    QString id() const override;
+    QString configurationId() const override;
+    void updateServiceSettings(const QVariantMap &settings) override;
+
+private:
+{% for interface in module.interfaces %}
+    {{interface}}MqttBackend *m_{{interface|lower}}Backend;
+{% endfor %}
+};
+
+{{ module|end_namespace }}
+
+#endif // {{oncedefine}}

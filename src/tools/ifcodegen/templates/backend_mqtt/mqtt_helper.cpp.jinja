@@ -1,0 +1,208 @@
+{#
+# Copyright (C) 2025 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#}
+{% import 'common/qtif_macros.jinja' as qtif %}
+{% include "common/generated_comment.cpp.jinja" %}
+
+#include "{{module.module_name|lower}}_mqtt_helper.h"
+
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+
+using namespace Qt::StringLiterals;
+
+{{ module|begin_namespace }}
+
+QByteArray toMqttMessage(const QVariant &value)
+{
+    if (value.canConvert<QByteArray>()) {
+        QVariant v = value;
+        v.convert(QMetaType::fromType<QByteArray>());
+        return v.toByteArray();
+    }
+
+    QByteArray data;
+    QDataStream stream(data);
+    stream << value;
+    return data;
+}
+
+QByteArray toMqttMessage(const QVariantList &value)
+{
+    QByteArray data;
+    QDataStream stream(data);
+    stream << value;
+    return data;
+}
+
+QByteArray toMqttMessage(bool value)
+{
+    return QJsonDocument::fromVariant(QVariant::fromValue(value)).toJson(QJsonDocument::Compact);
+}
+
+QByteArray toMqttMessage(const QList<bool> &value)
+{
+    QVariantList list;
+    for (auto val : value)
+        list.append(val);
+    return QJsonDocument::fromVariant(list).toJson(QJsonDocument::Compact);
+}
+
+QByteArray toMqttMessage(double value)
+{
+    return QByteArray::number(value, 10, QLocale::FloatingPointShortest);
+}
+
+QByteArray toMqttMessage(const QList<double> &value)
+{
+    QVariantList list;
+    for (auto val : value)
+        list.append(val);
+    return QJsonDocument::fromVariant(list).toJson(QJsonDocument::Compact);
+}
+
+QByteArray toMqttMessage(int value)
+{
+    return QByteArray::number(value);
+}
+
+QByteArray toMqttMessage(const QList<int> &value)
+{
+    QVariantList list;
+    for (auto val : value)
+        list.append(val);
+    return QJsonDocument::fromVariant(list).toJson(QJsonDocument::Compact);
+}
+
+QByteArray toMqttMessage(const QString &value)
+{
+    return value.toUtf8();
+}
+
+QByteArray toMqttMessage(const QList<QString> &value)
+{
+    QVariantList list;
+    for (auto &val : value)
+        list.append(val);
+    return QJsonDocument::fromVariant(list).toJson(QJsonDocument::Compact);
+}
+
+{% for struct in module.structs %}
+QByteArray toMqttMessage(const {{struct}} &value)
+{
+    return QJsonDocument::fromVariant(value.toVariant()).toJson(QJsonDocument::Compact);
+}
+
+QByteArray toMqttMessage(const QList<{{struct}}> &value)
+{
+    QVariantList list;
+    for (auto &val : value)
+        list.append(val.toVariant());
+    return QJsonDocument::fromVariant(list).toJson(QJsonDocument::Compact);
+}
+
+{% endfor %}
+
+{% for enum in module.enums %}
+QByteArray toMqttMessage({{module.module_name|upper_first}}::{{enum|flag_type}} value)
+{
+    return toMqttMessage(int(value));
+}
+
+QByteArray toMqttMessage(const QList<{{module.module_name|upper_first}}::{{enum|flag_type}}> &value)
+{
+    QVariantList list;
+    for (auto &val : value)
+        list.append(int(val));
+    return QJsonDocument::fromVariant(list).toJson(QJsonDocument::Compact);
+}
+
+{% endfor %}
+
+template <> QVariant fromMqttMessage(const QByteArray &message, bool *ok)
+{
+    QVariant value = QVariant::fromValue(message);
+    if (ok)
+        *ok = true;
+    return value;
+}
+
+{% for type in ("bool", "int", "float", "QString", "QVariant") %}
+template <> QList<{{type}}> fromMqttMessage(const QByteArray &message, bool *ok)
+{
+    QList<{{type}}> list;
+    const QJsonDocument doc = QJsonDocument::fromJson(message);
+    if (!doc.isArray())
+        return {};
+
+    for (auto &value : doc.toVariant().toList()) {
+        bool val_ok = false;
+        list.append(fromMqttMessage<{{type}}>(value, &val_ok));
+
+        if (!val_ok)
+            return {};
+    }
+    if (ok)
+        *ok = true;
+
+    return list;
+}
+{% endfor %}
+
+{% for struct in module.structs %}
+template <> {{struct}} fromMqttMessage(const QVariant &value, bool *ok)
+{
+    {{struct}} struct_type;
+    struct_type.fromVariant(value);
+    if (ok)
+        *ok = true;
+    return struct_type;
+}
+template <> {{struct}} fromMqttMessage(const QByteArray &message, bool *ok)
+{
+    const QJsonDocument doc = QJsonDocument::fromJson(message);
+    const QVariant value = doc.toVariant();
+    return fromMqttMessage<{{struct}}>(value, ok);
+}
+template <> QList<{{struct}}> fromMqttMessage(const QByteArray &message, bool *ok)
+{
+    QList<{{struct}}> list;
+    const QJsonDocument doc = QJsonDocument::fromJson(message);
+    if (!doc.isArray())
+        return {};
+
+    for (auto &value : doc.toVariant().toList()) {
+        bool val_ok = false;
+        list.append(fromMqttMessage<{{struct}}>(value, &val_ok));
+
+        if (!val_ok)
+            return {};
+    }
+    if (ok)
+        *ok = true;
+
+    return list;
+}
+{% endfor %}
+
+{% for enum in module.enums %}
+template <> {{module.module_name|upper_first}}::{{enum|flag_type}} fromMqttMessage(const QVariant &value, bool *ok)
+{
+    QVariant convertedValue = value;
+    bool success = !convertedValue.canConvert<{{module.module_name|upper_first}}::{{enum|flag_type}}>() && !convertedValue.convert(QMetaType::fromType<{{module.module_name|upper_first}}::{{enum|flag_type}}>());
+    if (ok)
+        *ok = success;
+    {{module.module_name|upper_first}}::{{enum|flag_type}} enumValue = {{module.module_name|upper_first}}::to{{enum|flag_type}}(convertedValue.toUInt(), ok);
+    return enumValue;
+}
+template <> {{module.module_name|upper_first}}::{{enum|flag_type}} fromMqttMessage(const QByteArray &message, bool *ok)
+{
+    QVariant value = QVariant::fromValue(message);
+    return fromMqttMessage<{{module.module_name|upper_first}}::{{enum|flag_type}}>(value, ok);
+}
+{% endfor %}
+
+
+{{ module|end_namespace }}

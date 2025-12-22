@@ -1,0 +1,15 @@
+backend_mqtt:
+    extra_filters: [ "filters.py" ]
+    module:
+        documents:
+            - "{{module.module_name|lower}}mqttplugin.h": "plugin.h.jinja"
+            - "{{module.module_name|lower}}mqttplugin.cpp": "plugin.cpp.jinja"
+            - "{{module.module_name|lower}}.json": "plugin.json.jinja"
+            - "{{srcBase|lower}}.pri": "plugin.pri.jinja"
+            - '{{srcBase|lower}}.cmake': 'CMakeLists.txt.jinja'
+            - '{{module.module_name|lower}}_mqtt_helper.h': 'mqtt_helper.h.jinja'
+            - '{{module.module_name|lower}}_mqtt_helper.cpp': 'mqtt_helper.cpp.jinja'
+    interface:
+        documents:
+            - '{{interface|lower}}mqttbackend.h': 'backend.h.jinja'
+            - '{{interface|lower}}mqttbackend.cpp': 'backend.cpp.jinja'

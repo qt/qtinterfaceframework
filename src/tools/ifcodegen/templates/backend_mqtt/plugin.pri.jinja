@@ -1,0 +1,25 @@
+{#
+# Copyright (C) 2025 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#}
+{% include "common/generated_comment.qmake.jinja" %}
+
+QT += mqtt
+
+HEADERS += \
+{% for interface in module.interfaces %}
+    $$PWD/{{interface|lower}}mqttbackend.h \
+{% endfor %}
+    $$PWD/{{module.module_name|lower}}_mqtt_helper.h \
+    $$PWD/{{module.module_name|lower}}mqttplugin.h
+
+SOURCES += \
+{% for interface in module.interfaces %}
+    $$PWD/{{interface|lower}}mqttbackend.cpp \
+{% endfor %}
+    $$PWD/{{module.module_name|lower}}_mqtt_helper.cpp \
+    $$PWD/{{module.module_name|lower}}mqttplugin.cpp
+
+
+OTHER_FILES += \
+    $$PWD/{{module.module_name|lower}}.json
