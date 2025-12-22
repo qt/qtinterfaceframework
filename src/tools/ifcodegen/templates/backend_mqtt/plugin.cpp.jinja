@@ -1,0 +1,78 @@
+{#
+# Copyright (C) 2025 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#}
+{% include "common/generated_comment.cpp.jinja" %}
+{% set class = '{0}MqttPlugin'.format(module.module_name|upperfirst) %}
+
+#include "{{class|lower}}.h"
+
+#include <QStringList>
+
+using namespace Qt::StringLiterals;
+
+{{ module|begin_namespace }}
+
+{{class}}::{{class}}(QObject *parent)
+    : QObject(parent)
+{
+{% for interface in module.interfaces %}
+    m_{{interface|lower}}Backend = new {{interface}}MqttBackend({{interface|mqtt_topic_prefix}}, this);
+{% endfor %}
+}
+
+QStringList {{class}}::interfaces() const
+{
+    QStringList list;
+{% for iface in module.interfaces %}
+{%   if loop.first %}    list{% endif %} << QStringLiteral({{module.module_name|upperfirst}}_{{iface}}_iid){% if loop.last %};{% endif %}
+{% endfor %}
+
+    return list;
+}
+
+/*! \internal */
+QIfFeatureInterface *{{class}}::interfaceInstance(const QString &interface) const
+{
+{% for interface in module.interfaces %}
+{%   if loop.first %}
+    if (interface == QStringLiteral({{module.module_name|upperfirst}}_{{interface}}_iid))
+{%   else %}
+    else if (interface == QStringLiteral({{module.module_name|upperfirst}}_{{interface}}_iid))
+{%   endif %}
+        return m_{{interface|lower}}Backend;
+{% endfor %}
+
+    return nullptr;
+}
+
+QString {{class}}::id() const
+{
+{% if module.tags.config_mqtt and module.tags.config_mqtt.serviceObjectId %}
+{%   set serviceObjectId = module.tags.config_mqtt.serviceObjectId %}
+{% else %}
+{%   set serviceObjectId = "{0}_mqtt".format(module.name) %}
+{% endif %}
+    return u"{{serviceObjectId}}"_s;
+}
+
+QString {{class}}::configurationId() const
+{
+{% if module.tags.config_mqtt and module.tags.config_mqtt.configurationId %}
+{%   set configurationId = module.tags.config_mqtt.configurationId %}
+{% elif module.tags.config.configurationId %}
+{%   set configurationId = module.tags.config.configurationId %}
+{% else %}
+{%   set configurationId = module.name %}
+{% endif %}
+    return u"{{configurationId}}"_s;
+}
+
+void {{class}}::updateServiceSettings(const QVariantMap &settings)
+{
+{% for interface in module.interfaces %}
+    m_{{interface|lower}}Backend->updateServiceSettings(settings);
+{% endfor %}
+}
+
+{{ module|end_namespace }}

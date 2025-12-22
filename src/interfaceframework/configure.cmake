@@ -70,6 +70,10 @@ qt_feature("remoteobjects" PUBLIC
     LABEL "QtRemoteObjects Support"
     CONDITION TARGET Qt::RemoteObjects OR INPUT_force_ifcodegen_qtremoteobjects STREQUAL 'yes'
 )
+qt_feature("mqtt" PUBLIC
+    LABEL "QtMqtt Support"
+    CONDITION TARGET Qt::Mqtt OR INPUT_force_ifcodegen_qtmqtt STREQUAL 'yes'
+)
 qt_feature("interfaceframework" PUBLIC
     LABEL "Qt Interface Framework Core"
 )
@@ -102,6 +106,7 @@ endif()
 
 qt_configure_end_summary_section() # end of "Interface Framework Generator" section
 qt_configure_add_summary_entry(ARGS "remoteobjects")
+qt_configure_add_summary_entry(ARGS "mqtt")
 qt_configure_end_summary_section() # end of "Qt Interface Framework Core" section
 qt_configure_add_summary_entry(
     ARGS "interfaceframework"
@@ -126,4 +131,9 @@ qt_configure_add_report_entry(
     TYPE WARNING
     MESSAGE "Cannot enable the QtRemoteObjects features because the QtRemoteObjects module is not installed."
     CONDITION NOT QT_FEATURE_remoteobjects
+)
+qt_configure_add_report_entry(
+    TYPE WARNING
+    MESSAGE "Cannot enable the QtMqtt features because the QtMqtt module is not installed."
+    CONDITION NOT QT_FEATURE_mqtt
 )

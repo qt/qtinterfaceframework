@@ -1,0 +1,84 @@
+{#
+# Copyright (C) 2025 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#}
+{% import 'common/qtif_macros.jinja' as qtif %}
+{% include "common/generated_comment.cpp.jinja" %}
+{% set class = '{0}MqttBackend'.format(interface) %}
+{% set zone_class = '{0}MqttZone'.format(interface) %}
+{% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
+{% set oncedefine = '{0}_{1}_H_'.format(module.module_name|upper, class|upper) %}
+#ifndef {{oncedefine}}
+#define {{oncedefine}}
+
+#include <QMqttClient>
+#include <QBitArray>
+{% if module.tags.config.module %}
+#include <{{module.tags.config.module}}/{{interface}}BackendInterface>
+{% else %}
+#include "{{interface|lower}}backendinterface.h"
+{% endif %}
+
+using namespace Qt::StringLiterals;
+
+{{ module|begin_namespace }}
+
+class {{class}} : public {{interface}}BackendInterface
+{
+    Q_OBJECT
+
+public:
+    explicit {{class}}(const QString &topicPrefix = {}, QObject *parent = nullptr);
+    ~{{class}}() override;
+
+    void initialize() override;
+    void updateServiceSettings(const QVariantMap &settings);
+
+public Q_SLOTS:
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+{%     if not property.readonly and not property.const %}
+    {{qtif.prop_setter(property, zoned=interface_zoned)}} override;
+{%     elif property|mqtt_reset_on_error %}
+    {{qtif.prop_setter(property, zoned=interface_zoned)}};
+{%     endif %}
+{%   endif %}
+{% endfor %}
+
+{% if interface_zoned %}
+    QStringList availableZones() const override;
+{% endif %}
+
+{% for operation in interface.operations %}
+    {{qtif.operation(operation, zoned=interface_zoned)}} override;
+{% endfor %}
+
+protected Q_SLOTS:
+    void onMessageReceived(const QByteArray &message, const QMqttTopicName &topic);
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+    {{qtif.on_prop_changed(property, zoned=interface_zoned)}};
+{%   endif %}
+{% endfor %}
+
+protected:
+    bool connectToBroker();
+    QString mqttTopic(const QString &topic, bool usePrefix) const;
+    void checkSyncDone();
+
+    QMqttClient *m_client = nullptr;
+    QUrl m_url;
+    QString m_topicPrefix;
+    QHash<QString, std::function<void (const QByteArray &)> > m_pendingReplies;
+    QVariantMap m_serviceSettings;
+{% for property in interface.properties %}
+{%     if not property.type.is_model %}
+    {{ property|return_type }} m_{{ property }};
+{%     endif %}
+{% endfor %}
+    QStringList m_propertiesToSync;
+};
+
+{{ module|end_namespace }}
+
+#endif // {{oncedefine}}

@@ -40,6 +40,12 @@ if (QT_FEATURE_remoteobjects)
     target_link_libraries(tst_qtro_backend_static PRIVATE echo_backend_qtro_static)
 endif()
 
+if (QT_FEATURE_mqtt AND QT_FEATURE_process)
+    internal_add_backend_test(tst_mqtt_backend
+        tst_mqtt_backend.cpp
+    )
+endif()
+
 add_custom_target(tst_backends_extra_files
     SOURCES
         simulation.qml

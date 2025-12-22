@@ -1,0 +1,494 @@
+{#
+# Copyright (C) 2025 The Qt Company Ltd.
+# SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+#}
+{% import 'common/qtif_macros.jinja' as qtif %}
+{% include "common/generated_comment.cpp.jinja" %}
+{% set class = '{0}MqttBackend'.format(interface) %}
+{% set zone_class = '{0}MqttZone'.format(interface) %}
+{% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
+#include "{{class|lower}}.h"
+
+#include <QDebug>
+#include <QSettings>
+#include <QTimer>
+#include <QLoggingCategory>
+#include <QJsonDocument>
+
+#include "{{module.module_name|lower}}.h"
+{% for struct in module.structs %}
+#include "{{struct|lower}}.h"
+{% endfor %}
+#include "{{module.module_name|lower}}_mqtt_helper.h"
+
+using namespace Qt::StringLiterals;
+
+Q_LOGGING_CATEGORY(qLcMqtt{{interface}}, "{{module|qml_type|lower}}.{{interface|lower}}backend.mqtt", QtInfoMsg)
+
+{{ module|begin_namespace }}
+
+{{class}}::{{class}}(const QString &topicPrefix, QObject *parent)
+    : {{interface}}BackendInterface(parent)
+    , m_client(nullptr)
+    , m_topicPrefix(topicPrefix)
+{% for property in interface.properties %}
+{%   if not property.type.is_model %}
+    , m_{{ property }}({{property|default_type_value}})
+{%   endif %}
+{% endfor %}
+{
+    {{module.module_name|upperfirst}}::registerTypes();
+
+    if (m_topicPrefix.isEmpty() || m_topicPrefix.back() != u'/')
+        m_topicPrefix.append(u'/');
+}
+
+{{class}}::~{{class}}()
+{
+}
+
+void {{class}}::initialize()
+{
+{% for property in interface.properties %}
+{%   if property.type.is_model %}
+// TODO Add support for models
+//    Q_EMIT {{property}}Changed(m_{{property}});
+{%   endif %}
+{% endfor %}
+
+    if (!connectToBroker())
+        return;
+
+    checkSyncDone();
+}
+
+void {{class}}::updateServiceSettings(const QVariantMap &settings)
+{
+    if (m_serviceSettings == settings)
+        return;
+
+    m_serviceSettings = settings;
+    connectToBroker();
+
+{% for property in interface.properties %}
+{%   if property.type.is_model %}
+//    m_{{property}}->updateServiceSettings(settings);
+{%   endif %}
+{% endfor %}
+}
+
+{% for property in interface.properties %}
+{%   if not property.readonly and not property.const or property|mqtt_reset_on_error %}
+{%     if not property.is_model %}
+{{qtif.prop_setter(property, class, zoned=interface_zoned)}}
+{
+    if (m_client->state() != QMqttClient::Connected)
+        return;
+{%     if interface_zoned %}
+    Q_UNUSED(zone)
+    Q_UNUSED({{property}})
+    qCritical() << "Zone support is not implemented yet!";
+{%     else %}
+    bool retain = {{"true" if property|mqtt_retain else "false" }};
+    bool useTopicPrefix = {{"true" if property|mqtt_use_topic_prefix else "false" }};
+    auto topic = mqttTopic(u"{{property|mqtt_topic}}"_s, useTopicPrefix);
+    quint8 qos = {{property|mqtt_qos}};
+{%      if property.type.is_list and not property.type.nested.is_var %}
+    // Remove this special case again once we use QList<type> directly instead of QVariantList
+    QList<{{property.type.nested|return_type}}> list;
+    for (const auto &val : {{property}}) {
+        if (val.metaType() != QMetaType::fromType<{{property.type.nested|return_type}}>()) {
+            qCWarning(qLcMqtt{{interface}}) << "Wrong datatype passed to {{qtif.prop_setter(property, class, zoned=interface_zoned)}},"
+                                            << "Expected: {{property.type.nested|return_type}} Received:" << val.metaType().name();
+            break;
+        }
+        list.append(val.value<{{property.type.nested|return_type}}>());
+    }
+    QByteArray value = toMqttMessage(list);
+{%      else %}
+    QByteArray value = toMqttMessage({{property}});
+{%      endif %}
+    qCDebug(qLcMqtt{{interface}}) << "publish {{property}} using topic: " << topic << {{property}} << "retain:" << retain;
+    m_client->publish(topic, value, qos, retain);
+{%     endif %}
+}
+
+{%     endif %}
+{%   endif %}
+{% endfor %}
+
+{% if interface_zoned %}
+QStringList {{class}}::availableZones() const
+{
+    return {};
+}
+{% endif %}
+
+// See https://learn.microsoft.com/en-us/azure/iot/iot-mqtt-connect-to-iot-hub#respond-to-a-direct-method
+{% for operation in interface.operations %}
+{{ qtif.operation(operation, class, zoned=interface_zoned) }}
+{
+    if (m_client->state() != QMqttClient::Connected)
+        return QIfPendingReply<{{operation|return_type}}>::createFailedReply();
+
+    bool retain = {{"true" if operation|mqtt_retain else "false" }};
+    bool useTopicPrefix = {{"true" if operation|mqtt_use_topic_prefix else "false" }};
+    auto topic = mqttTopic(u"{{operation|mqtt_topic}}"_s, useTopicPrefix);
+    quint8 qos = {{operation|mqtt_qos}};
+
+    QString id = QUuid::createUuidV7().toString();
+    topic += u"/"_s + id;
+
+    auto resultTopic = mqttTopic(u"{{operation|mqtt_result_topic}}"_s, useTopicPrefix) + u"/"_s + id;
+
+    qCDebug(qLcMqtt{{interface}}) << "publish {{operation}} using topic: " << topic << "{{operation}} retain:" << retain;
+    qCDebug(qLcMqtt{{interface}}) << "waiting for replies using topic: " << resultTopic;
+
+    QVariantMap arguments;
+{%   for param in operation.parameters %}
+    arguments.insert("{{param}}", toMqttMessage({{param}}));
+{%   endfor %}
+{%   if interface_zoned %}
+    arguments.insert("zone", zone);
+{%   endif %}
+    QIfPendingReply<{{operation|return_type}}> reply;
+    m_pendingReplies.insert(resultTopic , [reply](const QByteArray &message) mutable {
+{%   if operation.type.is_void %}
+        Q_UNUSED(message)
+        reply.setSuccess();
+{%   else %}
+        bool ok = false;
+        {{operation|return_type}} value = fromMqttMessage<{{operation|return_type}}>(message, &ok);
+        if (!ok) {
+            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert topic to correct type: {{operation|return_type}}";
+            qCWarning(qLcMqtt{{interface}}) << "Message received: " << message;
+            return;
+        }
+        reply.setSuccess(value);
+{%   endif %}
+    });
+    m_client->subscribe(resultTopic);
+    m_client->publish(topic, QJsonDocument::fromVariant(arguments).toJson(), qos, retain);
+
+    return reply;
+}
+
+{% endfor %}
+
+bool {{class}}::connectToBroker()
+{
+    auto findConnectionUrl = [this](const QString &key) -> QUrl {
+        const auto it = m_serviceSettings.constFind(key);
+
+        if (it != m_serviceSettings.constEnd())
+            return it->toMap().value(u"connectionUrl"_s).toUrl();
+        return QUrl();
+    };
+
+    auto findConnectionTimeout = [this](const QString &key, int defaultTimeout) -> int {
+        const auto it = m_serviceSettings.constFind(key);
+
+        if (it != m_serviceSettings.constEnd())
+            return it->toMap().value(u"connectionTimeout"_s, defaultTimeout).toInt();
+        return defaultTimeout;
+    };
+
+    auto findClientId = [this](const QString &key) -> QString {
+        const auto it = m_serviceSettings.constFind(key);
+
+        if (it != m_serviceSettings.constEnd())
+            return it->toMap().value(u"clientId"_s).toString();
+        return QString();
+    };
+
+    QUrl url = findConnectionUrl(u"{{interface.qualified_name}}"_s);
+    if (url.isEmpty())
+        url = findConnectionUrl(u"{{interface}}"_s);
+    if (url.isEmpty())
+        url = findConnectionUrl(u"{{module}}"_s);
+    if (url.isEmpty())
+        url = m_serviceSettings.value(u"connectionUrl"_s).toUrl();
+
+    if (url.isEmpty())
+        url = QUrl("{{interface|mqtt_default_server}}");
+
+    QString clientId = findClientId(u"{{interface.qualified_name}}"_s);
+    if (clientId.isEmpty())
+        clientId = findClientId(u"{{interface}}"_s);
+    if (clientId.isEmpty())
+        clientId = findClientId(u"{{module}}"_s);
+    if (clientId.isEmpty())
+        clientId = m_serviceSettings.value(u"clientId"_s).toString();
+
+{% if interface|mqtt_default_client_id %}
+    if (clientId.isEmpty())
+        clientId = QString(u"{{interface|mqtt_default_client_id}}"_s);
+{% endif %}
+
+    if (m_url != url) {
+        if (m_client) {
+            qCInfo(qLcMqtt{{interface}}) << "Disconnecting from" << m_url.toString(QUrl::PrettyDecoded | QUrl::RemovePassword);
+            delete m_client;
+        }
+
+        m_url = url;
+
+        m_client = new QMqttClient(this);
+        m_client->setHostname(m_url.host());
+        m_client->setPort(m_url.port(1883));
+        m_client->setUsername(m_url.userName());
+        m_client->setPassword(m_url.password());
+        if (!clientId.isEmpty())
+            m_client->setClientId(clientId);
+
+        qCInfo(qLcMqtt{{interface}}) << "Connecting to" << m_url.toString(QUrl::PrettyDecoded | QUrl::RemovePassword);
+        connect(m_client, &QMqttClient::stateChanged, this, [this](QMqttClient::ClientState state){
+            if (state == QMqttClient::Connected) {
+                qCInfo(qLcMqtt{{interface}}) << "Connected to" << m_url.toString(QUrl::PrettyDecoded | QUrl::RemovePassword);
+{% for property in interface.properties if not property.type.is_model %}
+                auto sub{{property}} = m_client->subscribe(mqttTopic(u"{{property|mqtt_topic}}"_s, {{"true" if property|mqtt_use_topic_prefix else "false" }}), {{property|mqtt_qos}});
+                connect(sub{{property}}, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for property {{property}} changed to" << state;
+                });
+{% endfor %}
+{% for signal in interface.signals %}
+                auto sub{{signal}} = m_client->subscribe(mqttTopic(u"{{signal|mqtt_topic}}"_s, {{"true" if signal|mqtt_use_topic_prefix else "false" }}), {{signal|mqtt_qos}});
+                connect(sub{{signal}}, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for signal {{signal}} changed to" << state;
+                });
+{% endfor %}
+{% for operation in interface.operations %}
+                auto sub{{operation}} = m_client->subscribe(mqttTopic(u"{{operation|mqtt_topic}}"_s, {{"true" if operation|mqtt_use_topic_prefix else "false" }}), {{operation|mqtt_qos}});
+                connect(sub{{operation}}, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for operation {{operation}} changed to" << state;
+                });
+                auto sub{{operation}}_result = m_client->subscribe(mqttTopic(u"{{operation|mqtt_result_topic}}"_s, {{"true" if operation|mqtt_use_topic_prefix else "false" }}), {{operation|mqtt_qos}});
+                connect(sub{{operation}}_result, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for operation result {{operation}} changed to" << state;
+                });
+{% endfor %}
+            }
+        });
+        connect(m_client, &QMqttClient::disconnected, this, [this](){
+            qCInfo(qLcMqtt{{interface}}) << "Disconnected from" << m_url.toString(QUrl::PrettyDecoded | QUrl::RemovePassword);
+        });
+        connect(m_client, &QMqttClient::errorChanged, this, [this](QMqttClient::ClientError error){
+            qCWarning(qLcMqtt{{interface}}) << "Error:" << error;
+        });
+        connect(m_client, &QMqttClient::messageReceived, this, &{{class}}::onMessageReceived);
+
+{% for property in interface.properties %}
+{%   if not property.type.is_model and property|mqtt_mandatory%}
+        m_propertiesToSync.append(u"{{property}}"_s);
+{%   endif %}
+{% endfor %}
+        m_client->connectToHost();
+
+        static const int defaultTimeout = 3000;
+        int connectionTimeout = defaultTimeout;
+        connectionTimeout = findConnectionTimeout(u"{{interface.qualified_name}}"_s, defaultTimeout);
+
+        if (connectionTimeout == defaultTimeout)
+            connectionTimeout = findConnectionTimeout(u"{{interface}}"_s, defaultTimeout);
+
+        if (connectionTimeout == defaultTimeout)
+            connectionTimeout = findConnectionTimeout(u"{{module}}"_s, defaultTimeout);
+
+        if (connectionTimeout == defaultTimeout)
+            connectionTimeout = m_serviceSettings.value(u"connectionTimeout"_s, defaultTimeout).toInt();
+
+        if (connectionTimeout != -1) {
+            QTimer::singleShot(connectionTimeout, this, [this](){
+                if (!m_propertiesToSync.isEmpty()) {
+                    qCWarning(qLcMqtt{{interface}}) << "{{interface.qualified_name}} wasn't initialized within the timeout period.";
+                    qCWarning(qLcMqtt{{interface}}).noquote() << "Couldn't retrieve any value for the following properties:" << m_propertiesToSync.join(", ");
+                }
+            });
+        }
+    }
+    return true;
+}
+
+QString {{class}}::mqttTopic(const QString &topic, bool usePrefix) const
+{
+    if (usePrefix)
+        return m_topicPrefix + topic;
+    return topic;
+}
+
+void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicName &topic)
+{
+    qCDebug(qLcMqtt{{interface}}) << "Received message on topic" << topic.name() << "with payload" << message;
+
+{% for property in interface.properties if not property.type.is_model %}
+    if (topic == mqttTopic(u"{{property|mqtt_topic}}"_s, {{"true" if property|mqtt_use_topic_prefix else "false" }})) {
+{%   if property | mqtt_clear_on_change %}
+        // Clear the value after change
+        qCDebug(qLcMqtt{{interface}}) << "Clearing value after change ";
+        bool retain = {{"true" if property|mqtt_retain else "false" }};
+        bool useTopicPrefix = {{"true" if property|mqtt_use_topic_prefix else "false" }};
+        auto topic = mqttTopic(u"{{property|mqtt_topic}}"_s, useTopicPrefix);
+        quint8 qos = {{property|mqtt_qos}};
+        m_client->publish(topic, QByteArray(), qos, retain);
+{%   endif %}
+
+{%   if property.type.is_list and not property.type.nested.is_var %}
+{%     set property_type = "QList<{0}>".format(property.type.nested|return_type) %}
+{%   else %}
+{%     set property_type = property|return_type %}
+{%   endif %}
+        bool ok = false;
+        {{property_type}} value = fromMqttMessage<{{property_type}}>(message, &ok);
+        if (!ok) {
+            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert topic" << topic << "to correct type: {{property_type}}";
+            qCWarning(qLcMqtt{{interface}}) << "Message received: " << message;
+{%   if property | mqtt_reset_on_error %}
+            // Reset to current value
+            qCWarning(qLcMqtt{{interface}}) << "Resetting value to: " << m_{{property}};
+            set{{property|upperfirst}}(m_{{property}});
+{%   endif %}
+            return;
+        }
+{%   if property.type.is_list and not property.type.nested.is_var %}
+        QVariantList converted;
+        for (const auto &val: std::as_const(value))
+            converted.append(QVariant::fromValue(val));
+{%     if interface_zoned %}
+        on{{property|upperfirst}}Changed(converted, QString());
+{%     else %}
+        on{{property|upperfirst}}Changed(converted);
+{%     endif %}
+{%   else %}
+{%     if interface_zoned %}
+        on{{property|upperfirst}}Changed(value, QString());
+{%     else %}
+        on{{property|upperfirst}}Changed(value);
+{%     endif %}
+{%   endif %}
+        return;
+    }
+{% endfor %}
+    // signal handling
+{% for signal in interface.signals %}
+    if (topic == mqttTopic(u"{{signal|mqtt_topic}}"_s, {{"true" if signal|mqtt_use_topic_prefix else "false" }})) {
+{%   if signal | mqtt_clear_on_change %}
+        // Clear the value after change
+        qCDebug(qLcMqtt{{interface}}) << "Clearing value after change ";
+        bool retain = {{"true" if signal|mqtt_retain else "false" }};
+        bool useTopicPrefix = {{"true" if signal|mqtt_use_topic_prefix else "false" }};
+        auto topic = mqttTopic(u"{{signal|mqtt_topic}}"_s, useTopicPrefix);
+        quint8 qos = {{signal|mqtt_qos}};
+        m_client->publish(topic, QByteArray(), qos, retain);
+{%   endif %}
+{%   if signal.parameters|length > 1 %}
+        QJsonParseError error;
+        const QJsonDocument doc = QJsonDocument::fromJson(message, &error);
+        if (error.error != QJsonParseError::NoError) {
+            qCWarning(qLcMqtt{{interface}}) << "Received invalid JSON for signal" << u"{{signal}}"_s;
+            return;
+        }
+        if (!doc.isObject()) {
+            qCWarning(qLcMqtt{{interface}}) << "Received invalid JSON object for signal" << u"{{signal}}"_s;
+            return;
+        }
+        const QJsonObject object = doc.object();
+{%     for param in signal.parameters %}
+        if (!object.contains(u"{{param}}"_s)) {
+            qCWarning(qLcMqtt{{interface}}) << "Missing parameter" << u"{{param}}"_s << "for signal" << u"{{signal}}"_s;
+            return;
+        }
+        bool ok = false;
+        {{param.type|return_type}} {{param}}Value = fromMqttMessage<{{param.type|return_type}}>(object[u"{{param}}"_s], &ok);
+        if (!ok) {
+            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert parameter {{param}} to correct type: {{param|return_type}}";
+            qCWarning(qLcMqtt{{interface}}) << "Message received: " << message;
+            return;
+        }
+{%     endfor %}
+        Q_EMIT {{signal}}({%for param in signal.parameters%}{{param}}Value{% if not loop.last %}, {% endif %}{% endfor %});
+{%   elif signal.parameters|length == 1 %}
+{%      set signal_param = signal.parameters|first %}
+        bool ok = false;
+        {{signal_param.type|return_type}} value = fromMqttMessage<{{signal_param.type|return_type}}>(message, &ok);
+        if (!ok) {
+            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert topic" << topic << "to correct type: {{signal_param.type|return_type}}";
+            qCWarning(qLcMqtt{{interface}}) << "Message received: " << message;
+            return;
+        }
+{%     if interface_zoned %}
+        Q_EMIT {{signal}}(value, QString());
+{%     else %}
+        Q_EMIT {{signal}}(value);
+{%     endif %}
+{%   else %}
+{%     if interface_zoned %}
+        Q_EMIT {{signal}}(QString());
+{%     else %}
+        Q_EMIT {{signal}}();
+{%     endif %}
+{%   endif %}
+        return;
+    }
+{% endfor %}
+    // operation handling
+{% for operation in interface.operations %}
+    if (topic == mqttTopic(u"{{operation|mqtt_topic}}"_s, {{"true" if operation|mqtt_use_topic_prefix else "false" }})) {
+{%   if operation | mqtt_clear_on_change %}
+        // Clear the value after change
+        qCDebug(qLcMqtt{{interface}}) << "Clearing value after change ";
+        bool retain = {{"true" if operation|mqtt_retain else "false" }};
+        bool useTopicPrefix = {{"true" if operation|mqtt_use_topic_prefix else "false" }};
+        auto topic = mqttTopic(u"{{operation|mqtt_topic}}"_s, useTopicPrefix);
+        quint8 qos = {{operation|mqtt_qos}};
+        m_client->publish(topic, QByteArray(), qos, retain);
+{%   endif %}
+    }
+{% endfor %}
+    // operation result handling
+    if (m_pendingReplies.contains(topic.name())) {
+        auto func = m_pendingReplies.value(topic.name());
+        func(message);
+    }
+}
+
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+{{qtif.on_prop_changed(property, zoned=interface_zoned, class=class)}}
+{
+{%     if interface_zoned %}
+    // TODO Add support for zones
+    Q_UNUSED(zone)
+    qCritical() << "Zone support is not implemented yet!";
+{%     endif %}
+    m_{{property}} = {{property}};
+    emit {{property}}Changed({{property}});
+
+{%     if property|mqtt_mandatory %}
+    qCDebug(qLcMqtt{{interface}}) << "Received value for mandatory property {{property}}";
+    qCDebug(qLcMqtt{{interface}}).noquote() << "Mandatory properties left until initialized:" << m_propertiesToSync.join(", ");
+    m_propertiesToSync.removeAll(u"{{property}}"_s);
+    checkSyncDone();
+{%     endif %}
+}
+{%   endif %}
+
+{% endfor %}
+
+void {{class}}::checkSyncDone()
+{
+    if (!m_propertiesToSync.isEmpty())
+        return;
+
+    qCDebug(qLcMqtt{{interface}}) << "All mandatory properties initialized";
+
+{%   for property in interface.properties %}
+{%     if not property.is_model %}
+    Q_EMIT {{property}}Changed(m_{{property}});
+{%     endif %}
+{%   endfor %}
+    Q_EMIT initializationDone();
+}
+
+{{ module|end_namespace }}
+
+#include "moc_{{class|lower}}.cpp"

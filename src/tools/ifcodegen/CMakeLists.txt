@@ -423,3 +423,24 @@ if (QT_FEATURE_remoteobjects)
         DESTINATION "${templates_install_dir}"
         )
 endif()
+
+qt_copy_or_install(
+    FILES
+        templates/backend_mqtt/backend.cpp.jinja
+        templates/backend_mqtt/backend.h.jinja
+        templates/backend_mqtt/mqtt_helper.h.jinja
+        templates/backend_mqtt/mqtt_helper.cpp.jinja
+        templates/backend_mqtt/plugin.cpp.jinja
+        templates/backend_mqtt/plugin.h.jinja
+        templates/backend_mqtt/plugin.json.jinja
+        templates/backend_mqtt/plugin.pri.jinja
+        templates/backend_mqtt/CMakeLists.txt.jinja
+        templates/backend_mqtt/filters.py
+        DESTINATION "${templates_install_dir}/backend_mqtt"
+)
+
+qt_copy_or_install(
+    FILES
+    templates/backend_mqtt.yaml
+    DESTINATION "${templates_install_dir}"
+    )
