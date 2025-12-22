@@ -14,12 +14,12 @@ void RoTestBase::testRemoteObjectsConfig()
         QSKIP("This test is only for remoteobject");
 
     Echo client;
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
     EchoZoned zonedClient;
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy zonedInitSpy(&zonedClient, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(zonedInitSpy.isValid());
     zonedClient.setServiceObject(client.serviceObject());
 

@@ -36,10 +36,10 @@ public:
     BackendsTestBase();
 
     void sendCmd(const QByteArray &input);
-    void startServer(QStringList arguments = QStringList());
+    void startServer(const QStringList &arguments = QStringList());
     void ignoreMessage(QtMsgType type, const char *message);
     void cleanupTestData();
-    void setSkippedTests(QMap<QString, QString> skipMap);
+    void setSkippedTests(const QMap<QString, QString> &skipMap);
     QMap<QString, QString> skippedTests() const;
 
     virtual void initTestCase_data();

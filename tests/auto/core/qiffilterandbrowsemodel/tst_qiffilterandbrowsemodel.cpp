@@ -566,7 +566,7 @@ void tst_QIfFilterAndBrowseModel::testFetchMore()
     model.setServiceObject(service);
 
     if (chunkSize != -1) {
-        QSignalSpy chunkSizeChangedSpy(&model, SIGNAL(chunkSizeChanged(int)));
+        QSignalSpy chunkSizeChangedSpy(&model, &QIfPagingModel::chunkSizeChanged);
         model.setChunkSize(model.chunkSize());
         QVERIFY(!chunkSizeChangedSpy.count());
 
@@ -577,7 +577,7 @@ void tst_QIfFilterAndBrowseModel::testFetchMore()
 
     // Set the threshold
     if (fetchMoreThreshold != -1) {
-        QSignalSpy fetchMoreThresholdChangedSpy(&model, SIGNAL(fetchMoreThresholdChanged(int)));
+        QSignalSpy fetchMoreThresholdChangedSpy(&model, &QIfPagingModel::fetchMoreThresholdChanged);
         model.setFetchMoreThreshold(model.fetchMoreThreshold());
         QVERIFY(!fetchMoreThresholdChangedSpy.count());
 
@@ -587,7 +587,7 @@ void tst_QIfFilterAndBrowseModel::testFetchMore()
     }
 
     // Set the contentType
-    QSignalSpy contentTypeSpy(&model, SIGNAL(contentTypeChanged(QString)));
+    QSignalSpy contentTypeSpy(&model, &QIfFilterAndBrowseModel::contentTypeChanged);
     QVERIFY(model.availableContentTypes().contains("simple"));
     model.setContentType("simple");
     QCOMPARE(model.contentType(), QString("simple"));
@@ -601,7 +601,7 @@ void tst_QIfFilterAndBrowseModel::testFetchMore()
     QVERIFY(model.serviceObject());
     QCOMPARE(model.loadingType(), QIfFilterAndBrowseModel::FetchMore);
 
-    QSignalSpy fetchMoreThresholdSpy(&model, SIGNAL(fetchMoreThresholdReached()));
+    QSignalSpy fetchMoreThresholdSpy(&model, &QIfPagingModel::fetchMoreThresholdReached);
 
     // Ask for an item before the threshold, shouldn't trigger the threshold reached signal and fetch new data.
     int offset = model.fetchMoreThreshold() + 1;
@@ -641,13 +641,13 @@ void tst_QIfFilterAndBrowseModel::testDataChangedMode()
     QVERIFY(model.serviceObject());
 
     //TODO remove this section once we have fixed the capability race
-    QSignalSpy fetchMoreThresholdSpy(&model, SIGNAL(fetchMoreThresholdReached()));
+    QSignalSpy fetchMoreThresholdSpy(&model, &QIfPagingModel::fetchMoreThresholdReached);
     QCOMPARE(model.rowCount(), model.chunkSize());
     QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - 1).id(), QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
     QVERIFY(fetchMoreThresholdSpy.count());
     fetchMoreThresholdSpy.clear();
 
-    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIfPagingModel::LoadingType)));
+    QSignalSpy loadingTypeChangedSpy(&model, &QIfPagingModel::loadingTypeChanged);
     model.setLoadingType(model.loadingType());
     QVERIFY(!loadingTypeChangedSpy.count());
 
@@ -660,7 +660,7 @@ void tst_QIfFilterAndBrowseModel::testDataChangedMode()
     int testIndex = model.chunkSize() - 1;
 
     // Asking for an item near inside the threshold range should trigger a new fetch.
-    QSignalSpy fetchDataSpy(service->testBackend(), SIGNAL(dataFetched(const QUuid &, const QList<QVariant> &, int , bool )));
+    QSignalSpy fetchDataSpy(service->testBackend(), &QIfPagingModelInterface::dataFetched);
     QCOMPARE(model.at<QIfStandardItem>(testIndex).id(), QLatin1String("simple ") + QString::number(testIndex));
     QVERIFY(fetchMoreThresholdSpy.count());
     QVERIFY(fetchDataSpy.count());
@@ -682,7 +682,7 @@ void tst_QIfFilterAndBrowseModel::testReload()
     QVERIFY(model.serviceObject());
 
     QVERIFY(model.availableContentTypes().contains("simple"));
-    QSignalSpy countChangedSpy(&model, SIGNAL(countChanged()));
+    QSignalSpy countChangedSpy(&model, &QIfPagingModel::countChanged);
     model.setContentType("simple");
     countChangedSpy.wait(100);
     QVERIFY(countChangedSpy.count());
@@ -690,7 +690,7 @@ void tst_QIfFilterAndBrowseModel::testReload()
     QCOMPARE(model.rowCount(), model.chunkSize());
     countChangedSpy.clear();
 
-    QSignalSpy resetSpy(&model, SIGNAL(modelReset()));
+    QSignalSpy resetSpy(&model, &QAbstractItemModel::modelReset);
     model.reload();
     countChangedSpy.wait(100);
     QCOMPARE(resetSpy.count(), 1);
@@ -712,7 +712,7 @@ void tst_QIfFilterAndBrowseModel::testDataChangedMode_jump()
     model.setContentType("simple");
     QVERIFY(model.serviceObject());
 
-    QSignalSpy loadingTypeChangedSpy(&model, SIGNAL(loadingTypeChanged(QIfPagingModel::LoadingType)));
+    QSignalSpy loadingTypeChangedSpy(&model, &QIfPagingModel::loadingTypeChanged);
     model.setLoadingType(model.loadingType());
     QVERIFY(!loadingTypeChangedSpy.count());
 
@@ -723,8 +723,8 @@ void tst_QIfFilterAndBrowseModel::testDataChangedMode_jump()
     QCOMPARE(model.rowCount(), 100);
 
     // Ask for the last item. This should just fetch the chunk which is needed.
-    QSignalSpy dataChangedSpy(&model, SIGNAL(dataChanged(const QModelIndex, const QModelIndex, const QVector<int>)));
-    QSignalSpy fetchDataSpy(service->testBackend(), SIGNAL(dataFetched(const QUuid &, const QList<QVariant> &, int , bool )));
+    QSignalSpy dataChangedSpy(&model, &QAbstractItemModel::dataChanged);
+    QSignalSpy fetchDataSpy(service->testBackend(), &QIfPagingModelInterface::dataFetched);
     model.get(99);
     dataChangedSpy.wait();
     QCOMPARE(model.at<QIfStandardItem>(99).id(), QLatin1String("simple ") + QString::number(99));
@@ -852,7 +852,7 @@ void tst_QIfFilterAndBrowseModel::testFilter()
     QCOMPARE(model.at<QIfStandardItem>(0).id(), QString::number(0));
 
     // Set the query
-    QSignalSpy queryChangedSpy(&model, SIGNAL(queryChanged(QString)));
+    QSignalSpy queryChangedSpy(&model, &QIfFilterAndBrowseModel::queryChanged);
     model.setQuery(model.query());
     QVERIFY(!queryChangedSpy.count());
 
@@ -890,7 +890,7 @@ void tst_QIfFilterAndBrowseModel::testEditing()
     newItem.setId(QLatin1String("testItem"));
 
     // Add a new Item
-    QSignalSpy insertSpy(&model, SIGNAL(rowsInserted(const QModelIndex &, int , int )));
+    QSignalSpy insertSpy(&model, &QAbstractItemModel::rowsInserted);
     model.insert(0, QVariant::fromValue(newItem));
     QVERIFY(insertSpy.count());
     QCOMPARE(insertSpy.at(0).at(1).toInt(), 0);
@@ -899,7 +899,7 @@ void tst_QIfFilterAndBrowseModel::testEditing()
     QCOMPARE(model.at<QIfStandardItem>(0).id(), newItem.id());
 
     // Move the item to a new location
-    QSignalSpy moveSpy(&model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &, const QVector<int> &)));
+    QSignalSpy moveSpy(&model, &QAbstractItemModel::dataChanged);
     int newIndex = 10;
     model.move(0, newIndex);
     QVERIFY(moveSpy.count());
@@ -909,7 +909,7 @@ void tst_QIfFilterAndBrowseModel::testEditing()
     QCOMPARE(model.at<QIfStandardItem>(newIndex).id(), newItem.id());
 
     // Remove the item again
-    QSignalSpy removedSpy(&model, SIGNAL(rowsRemoved(const QModelIndex &, int , int )));
+    QSignalSpy removedSpy(&model, &QAbstractItemModel::rowsRemoved);
     model.remove(newIndex);
     QVERIFY(removedSpy.count());
     QCOMPARE(removedSpy.at(0).at(1).toInt(), newIndex);
@@ -966,7 +966,7 @@ void tst_QIfFilterAndBrowseModel::testInputErrors()
     QCOMPARE(model.data(model.index(0,0), Qt::DecorationRole), QVariant());
     QVERIFY(!model.canFetchMore(model.index(0,0)));
 
-    QSignalSpy countChanged(&model, SIGNAL(countChanged()));
+    QSignalSpy countChanged(&model, &QIfPagingModel::countChanged);
     model.fetchMore(model.index(0,0));
     QVERIFY(!countChanged.count());
 
