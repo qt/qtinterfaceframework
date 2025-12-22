@@ -9,14 +9,14 @@ CmdListener::CmdListener(QObject *parent)
 {
     auto socket = new QLocalSocket(this);
     socket->connectToServer("qifcmdsocket");
-    connect(socket, &QIODevice::readyRead, [this, socket]() {
+    connect(socket, &QIODevice::readyRead, this, [this, socket]() {
         while (socket->canReadLine()) {
             QString cmd = QString::fromLocal8Bit(socket->readLine()).chopped(1);
             //qDebug() << "NEW CMD " << cmd;
             emit newCmd(cmd);
         }
     });
-    m_reconnectingConnection = connect(socket, &QLocalSocket::disconnected, [socket]() {
+    m_reconnectingConnection = connect(socket, &QLocalSocket::disconnected, this, [socket]() {
         socket->connectToServer("qifcmdsocket");
     });
 }

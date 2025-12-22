@@ -482,7 +482,7 @@ void tst_QIfSimulationGlobalObject::testCheckSettingsInvalid()
     QVariant data = parseJson(json, error);
     QVERIFY2(error.isEmpty(), qPrintable(error));
 
-    QTest::ignoreMessage(QtWarningMsg, expectedWarning.toUtf8());
+    QTest::ignoreMessage(QtWarningMsg, expectedWarning.toUtf8().constData());
 
     QVERIFY(!globalObject.checkSettings(data.toMap(), value));
 }

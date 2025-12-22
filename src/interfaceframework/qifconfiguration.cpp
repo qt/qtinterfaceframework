@@ -47,7 +47,7 @@ QIfAbstractFeature::DiscoveryMode discoveryModeFromString(const QString &modeStr
     QMetaEnum me = QMetaEnum::fromType<QIfAbstractFeature::DiscoveryMode>();
     QByteArray modeStringUtf8 = modeString.toUtf8();
     bool ok = false;
-    int value = me.keyToValue(modeStringUtf8, &ok);
+    int value = me.keyToValue(modeStringUtf8.constData(), &ok);
     if (ok) {
         return static_cast<QIfAbstractFeature::DiscoveryMode>(value);
     } else {

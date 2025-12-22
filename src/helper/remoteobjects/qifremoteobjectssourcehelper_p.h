@@ -57,7 +57,7 @@ public:
             }
             QIfRemoteObjectsPendingResult result = QIfRemoteObjectsPendingResult(id, false /* failed */);
             qCDebug(m_category) << "Returning a pending result: id:" << id;
-            QObject::connect(pendingReply.watcher(), &QIfPendingReplyWatcher::valueChanged, [this, pendingReply, id] (const QVariant &value) {
+            QObject::connect(pendingReply.watcher(), &QIfPendingReplyWatcher::valueChanged, m_adapter, [this, pendingReply, id] (const QVariant &value) {
                 qCDebug(m_category) << "Value for pending result available: id:" << id << "value:" << value;
                 Q_EMIT m_adapter->pendingResultAvailable(id, pendingReply.isSuccessful(), value);
             });

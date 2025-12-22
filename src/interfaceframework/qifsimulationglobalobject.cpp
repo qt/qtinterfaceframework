@@ -294,13 +294,13 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
         QByteArray key = i.key().toLatin1();
         const QVariant defVal = defaultValue(i.value().toMap());
         if (defVal.isValid()) {
-            QVariant currentValue = object->property(key);
+            QVariant currentValue = object->property(key.constData());
             if (QIfPagingModelInterface *model = currentValue.value<QIfPagingModelInterface*>()) {
                 QVariantList list = defVal.toList();
                 for (auto i = list.crbegin(); i != list.crend(); ++i)
                     QMetaObject::invokeMethod(model, "insert", createArgument(int(0)), createArgument(*i));
             } else {
-                object->setProperty(key, defVal);
+                object->setProperty(key.constData(), defVal);
             }
         }
 
@@ -314,7 +314,7 @@ void QIfSimulationGlobalObject::initializeDefault(const QVariantMap &data, QObje
             if (defVal.isValid()) {
                 QObject *zoneObject = map->value(zone).value<QObject*>();
                 if (zoneObject)
-                    zoneObject->setProperty(key, defVal);
+                    zoneObject->setProperty(key.constData(), defVal);
             }
         }
     }

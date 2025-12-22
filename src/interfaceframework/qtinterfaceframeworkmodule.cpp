@@ -127,7 +127,8 @@ void QtInterfaceFrameworkModule::registerTypes()
 void QtInterfaceFrameworkModule::registerQmlTypes(const QString &uri, int majorVersion, int minorVersion)
 {
     registerTypes();
-    QByteArray u = uri.toLatin1();
+    QByteArray uriLatin1 = uri.toLatin1();
+    const char* u = uriLatin1.constData();
     qmlRegisterSingletonType<QtInterfaceFrameworkModule>(u, majorVersion, minorVersion,
                                         "QtInterfaceFrameworkModule",
                                         qtinterfaceframeworkmodule_singletontype_provider);

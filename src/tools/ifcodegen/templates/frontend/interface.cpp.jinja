@@ -262,14 +262,14 @@ void {{class}}Private::on{{signal|upperfirst}}({{qtif.join_params(signal)}})
 void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minorVersion)
 {
 {% if interface.tags.config.zoned %}
-    qmlRegisterAnonymousType<QIfAbstractZonedFeature, 254>(uri.toLatin1(), majorVersion);
+    qmlRegisterAnonymousType<QIfAbstractZonedFeature, 254>(uri.toLatin1().constData(), majorVersion);
 {% else %}
-    qmlRegisterAnonymousType<QIfAbstractFeature, 254>(uri.toLatin1(), majorVersion);
+    qmlRegisterAnonymousType<QIfAbstractFeature, 254>(uri.toLatin1().constData(), majorVersion);
 {% endif %}
 {% if 'singleton' in interface.tags %}
-    qmlRegisterSingletonType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{interface}}", {{class|lower}}_singletontype_provider);
+    qmlRegisterSingletonType<{{class}}>(uri.toLatin1().constData(), majorVersion, minorVersion, "{{interface}}", {{class|lower}}_singletontype_provider);
 {% else %}
-    qmlRegisterType<{{class}}>(uri.toLatin1(), majorVersion, minorVersion, "{{interface|qml_type}}");
+    qmlRegisterType<{{class}}>(uri.toLatin1().constData(), majorVersion, minorVersion, "{{interface|qml_type}}");
 {% endif %}
 }
 

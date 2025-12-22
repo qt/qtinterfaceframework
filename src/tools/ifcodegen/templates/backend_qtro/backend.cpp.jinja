@@ -321,7 +321,7 @@ bool {{class}}::connectToNode()
     }
 
     if (url.isEmpty())
-        url = QIfRemoteObjectsHelper::buildDefaultUrl(u"{{module.module_name|lower}}"_s);
+        url = QUrl(QIfRemoteObjectsHelper::buildDefaultUrl(u"{{module.module_name|lower}}"_s));
 
     if (m_url != url) {
         // QtRO doesn't allow to change the URL without destroying the Node
