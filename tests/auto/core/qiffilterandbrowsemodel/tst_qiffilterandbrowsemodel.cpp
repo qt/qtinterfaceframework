@@ -170,7 +170,7 @@ public:
             }
 
             const QMetaObject mo = QIfStandardItem::staticMetaObject;
-            int mpi = mo.indexOfProperty(filterTerm->propertyName().toUtf8());
+            int mpi = mo.indexOfProperty(filterTerm->propertyName().toUtf8().constData());
             Q_ASSERT(mpi != -1);
 
             QMetaProperty mp = mo.property(mpi);
@@ -204,7 +204,7 @@ public:
             }
 
             const QMetaObject mo = QIfStandardItem::staticMetaObject;
-            int mpi = mo.indexOfProperty(m_orderTerms.first().propertyName().toUtf8());
+            int mpi = mo.indexOfProperty(m_orderTerms.first().propertyName().toUtf8().constData());
             Q_ASSERT(mpi != -1);
 
             QMetaProperty mp = mo.property(mpi);

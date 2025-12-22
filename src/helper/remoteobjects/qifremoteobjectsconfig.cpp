@@ -244,7 +244,7 @@ bool QIfRemoteObjectsConfig::enableRemoting(const QString &module, const QString
 */
 bool QIfRemoteObjectsConfig::enableRemoting(const QString &module, const QString &interface, QObject *object)
 {
-    return enableRemoting(module, interface, QString(), object);
+    return enableRemoting(module, interface, QUrl(), object);
 }
 
 QT_END_NAMESPACE

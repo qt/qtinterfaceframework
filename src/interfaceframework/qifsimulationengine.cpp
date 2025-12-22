@@ -26,12 +26,12 @@ namespace qtif_helper {
         static const QString resourceLiteral = u":/"_s;
 
         if (path.startsWith(qrcUrlLiteral))
-            return path;
+            return QUrl(path);
         else if (path.startsWith(resourceLiteral))
-            return QString(path).prepend(qrcLiteral);
+            return QUrl(QString(path).prepend(qrcLiteral));
         else if (QFile::exists(path)) // If the file exists a normal path was passed (instead of a url)
             return QUrl::fromLocalFile(path);
-        return path;
+        return QUrl(path);
     }
 }
 

@@ -94,7 +94,7 @@ QVariant qtif_convertFromVariant(const QVariant &value)
                 for (int i = mo->enumeratorOffset(); i < mo->enumeratorCount(); ++i) {
                     QMetaEnum me = mo->enumerator(i);
                     bool ok = false;
-                    int value = me.keysToValue(enumValueUtf8, &ok);
+                    int value = me.keysToValue(enumValueUtf8.constData(), &ok);
                     if (ok) {
                         return QVariant(QMetaType::fromName((QLatin1String(me.scope()) + u"::"_s + QLatin1String(me.enumName())).toLatin1()), &value);
                     }

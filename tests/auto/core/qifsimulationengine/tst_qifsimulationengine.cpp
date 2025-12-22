@@ -193,14 +193,14 @@ QVariant callTestFunction(QObject* object, const QByteArray &function, QVariantL
     }
 
     if (!value1.isValid()) {
-        QMetaObject::invokeMethod(object, function, retArgument);
+        QMetaObject::invokeMethod(object, function.constData(), retArgument);
     } else if (!value2.isValid()) {
         expectedValues.append(value1);
-        QMetaObject::invokeMethod(object, function, retArgument, QGenericArgument(value1.typeName(), value1.data()));
+        QMetaObject::invokeMethod(object, function.constData(), retArgument, QGenericArgument(value1.typeName(), value1.data()));
     } else {
         expectedValues.append(value1);
         expectedValues.append(value2);
-        QMetaObject::invokeMethod(object, function, retArgument, QGenericArgument(value1.typeName(), value1.data()), QGenericArgument(value2.typeName(), value2.data()));
+        QMetaObject::invokeMethod(object, function.constData(), retArgument, QGenericArgument(value1.typeName(), value1.data()), QGenericArgument(value2.typeName(), value2.data()));
     }
 
     return retValue;
@@ -311,7 +311,7 @@ void tst_QIfSimulationEngine::testOverrideEnvVariables()
     QVERIFY(simulationData.isValid());
 
     QTest::ignoreMessage(QtWarningMsg, "Using simulation override from QIfConfiguration(overrideTest): qrc:/simple.qml");
-    engine.loadSimulation(QStringLiteral("invalid.qml"));
+    engine.loadSimulation(QUrl("invalid.qml"));
 }
 
 void tst_QIfSimulationEngine::testLoadSimulationData_data()
@@ -461,7 +461,7 @@ void tst_QIfSimulationEngine::testPropertyChange()
     QVERIFY2(obj, qPrintable(component.errorString()));
 
     //call the setter
-    QMetaObject::invokeMethod(&testObject, setter, QGenericArgument(value.typeName(), value.data()));
+    QMetaObject::invokeMethod(&testObject, setter.constData(), QGenericArgument(value.typeName(), value.data()));
 
     //Check the slot in QML was called and that the new property is updated
     QCOMPARE(obj->property("updatedPropertyValue"), value);
@@ -510,7 +510,7 @@ void tst_QIfSimulationEngine::testPropertyChangeDerived()
     QVERIFY2(obj, qPrintable(component.errorString()));
 
     //call the setter
-    QMetaObject::invokeMethod(&testObject, setter, QGenericArgument(value.typeName(), value.data()));
+    QMetaObject::invokeMethod(&testObject, setter.constData(), QGenericArgument(value.typeName(), value.data()));
 
     //Check the slot in QML was called and that the new property is updated
     QCOMPARE(obj->property("updatedPropertyValue"), value);

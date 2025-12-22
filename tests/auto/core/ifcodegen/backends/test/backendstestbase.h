@@ -27,7 +27,7 @@ if (spy.count() != value) \
 
 #define CHECK_SKIP() \
 if (skippedTests().contains(__func__)) \
-    QSKIP(skippedTests().value(__func__).toLatin1()); \
+    QSKIP(skippedTests().value(QByteArray(__func__)).toLatin1().constData()); \
 
 class BackendsTestBase : public QObject
 {
