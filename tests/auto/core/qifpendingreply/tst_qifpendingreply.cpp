@@ -136,8 +136,8 @@ private:
     template <typename T> void test(QIfPendingReply<T> reply, bool failed, T expectedResult = T());
     template <typename T> void createThenCallbacks(QIfPendingReply<T> reply, bool *successCalled, bool *failedCalled);
     template <typename T> void test_helper(QIfPendingReply<T> reply, bool failed);
-    template <typename T> void testQml(TestObject *testObject, const QByteArray qmlFunction, bool failed, T expectedResult = T());
-    template <typename T> void qml_helper(TestObject *testObject, const QByteArray qmlFunction, bool failed,
+    template <typename T> void testQml(TestObject *testObject, const QByteArray &qmlFunction, bool failed, T expectedResult = T());
+    template <typename T> void qml_helper(TestObject *testObject, const QByteArray &qmlFunction, bool failed,
                                           QVariant &result, QVariant &watcherValue, QVariant &replyValue);
 };
 
@@ -213,7 +213,7 @@ template <typename T> void tst_QIfPendingReply::test_helper(QIfPendingReply<T> r
         QCOMPARE(reply.value(), valueChangedSpy.at(0).at(0));
 }
 
-template <typename T> void tst_QIfPendingReply::testQml(TestObject *testObject, const QByteArray qmlFunction, bool failed, T expectedResult)
+template <typename T> void tst_QIfPendingReply::testQml(TestObject *testObject, const QByteArray &qmlFunction, bool failed, T expectedResult)
 {
     QVariant result;
     QVariant watcherValue;
@@ -232,7 +232,7 @@ template <typename T> void tst_QIfPendingReply::testQml(TestObject *testObject, 
     }
 }
 
-template <typename T> void tst_QIfPendingReply::qml_helper(TestObject *testObject, const QByteArray qmlFunction, bool failed,
+template <typename T> void tst_QIfPendingReply::qml_helper(TestObject *testObject, const QByteArray &qmlFunction, bool failed,
                                                             QVariant &result, QVariant &watcherValue, QVariant &replyValue)
 {
     qWarning() << "TEST " << qmlFunction;

@@ -56,7 +56,7 @@ void BackendsTestBase::sendCmd(const QByteArray &input)
     WAIT_AND_COMPARE(writtenSpy, 1);
 }
 
-void BackendsTestBase::startServer(QStringList arguments)
+void BackendsTestBase::startServer(const QStringList &arguments)
 {
     // Give the backend some time to fully initialize the connection
     QTest::qWait(500);
@@ -112,7 +112,7 @@ void BackendsTestBase::cleanupTestData()
     QIfServiceManager::instance()->unloadAllBackends();
 }
 
-void BackendsTestBase::setSkippedTests(QMap<QString, QString> skipMap)
+void BackendsTestBase::setSkippedTests(const QMap<QString, QString> &skipMap)
 {
     m_skipMap = skipMap;
 }
@@ -205,8 +205,8 @@ void BackendsTestBase::testInit()
     QCOMPARE(client.error(), QIfAbstractFeature::NoError);
 
     //wait until the client has connected and initial values are set
-    QSignalSpy lastMessageChangedSpy(&client, SIGNAL(lastMessageChanged(QString)));
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy lastMessageChangedSpy(&client, &Echo::lastMessageChanged);
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
 
     startServer();
 
@@ -241,8 +241,8 @@ void BackendsTestBase::testInit()
     //test that a second instance is also initialized with the correct values
     Echo client2;
 
-    QSignalSpy lastMessageChangedSpy2(&client2, SIGNAL(lastMessageChanged(QString)));
-    QSignalSpy initSpy2(&client2, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy lastMessageChangedSpy2(&client2, &Echo::lastMessageChanged);
+    QSignalSpy initSpy2(&client2, &QIfAbstractFeature::isInitializedChanged);
 
     QVERIFY(client2.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
@@ -285,9 +285,9 @@ void BackendsTestBase::testZonedInit()
     QCOMPARE(client.error(), QIfAbstractFeature::NoError);
 
     //wait until the client has connected and initial values are set
-    QSignalSpy stringValueChangedSpy(&client, SIGNAL(stringValueChanged(QString)));
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
-    QSignalSpy availableZonesSpy(&client, SIGNAL(availableZonesChanged(QStringList)));
+    QSignalSpy stringValueChangedSpy(&client, &EchoZoned::stringValueChanged);
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
+    QSignalSpy availableZonesSpy(&client, &EchoZoned::availableZonesChanged);
 
     int intValueTestValue(789);
     QVariant varValueTestValue(789);
@@ -336,8 +336,8 @@ void BackendsTestBase::testZonedInit()
     //test that a second instance is also initialized with the correct values
     EchoZoned client2;
 
-    QSignalSpy stringValueChangedSpy2(&client2, SIGNAL(stringValueChanged(QString)));
-    QSignalSpy initSpy2(&client2, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy stringValueChangedSpy2(&client2, &EchoZoned::stringValueChanged);
+    QSignalSpy initSpy2(&client2, &QIfAbstractFeature::isInitializedChanged);
 
     QVERIFY(client2.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
@@ -362,7 +362,7 @@ void BackendsTestBase::testReconnect()
 
 
     Echo client;
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
@@ -373,7 +373,7 @@ void BackendsTestBase::testReconnect()
     QVERIFY(client.isInitialized());
 
     EchoZoned zonedClient;
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy zonedInitSpy(&zonedClient, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(zonedInitSpy.isValid());
     QVERIFY(zonedClient.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
@@ -384,8 +384,8 @@ void BackendsTestBase::testReconnect()
     //test disconnection
     QCOMPARE(client.error(), QIfAbstractFeature::NoError);
     QCOMPARE(zonedClient.error(), QIfAbstractFeature::NoError);
-    QSignalSpy disconnectSpy(&client, SIGNAL(errorChanged(QIfAbstractFeature::Error, QString)));
-    QSignalSpy zonedDisconnectSpy(&zonedClient, SIGNAL(errorChanged(QIfAbstractFeature::Error, QString)));
+    QSignalSpy disconnectSpy(&client, &QIfAbstractFeature::errorChanged);
+    QSignalSpy zonedDisconnectSpy(&zonedClient, &QIfAbstractFeature::errorChanged);
     QVERIFY(disconnectSpy.isValid());
     QVERIFY(zonedDisconnectSpy.isValid());
 
@@ -407,9 +407,9 @@ void BackendsTestBase::testReconnect()
     QVERIFY(zonedIdReply.isResultAvailable() && !zonedIdReply.watcher()->isSuccessful());
 
     //test reconnection
-    QSignalSpy reconnectSpy(&client, SIGNAL(errorChanged(QIfAbstractFeature::Error, QString)));
+    QSignalSpy reconnectSpy(&client, &QIfAbstractFeature::errorChanged);
     QVERIFY(reconnectSpy.isValid());
-    QSignalSpy zonedReconnectSpy(&zonedClient, SIGNAL(errorChanged(QIfAbstractFeature::Error, QString)));
+    QSignalSpy zonedReconnectSpy(&zonedClient, &QIfAbstractFeature::errorChanged);
     QVERIFY(zonedReconnectSpy.isValid());
 
     startServer();
@@ -427,7 +427,7 @@ void BackendsTestBase::testClient2Server()
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -439,7 +439,7 @@ void BackendsTestBase::testClient2Server()
     QVERIFY(client.isInitialized());
 
     //test properties
-    QSignalSpy intValueSpy(&client, SIGNAL(intValueChanged(int)));
+    QSignalSpy intValueSpy(&client, &Echo::intValueChanged);
     QVERIFY(intValueSpy.isValid());
     int intValueTestValue = 12345;
     client.setIntValue(intValueTestValue);
@@ -447,7 +447,7 @@ void BackendsTestBase::testClient2Server()
     QCOMPARE(client.intValue(), intValueTestValue);
     QCOMPARE(intValueSpy[0][0].toInt(), intValueTestValue);
 
-    QSignalSpy floatValue1Spy(&client, SIGNAL(floatValue1Changed(qreal)));
+    QSignalSpy floatValue1Spy(&client, &Echo::floatValue1Changed);
     QVERIFY(floatValue1Spy.isValid());
     qreal floatValue1TestValue = 1234.5678;
     client.setFloatValue1(floatValue1TestValue);
@@ -455,7 +455,7 @@ void BackendsTestBase::testClient2Server()
     QCOMPARE(client.floatValue1(), floatValue1TestValue);
     QCOMPARE(floatValue1Spy[0][0].toReal(), floatValue1TestValue);
 
-    QSignalSpy floatValue2Spy(&client, SIGNAL(floatValue2Changed(qreal)));
+    QSignalSpy floatValue2Spy(&client, &Echo::floatValue2Changed);
     QVERIFY(floatValue2Spy.isValid());
     qreal floatValue2TestValue = 3.1415;
     client.setFloatValue2(floatValue2TestValue);
@@ -463,7 +463,7 @@ void BackendsTestBase::testClient2Server()
     QCOMPARE(client.floatValue2(), floatValue2TestValue);
     QCOMPARE(floatValue2Spy[0][0].toReal(), floatValue2TestValue);
 
-    QSignalSpy stringValueSpy(&client, SIGNAL(stringValueChanged(QString)));
+    QSignalSpy stringValueSpy(&client, &Echo::stringValueChanged);
     QVERIFY(stringValueSpy.isValid());
     QString stringValueTestValue = QStringLiteral("hello test");
     client.setStringValue(stringValueTestValue);
@@ -471,7 +471,7 @@ void BackendsTestBase::testClient2Server()
     QCOMPARE(client.stringValue(), stringValueTestValue);
     QCOMPARE(stringValueSpy[0][0].toString(), stringValueTestValue);
 
-    QSignalSpy comboListSpy(&client, SIGNAL(comboListChanged(QVariantList)));
+    QSignalSpy comboListSpy(&client, &Echo::comboListChanged);
     QVERIFY(comboListSpy.isValid());
     QVariantList comboListTestValue(
                     { QVariant::fromValue<Combo>(Combo(Contact("Mr A.", 20, false, "foo"), Echomodule::Monday)),
@@ -485,7 +485,7 @@ void BackendsTestBase::testClient2Server()
     QCOMPARE(signalArgs[0].value<Combo>(), comboListTestValue[0].value<Combo>());
     QCOMPARE(signalArgs[1].value<Combo>(), comboListTestValue[1].value<Combo>());
 
-    QSignalSpy contactSpy(&client, SIGNAL(contactChanged(Contact)));
+    QSignalSpy contactSpy(&client, &Echo::contactChanged);
     QVERIFY(contactSpy.isValid());
     Contact contactTestValue(QStringLiteral("Nemo"), 47, true, 1);
     client.setContact(contactTestValue);
@@ -493,7 +493,7 @@ void BackendsTestBase::testClient2Server()
     QCOMPARE(client.contact(), contactTestValue);
     QCOMPARE(contactSpy[0][0].value<Contact>(), contactTestValue);
 
-    QSignalSpy weekDaySpy(&client, SIGNAL(weekDayChanged(Echomodule::DaysOfTheWeek)));
+    QSignalSpy weekDaySpy(&client, &Echo::weekDayChanged);
     QVERIFY(weekDaySpy.isValid());
     Echomodule::DaysOfTheWeek weekDayTestValue = Echomodule::Thursday;
     client.setWeekDay(weekDayTestValue);
@@ -501,7 +501,7 @@ void BackendsTestBase::testClient2Server()
     QCOMPARE(client.weekDay(), weekDayTestValue);
     QCOMPARE(weekDaySpy[0][0].value<Echomodule::DaysOfTheWeek>(), weekDayTestValue);
 
-    QSignalSpy testEnumSpy(&client, SIGNAL(testEnumChanged(Echomodule::TestEnum)));
+    QSignalSpy testEnumSpy(&client, &Echo::testEnumChanged);
     QVERIFY(testEnumSpy.isValid());
     Echomodule::TestEnum testEnumTestValue = Echomodule::SecondEnumValue;
     client.setTestEnum(testEnumTestValue);
@@ -517,7 +517,7 @@ void BackendsTestBase::testZonedClient2Server()
     EchoZoned client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -529,7 +529,7 @@ void BackendsTestBase::testZonedClient2Server()
     QVERIFY(client.isInitialized());
 
     //test properties
-    QSignalSpy intValueSpy(&client, SIGNAL(intValueChanged(int)));
+    QSignalSpy intValueSpy(&client, &EchoZoned::intValueChanged);
     QVERIFY(intValueSpy.isValid());
     int intValueTestValue = 12345;
     client.setIntValue(intValueTestValue);
@@ -537,7 +537,7 @@ void BackendsTestBase::testZonedClient2Server()
     QCOMPARE(client.intValue(), intValueTestValue);
     QCOMPARE(intValueSpy[0][0].toInt(), intValueTestValue);
 
-    QSignalSpy UPPERCASEPROPERTYSpy(&client, SIGNAL(UPPERCASEPROPERTYChanged(qreal)));
+    QSignalSpy UPPERCASEPROPERTYSpy(&client, &EchoZoned::UPPERCASEPROPERTYChanged);
     QVERIFY(UPPERCASEPROPERTYSpy.isValid());
     qreal floatValueTestValue = 1234.5678;
     client.setUPPERCASEPROPERTY(floatValueTestValue);
@@ -548,7 +548,7 @@ void BackendsTestBase::testZonedClient2Server()
     EchoZoned *zone = qobject_cast<EchoZoned*>(client.zoneAt(frontLeftZone));
     QVERIFY(zone);
 
-    QSignalSpy stringValueSpy(zone, SIGNAL(stringValueChanged(QString)));
+    QSignalSpy stringValueSpy(zone, &EchoZoned::stringValueChanged);
     QVERIFY(stringValueSpy.isValid());
     QString stringValueTestValue = QStringLiteral("hello test");
     zone->setStringValue(stringValueTestValue);
@@ -556,7 +556,7 @@ void BackendsTestBase::testZonedClient2Server()
     QCOMPARE(zone->stringValue(), stringValueTestValue);
     QCOMPARE(stringValueSpy[0][0].toString(), stringValueTestValue);
 
-    QSignalSpy comboListSpy(zone, SIGNAL(comboListChanged(QVariantList)));
+    QSignalSpy comboListSpy(zone, &EchoZoned::comboListChanged);
     QVERIFY(comboListSpy.isValid());
     QVariantList comboListTestValue(
                     { QVariant::fromValue<Combo>(Combo(Contact("Mr A.", 20, false, "foo"), Echomodule::Monday)),
@@ -573,7 +573,7 @@ void BackendsTestBase::testZonedClient2Server()
     QCOMPARE(signalArgs[0].value<Combo>(), comboListTestValue[0].value<Combo>());
     QCOMPARE(signalArgs[1].value<Combo>(), comboListTestValue[1].value<Combo>());
 
-    QSignalSpy contactSpy(zone, SIGNAL(contactChanged(Contact)));
+    QSignalSpy contactSpy(zone, &EchoZoned::contactChanged);
     QVERIFY(contactSpy.isValid());
     Contact contactTestValue(QStringLiteral("Nemo"), 47, true, 1);
     zone->setContact(contactTestValue);
@@ -581,7 +581,7 @@ void BackendsTestBase::testZonedClient2Server()
     QCOMPARE(zone->contact(), contactTestValue);
     QCOMPARE(contactSpy[0][0].value<Contact>(), contactTestValue);
 
-    QSignalSpy airflowSpy(zone, SIGNAL(airflowDirectionChanged(Echomodule::AirflowDirections)));
+    QSignalSpy airflowSpy(zone, &EchoZoned::airflowDirectionChanged);
     QVERIFY(airflowSpy.isValid());
     Echomodule::AirflowDirections airflowTestValue = Echomodule::Windshield;
     zone->setAirflowDirection(airflowTestValue);
@@ -589,7 +589,7 @@ void BackendsTestBase::testZonedClient2Server()
     QCOMPARE(zone->airflowDirection(), airflowTestValue);
     QCOMPARE(airflowSpy[0][0].value<Echomodule::AirflowDirections>(), airflowTestValue);
 
-    QSignalSpy testEnumSpy(zone, SIGNAL(testEnumChanged(Echomodule::TestEnum)));
+    QSignalSpy testEnumSpy(zone, &EchoZoned::testEnumChanged);
     QVERIFY(testEnumSpy.isValid());
     Echomodule::TestEnum testEnumTestValue = Echomodule::SecondEnumValue;
     zone->setTestEnum(testEnumTestValue);
@@ -605,7 +605,7 @@ void BackendsTestBase::testServer2Client()
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -616,14 +616,14 @@ void BackendsTestBase::testServer2Client()
     WAIT_AND_COMPARE(initSpy, 1);
     QVERIFY(client.isInitialized());
 
-    QSignalSpy intValueSpy(&client, SIGNAL(intValueChanged(int)));
-    QSignalSpy floatValue2Spy(&client, SIGNAL(floatValue2Changed(qreal)));
-    QSignalSpy floatValue1Spy(&client, SIGNAL(floatValue1Changed(qreal)));
-    QSignalSpy stringValueSpy(&client, SIGNAL(stringValueChanged(QString)));
-    QSignalSpy comboListSpy(&client, SIGNAL(comboListChanged(QVariantList)));
-    QSignalSpy contactSpy(&client, SIGNAL(contactChanged(Contact)));
-    QSignalSpy weekDaySpy(&client, SIGNAL(weekDayChanged(Echomodule::DaysOfTheWeek)));
-    QSignalSpy testEnumSpy(&client, SIGNAL(testEnumChanged(Echomodule::TestEnum)));
+    QSignalSpy intValueSpy(&client, &Echo::intValueChanged);
+    QSignalSpy floatValue2Spy(&client, &Echo::floatValue2Changed);
+    QSignalSpy floatValue1Spy(&client, &Echo::floatValue1Changed);
+    QSignalSpy stringValueSpy(&client, &Echo::stringValueChanged);
+    QSignalSpy comboListSpy(&client, &Echo::comboListChanged);
+    QSignalSpy contactSpy(&client, &Echo::contactChanged);
+    QSignalSpy weekDaySpy(&client, &Echo::weekDayChanged);
+    QSignalSpy testEnumSpy(&client, &Echo::testEnumChanged);
 
     // Send a signal to the server that new values should be published
     sendCmd("changeProperties");
@@ -692,7 +692,7 @@ void BackendsTestBase::testZonedServer2Client()
     EchoZoned client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -706,13 +706,13 @@ void BackendsTestBase::testZonedServer2Client()
     EchoZoned *zone = qobject_cast<EchoZoned*>(client.zoneAt(frontLeftZone));
     QVERIFY(zone);
 
-    QSignalSpy intValueSpy(&client, SIGNAL(intValueChanged(int)));
-    QSignalSpy UPPERCASEPROPERTYSpy(&client, SIGNAL(UPPERCASEPROPERTYChanged(qreal)));
-    QSignalSpy stringValueSpy(zone, SIGNAL(stringValueChanged(QString)));
-    QSignalSpy comboListSpy(zone, SIGNAL(comboListChanged(QVariantList)));
-    QSignalSpy contactSpy(zone, SIGNAL(contactChanged(Contact)));
-    QSignalSpy airflowSpy(zone, SIGNAL(airflowDirectionChanged(Echomodule::AirflowDirections)));
-    QSignalSpy testEnumSpy(zone, SIGNAL(testEnumChanged(Echomodule::TestEnum)));
+    QSignalSpy intValueSpy(&client, &EchoZoned::intValueChanged);
+    QSignalSpy UPPERCASEPROPERTYSpy(&client, &EchoZoned::UPPERCASEPROPERTYChanged);
+    QSignalSpy stringValueSpy(zone, &EchoZoned::stringValueChanged);
+    QSignalSpy comboListSpy(zone, &EchoZoned::comboListChanged);
+    QSignalSpy contactSpy(zone, &EchoZoned::contactChanged);
+    QSignalSpy airflowSpy(zone, &EchoZoned::airflowDirectionChanged);
+    QSignalSpy testEnumSpy(zone, &EchoZoned::testEnumChanged);
 
     QTest::qSleep(200);
     // Send a signal to the server that new values should be published
@@ -776,7 +776,7 @@ void BackendsTestBase::testSlots()
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -792,14 +792,14 @@ void BackendsTestBase::testSlots()
     QLatin1String echoTestValue("this will be echoed");
     QIfPendingReply<QString> echoReply = client.echo(echoTestValue);
     if (!echoReply.isResultAvailable()) {
-        QSignalSpy echoReplySpy(echoReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy echoReplySpy(echoReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(echoReplySpy, 1);
     }
     QCOMPARE(echoReply.reply(), echoTestValue);
 
     QIfPendingReply<QString> idReply = client.id();
     if (!idReply.isResultAvailable()) {
-        QSignalSpy idReplySpy(idReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy idReplySpy(idReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(idReplySpy, 1);
     }
     QCOMPARE(idReply.reply(), QStringLiteral("id123"));
@@ -807,7 +807,7 @@ void BackendsTestBase::testSlots()
     Combo expectedCombo(Contact(QStringLiteral("Antti"), 34, true, QVariant()), Echomodule::Friday);
     QIfPendingReply<Combo> comboReply = client.getCombo();
     if (!comboReply.isResultAvailable()) {
-        QSignalSpy comboReplySpy(comboReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy comboReplySpy(comboReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(comboReplySpy, 1);
     }
 
@@ -823,21 +823,21 @@ void BackendsTestBase::testSlots()
 
     QIfPendingReply<void> voidReply = client.voidSlot();
     if (!voidReply.isResultAvailable()) {
-        QSignalSpy voidReplySpy(voidReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy voidReplySpy(voidReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(voidReplySpy, 1);
     }
 
     int voidSlot2TestValue = 776;
     QIfPendingReply<void> void2Reply = client.voidSlot2(voidSlot2TestValue);
     if (!void2Reply.isResultAvailable()) {
-        QSignalSpy void2ReplySpy(void2Reply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy void2ReplySpy(void2Reply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(void2ReplySpy, 1);
     }
 
     Echomodule::AirflowDirections flagTestValue = Echomodule::Dashboard;
     QIfPendingReply<Echomodule::AirflowDirections> flagMethodReply = client.flagMethod(flagTestValue);
     if (!flagMethodReply.isResultAvailable()) {
-        QSignalSpy flagMethodReplySpy(flagMethodReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy flagMethodReplySpy(flagMethodReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(flagMethodReplySpy, 1);
     }
     QCOMPARE(flagMethodReply.reply(), flagTestValue);
@@ -845,7 +845,7 @@ void BackendsTestBase::testSlots()
     Echomodule::TestEnum enumTestValue = Echomodule::SecondEnumValue;
     QIfPendingReply<Echomodule::TestEnum> enumMethodReply = client.enumMethod(enumTestValue);
     if (!enumMethodReply.isResultAvailable()) {
-        QSignalSpy enumMethodReplySpy(enumMethodReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy enumMethodReplySpy(enumMethodReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(enumMethodReplySpy, 1);
     }
     QCOMPARE(enumMethodReply.reply(), enumTestValue);
@@ -858,7 +858,7 @@ void BackendsTestBase::testZonedSlots()
     EchoZoned client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &EchoZoned::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -874,14 +874,14 @@ void BackendsTestBase::testZonedSlots()
     QLatin1String echoTestValue("this will be echoed");
     QIfPendingReply<QString> echoReply = client.echo(echoTestValue);
     if (!echoReply.isResultAvailable()) {
-        QSignalSpy echoReplySpy(echoReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy echoReplySpy(echoReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(echoReplySpy, 1);
     }
     QCOMPARE(echoReply.reply(), echoTestValue);
 
     QIfPendingReply<QString> idReply = client.id();
     if (!idReply.isResultAvailable()) {
-        QSignalSpy idReplySpy(idReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy idReplySpy(idReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(idReplySpy, 1);
     }
     QCOMPARE(idReply.reply(), QStringLiteral("id123"));
@@ -892,7 +892,7 @@ void BackendsTestBase::testZonedSlots()
     Combo expectedCompo(Contact(QStringLiteral("Antti"), 34, true, QVariant()), Echomodule::Friday);
     QIfPendingReply<Combo> comboReply = zone->getCombo();
     if (!comboReply.isResultAvailable()) {
-        QSignalSpy comboReplySpy(comboReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy comboReplySpy(comboReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(comboReplySpy, 1);
     }
     QCOMPARE(comboReply.reply(), expectedCompo);
@@ -900,7 +900,7 @@ void BackendsTestBase::testZonedSlots()
     Echomodule::AirflowDirections flagTestValue = Echomodule::Dashboard;
     QIfPendingReply<Echomodule::AirflowDirections> flagMethodReply = zone->flagMethod(flagTestValue);
     if (!flagMethodReply.isResultAvailable()) {
-        QSignalSpy flagMethodReplySpy(flagMethodReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy flagMethodReplySpy(flagMethodReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(flagMethodReplySpy, 1);
     }
     QCOMPARE(flagMethodReply.reply(), flagTestValue);
@@ -908,7 +908,7 @@ void BackendsTestBase::testZonedSlots()
     Echomodule::TestEnum enumTestValue = Echomodule::SecondEnumValue;
     QIfPendingReply<Echomodule::TestEnum> enumMethodReply = zone->enumMethod(enumTestValue);
     if (!enumMethodReply.isResultAvailable()) {
-        QSignalSpy enumMethodReplySpy(enumMethodReply.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy enumMethodReplySpy(enumMethodReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(enumMethodReplySpy, 1);
     }
     QCOMPARE(enumMethodReply.reply(), enumTestValue);
@@ -919,7 +919,7 @@ void BackendsTestBase::testMultipleSlotCalls()
     CHECK_SKIP();
 
     Echo client;
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     QVERIFY(client.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
@@ -938,9 +938,9 @@ void BackendsTestBase::testMultipleSlotCalls()
     QIfPendingReply<QString> echoReply2 = client.echo(echoTestValue2);
     QIfPendingReply<QString> echoReply3 = client.echo(echoTestValue3);
     if (!echoReply.isResultAvailable() && !echoReply2.isResultAvailable() && !echoReply3.isResultAvailable()) {
-        QSignalSpy echoReplySpy(echoReply.watcher(), SIGNAL(replySuccess()));
-        QSignalSpy echoReplySpy2(echoReply2.watcher(), SIGNAL(replySuccess()));
-        QSignalSpy echoReplySpy3(echoReply3.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy echoReplySpy(echoReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
+        QSignalSpy echoReplySpy2(echoReply2.watcher(), &QIfPendingReplyWatcher::replySuccess);
+        QSignalSpy echoReplySpy3(echoReply3.watcher(), &QIfPendingReplyWatcher::replySuccess);
         echoReplySpy3.wait();
         QCOMPARE(echoReplySpy.count(), 1);
         QCOMPARE(echoReplySpy2.count(), 1);
@@ -956,7 +956,7 @@ void BackendsTestBase::testMultipleZonedSlotCalls()
     CHECK_SKIP();
 
     EchoZoned zonedClient;
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy zonedInitSpy(&zonedClient, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(zonedInitSpy.isValid());
     QVERIFY(zonedClient.startAutoDiscovery() > QIfAbstractFeature::ErrorWhileLoading);
 
@@ -977,9 +977,9 @@ void BackendsTestBase::testMultipleZonedSlotCalls()
     QIfPendingReply<QString> echoZonedReply2 = zone->echo(echoTestValue2);
     QIfPendingReply<QString> echoZonedReply3 = zone->echo(echoTestValue3);
     if (!echoZonedReply.isResultAvailable() && !echoZonedReply2.isResultAvailable() && !echoZonedReply3.isResultAvailable()) {
-        QSignalSpy echoZonedReplySpy(echoZonedReply.watcher(), SIGNAL(replySuccess()));
-        QSignalSpy echoZonedReplySpy2(echoZonedReply2.watcher(), SIGNAL(replySuccess()));
-        QSignalSpy echoZonedReplySpy3(echoZonedReply3.watcher(), SIGNAL(replySuccess()));
+        QSignalSpy echoZonedReplySpy(echoZonedReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
+        QSignalSpy echoZonedReplySpy2(echoZonedReply2.watcher(), &QIfPendingReplyWatcher::replySuccess);
+        QSignalSpy echoZonedReplySpy3(echoZonedReply3.watcher(), &QIfPendingReplyWatcher::replySuccess);
         echoZonedReplySpy3.wait();
         QCOMPARE(echoZonedReplySpy.count(), 1);
         QCOMPARE(echoZonedReplySpy2.count(), 1);
@@ -997,7 +997,7 @@ void BackendsTestBase::testAsyncSlotResults()
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -1012,8 +1012,8 @@ void BackendsTestBase::testAsyncSlotResults()
     // function when the timer is finished.
     QIfPendingReply<void> reply = client.timer(1000);
     QIfPendingReply<void> reply2 = client.timer(500);
-    QSignalSpy echoReplySpy(reply.watcher(), SIGNAL(replySuccess()));
-    QSignalSpy echoReplySpy2(reply2.watcher(), SIGNAL(replySuccess()));
+    QSignalSpy echoReplySpy(reply.watcher(), &QIfPendingReplyWatcher::replySuccess);
+    QSignalSpy echoReplySpy2(reply2.watcher(), &QIfPendingReplyWatcher::replySuccess);
 
     //Wait for the second reply to return first. Verify the other reply is not yet ready.
     echoReplySpy2.wait();
@@ -1033,7 +1033,7 @@ void BackendsTestBase::testAsyncZonedSlotResults()
     EchoZoned zonedClient;
     zonedClient.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&zonedClient, &Echo::serviceObjectChanged);
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy zonedInitSpy(&zonedClient, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(zonedInitSpy.isValid());
     zonedClient.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -1051,8 +1051,8 @@ void BackendsTestBase::testAsyncZonedSlotResults()
     // function when the timer is finished.
     QIfPendingReply<QString> zonedReply = zonedClient.timer(1000);
     QIfPendingReply<QString> zonedReply2 = zone->timer(500);
-    QSignalSpy zonedEchoReplySpy(zonedReply.watcher(), SIGNAL(replySuccess()));
-    QSignalSpy zonedEchoReplySpy2(zonedReply2.watcher(), SIGNAL(replySuccess()));
+    QSignalSpy zonedEchoReplySpy(zonedReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
+    QSignalSpy zonedEchoReplySpy2(zonedReply2.watcher(), &QIfPendingReplyWatcher::replySuccess);
 
     //Wait for the second reply to return first. Verify the other reply is not yet ready.
     zonedEchoReplySpy2.wait();
@@ -1074,7 +1074,7 @@ void BackendsTestBase::testSignals()
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -1086,9 +1086,9 @@ void BackendsTestBase::testSignals()
     QVERIFY(client.isInitialized());
 
     //test custom signals (other than property notifiers) from server to client
-    QSignalSpy anotherChangedSpy(&client, SIGNAL(anotherChanged(AnotherStruct)));
-    QSignalSpy foobarSpy(&client, SIGNAL(foobar(QString)));
-    QSignalSpy somethingSpy(&client, SIGNAL(somethingHappened()));
+    QSignalSpy anotherChangedSpy(&client, &Echo::anotherChanged);
+    QSignalSpy foobarSpy(&client, &Echo::foobar);
+    QSignalSpy somethingSpy(&client, &Echo::somethingHappened);
 
     // Send a signal to the server that new values should be published
     sendCmd("emitSignals");
@@ -1114,7 +1114,7 @@ void BackendsTestBase::testZonedSignals()
     EchoZoned zonedClient;
     zonedClient.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&zonedClient, &Echo::serviceObjectChanged);
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy zonedInitSpy(&zonedClient, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(zonedInitSpy.isValid());
     zonedClient.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -1129,9 +1129,9 @@ void BackendsTestBase::testZonedSignals()
     QVERIFY(zone);
 
     //test custom signals (other than property notifiers) from server to client
-    QSignalSpy zonedAnotherChangedSpy(&zonedClient, SIGNAL(anotherChanged(AnotherStruct)));
-    QSignalSpy zonedFoobarSpy(zone, SIGNAL(foobar(QString)));
-    QSignalSpy zonedSomethingSpy(zone, SIGNAL(somethingHappened()));
+    QSignalSpy zonedAnotherChangedSpy(&zonedClient, &EchoZoned::anotherChanged);
+    QSignalSpy zonedFoobarSpy(zone, &EchoZoned::foobar);
+    QSignalSpy zonedSomethingSpy(zone, &EchoZoned::somethingHappened);
 
     zonedClient.setIntValue(1234);
 
@@ -1159,7 +1159,7 @@ void BackendsTestBase::testModel()
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -1179,7 +1179,7 @@ void BackendsTestBase::testModel()
 
     //Test inserting a row
     Contact testContact(QStringLiteral("Mr A."), 20, false, "foo");
-    QSignalSpy countSpy(model, SIGNAL(countChanged()));
+    QSignalSpy countSpy(model, &QIfPagingModel::countChanged);
 
     // Send a signal to the server that new values should be published
     sendCmd("insert");
@@ -1190,7 +1190,7 @@ void BackendsTestBase::testModel()
     countSpy.clear();
 
     //test updating a row
-    QSignalSpy changedSpy(model, SIGNAL(dataChanged( QModelIndex, QModelIndex, QVector<int>)));
+    QSignalSpy changedSpy(model, &QAbstractItemModel::dataChanged);
     Contact updatedContact(QStringLiteral("Mr B."), 30, true, QVariant());
     sendCmd("update");
 
@@ -1214,7 +1214,7 @@ void BackendsTestBase::testSimulationData()
     Echo client;
     client.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&client, &Echo::serviceObjectChanged);
-    QSignalSpy initSpy(&client, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     client.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -1225,7 +1225,7 @@ void BackendsTestBase::testSimulationData()
     WAIT_AND_COMPARE(initSpy, 1);
     QVERIFY(client.isInitialized());
 
-    QSignalSpy floatValue1Spy(&client, SIGNAL(floatValue1Changed(qreal)));
+    QSignalSpy floatValue1Spy(&client, &Echo::floatValue1Changed);
     QVERIFY(floatValue1Spy.isValid());
     ignoreMessage(QtCriticalMsg, "SIMULATION changing floatValue1 is not possible: provided: 1 constraint: >= 2");
 
@@ -1234,7 +1234,7 @@ void BackendsTestBase::testSimulationData()
     QCOMPARE(floatValue1Spy.count(), 0);
     QCOMPARE(client.floatValue1(), 0);
 
-    QSignalSpy floatValue2Spy(&client, SIGNAL(floatValue2Changed(qreal)));
+    QSignalSpy floatValue2Spy(&client, &Echo::floatValue2Changed);
     QVERIFY(floatValue2Spy.isValid());
     ignoreMessage(QtCriticalMsg, "SIMULATION changing floatValue2 is not possible: provided: 400 constraint: <= 300");
 
@@ -1254,7 +1254,7 @@ void BackendsTestBase::testZonedSimulationData()
     EchoZoned zonedClient;
     zonedClient.setAsynchronousBackendLoading(m_asyncBackendLoading);
     QSignalSpy serviceObjectChangedSpy(&zonedClient, &Echo::serviceObjectChanged);
-    QSignalSpy zonedInitSpy(&zonedClient, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy zonedInitSpy(&zonedClient, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(zonedInitSpy.isValid());
     zonedClient.startAutoDiscovery();
     WAIT_AND_COMPARE(serviceObjectChangedSpy, 1);
@@ -1267,7 +1267,7 @@ void BackendsTestBase::testZonedSimulationData()
 
     EchoZoned *zone =  qobject_cast<EchoZoned*>(zonedClient.zoneAt(frontLeftZone));
 
-    QSignalSpy intValueSpy(zone, SIGNAL(intValueChanged(int)));
+    QSignalSpy intValueSpy(zone, &EchoZoned::intValueChanged);
     QVERIFY(intValueSpy.isValid());
     ignoreMessage(QtCriticalMsg, "SIMULATION changing intValue is not possible: provided: 1 constraint: \\[10-33\\]");
 
@@ -1283,7 +1283,7 @@ void BackendsTestBase::testZonedSimulationData()
     QCOMPARE(intValueSpy.count(), 0);
     QCOMPARE(zone->intValue(), 0);
 
-    QSignalSpy rangedValueSpy(zone, SIGNAL(rangedValueChanged(int)));
+    QSignalSpy rangedValueSpy(zone, &EchoZoned::rangedValueChanged);
     QVERIFY(rangedValueSpy.isValid());
     ignoreMessage(QtCriticalMsg, "SIMULATION changing rangedValue is not possible: provided: 1 constraint: \\[10-15\\]");
 
@@ -1299,7 +1299,7 @@ void BackendsTestBase::testZonedSimulationData()
     QCOMPARE(rangedValueSpy.count(), 0);
     QCOMPARE(zone->rangedValue(), 0);
 
-    QSignalSpy stringValueSpy(zone, SIGNAL(stringValueChanged(QString)));
+    QSignalSpy stringValueSpy(zone, &EchoZoned::stringValueChanged);
     QVERIFY(stringValueSpy.isValid());
     ignoreMessage(QtCriticalMsg, "SIMULATION changing stringValue is not possible: provided: 12345 constraint: \\[\"hello test\",\"test string\",\"three\"\\]");
 
@@ -1308,7 +1308,7 @@ void BackendsTestBase::testZonedSimulationData()
     QCOMPARE(stringValueSpy.count(), 0);
     QCOMPARE(zone->stringValue(), QString());
 
-    QSignalSpy unsupportedValueSpy(zone, SIGNAL(unsupportedValueChanged(QString)));
+    QSignalSpy unsupportedValueSpy(zone, &EchoZoned::unsupportedValueChanged);
     QVERIFY(unsupportedValueSpy.isValid());
     ignoreMessage(QtCriticalMsg, "SIMULATION changing unsupportedValue is not possible: provided: 12345 constraint: unsupported");
 

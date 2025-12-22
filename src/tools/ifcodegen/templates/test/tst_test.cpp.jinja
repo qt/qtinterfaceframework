@@ -246,7 +246,7 @@ void {{interface}}Test::testInitBackend()
     manager->registerService(service, service->interfaces());
 
     {{interface}} cc;
-    QSignalSpy initSpy(&cc, SIGNAL(isInitializedChanged(bool)));
+    QSignalSpy initSpy(&cc, &QIfAbstractFeature::isInitializedChanged);
     QVERIFY(initSpy.isValid());
     cc.startAutoDiscovery();
 
@@ -270,7 +270,7 @@ void {{interface}}Test::testWithoutBackend()
 {%   if not property.readonly and not property.const and not property.type.is_model %}
     //Test that this is still the case if we try to change it, as we don't
     //have a connected backend
-    QSignalSpy {{property}}Spy(&cc, SIGNAL({{property}}Changed({{property|return_type}})));
+    QSignalSpy {{property}}Spy(&cc, &{{interface}}::{{property}}Changed);
     cc.{{property|setter_name}}({{property|test_type_value}});
     QCOMPARE({{property}}Spy.count(), 1);
     QCOMPARE({{property}}Spy.at(0).at(0).value<{{property|return_type}}>(), {{property}}DefaultValue);

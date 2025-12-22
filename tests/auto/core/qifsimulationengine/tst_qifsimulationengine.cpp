@@ -615,7 +615,7 @@ void tst_QIfSimulationEngine::testAnimations()
 
     DerivedClass testObject;
     engine.registerSimulationInstance<DerivedClass>(&testObject, "TestAPI", 1, 0, "DerivedClass");
-    QSignalSpy spy(&testObject, SIGNAL(propertyInBaseChanged(int)));
+    QSignalSpy spy(&testObject, &BaseClass::propertyInBaseChanged);
 
     QByteArray qml ("import QtQuick; \n\
                      import TestAPI; \n\
@@ -668,8 +668,8 @@ void tst_QIfSimulationEngine::testSignals()
     QScopedPointer<QObject> obj(component.create());
     QVERIFY2(obj, qPrintable(component.errorString()));
 
-    QSignalSpy somethingHappenedSpy(&testObject, SIGNAL(somethingHappened(QString)));
-    QSignalSpy otherSignalSpy(&testObject, SIGNAL(otherSignal(QString)));
+    QSignalSpy somethingHappenedSpy(&testObject, &SimpleTestAPI::somethingHappened);
+    QSignalSpy otherSignalSpy(&testObject, &SimpleTestAPI::otherSignal);
 
     QVERIFY(somethingHappenedSpy.isValid());
     QVERIFY(otherSignalSpy.isValid());
@@ -807,7 +807,7 @@ void tst_QIfSimulationEngine::testFunctionWithInheritance()
 
     engine.loadSimulation(QUrl("qrc:/FunctionTestMain.qml"));
 
-    QSignalSpy spy(&testObject, SIGNAL(simpleFunctionCalled()));
+    QSignalSpy spy(&testObject, &SimpleTestAPI::simpleFunctionCalled);
 
     QCOMPARE(testObject.m_callCounter, 0);
 
@@ -820,7 +820,7 @@ void tst_QIfSimulationEngine::testFunctionWithInheritance()
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.at(0), expectedValues);
 
-    QSignalSpy spy2(&testObject, SIGNAL(functionWithArgumentsCalled(int, QString)));
+    QSignalSpy spy2(&testObject, &SimpleTestAPI::functionWithArgumentsCalled);
 
     //call the testfunction implemented in FunctionTestMain.qml
     retValue = callTestFunction(&testObject, "functionWithArguments", expectedValues, QVariant(), QVariant(100), QVariant("Test"));
@@ -918,7 +918,7 @@ void tst_QIfSimulationEngine::testRecursionPrevention()
     QScopedPointer<QObject> obj(component.create());
     QVERIFY2(obj, qPrintable(component.errorString()));
 
-    QSignalSpy spy(&testObject, SIGNAL(testPropertyChanged(int)));
+    QSignalSpy spy(&testObject, &SimpleTestAPI::testPropertyChanged);
 
     QCOMPARE(testObject.m_callCounter, 0);
 
@@ -979,9 +979,9 @@ void tst_QIfSimulationEngine::testMultipleInstances()
     QSignalSpy firstInstanceSpy(obj.data(), SIGNAL(firstInstanceCalled()));
     QSignalSpy secondInstanceSpy(obj.data(), SIGNAL(secondInstanceCalled()));
 
-    QSignalSpy simpleSpy(&testObject, SIGNAL(simpleFunctionCalled()));
-    QSignalSpy argumentsSpy(&testObject, SIGNAL(functionWithArgumentsCalled(int, QString)));
-    QSignalSpy returnValueSpy(&testObject, SIGNAL(functionWithReturnValueCalled(int)));
+    QSignalSpy simpleSpy(&testObject, &SimpleTestAPI::simpleFunctionCalled);
+    QSignalSpy argumentsSpy(&testObject, &SimpleTestAPI::functionWithArgumentsCalled);
+    QSignalSpy returnValueSpy(&testObject, &SimpleTestAPI::functionWithReturnValueCalled);
 
     // call the simpleFunction function (defined in the first instance)
     QVariantList expectedValues;

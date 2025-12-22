@@ -468,7 +468,7 @@ void ServiceManagerTest::testManagerListModel()
     // in the list
     const int backendCount = manager->rowCount();
 
-    QSignalSpy managerModelSpy(manager, SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy managerModelSpy(manager, &QAbstractItemModel::rowsInserted);
 
     // Sanity check
     QCOMPARE(manager->rowCount(), backendCount);

@@ -219,7 +219,7 @@ namespace qtif_private {
 #define QIF_SIMULATION_TRY_CALL_FUNC(instance_type, function, ret_func, ...) \
 qtif_private::RecursionGuard<instance_type> _guard; \
 if (_guard.trySet(function)) { \
-    for (auto _qif_instance : qtif_private::QIfSimulationProxy<instance_type>::proxies) { \
+    for (auto _qif_instance : std::as_const(qtif_private::QIfSimulationProxy<instance_type>::proxies)) { \
         QVariant return_value; \
         if (_qif_instance->callQmlMethod(function, return_value, ##__VA_ARGS__)) { \
             ret_func; \
