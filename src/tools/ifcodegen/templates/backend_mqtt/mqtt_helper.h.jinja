@@ -10,57 +10,84 @@
 
 #include "{{module.module_name|lower}}factory.h"
 
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+
 using namespace Qt::StringLiterals;
 
 {{ module|begin_namespace }}
 
-QByteArray toMqttMessage(const QVariant &value);
-QByteArray toMqttMessage(const QVariantList &value);
-QByteArray toMqttMessage(bool value);
-QByteArray toMqttMessage(const QList<bool> &value);
-QByteArray toMqttMessage(double value);
-QByteArray toMqttMessage(const QList<double> &value);
-QByteArray toMqttMessage(int value);
-QByteArray toMqttMessage(const QList<int> &value);
-QByteArray toMqttMessage(const QString &value);
-QByteArray toMqttMessage(const QList<QString> &value);
+template <typename T> QByteArray toMqttMessage(const T &value)
+{
+    return QVariant::fromValue(value).toByteArray();
+}
+
+template <typename T> QByteArray toMqttMessage(const QList<T> &value)
+{
+    QList<QByteArray> data;
+    for (auto val : value)
+        data += toMqttMessage(val);
+    return "[" + data.join(",") + "]";
+}
+
 {% for struct in module.structs %}
-QByteArray toMqttMessage(const {{struct}} &value);
-QByteArray toMqttMessage(const QList<{{struct}}> &value);
+template <> QByteArray toMqttMessage(const {{struct}} &value);
 {% endfor %}
 {% for enum in module.enums %}
-QByteArray toMqttMessage({{module.module_name|upper_first}}::{{enum|flag_type}} value);
-QByteArray toMqttMessage(const QList<{{module.module_name|upper_first}}::{{enum|flag_type}}> &value);
+template <> QByteArray toMqttMessage(const {{module.module_name|upper_first}}::{{enum|flag_type}} &value);
 {% endfor %}
 
-template <typename T> T fromMqttMessage(const QVariant &value, bool *ok)
+
+
+
+template <typename T> T fromMqttMessage(const QVariant &variant, bool *ok)
 {
-    QVariant convertedValue = value;
-    bool success = convertedValue.canConvert<T>() && convertedValue.convert(QMetaType::fromType<T>());
+    QVariant value = variant;
+    bool success = value.canConvert<T>() && value.convert(QMetaType::fromType<T>());
     if (ok)
         *ok = success;
-    return convertedValue.value<T>();
+    return value.value<T>();
 }
-template <typename T> T fromMqttMessage(const QByteArray &message, bool *ok)
+
+template <typename T> typename std::enable_if_t<!QtPrivate::IsSequentialContainer<T>::Value, T> fromMqttMessage(const QByteArray &message, bool *ok)
 {
     QVariant value = QVariant::fromValue(message);
     return fromMqttMessage<T>(value, ok);
 }
 
-template <> QVariant fromMqttMessage(const QByteArray &message, bool *ok);
+template <typename T> typename std::enable_if_t<QtPrivate::IsSequentialContainer<T>::Value, T> fromMqttMessage(const QByteArray &message, bool *ok)
+{
+    if (ok)
+        *ok = false;
 
-{% for type in ("bool", "int", "float", "QString", "QVariant") %}
-template <> QList<{{type}}> fromMqttMessage(const QByteArray &message, bool *ok);
-{% endfor %}
+    T list;
+    const QJsonDocument doc = QJsonDocument::fromJson(message);
+    if (!doc.isArray())
+        return {};
 
+    for (auto value : doc.array()) {
+        bool val_ok = false;
+        list.append(fromMqttMessage<typename T::value_type>(value.toVariant(), &val_ok));
+
+        if (!val_ok)
+            return {};
+    }
+    if (ok)
+        *ok = true;
+
+    return list;
+}
+
+
+template <> QVariant fromMqttMessage<QVariant>(const QVariant &variant, bool *ok);
 {% for struct in module.structs %}
-template <> {{struct}} fromMqttMessage(const QVariant &value, bool *ok);
-template <> {{struct}} fromMqttMessage(const QByteArray &message, bool *ok);
-template <> QList<{{struct}}> fromMqttMessage(const QByteArray &message, bool *ok);
+template <> {{struct}} fromMqttMessage<{{struct}}>(const QVariant &variant, bool *ok);
+template <> {{struct}} fromMqttMessage<{{struct}}>(const QByteArray &message, bool *ok);
+
 {% endfor %}
 {% for enum in module.enums %}
-template <> {{module.module_name|upper_first}}::{{enum|flag_type}} fromMqttMessage(const QVariant &value, bool *ok);
-template <> {{module.module_name|upper_first}}::{{enum|flag_type}} fromMqttMessage(const QByteArray &message, bool *ok);
+template <> {{module.module_name|upper_first}}::{{enum|flag_type}} fromMqttMessage<{{module.module_name|upper_first}}::{{enum|flag_type}}>(const QVariant &variant, bool *ok);
 {% endfor %}
 
 {{ module|end_namespace }}
