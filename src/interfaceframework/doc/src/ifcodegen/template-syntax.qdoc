@@ -453,4 +453,12 @@ invalid:
 {% - if foo - %}...{% endif %}
 \endcode
 
+
+\section1 Jinja Support in \QC
+
+\QC provides syntax highlighting, code folding and selection range support for the \c Jinja template
+language in its text editor. \QC highlights both the Jinja markup and the embedded language based on
+the file's secondary extension. For example, when you open \c myclass.cpp.jinja, \QC highlights the
+embedded code as \c C++ and the Jinja directives as Jinja.
+
 */

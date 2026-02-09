@@ -291,4 +291,9 @@ The IDL is converted into an in-memory domain model (see qface/idl/domain.py).
 The domain model is the base for any code generation. You traverse the domain tree and then trigger
 your own code generation.
 
+\section1 QFace Support in \QC
+
+\QC provides syntax highlighting, code folding and selection range support for the \c QFace language
+in its text editor.
+
 */
