@@ -9,17 +9,79 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype SpinControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-controls
+    \brief A numeric spin box control for editing bounded integer properties.
 
-    \brief Reusable Spin control with SpinBox.
+    SpinControl provides a styled SpinBox with increment and decrement
+    buttons and optional minimum/maximum labels displayed above the input.
+    It is used by the simulation control panel for properties annotated
+    with \c {@range}, \c {@minimum}, or \c {@maximum} in the QFace IDL.
+
+    The spin box is editable by default, allowing the user to type a value
+    directly or use the \c + and \c - buttons.
+
+    \section1 Usage
+
+    \qml
+    SpinControl {
+        from: 0
+        to: 255
+        value: backend.brightness
+        onValueModified: function(value) {
+            backend.setBrightness(value)
+        }
+    }
+    \endqml
 */
 ColumnLayout {
     id: root
 
+    /*!
+        This property holds the minimum allowed value.
+
+        By default, the property is set to the minimum 32-bit signed
+        integer value (\c {-2147483648}).
+    */
     property int from: ControlPanelStyle.minInt32
+
+    /*!
+        This property holds the maximum allowed value.
+
+        By default, the property is set to the maximum 32-bit signed
+        integer value (\c {2147483647}).
+    */
     property int to: ControlPanelStyle.maxInt32
+
+    /*!
+        This property holds the current value of the spin box.
+
+        By default, the property is set to \c 0.
+    */
     property int value: 0
+
+    /*!
+        This property holds whether the user can type a value directly
+        into the spin box.
+
+        By default, the property is set to \c true.
+    */
     property alias editable: spinBox.editable
+
+    /*!
+        This property controls whether the minimum and maximum labels
+        are displayed above the spin box.
+
+        By default, the property is set to \c true.
+    */
     property bool showMinMaxLabels: true
+
+    /*!
+        \qmlsignal SpinControl::valueModified(int value)
+
+        This signal is emitted when the user modifies the value, either
+        by typing, clicking the \c + / \c - buttons, or using the
+        keyboard arrows. The \a value parameter contains the new value.
+    */
     signal valueModified(int value)
     spacing: 4
     implicitHeight: childrenRect.height

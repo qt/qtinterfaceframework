@@ -9,15 +9,36 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype SearchField
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-components
+    \brief A styled search input with a magnifying-glass icon and clear
+    button.
 
-    \brief Reusable Search Field with clear button.
+    SearchField wraps a TextField with a search icon on the left and a
+    clear button that appears when text is entered. It is used by
+    \l InterfaceSelector and \l TopBar to filter interfaces and
+    properties respectively.
 
-    A styled search input with magnifying glass icon and clear button.
-    Used for filtering lists and content.
+    \section1 Usage
+
+    \qml
+    SearchField {
+        placeholderText: "Search properties..."
+        onTextChanged: propertyList.filterText = text
+    }
+    \endqml
 */
 Rectangle {
     id: root
+
+    /*!
+        This property holds the current text in the search input.
+    */
     property alias text: searchInput.text
+
+    /*!
+        This property holds the placeholder text shown when the input
+        is empty.
+    */
     property alias placeholderText: searchInput.placeholderText
 
     implicitHeight: 34

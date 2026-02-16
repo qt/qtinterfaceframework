@@ -1,6 +1,7 @@
 if(QT_FEATURE_ifcodegen)
     qt_internal_add_example(climate)
     qt_internal_add_example(addressbook)
+    qt_internal_add_example(vehicle-dashboard)
 endif()
 if(QT_FEATURE_ifcodegen AND QT_FEATURE_remoteobjects)
     qt_internal_add_example(remote)

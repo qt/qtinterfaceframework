@@ -9,16 +9,73 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype RangeControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-controls
+    \brief A slider control for editing bounded numeric properties.
 
-    \brief Reusable Range control with Slider.
+    RangeControl provides a styled Slider with labels that display the
+    minimum, current, and maximum values. It is used by the simulation
+    control panel for properties annotated with \c {@range} in the
+    QFace IDL.
+
+    The slider supports discrete steps via the \l stepSize property
+    and snaps to the nearest step when \l stepSize is greater than
+    zero.
+
+    \section1 Usage
+
+    \qml
+    RangeControl {
+        from: 0
+        to: 100
+        stepSize: 5
+        value: backend.volume
+        onMoved: function(value) {
+            backend.setVolume(value)
+        }
+    }
+    \endqml
 */
 ColumnLayout {
     id: root
 
+    /*!
+        This property holds the minimum allowed value of the slider.
+
+        By default, the property is set to the minimum 32-bit signed
+        integer value (\c {-2147483648}).
+    */
     property real from: ControlPanelStyle.minInt32
+
+    /*!
+        This property holds the maximum allowed value of the slider.
+
+        By default, the property is set to the maximum 32-bit signed
+        integer value (\c {2147483647}).
+    */
     property real to: ControlPanelStyle.maxInt32
+
+    /*!
+        This property holds the current value of the slider.
+
+        By default, the property is set to \c 0.
+    */
     property real value: 0
+
+    /*!
+        This property holds the step size for the slider. When set to
+        a value greater than zero, the slider snaps to the nearest
+        multiple of \c stepSize.
+
+        By default, the property is set to \c 1.
+    */
     property real stepSize: 1
+
+    /*!
+        \qmlsignal RangeControl::moved(real value)
+
+        This signal is emitted when the user moves the slider handle.
+        The \a value parameter contains the new slider value.
+    */
     signal moved(real value)
     spacing: 6
     implicitHeight: childrenRect.height

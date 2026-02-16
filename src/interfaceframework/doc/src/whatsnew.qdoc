@@ -7,6 +7,18 @@
 The following page describes new features by Qt Version.
 There is a separate page to list all \l {New Classes and Functions by Qt Version}.
 
+\section1 6.11
+
+\note The features listed in this section are in technology preview.
+
+\list
+    \li Introduced the optional \l{Simulation Control Panel} for the backend_simulator template.
+        When enabled via the \l{config_simulator_controlPanel}{controlPanel} annotation, an
+        auto-generated runtime UI is provided to inspect and modify all simulation property values.
+    \li New \l{Qt Interface Framework Control Panel Helper QML Types}{QtInterfaceFramework.ControlPanelHelper}
+        QML module providing reusable UI controls for building simulation panels.
+\endlist
+
 \section1 6.10
 
 \list

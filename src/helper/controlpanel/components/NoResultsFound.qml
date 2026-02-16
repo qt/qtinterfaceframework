@@ -9,16 +9,51 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype NoResultsFound
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
-    \brief No Results Found Message.
+    \ingroup controlpanel-components
+    \brief A placeholder message shown when a search yields no results.
 
-    Displays a "no results found" message when search returns no results.
-    Can be used for properties, interfaces, or any searchable list.
- */
+    NoResultsFound displays a search icon, a title, and a description
+    that includes the search query. It is used by \l InterfaceSelector
+    and the property list when the user's filter matches nothing. The
+    \l itemType property lets the message adapt to different contexts
+    (e.g. "properties", "interfaces").
+
+    \section1 Usage
+
+    \qml
+    NoResultsFound {
+        searchText: searchField.text
+        itemType: "properties"
+    }
+    \endqml
+*/
 Rectangle {
     id: root
+
+    /*!
+        This property holds the search query to display in the
+        description message.
+    */
     property string searchText: ""
+
+    /*!
+        This property holds the type of items being searched,
+        used to build the title and description text
+        (e.g. "properties", "interfaces"). Defaults to \c {"properties"}.
+    */
     property string itemType: "properties"
+
+    /*!
+        This property holds the title text shown in the no-results placeholder
+        when a search yields no matches. Defaults to
+        \c {"No <itemType> found"}.
+    */
     property string titleText: "No " + itemType + " found"
+
+    /*!
+        This property holds the description text shown below the
+        title. Defaults to \c {'No <itemType> match "<searchText>"'}.
+    */
     property string descriptionText: 'No ' + itemType + ' match "' + searchText + '"'
 
     implicitHeight: 120

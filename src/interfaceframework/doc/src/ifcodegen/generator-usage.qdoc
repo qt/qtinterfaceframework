@@ -489,6 +489,32 @@
             \li Defines whether the property is \c supported; the generated code in the simulator
                 backend validates the value and reports a warning when you try to change an
                 \c unsupported property.
+        \row
+            \li
+            \target config_simulator_controlPanel
+            \code
+            config_simulator:
+            controlPanel: true
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Enables the auto-generated \l{Simulation Control Panel} for the module.
+                When set, the backend_simulator template generates additional QML files
+                that provide a runtime UI for inspecting and modifying all property values.
+        \row
+            \li
+            \target config_simulator_controlPanelFile
+            \code
+            config_simulator:
+            controlPanel: true
+            controlPanelFile: "qrc:/my_controlpanel.qml"
+            \endcode
+            \li Accompanying YAML file
+            \li Module
+            \li Specifies a custom QML file to use as the \l{Simulation Control Panel}
+                instead of the auto-generated one. Requires \c controlPanel to be set to
+                \c true. The custom file receives all backend instances as properties,
+                following the same naming convention as the generated panel.
     \endtable
 
     \section3 backend_qtro
@@ -675,6 +701,18 @@
         \row
             \li {{interface|upperfirst}}Simulation.qml
             \li Interface-specific QML simulation files.
+        \row
+            \li {{module.module_name|lower}}_controlpanel.qml
+            \li \e{(Optional)} Generated when the \l{config_simulator_controlPanel}{controlPanel}
+                annotation is enabled. Provides a runtime UI for inspecting and modifying
+                simulation property values.
+        \row
+            \li {{module.module_name|upperfirst}}ControlPanelBase.qml
+            \li \e{(Optional)} Base component defining the control panel window structure.
+        \row
+            \li {{module.module_name|upperfirst}}ControlPanelLoader.qml
+            \li \e{(Optional)} Helper that loads and connects the control panel to the
+                backend instances.
     \endtable
 
     \section2 QtRemoteObjects Backend

@@ -161,4 +161,173 @@ import 'qrc:/simulation/'
 
 Afterwards you should be able to load your modified simulation files like a regular QML file.
 
+\section1 Simulation Control Panel
+
+When developing and testing interfaces, it is useful to inspect and modify
+property values at runtime without writing custom test UIs. The simulation
+control panel provides an automatically generated GUI that displays every
+property of every interface in the module, with the appropriate editor
+control for each property type.
+
+\image controlpanel-overview.png "Simulation Control Panel"
+
+\section2 Enabling the Control Panel
+
+The control panel is an opt-in feature. To enable it, add the
+\c controlPanel annotation to the \c config_simulator block at the
+\b{module level} in your QFace IDL file:
+
+\code
+@config_simulator: { controlPanel: true }
+module Example.If.VehicleDashboard 1.0;
+\endcode
+
+When \c controlPanel is set to \c true, the \l{Backend Simulator}{backend_simulator}
+code generator produces three additional files alongside the usual simulation
+files:
+
+\table 100%
+    \header
+        \li Filename
+        \li Purpose
+    \row
+        \li {{module.module_name|lower}}_controlpanel.qml
+        \li The control panel UI, built from
+            \l{Qt Interface Framework Control Panel Helper QML Types}{ControlPanelHelper}
+            components. Contains the layout and property editors for all
+            interfaces in the module.
+    \row
+        \li {{module.module_name|upperfirst}}ControlPanelBase.qml
+        \li Base component that defines the control panel window structure.
+            This is the file that the loader instantiates.
+    \row
+        \li {{module.module_name|upperfirst}}ControlPanelLoader.qml
+        \li A small helper that loads the control panel at startup and
+            connects backend instances. The module simulation file creates
+            this loader automatically.
+\endtable
+
+No additional CMake configuration or linking is required. The
+\l{Qt Interface Framework Control Panel Helper QML Types}{ControlPanelHelper}
+module is a pure QML module that is resolved at runtime.
+
+\section2 How It Works
+
+The generated module simulation file creates a ControlPanelLoader instance
+and passes all interface backends to it:
+
+\qml
+QtObject {
+    property var climatecontrol : ClimateControlSimulation { }
+    property var vehiclestatus : VehicleStatusSimulation { }
+
+    property var controlPanelLoader: VehicledashboardControlPanelLoader {
+        climatecontrolBackend: climatecontrol
+        vehiclestatusBackend: vehiclestatus
+    }
+}
+\endqml
+
+The loader opens a separate window containing the control panel UI. The
+panel shares the same backend objects as the running application, so changes
+made in either the application or the control panel are reflected in the
+other immediately.
+
+\section2 Property Type Mapping
+
+The control panel selects the editor control based on the property type and
+its \c config_simulator annotations:
+
+\table 100%
+    \header
+        \li Property Type / Annotation
+        \li Control
+    \row
+        \li \c bool
+        \li \l BooleanControl (toggle switch)
+    \row
+        \li \c enum / \c flag
+        \li \l ComboBoxControl (drop-down)
+    \row
+        \li \c int or \c real with \c {@range}
+        \li \l SpinControl (spin box with min/max)
+    \row
+        \li \c int with \c {@minimum} and/or \c {@maximum}
+        \li \l SpinControl
+    \row
+        \li \c int or \c real with \c {@domain}
+        \li \l ComboBoxControl (discrete values)
+    \row
+        \li \c string, \c int, or \c real (no annotation)
+        \li \l TextControl (text field with validation)
+    \row
+        \li \c struct
+        \li \l StructControl (collapsible field editor)
+    \row
+        \li \c {list<type>}
+        \li \l ListControl (add/remove/edit list)
+    \row
+        \li \c {model<type>}
+        \li \l ModelControl (add/remove/update model entries)
+    \row
+        \li Property with \c {unsupported: true}
+        \li \l UnsupportedControl (placeholder)
+\endtable
+
+\section2 Zoned Interfaces
+
+For interfaces annotated with \c {@config: { zoned: true }}, the control
+panel provides a zone selector in the toolbar. Selecting a zone displays
+the per-zone property values for that zone.
+
+Properties annotated with \c {@config_simulator: { zoned: false }} at the
+property level are displayed in a separate "Non-Zoned Properties" section,
+as they are shared across all zones.
+
+\section2 Custom Property Editors
+
+If the built-in controls do not fit a particular property, you can replace
+the default editor with a custom component. The generated control panel
+exposes a \c Component property for each property that, when set, overrides
+the default editor.
+
+The custom component must inherit from \l CustomControlPanelComponent.
+This base type provides:
+
+\list
+    \li \c backendObject \mdash Reference to the backend instance.
+    \li \c backendProperty \mdash The current property value, kept in sync
+        automatically.
+    \li \c setValue(value) \mdash Convenience function to call the
+        backend setter, handling zoned and non-zoned cases.
+\endlist
+
+\section2 Custom Control Panel File
+
+To replace the entire control panel UI, specify a custom QML file using the
+\l{config_simulator_controlPanelFile}{controlPanelFile} annotation:
+
+\code
+@config_simulator: { controlPanel: true, controlPanelFile: "qrc:/my_controlpanel.qml" }
+module Example.If.VehicleDashboard 1.0;
+\endcode
+
+The loader will load the specified file instead of the generated one. The
+custom file receives all backend instances as properties, following the same
+naming convention.
+
+\section2 Example
+
+The \l{Qt Interface Framework Vehicle Dashboard Example} demonstrates the
+control panel feature with a complete vehicle dashboard application. It
+defines two interfaces \mdash a zoned \c ClimateControl and a non-zoned
+\c VehicleStatus \mdash covering all supported property types including
+bool, enum, int, real, string, struct, list, and model.
+
+The example also shows how to customize the control panel: it replaces the
+default \l StructControl for the \c tirePressure property with a custom
+arc-gauge editor built on \l CustomControlPanelComponent, and uses the
+\l{config_simulator_controlPanelFile}{controlPanelFile} annotation to load
+the custom panel file instead of the auto-generated one.
+
 */
