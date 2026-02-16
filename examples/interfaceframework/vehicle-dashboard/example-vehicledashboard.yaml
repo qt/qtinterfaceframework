@@ -1,0 +1,61 @@
+Example.If.VehicleDashboard.ClimateControl:
+    config_simulator:
+        zones: [ FrontLeft, FrontRight ]
+
+Example.If.VehicleDashboard.ClimateControl#fanSpeedLevel:
+    config_simulator:
+        default:
+            FrontLeft: 2
+            FrontRight: 3
+
+Example.If.VehicleDashboard.ClimateControl#targetTemperature:
+    config_simulator:
+        default:
+            FrontLeft: 22
+            FrontRight: 20
+
+Example.If.VehicleDashboard.ClimateControl#seatHeating:
+    config_simulator:
+        default:
+            FrontLeft: 0
+            FrontRight: 0
+
+Example.If.VehicleDashboard.ClimateControl#airConditioning:
+    config_simulator:
+        default: true
+
+Example.If.VehicleDashboard.ClimateControl#recirculationMode:
+    config_simulator:
+        default: "RecirculationOff"
+
+Example.If.VehicleDashboard.ClimateControl#outsideTemperature:
+    config_simulator:
+        default: 18
+
+Example.If.VehicleDashboard.VehicleStatus#headlights:
+    config_simulator:
+        default: false
+
+Example.If.VehicleDashboard.VehicleStatus#driveMode:
+    config_simulator:
+        default: "Normal"
+
+Example.If.VehicleDashboard.VehicleStatus#mileage:
+    config_simulator:
+        default: 42365.7
+
+Example.If.VehicleDashboard.VehicleStatus#vin:
+    config_simulator:
+        default: "WBA3A5C55CF256789"
+
+Example.If.VehicleDashboard.VehicleStatus#tirePressure:
+    config_simulator:
+        default: [2.3, 2.3, 2.1, 2.1]
+
+Example.If.VehicleDashboard.VehicleStatus#activeWarnings:
+    config_simulator:
+        default: ["Low washer fluid"]
+
+Example.If.VehicleDashboard.VehicleStatus#tripLog:
+    config_simulator:
+        default: [["Office", 28.5, 35], ["Airport", 65.2, 50]]

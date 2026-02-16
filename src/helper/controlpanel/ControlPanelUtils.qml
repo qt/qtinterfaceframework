@@ -7,13 +7,40 @@ import QtQuick
 /*!
     \qmltype ControlPanelUtils
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
-    \brief Utility functions.
+    \ingroup controlpanel-singletons
+    \brief A singleton providing helper functions for type conversion
+    and default value creation.
 
-    Provides helper functions for type conversion and default value creation
-    used across control panel components.
+    ControlPanelUtils is used internally by the control panel controls
+    to parse user input into the correct JavaScript type and to create
+    default values when new items are added to lists or models.
+
+    \section1 Functions
+
+    \list
+        \li \l parseValue() \unicode{0x2013} converts a string to the
+            JavaScript type indicated by a type name (\c "int", \c "real",
+            \c "bool", or \c "string").
+        \li \l getDefaultValue() \unicode{0x2013} returns a sensible
+            default for a given type, including recursive struct
+            construction.
+    \endlist
+
+    \section1 Usage
+
+    \qml
+    var intVal = ControlPanelUtils.parseValue("42", "int")   // 42
+    var defVal = ControlPanelUtils.getDefaultValue("bool")   // false
+    \endqml
 */
 
 QtObject {
+
+    /*!
+        Parses the string \a text into the JavaScript type specified
+        by \a type. Returns \c 0 for invalid \c "int" or \c "real"
+        input.
+    */
     function parseValue(text, type) {
         switch (type) {
             case "int":
@@ -30,6 +57,12 @@ QtObject {
         }
     }
 
+    /*!
+        Returns a sensible default value for the given \a type.
+        For \c "struct" types, \a structFields is used to recursively
+        build an object. For \c "enum" types, the first entry in
+        \a enumModel is returned.
+    */
     function getDefaultValue(type, structFields, enumModel) {
 
         if (structFields === undefined) structFields = null;

@@ -9,8 +9,13 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype UnsupportedControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-controls
+    \brief A placeholder shown for properties whose type is not yet
+    supported by the simulation control panel.
 
-    \brief Reusable control for unsupported properties.
+    UnsupportedControl displays a warning icon and a message indicating
+    that the property cannot be edited. It is loaded automatically when
+    no suitable control exists for a given property type.
 */
 Rectangle {
     anchors.fill: parent

@@ -9,21 +9,64 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype StructControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
-    \brief Displays struct properties.
+    \ingroup controlpanel-controls
+    \brief A collapsible editor for struct-typed properties.
 
-    Shows field count badge and renders individual fields using StructField.
-    Supports nested lists, enums, and all primitive types.
-    Emits fieldValueChanged signal when any field is modified.
- */
+    StructControl displays a clickable header with the struct name and a
+    field-count badge. Clicking the header expands or collapses the body,
+    which renders each field using \l StructField. It supports nested
+    lists, enums, and all primitive types.
+
+    \section1 Usage
+
+    \qml
+    StructControl {
+        structName: "Position"
+        structObject: backend.position
+        fields: [
+            { name: "x", type: "real" },
+            { name: "y", type: "real" },
+            { name: "z", type: "real" }
+        ]
+        onFieldValueChanged: function(fieldName, value) {
+            var pos = backend.position
+            pos[fieldName] = value
+            backend.setPosition(pos)
+        }
+    }
+    \endqml
+*/
 
 Rectangle {
     id: root
 
+    /*!
+        This property holds the display name shown in the header.
+    */
     property string structName: ""
+
+    /*!
+        This property holds the JavaScript object that contains the
+        current field values of the struct.
+    */
     property var structObject: null
+
+    /*!
+        This property holds the list of field descriptors. Each element
+        is a JavaScript object with at least a \c name and \c type key.
+        Optional keys include \c enumModel for enum fields.
+    */
     property var fields: []
+
     property bool expanded: false
 
+    /*!
+        \qmlsignal StructControl::fieldValueChanged(string fieldName, var value)
+
+        This signal is emitted when the user modifies a field.
+        The \a fieldName parameter identifies the field and \a value
+        contains the new value.
+    */
     signal fieldValueChanged(string fieldName, var value)
     signal isExpandedChanged()
 

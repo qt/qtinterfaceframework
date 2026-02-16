@@ -9,13 +9,50 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype PropertyCard
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-components
+    \brief A card container that wraps a single property editor.
 
-    \brief Reusable Property Card container.
+    PropertyCard displays a header with the property name, an optional
+    "Non-Zoned" badge, and a content area loaded from the supplied
+    \l content component. It provides a hover highlight effect and
+    consistent spacing around the editor control.
+
+    \section1 Usage
+
+    \qml
+    PropertyCard {
+        propertyName: "fanSpeed"
+        nonZonedBadge: true
+        content: Component {
+            SpinControl {
+                from: 0
+                to: 10
+                value: backend.fanSpeed
+                onValueModified: function(v) { backend.setFanSpeed(v) }
+            }
+        }
+    }
+    \endqml
 */
 Rectangle {
     id: root
+
+    /*!
+        This property holds the name displayed in the card header.
+    */
     property string propertyName: ""
+
+    /*!
+        This property holds whether the "Non-Zoned" badge is shown
+        in the header. Useful for zoned interfaces where some
+        properties are not zone-specific.
+    */
     property bool nonZonedBadge: false
+
+    /*!
+        This property holds the Component that provides the editor
+        control loaded inside the card body.
+    */
     property Component content: null
 
     Layout.fillWidth: true

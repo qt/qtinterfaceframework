@@ -9,15 +9,61 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype InterfaceSelector
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-panels
+    \brief A sidebar panel that lists and filters available interfaces.
 
-    \brief Interface Selector Panel.
+    InterfaceSelector displays all registered interfaces in a scrollable
+    list with a search field for filtering by name. Each entry shows a
+    zoned/non-zoned icon and the interface name. Selecting an entry emits
+    \l interfaceSelected. A summary footer shows the interface count and
+    whether the selected interface is zoned.
+
+    The list is filtered in real time as the user types into the built-in
+    \l SearchField. When no interfaces match the query, a
+    \l NoResultsFound placeholder is shown.
+
+    \section1 Usage
+
+    \qml
+    InterfaceSelector {
+        interfaces: controlPanel.availableInterfaces
+        currentInterfaceIndex: 0
+        onInterfaceSelected: function(index) {
+            controlPanel.selectInterface(index)
+        }
+    }
+    \endqml
 */
 
 Rectangle {
     id: root
+
+    /*!
+        This property holds the list of interface descriptors. Each
+        element is a JavaScript object with at least \c name (string)
+        and \c isZoned (bool) keys.
+    */
     property var interfaces: []
+
+    /*!
+        This property holds the index of the currently selected
+        interface in the \l interfaces list.
+    */
     property int currentInterfaceIndex: 0
+
+    /*!
+        This property holds the current search filter text. Only
+        interfaces whose name contains this text are shown.
+    */
     property string searchText: ""
+
+    /*!
+        \qmlsignal InterfaceSelector::interfaceSelected(int index)
+
+        This signal is emitted when the user selects an interface.
+        The \a index parameter is the position in the original
+        \l interfaces list.
+    */
     signal interfaceSelected(int index)
 
     readonly property var filteredInterfaces: {

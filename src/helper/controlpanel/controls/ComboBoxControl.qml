@@ -9,15 +9,80 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype ComboBoxControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-controls
+    \brief A drop-down selector for editing enum and domain-value properties.
 
-    \brief Reusable ComboBox control for both Enums and Domain values.
+    ComboBoxControl provides a styled ComboBox that can operate in two modes:
+    enum mode and domain mode. In enum mode (\l isEnumModel set to \c true),
+    it expects a ListModel whose elements have \c name and \c value roles.
+    In domain mode it accepts a plain JavaScript array of values.
+
+    The control automatically synchronises the selected index when the
+    \l value property changes externally, and emits \l valueActivated
+    when the user picks a new entry.
+
+    \section1 Usage
+
+    \section2 With an enum model
+    \qml
+    ComboBoxControl {
+        isEnumModel: true
+        valueModel: climateModule.airflowDirectionsModel
+        value: backend.airflowDirection
+        onValueActivated: function(val) {
+            backend.setAirflowDirection(val)
+        }
+    }
+    \endqml
+
+    \section2 With a domain list
+    \qml
+    ComboBoxControl {
+        valueModel: ["Economy", "Comfort", "Sport"]
+        value: backend.driveMode
+        onValueActivated: function(val) {
+            backend.setDriveMode(val)
+        }
+    }
+    \endqml
 */
 ComboBox {
     id: root
 
+    /*!
+        This property holds the model that provides the selectable values.
+
+        When \l isEnumModel is \c true, this must be a ListModel with
+        \c name and \c value roles. Otherwise it should be a plain
+        JavaScript array.
+
+        By default, the property is set to \c null.
+    */
     property var valueModel: null
+
+    /*!
+        This property holds the currently selected value. Setting this
+        property programmatically updates the selected index to match.
+
+        By default, the property is set to \c null.
+    */
     property var value: null
+
+    /*!
+        \qmlsignal ComboBoxControl::valueActivated(var value)
+
+        This signal is emitted when the user selects a new entry from the
+        drop-down. The \a value parameter contains the selected value.
+    */
     signal valueActivated(var value)
+
+    /*!
+        This property controls whether the \l valueModel is treated as an
+        enum ListModel (with \c name and \c value roles) or as a plain
+        JavaScript array.
+
+        By default, the property is set to \c false.
+    */
     property bool isEnumModel : false
 
     readonly property var selectedValue: {

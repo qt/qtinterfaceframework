@@ -9,15 +9,38 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype PropertySection
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-components
+    \brief A titled group container for \l {PropertyCard}{PropertyCards}.
 
-    \brief Property Section with header.
+    PropertySection provides a section header label followed by its
+    child items. It is used to visually separate "NON-ZONED PROPERTIES"
+    and "ZONED PROPERTIES" groups inside the control panel. The header
+    is hidden when \l title is empty.
 
-    Container for a group of properties with a section header.
-    Used to separate "NON-ZONED PROPERTIES" and "ZONED PROPERTIES" sections.
+    \section1 Usage
+
+    \qml
+    PropertySection {
+        title: "ZONED PROPERTIES"
+
+        PropertyCard { propertyName: "fanSpeed"; ... }
+        PropertyCard { propertyName: "targetTemperature"; ... }
+    }
+    \endqml
 */
 ColumnLayout {
     id: root
+
+    /*!
+        This property holds the section header text. When empty, the
+        header label is hidden.
+    */
     property string title: ""
+
+    /*!
+        This property holds whether the header label is visible.
+        Defaults to \c true when \l title is not empty.
+    */
     property bool showTitle: title.length > 0
     property int propertySpacing: 12
     Layout.fillWidth: true

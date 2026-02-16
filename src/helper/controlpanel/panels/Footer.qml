@@ -9,15 +9,56 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype Footer
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-panels
+    \brief A status bar displayed at the bottom of the control panel.
 
-    \brief Footer for Control Panel.
+    Footer shows connection status with an animated indicator, the
+    current interface name, the active zone (when applicable), and
+    the module name. It gives the user an at-a-glance overview of
+    the simulation context.
+
+    \section1 Usage
+
+    \qml
+    Footer {
+        connected: backend.isConnected
+        interfaceName: "ClimateControl"
+        isZoned: true
+        currentZone: "FrontLeft"
+        moduleName: "QtIfVehicleFunctions"
+    }
+    \endqml
 */
 Rectangle {
     id: root
+
+    /*!
+        This property holds whether the backend is connected.
+        Controls the color and animation of the status indicator.
+    */
     property bool connected: true
+
+    /*!
+        This property holds the name of the currently selected
+        interface.
+    */
     property string interfaceName: ""
+
+    /*!
+        This property holds whether the current interface supports
+        zones. When \c true, the \l currentZone label is shown.
+    */
     property bool isZoned: false
+
+    /*!
+        This property holds the name of the currently active zone.
+    */
     property string currentZone: ""
+
+    /*!
+        This property holds the module name displayed at the right
+        side of the footer.
+    */
     property string moduleName: ""
     implicitHeight: 52
     color: ControlPanelStyle.backgroundWhite

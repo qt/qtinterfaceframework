@@ -6,10 +6,14 @@
     \title Qt Interface Framework Control Panel Helper QML Types
     \ingroup qmlmodules
     \ingroup qtif_helper_modules
-    \brief Provides reusable QML components for Qt InterfaceFramework Control Panel.
+    \noautolist
+    \brief Provides reusable QML components for the Qt InterfaceFramework
+    simulation control panel.
 
     The QtInterfaceFramework.ControlPanelHelper module provides a collection of
-    reusable QML components for building control panel user interfaces.
+    reusable QML components for building simulation control panel user interfaces.
+    The control panel lets developers inspect and modify interface properties at
+    runtime without writing custom UI code.
 
     To use the Qt Interface Framework Control Panel Helper QML types in your
     application, import the module with the following statement:
@@ -17,4 +21,29 @@
     \qml
     import QtInterfaceFramework.ControlPanelHelper 1.0
     \endqml
+
+    \section1 Controls
+
+    Controls are the editors used to modify individual property values.
+    The control panel selects the appropriate control automatically based
+    on the property type.
+
+    \annotatedlist controlpanel-controls
+
+    \section1 Components
+
+    Components are reusable building blocks used to compose the control
+    panel layout.
+
+    \annotatedlist controlpanel-components
+
+    \section1 Panels
+
+    Panels are the top-level layout sections of the control panel.
+
+    \annotatedlist controlpanel-panels
+
+    \section1 Singletons
+
+    \annotatedlist controlpanel-singletons
 */

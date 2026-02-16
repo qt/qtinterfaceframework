@@ -9,19 +9,84 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype ButtonControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
-    \brief Reusable styled button.
+    \ingroup controlpanel-controls
+    \brief A reusable styled button with customizable colors.
 
-    Provides a standardized button component with visual feedback for user interactions.
-    Supports color customization while maintaining consistent styling across the control panel.
+    ButtonControl provides a standardized button with hover and press
+    visual feedback. It inherits from Button, so all standard Button
+    properties (such as \c text and \c onClicked) are available.
+
+    The button colors can be customised via the \l normalColor,
+    \l hoverColor, and \l pressedColor properties while keeping
+    a consistent look across the simulation control panel.
+
+    \section1 Usage
+
+    \qml
+    ButtonControl {
+        text: "Add"
+        onClicked: backend.addItem()
+    }
+    \endqml
+
+    \section2 Custom colors
+    \qml
+    ButtonControl {
+        text: "Delete"
+        normalColor: "#ffe0e0"
+        pressedColor: "#ff8080"
+        textColor: "#cc0000"
+        onClicked: backend.removeItem(index)
+    }
+    \endqml
 */
 
 Button {
     id: root
 
+    /*!
+        This property holds the background color of the button in its
+        normal (idle) state.
+
+        By default, the property is set to
+        \l {ControlPanelStyle::backgroundGray}{ControlPanelStyle.backgroundGray}.
+    */
     property color normalColor: ControlPanelStyle.backgroundGray
+
+    /*!
+        This property holds the background color shown when the user
+        hovers over the button.
+
+        By default, the property is set to
+        \l {ControlPanelStyle::hoverGray}{ControlPanelStyle.hoverGray}.
+    */
     property color hoverColor: ControlPanelStyle.hoverGray
+
+    /*!
+        This property holds the background color shown while the button
+        is pressed.
+
+        By default, the property is set to
+        \l {ControlPanelStyle::primaryBlueLight}{ControlPanelStyle.primaryBlueLight}.
+    */
     property color pressedColor: ControlPanelStyle.primaryBlueLight
+
+    /*!
+        This property holds the text color of the button in its normal
+        and hover states.
+
+        By default, the property is set to
+        \l {ControlPanelStyle::textPrimary}{ControlPanelStyle.textPrimary}.
+    */
     property color textColor: ControlPanelStyle.textPrimary
+
+    /*!
+        This property holds the text color shown while the button is
+        pressed.
+
+        By default, the property is set to
+        \l {ControlPanelStyle::primaryBlue}{ControlPanelStyle.primaryBlue}.
+    */
     property color pressedTextColor: ControlPanelStyle.primaryBlue
 
     implicitHeight: 36
