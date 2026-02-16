@@ -1,0 +1,121 @@
+@config_simulator: { controlPanel: true, controlPanelFile: "qrc:///simulation/VehicleDashboardCustomPanel.qml" }
+module Example.If.VehicleDashboard 1.0;
+
+/**
+ * Climate control interface with zone support.
+ *
+ * Fan speed, target temperature, and seat heating are per-zone properties.
+ * Air conditioning, recirculation mode, and outside temperature are shared
+ * across all zones.
+ */
+@config: { zoned: true }
+interface ClimateControl {
+    /**
+     * \brief Fan speed level from 0 (off) to 5 (maximum).
+     */
+    @config_simulator: { range: [0, 5] }
+    int fanSpeedLevel;
+
+    /**
+     * \brief Target cabin temperature in degrees Celsius.
+     */
+    @config_simulator: { minimum: 16, maximum: 30 }
+    int targetTemperature;
+
+    /**
+     * \brief Seat heating level: 0 (off), 1 (low), 2 (medium), 3 (high).
+     */
+    @config_simulator: { domain: [0, 1, 2, 3] }
+    int seatHeating;
+
+    /**
+     * \brief Whether air conditioning is enabled. Shared across zones.
+     */
+    @config_simulator: { zoned: false }
+    bool airConditioning;
+
+    /**
+     * \brief Air recirculation mode. Shared across zones.
+     */
+    @config_simulator: { zoned: false }
+    RecirculationMode recirculationMode;
+
+    /**
+     * \brief Outside temperature reading in degrees Celsius. Read-only,
+     * shared across zones.
+     */
+    @config_simulator: { zoned: false }
+    readonly int outsideTemperature;
+}
+
+/**
+ * General vehicle status information (non-zoned).
+ */
+interface VehicleStatus {
+    /**
+     * \brief Whether the headlights are on.
+     */
+    bool headlights;
+
+    /**
+     * \brief Current drive mode.
+     */
+    DriveMode driveMode;
+
+    /**
+     * \brief Total mileage in kilometers.
+     */
+    real mileage;
+
+    /**
+     * \brief Vehicle identification number.
+     */
+    string vin;
+
+    /**
+     * \brief Current tire pressure readings.
+     */
+    TirePressure tirePressure;
+
+    /**
+     * \brief List of active warning messages.
+     */
+    list<string> activeWarnings;
+
+    /**
+     * \brief Log of recent trips.
+     */
+    model<TripEntry> tripLog;
+
+    /**
+     * \brief Parking sensor distance. Marked as unsupported.
+     */
+    @config_simulator: { unsupported: true }
+    int parkingSensor;
+}
+
+enum RecirculationMode {
+    RecirculationOff = 0,
+    RecirculationOn = 1,
+    AutoRecirculation = 2
+}
+
+enum DriveMode {
+    Eco = 0,
+    Normal = 1,
+    Sport = 2,
+    OffRoad = 3
+}
+
+struct TirePressure {
+    real frontLeft;
+    real frontRight;
+    real rearLeft;
+    real rearRight;
+}
+
+struct TripEntry {
+    string destination;
+    real distance;
+    int duration;
+}

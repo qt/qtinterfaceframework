@@ -9,17 +9,76 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype TopBar
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-panels
+    \brief A toolbar displayed above the property list in the control panel.
 
-    \brief Top Bar for Control Panel.
+    TopBar shows the selected interface name, a \l ZoneSelector drop-down
+    (for zoned interfaces), a \l SearchField for filtering properties,
+    and filter buttons that toggle between all, non-zoned, and zoned
+    properties. Filter buttons and the zone selector are only visible
+    when \l isZoned is \c true.
+
+    \section1 Usage
+
+    \qml
+    TopBar {
+        interfaceName: "ClimateControl"
+        isZoned: true
+        availableZones: ["FrontLeft", "FrontRight", "Rear"]
+        currentZoneIndex: 0
+        onZoneChanged: function(index) {
+            controlPanel.selectZone(index)
+        }
+    }
+    \endqml
 */
 Rectangle {
     id: root
+
+    /*!
+        This property holds the name of the currently selected
+        interface, displayed in the toolbar header.
+    */
     property string interfaceName: ""
+
+    /*!
+        This property holds whether the current interface supports
+        zones. When \c true, the zone selector and filter buttons
+        are shown.
+    */
     property bool isZoned: false
+
+    /*!
+        This property holds the list of available zone names for the
+        \l ZoneSelector drop-down.
+    */
     property var availableZones: []
+
+    /*!
+        This property holds the index of the currently selected zone
+        in \l availableZones.
+    */
     property int currentZoneIndex: 0
+
+    /*!
+        This property holds the current text in the property search
+        field, used to filter the property list below.
+    */
     property string propertySearchText: ""
+
+    /*!
+        This property holds the active property filter index.
+        \c 0 means all properties, \c 1 means non-zoned only, and
+        \c 2 means zoned only.
+    */
     property int propertyFilter: 0
+
+    /*!
+        \qmlsignal TopBar::zoneChanged(int index)
+
+        This signal is emitted when the user selects a different zone.
+        The \a index parameter is the position in \l availableZones.
+    */
     signal zoneChanged(int index)
 
     implicitHeight: 60

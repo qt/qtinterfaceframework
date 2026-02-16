@@ -9,15 +9,59 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype ModelControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
-    \brief Displays and edits Model data with add, remove, and update operations.
+    \ingroup controlpanel-controls
+    \brief An editor for QtInterfaceFramework model properties with add,
+    remove, and update operations.
+
+    ModelControl displays a scrollable list of model items with an item
+    count badge and an \e Add button. Each item renders its struct fields
+    using \l StructField delegates and provides a remove button. Unlike
+    \l ListControl, which operates on plain JavaScript arrays, ModelControl
+    works directly with a QtInterfaceFramework model backend that supports
+    \c insert(), \c remove(), \c at(), and \c update() operations.
+
+    \section1 Usage
+
+    \qml
+    ModelControl {
+        modelBackend: backend.contacts
+        elementType: "struct"
+        structType: {
+            "name": "Contact",
+            "fields": [
+                { name: "name", type: "string" },
+                { name: "phone", type: "string" }
+            ]
+        }
+    }
+    \endqml
 */
 
 ColumnLayout {
     id: root
 
+    /*!
+        This property holds the QtInterfaceFramework model backend.
+        The model must provide \c insert(), \c remove(), \c at(),
+        \c update(), and \c count operations.
+    */
     property var modelBackend: null
+
+    /*!
+        This property defines the type of each model element.
+    */
     property string elementType: "string"
+
+    /*!
+        This property holds the struct descriptor that defines the
+        fields of each model item. It should be a JavaScript object
+        with \c name and \c fields keys.
+    */
     property var structType: null
+
+    /*!
+        This property holds the enum model used for enum-typed fields.
+    */
     property var enumModel: null
 
     property int itemCount: 0

@@ -1,0 +1,176 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+\example interfaceframework/vehicle-dashboard
+\meta tag {simulation, ifcodegen, qface-annotations, qface-enums, qface-structs, zoning, control-panel}
+\brief Demonstrates the simulation control panel with a vehicle dashboard.
+\ingroup qtinterfaceframework-examples
+\title Qt Interface Framework Vehicle Dashboard Example
+\image vehicle-dashboard.png
+
+\section1 Introduction
+
+This example shows how to enable the auto-generated \l{Simulation Control Panel}
+using the \l{config_simulator_controlPanel}{controlPanel} annotation. The control
+panel opens a separate window at runtime where developers can inspect and modify
+all simulation backend properties without writing custom UI code.
+
+The example defines a vehicle dashboard module with two interfaces:
+
+\list
+    \li \b ClimateControl - a zoned interface with per-zone
+        properties (fan speed, target temperature, seat heating) and shared
+        properties (air conditioning, recirculation mode, outside temperature).
+    \li \b VehicleStatus - a non-zoned interface demonstrating
+        booleans, enums, strings, reals, structs, lists, and models.
+\endlist
+
+Together these interfaces exercise every control type that the control panel
+can render, including \l SpinControl, \l BooleanControl, \l ComboBoxControl,
+\l TextControl, \l StructControl, \l ListControl, \l ModelControl, and
+\l UnsupportedControl.
+
+\section1 The IDL File
+
+The IDL file defines a module with two interfaces, two enums, and two structs.
+The key annotation that enables the control panel is at the module level:
+
+\code
+@config_simulator: { controlPanel: true }
+module Example.If.VehicleDashboard 1.0;
+\endcode
+
+\section2 Zoned Interface with Shared Properties
+
+The \c ClimateControl interface uses \c {@config: { zoned: true }} to enable
+zone support (see \l{Zoned Features}). Some properties are marked as shared using
+\c {@config_simulator: { zoned: false }} at the property level:
+
+\code
+@config: { zoned: true }
+interface ClimateControl {
+    @config_simulator: { range: [0, 5] }
+    int fanSpeedLevel;
+
+    @config_simulator: { zoned: false }
+    bool airConditioning;
+
+    // ...
+}
+\endcode
+
+This demonstrates how the control panel handles both per-zone and shared
+properties in the same interface. Shared properties appear in a separate
+"Non-Zoned Properties" section in the control panel.
+
+\section2 Annotations for Control Types
+
+Different \c config_simulator annotations cause the control panel to select
+different editor controls:
+
+\table
+    \header
+        \li Annotation
+        \li Control Type
+    \row
+        \li \c {@config_simulator: { range: [0, 5] }}
+        \li \l SpinControl with min/max bounds
+    \row
+        \li \c {@config_simulator: { minimum: 16, maximum: 30 }}
+        \li \l SpinControl with separate min and max
+    \row
+        \li \c {@config_simulator: { domain: [0, 1, 2, 3] }}
+        \li \l ComboBoxControl with discrete values
+    \row
+        \li \c {@config_simulator: { unsupported: true }}
+        \li \l UnsupportedControl placeholder
+\endtable
+
+Properties without boundary annotations use a default control based on their
+type: \l BooleanControl for \c bool, \l ComboBoxControl for \c enum,
+\l TextControl for \c string / \c int / \c real, \l StructControl for structs,
+\l ListControl for lists, and \l ModelControl for models.
+
+\section2 The TirePressure Struct
+
+The \c VehicleStatus interface includes a \c tirePressure property of type
+\c TirePressure, which holds per-wheel readings:
+
+\code
+struct TirePressure {
+    real frontLeft;
+    real frontRight;
+    real rearLeft;
+    real rearRight;
+}
+\endcode
+
+By default, the control panel renders this as a \l StructControl. This example
+replaces it with a custom arc-gauge editor described in the next section.
+
+\section2 Simulation Data
+
+A YAML file provides default values for the simulation backend, including
+per-zone defaults for the zoned interface:
+
+\code
+Example.If.VehicleDashboard.ClimateControl#fanSpeedLevel:
+    config_simulator:
+        default:
+            FrontLeft: 2
+            FrontRight: 3
+\endcode
+
+\section1 Custom Property Editors
+
+The control panel selects a built-in control for each property type
+automatically. For cases where the default editor is not sufficient, you
+can replace it with a custom component that inherits \l CustomControlPanelComponent.
+
+A custom component has two responsibilities:
+
+\list
+    \li Read the current value from
+        \l {CustomControlPanelComponent::backendProperty}{backendProperty},
+        which is a JavaScript object whose fields match the IDL struct.
+    \li Write changes back to the backend by calling
+        \l {CustomControlPanelComponent::setValue()}{setValue()} with a new
+        JavaScript object containing all struct fields.
+\endlist
+
+This example provides \c TirePressureControl as a custom editor for the
+\c tirePressure property. It displays an arc gauge for each wheel with
+color-coded pressure state (red for critically low or over-inflated, amber
+for slightly low, green for nominal range), and a SpinBox to edit each
+wheel's value directly.
+
+\image tirepressure-control.png "Tire Pressure Control custom editor"
+
+\section2 Wiring the Custom Editor
+
+To use a custom panel file instead of the auto-generated one, add the
+\l {config_simulator_controlPanelFile}{controlPanelFile} annotation to the
+module:
+
+\code
+@config_simulator: { controlPanel: true, controlPanelFile: "qrc:///simulation/VehicleDashboardCustomPanel.qml" }
+module Example.If.VehicleDashboard 1.0;
+\endcode
+
+The custom panel file extends the auto-generated base class and assigns the
+custom component to the generated property for that specific struct field.
+The property follows the naming convention
+\c custom<InterfaceName><PropertyName>Component:
+
+\snippet interfaceframework/vehicle-dashboard/VehicleDashboardCustomPanel.qml custom-panel
+
+\section1 Demo Application
+
+When you run the example, two windows appear: the vehicle dashboard and the
+auto-generated control panel. Use the control panel to select an interface,
+switch between zones, and edit property values. Any change made in the control
+panel is immediately reflected in the dashboard, and vice versa, demonstrating
+two-way property binding through the shared simulation backend.
+
+*/

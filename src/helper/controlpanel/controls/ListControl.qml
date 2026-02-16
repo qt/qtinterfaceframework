@@ -9,23 +9,82 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype ListControl
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
-    \brief Displays and manages list<type> properties with add/remove/edit functionality.
+    \ingroup controlpanel-controls
+    \brief An editor for \c {list<type>} properties with add, remove, and
+    edit functionality.
 
-    Supports primitives (int, real, string, bool), enums, and structs.
-    Each list item can be expanded (for structs) or edited inline.
-    Items are displayed in a scrollable view with index numbers.
- */
+    ListControl displays a scrollable list of items with numbered indices.
+    It supports primitives (\c int, \c real, \c string, \c bool), enums,
+    and structs. Each item is rendered using the appropriate control based
+    on \l elementType, and struct items can be expanded inline.
+
+    \section1 Usage
+
+    \qml
+    ListControl {
+        elementType: "int"
+        listValue: backend.sensorReadings
+        onListChanged: function(newList) {
+            backend.setSensorReadings(newList)
+        }
+    }
+    \endqml
+
+    \section2 With structs
+    \qml
+    ListControl {
+        elementType: "struct"
+        listValue: backend.waypoints
+        structType: {
+            "name": "Waypoint",
+            "fields": [
+                { name: "lat", type: "real" },
+                { name: "lon", type: "real" }
+            ]
+        }
+        onListChanged: function(newList) {
+            backend.setWaypoints(newList)
+        }
+    }
+    \endqml
+*/
 
 ColumnLayout {
     id: root
 
-    // Properties
+    /*!
+        This property holds the JavaScript array of list items.
+    */
     property var listValue: []
+
+    /*!
+        This property defines the type of each list element. Accepted
+        values are \c "string", \c "int", \c "real", \c "bool",
+        \c "enum", and \c "struct".
+    */
     property string elementType: "string"
+
+    /*!
+        This property holds the struct descriptor used when
+        \l elementType is \c "struct". It should be a JavaScript object
+        with \c name and \c fields keys.
+    */
     property var structType: null
+
+    /*!
+        This property holds the enum model used when \l elementType is
+        \c "enum".
+    */
     property var enumModel: null
+
     property var expandedItems: ({})
 
+    /*!
+        \qmlsignal ListControl::listChanged(var newList)
+
+        This signal is emitted when items are added, removed, or
+        modified. The \a newList parameter contains the updated array.
+    */
     signal listChanged(var newList)
     spacing: 8
 

@@ -9,21 +9,68 @@ import QtInterfaceFramework.ControlPanelHelper
 /*!
     \qmltype StructField
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
-    \brief Single field editor for struct fields.
+    \ingroup controlpanel-controls
+    \brief A single-field editor row used inside \l StructControl.
 
-    Renders appropriate control based on field type (string, int, bool, enum, etc.)
-    Used by StructControl for editing individual struct fields.
- */
+    StructField displays a label with the field name and loads the
+    appropriate editing control based on \l fieldType. Supported types
+    are \c "string", \c "int", \c "real", \c "bool", \c "enum", and
+    \c "list". It is used internally by \l StructControl and
+    \l ModelControl.
+
+    \section1 Usage
+
+    \qml
+    StructField {
+        fieldName: "temperature"
+        fieldType: "real"
+        fieldValue: 22.5
+        onFieldChanged: function(value) {
+            backend.setTemperature(value)
+        }
+    }
+    \endqml
+*/
 
 RowLayout {
     id: root
 
+    /*!
+        This property holds the label text displayed beside the control.
+    */
     property string fieldName: ""
+
+    /*!
+        This property defines which editor control is loaded.
+        Accepted values are \c "string", \c "int", \c "real",
+        \c "bool", \c "enum", and \c "list".
+    */
     property string fieldType: "string"  // "string", "int", "real", "bool", "list"
+
+    /*!
+        This property holds the current value of the field.
+    */
     property var fieldValue: ""
+
+    /*!
+        This property holds the enum model used when \l fieldType is
+        \c "enum". It should be a ListModel with \c name and \c value
+        roles.
+    */
     property var enumModel: null
+
+    /*!
+        This property holds the element type used when \l fieldType is
+        \c "list", for parsing comma-separated input.
+    */
     property string listElementType: "string"
 
+    /*!
+        \qmlsignal StructField::fieldChanged(var value)
+
+        This signal is emitted when the user modifies the field value.
+        The \a value parameter contains the new value.
+    */
     signal fieldChanged(var value)
 
     spacing: 12

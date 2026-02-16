@@ -7,8 +7,26 @@ import QtQuick
 /*!
     \qmltype ControlPanelStyle
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
+    \ingroup controlpanel-singletons
+    \brief A singleton that provides centralized style constants for
+    all control panel components.
 
-    \brief Centralized style definitions for Control Panel components.
+    ControlPanelStyle defines the color palette, font sizes, spacing
+    values, border widths, animation durations, and icon glyphs used
+    throughout the simulation control panel. All properties are
+    read-only and should be referenced by other QML types rather than
+    hard-coding style values.
+
+    \section1 Usage
+
+    \qml
+    Rectangle {
+        color: ControlPanelStyle.backgroundGray
+        border.color: ControlPanelStyle.borderLight
+        border.width: ControlPanelStyle.borderWidth
+        radius: ControlPanelStyle.radius
+    }
+    \endqml
 */
 QtObject {
     id: root
