@@ -19,9 +19,9 @@ void tst_QMLRegistration::testRegistration_data()
 {
     QTest::addColumn<QByteArray>("type");
     QTest::addColumn<QString>("error");
-    QTest::newRow("AbstractFeatureListModel") << QByteArray("AbstractFeatureListModel{}") << ":1 AbstractFeatureListModel is not accessible directly";
-    QTest::newRow("AbstractFeature") << QByteArray("AbstractFeature{}") << ":1 AbstractFeature is not accessible directly";
-    QTest::newRow("AbstractZonedFeature") << QByteArray("AbstractZonedFeature{}") << ":1 AbstractZonedFeature is not accessible directly";
+    QTest::newRow("AbstractFeatureListModel") << QByteArray("AbstractFeatureListModel{}") << "<Unknown File>:1:33: AbstractFeatureListModel is not accessible directly";
+    QTest::newRow("AbstractFeature") << QByteArray("AbstractFeature{}") << "<Unknown File>:1:33: AbstractFeature is not accessible directly";
+    QTest::newRow("AbstractZonedFeature") << QByteArray("AbstractZonedFeature{}") << "<Unknown File>:1:33: AbstractZonedFeature is not accessible directly";
     QTest::newRow("PagingModel") << QByteArray("PagingModel{}") << QString();
     QTest::newRow("FilterAndBrowseModel") << QByteArray("FilterAndBrowseModel{}") << QString();
     QTest::newRow("InterfaceFrameworkConfiguration") << QByteArray("InterfaceFrameworkConfiguration{}") << QString();
