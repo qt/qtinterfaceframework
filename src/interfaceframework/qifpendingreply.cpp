@@ -666,7 +666,7 @@ bool QIfPendingReplyBase::isSuccessful() const
 }
 
 /*!
-    \qmlmethod PendingReply::then(success, failed)
+    \qmlmethod void PendingReply::then(success, failed)
 
     Sets the JavaScript callbacks to be called once a result is delivered. If the reply succeeded
     the \a success callback is called, otherwise the \a failed callback.
@@ -695,7 +695,7 @@ void QIfPendingReplyBase::then(const QJSValue &success, const QJSValue &failed)
 }
 
 /*!
-    \qmlmethod PendingReply::setSuccess(var value)
+    \qmlmethod void PendingReply::setSuccess(var value)
 
     Sets the result of the reply to \a value and marks the reply as succeeded.
 
@@ -721,7 +721,7 @@ void QIfPendingReplyBase::setSuccess(const QVariant &value)
 }
 
 /*!
-    \qmlmethod PendingReply::setFailed()
+    \qmlmethod void PendingReply::setFailed()
 
     Marks the reply as failed.
 
