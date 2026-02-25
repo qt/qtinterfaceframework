@@ -732,7 +732,7 @@ QIfFilterAndBrowseModel *QIfFilterAndBrowseModel::goForward(int i, NavigationTyp
 }
 
 /*!
-    \qmlmethod FilterAndBrowseModel::insert(int index, StandardItem item)
+    \qmlmethod PendingReply FilterAndBrowseModel::insert(int index, StandardItem item)
 
     Insert the \a item at the position \a index.
 
@@ -772,7 +772,7 @@ QIfPendingReply<void> QIfFilterAndBrowseModel::insert(int index, const QVariant 
 }
 
 /*!
-    \qmlmethod FilterAndBrowseModel::remove(int index)
+    \qmlmethod PendingReply FilterAndBrowseModel::remove(int index)
 
     Removes the item at position \a index.
 
@@ -804,7 +804,7 @@ QIfPendingReply<void> QIfFilterAndBrowseModel::remove(int index)
 }
 
 /*!
-    \qmlmethod FilterAndBrowseModel::move(int cur_index, int new_index)
+    \qmlmethod PendingReply FilterAndBrowseModel::move(int cur_index, int new_index)
 
     Moves the item at position \a cur_index to the new position \a new_index.
 
@@ -836,7 +836,7 @@ QIfPendingReply<void> QIfFilterAndBrowseModel::move(int cur_index, int new_index
 }
 
 /*!
-    \qmlmethod FilterAndBrowseModel::indexOf(StandardItem item)
+    \qmlmethod PendingReply FilterAndBrowseModel::indexOf(StandardItem item)
 
     Determines the index of \a item in this model.
 

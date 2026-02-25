@@ -643,7 +643,7 @@ QVariant QIfPagingModel::get(int i) const
 }
 
 /*!
-    \qmlmethod PagingModel::reload()
+    \qmlmethod void PagingModel::reload()
 
     Resets the model and starts fetching the content again.
 */
