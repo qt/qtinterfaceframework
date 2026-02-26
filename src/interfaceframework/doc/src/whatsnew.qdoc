@@ -17,6 +17,11 @@ There is a separate page to list all \l {New Classes and Functions by Qt Version
         auto-generated runtime UI is provided to inspect and modify all simulation property values.
     \li New \l{Qt Interface Framework Control Panel Helper QML Types}{QtInterfaceFramework.ControlPanelHelper}
         QML module providing reusable UI controls for building simulation panels.
+    \li New \l{backend-mqtt-template}{backend_mqtt} ifcodegen template for generating MQTT-based
+        backend plugins. The template uses the QtMqtt module to synchronize property values,
+        invoke operations, and receive signals over configurable MQTT topics. Topic names, QoS
+        levels, message retention, and other MQTT-specific options can be controlled via the new
+        \l{config_mqtt}{@config_mqtt} annotations.
 \endlist
 
 \section1 6.10
