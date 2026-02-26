@@ -20,25 +20,29 @@ complex system and make it possible to separate computation-intensive code from 
 Additionally, backends that use an IPC can be accessible via multiple frontend points, be it the
 central UI, separate applications, or even mobile devices or third party applications.
 
-Combined with QtInterfaceFramework's \l{Use the Generator}{automatic code generation} and uniform feature loading,
-developing distributed features requires less development overhead, with more interchangeability
-and transparency for the UI code.
+Combined with QtInterfaceFramework's \l{Use the Generator}{automatic code generation} and uniform
+feature loading, developing distributed features requires less development overhead, with more
+interchangeability and transparency for the UI code.
+
+The Qt Interface Framework Generator makes it possible to generate Middleware Backends using
+different IPC mechanisms. The generated backend plugins are loaded and used in the same way as
+any other QtInterfaceFramework plugin and are interchangeable with any other backend
+implementation with the same API. Since all method calls over QtInterfaceFramework feature
+interfaces are asynchronous, switching between IPC mechanisms is transparent to the frontend code.
+
+The Qt Interface Framework Generator currently supports the following IPC mechanisms:
 
 \section1 Qt Remote Objects
 
-The Qt Interface Framework Generator makes it possible to generate Middleware Backends that utilize the
-QtRemoteObjects module. The client-side code is generated as a QtInterfaceFramework backend plugin and as
-a Middleware Service, either a server stub or a full simulation server. The client is generated
-using the \l{backend-qtro-template} {backend_qtro} template; the server using the
+The Qt Interface Framework Generator can generate Middleware Backends that use the Qt Remote Objects
+module as communication channel. The generated code is split between a client and a server part.
+The client-side code is generated as a QtInterfaceFramework backend plugin and as a Middleware
+Service, either a server stub or a full simulation server. The client is generated using the
+\l{backend-qtro-template} {backend_qtro} template; the server using the
 \l{server-qtro-template} {server_qtro} template or \l{server-qtro-simulator-template}
 {server_qtro_simulator}. Both the plugin and the server contain generated C++ code and an
-intermediate \c{.rep} file that is further processed by Qt’s \l {Qt Remote Objects Compiler}
+intermediate \c{.rep} file that is further processed by Qt's \l {Qt Remote Objects Compiler}
 {replica compiler} to produce the actual source and replica classes.
-
-The generated plugin is loaded and used in the same way as other QtInterfaceFramework plugins and is
-interchangeable with any other backend implementation with the same API. Since all method calls
-over QtInterfaceFramework feature interfaces are asynchronous, the use of a QtRemoteObjects based backend is
-similar to any other type of backend.
 
 The generated plugin is buildable and usable as-is; you don't have to make any changes. Your task
 is then to implement the intended functionality on the server-side. To help you get started with
@@ -48,5 +52,25 @@ location or at a user-specified path.
 
 For a steb-by-step introduction to remote backends, see the
 \l {interfaceframework/remote}{Qt Interface Framework Generator Remote Example}.
+
+\section1 MQTT
+
+The Qt Interface Framework Generator can generate Middleware Backends that use the
+QtMqtt module to communicate via the MQTT protocol. The client-side code is generated
+as a QtInterfaceFramework backend plugin using the \l{backend-mqtt-template}{backend_mqtt}
+template.
+
+The generated plugin subscribes to MQTT topics to receive property values and signal
+events, and publishes to topics to set property values and invoke operations. Each
+property, signal, and operation is mapped to a configurable MQTT topic, controlled via
+\l{config_mqtt}{@config_mqtt} annotations in the QFace IDL file or its accompanying
+YAML file.
+
+The generated plugin is loaded and used in the same way as other QtInterfaceFramework
+plugins and is interchangeable with any other backend implementation with the same API.
+
+Unlike the QtRemoteObjects-based templates, the \c backend_mqtt template does not
+generate a corresponding server. The MQTT broker and the server-side implementation
+must be provided separately.
 
 */
