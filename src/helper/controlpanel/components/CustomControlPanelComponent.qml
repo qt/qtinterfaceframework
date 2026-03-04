@@ -9,6 +9,8 @@ import QtQuick
     \ingroup controlpanel-components
     \brief Base type for user-defined property editors in the control panel.
 
+    \techpreview
+
     All custom property UI components must inherit from this base type.
     It provides the standard interface that the simulation control panel
     uses to supply backend context and zone information. Subclasses can

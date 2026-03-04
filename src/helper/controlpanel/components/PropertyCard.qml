@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-components
     \brief A card container that wraps a single property editor.
 
+    \techpreview
+
     PropertyCard displays a header with the property name, an optional
     "Non-Zoned" badge, and a content area loaded from the supplied
     \l content component. It provides a hover highlight effect and

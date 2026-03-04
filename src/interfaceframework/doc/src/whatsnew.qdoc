@@ -9,7 +9,7 @@ There is a separate page to list all \l {New Classes and Functions by Qt Version
 
 \section1 6.11
 
-\note The features listed in this section are in technology preview.
+\techpreview
 
 \list
     \li Introduced the optional \l{Simulation Control Panel} for the backend_simulator template.

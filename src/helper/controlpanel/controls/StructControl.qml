@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-controls
     \brief A collapsible editor for struct-typed properties.
 
+    \techpreview
+
     StructControl displays a clickable header with the struct name and a
     field-count badge. Clicking the header expands or collapses the body,
     which renders each field using \l StructField. It supports nested

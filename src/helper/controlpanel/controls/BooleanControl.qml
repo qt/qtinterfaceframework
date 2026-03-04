@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-controls
     \brief A toggle switch control for editing boolean properties.
 
+    \techpreview
+
     BooleanControl provides a styled Switch with an accompanying status label
     that displays "Enabled" or "Disabled" based on the current state. It is
     used by the simulation control panel for all boolean-typed properties.

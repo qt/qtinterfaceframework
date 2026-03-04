@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-controls
     \brief A numeric spin box control for editing bounded integer properties.
 
+    \techpreview
+
     SpinControl provides a styled SpinBox with increment and decrement
     buttons and optional minimum/maximum labels displayed above the input.
     It is used by the simulation control panel for properties annotated

@@ -11,6 +11,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \inqmlmodule QtInterfaceFramework.ControlPanelHelper
     \brief A text input control for editing string, integer, and real properties.
 
+    \techpreview
+
     TextControl provides a styled text field with built-in input validation
     based on the property type. It is the default control used by the simulation
     control panel for properties that do not have a more specific editor

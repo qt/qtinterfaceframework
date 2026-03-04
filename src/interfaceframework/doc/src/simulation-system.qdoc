@@ -163,6 +163,8 @@ Afterwards you should be able to load your modified simulation files like a regu
 
 \section1 Simulation Control Panel
 
+\techpreview
+
 When developing and testing interfaces, it is useful to inspect and modify
 property values at runtime without writing custom test UIs. The simulation
 control panel provides an automatically generated GUI that displays every

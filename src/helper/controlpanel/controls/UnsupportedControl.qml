@@ -13,6 +13,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \brief A placeholder shown for properties whose type is not yet
     supported by the simulation control panel.
 
+    \techpreview
+
     UnsupportedControl displays a warning icon and a message indicating
     that the property cannot be edited. It is loaded automatically when
     no suitable control exists for a given property type.

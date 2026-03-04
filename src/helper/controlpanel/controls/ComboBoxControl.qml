@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-controls
     \brief A drop-down selector for editing enum and domain-value properties.
 
+    \techpreview
+
     ComboBoxControl provides a styled ComboBox that can operate in two modes:
     enum mode and domain mode. In enum mode (\l isEnumModel set to \c true),
     it expects a ListModel whose elements have \c name and \c value roles.

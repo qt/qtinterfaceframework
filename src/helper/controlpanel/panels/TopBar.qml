@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-panels
     \brief A toolbar displayed above the property list in the control panel.
 
+    \techpreview
+
     TopBar shows the selected interface name, a \l ZoneSelector drop-down
     (for zoned interfaces), a \l SearchField for filtering properties,
     and filter buttons that toggle between all, non-zoned, and zoned
