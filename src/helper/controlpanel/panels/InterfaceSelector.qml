@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-panels
     \brief A sidebar panel that lists and filters available interfaces.
 
+    \techpreview
+
     InterfaceSelector displays all registered interfaces in a scrollable
     list with a search field for filtering by name. Each entry shows a
     zoned/non-zoned icon and the interface name. Selecting an entry emits

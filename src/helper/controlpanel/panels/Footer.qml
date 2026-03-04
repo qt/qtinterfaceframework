@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-panels
     \brief A status bar displayed at the bottom of the control panel.
 
+    \techpreview
+
     Footer shows connection status with an animated indicator, the
     current interface name, the active zone (when applicable), and
     the module name. It gives the user an at-a-glance overview of

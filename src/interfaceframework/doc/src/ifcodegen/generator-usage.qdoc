@@ -581,6 +581,8 @@
     \section3 backend_mqtt
     \target config_mqtt
 
+    \techpreview
+
     \table 100%
         \header
             \li Tag
@@ -1013,6 +1015,8 @@
 
     \section2 MQTT Backend
 
+    \techpreview
+
     The backend_mqtt template is only available if the QtMqtt module was detected when building
     the qtinterfaceframework repository. This backend connects to an MQTT broker and uses
     MQTT topics to synchronize property values, invoke operations, and receive signals.
@@ -1104,6 +1108,8 @@
 
     \section2 MQTT Backend
     \target backend_mqtt_configuration
+
+    \techpreview
 
     \table
     \header

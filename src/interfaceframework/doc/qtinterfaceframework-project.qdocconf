@@ -68,6 +68,7 @@ navigation.qmltypespage = "Qt Interface Framework QML Types"
 buildversion = "Qt Interface Framework $QT_VERSION"
 
 macro.fileLink = "\\l {https://code.qt.io/cgit/qt/interfaceframework.git/tree/\1?h=$QT_VER}{\2}"
+macro.techpreview = "\\note This component is currently in Technology Preview. Its API and behavior may change in future releases."
 
 manifestmeta.filters = interfaceframework
 manifestmeta.interfaceframework.names = *

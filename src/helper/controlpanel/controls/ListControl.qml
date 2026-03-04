@@ -13,6 +13,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \brief An editor for \c {list<type>} properties with add, remove, and
     edit functionality.
 
+    \techpreview
+
     ListControl displays a scrollable list of items with numbered indices.
     It supports primitives (\c int, \c real, \c string, \c bool), enums,
     and structs. Each item is rendered using the appropriate control based

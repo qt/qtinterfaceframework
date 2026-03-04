@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-controls
     \brief A single-field editor row used inside \l StructControl.
 
+    \techpreview
+
     StructField displays a label with the field name and loads the
     appropriate editing control based on \l fieldType. Supported types
     are \c "string", \c "int", \c "real", \c "bool", \c "enum", and

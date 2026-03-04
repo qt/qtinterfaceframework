@@ -13,6 +13,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \brief A styled search input with a magnifying-glass icon and clear
     button.
 
+    \techpreview
+
     SearchField wraps a TextField with a search icon on the left and a
     clear button that appears when text is entered. It is used by
     \l InterfaceSelector and \l TopBar to filter interfaces and

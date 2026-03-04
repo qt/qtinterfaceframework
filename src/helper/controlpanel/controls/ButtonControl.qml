@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-controls
     \brief A reusable styled button with customizable colors.
 
+    \techpreview
+
     ButtonControl provides a standardized button with hover and press
     visual feedback. It inherits from Button, so all standard Button
     properties (such as \c text and \c onClicked) are available.

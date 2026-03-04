@@ -11,6 +11,8 @@ import QtQuick
     \brief A singleton providing helper functions for type conversion
     and default value creation.
 
+    \techpreview
+
     ControlPanelUtils is used internally by the control panel controls
     to parse user input into the correct JavaScript type and to create
     default values when new items are added to lists or models.

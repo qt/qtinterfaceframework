@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-controls
     \brief A slider control for editing bounded numeric properties.
 
+    \techpreview
+
     RangeControl provides a styled Slider with labels that display the
     minimum, current, and maximum values. It is used by the simulation
     control panel for properties annotated with \c {@range} in the
