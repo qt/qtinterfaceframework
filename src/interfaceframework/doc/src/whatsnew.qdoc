@@ -9,6 +9,17 @@ There is a separate page to list all \l {New Classes and Functions by Qt Version
 
 \section1 6.11
 
+\list
+    \li Deprecated \c {qtif_convertFromJSON()} in favor of the new
+        \c {qtif_convertFromVariant()}. The auto-generated \c {fromJSON()} function in
+        struct types is similarly deprecated in favor of \c {fromVariant()}, and a new
+        public \c {toVariant()} function is now available on all generated struct types.
+    \li \l{The IDL Syntax}{QFace} and \l{Template Syntax}{Jinja template} languages now
+        have syntax highlighting, code folding, and selection range support in Qt Creator.
+        Jinja highlighting is aware of the embedded language based on the secondary file
+        extension (e.g. \c {myclass.cpp.jinja} is highlighted as C++ with Jinja directives).
+\endlist
+
 \techpreview
 
 \list
