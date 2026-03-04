@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-components
     \brief A placeholder message shown when a search yields no results.
 
+    \techpreview
+
     NoResultsFound displays a search icon, a title, and a description
     that includes the search query. It is used by \l InterfaceSelector
     and the property list when the user's filter matches nothing. The

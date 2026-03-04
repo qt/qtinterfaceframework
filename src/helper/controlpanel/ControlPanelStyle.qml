@@ -11,6 +11,8 @@ import QtQuick
     \brief A singleton that provides centralized style constants for
     all control panel components.
 
+    \techpreview
+
     ControlPanelStyle defines the color palette, font sizes, spacing
     values, border widths, animation durations, and icon glyphs used
     throughout the simulation control panel. All properties are

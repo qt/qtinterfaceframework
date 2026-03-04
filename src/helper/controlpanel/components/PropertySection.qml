@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-components
     \brief A titled group container for \l {PropertyCard}{PropertyCards}.
 
+    \techpreview
+
     PropertySection provides a section header label followed by its
     child items. It is used to visually separate "NON-ZONED PROPERTIES"
     and "ZONED PROPERTIES" groups inside the control panel. The header

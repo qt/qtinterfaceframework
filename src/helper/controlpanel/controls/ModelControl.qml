@@ -13,6 +13,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \brief An editor for QtInterfaceFramework model properties with add,
     remove, and update operations.
 
+    \techpreview
+
     ModelControl displays a scrollable list of model items with an item
     count badge and an \e Add button. Each item renders its struct fields
     using \l StructField delegates and provides a remove button. Unlike

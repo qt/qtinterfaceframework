@@ -12,6 +12,8 @@ import QtInterfaceFramework.ControlPanelHelper
     \ingroup controlpanel-components
     \brief A drop-down for selecting the active zone in a zoned interface.
 
+    \techpreview
+
     ZoneSelector is a styled ComboBox that lists the available zones
     and emits \l zoneSelected when the user picks a different one. It is
     used by \l TopBar to switch between zones of a zoned interface.

@@ -10,6 +10,8 @@
     \brief Provides reusable QML components for the Qt InterfaceFramework
     simulation control panel.
 
+    \techpreview
+
     The QtInterfaceFramework.ControlPanelHelper module provides a collection of
     reusable QML components for building simulation control panel user interfaces.
     The control panel lets developers inspect and modify interface properties at
