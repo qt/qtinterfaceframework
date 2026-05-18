@@ -148,14 +148,22 @@ QMetaObject QIfSimulationProxyBase::buildObject(const QMetaObject *metaObject, Q
     for (int i=0; i<methodOffset; ++i)
         methodMap.insert(i, i);
 
+    // in the meta-object, signals are placed before other methods
+    // so we need to be careful with the indices
+    // QMetaMethodBuilder::index only returns a vector local index,
+    // which is separate for ctors, signals and other methods (before 6.12: only for ctors and everything else)
+    int signalCount = 0;
+    int otherMethodsCount = 0;
+
     //Add all signals
     qCDebug(qLcIfSimulationEngine) << "Signal Mapping: Original -> Proxy";
     for (int index = methodOffset; index < mo->methodCount(); ++index) {
         QMetaMethod mm = mo->method(index);
         if (mm.methodType() == QMetaMethod::Signal) {
-            auto mb = builder.addMethod(mm);
-            qCDebug(qLcIfSimulationEngine) << index << "->" << methodOffset + mb.index();
-            methodMap.insert(index, methodOffset + mb.index());
+            builder.addMethod(mm);
+            qCDebug(qLcIfSimulationEngine) << index << "->" << methodOffset + signalCount;
+            methodMap.insert(index, methodOffset + signalCount);
+            signalCount++;
         }
     }
 
@@ -164,9 +172,10 @@ QMetaObject QIfSimulationProxyBase::buildObject(const QMetaObject *metaObject, Q
     for (int index = methodOffset; index < mo->methodCount(); ++index) {
         QMetaMethod mm = mo->method(index);
         if (mm.methodType() != QMetaMethod::Signal) {
-            auto mb = builder.addMethod(mm);
-            qCDebug(qLcIfSimulationEngine) << index << "->" << methodOffset + mb.index();
-            methodMap.insert(index, methodOffset + mb.index());
+            builder.addMethod(mm);
+            qCDebug(qLcIfSimulationEngine) << index << "->" << methodOffset + signalCount + otherMethodsCount;
+            methodMap.insert(index, methodOffset + signalCount + otherMethodsCount);
+            ++otherMethodsCount;
         }
     }
 
