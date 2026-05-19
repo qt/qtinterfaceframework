@@ -78,6 +78,8 @@ QT_BEGIN_NAMESPACE
 QIfFeatureInterface::QIfFeatureInterface(QObject *parent)
     : QObject(parent)
 {
+    // A backend can be used without a QIfAbstractFeature, e.g. in a simulation server
+    qRegisterMetaType<QIfAbstractFeature::Error>();
 }
 
 /*!

@@ -27,6 +27,10 @@ public:
     template <typename T> void registerSimulationInstance(T* instance, const char *uri, int versionMajor, int versionMinor, const char *qmlName)
     {
         qtif_private::QIfSimulationProxy<T>::buildMetaObject();
+        // The meta object can't be built when it uses types which are not registered. The reason
+        // is already logged.
+        if (!qtif_private::QIfSimulationProxy<T>::staticMetaObject.d.data)
+            return;
         //pass engine here to check that it's only used in this engine
         qtif_private::QIfSimulationProxy<T>::registerInstance(this, instance);
         qmlRegisterType< qtif_private::QIfSimulationProxy<T> >(uri, versionMajor, versionMinor, qmlName);

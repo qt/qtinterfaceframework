@@ -23,3 +23,22 @@ qt_ifcodegen_extend_target(tst_qface_include
     TEMPLATE test
     IDL_IMPORT_PATH ../../qface\ imports
 )
+
+# Test that cross-module enum types work at runtime with the simulation backend.
+# This exercises the signal forwarding path in QIfSimulationProxy::qt_metacall()
+# which previously caused a stack overflow for cross-module enum parameters.
+qt_internal_add_test(tst_cross_module_simulation
+    SOURCES
+        tst_cross_module_simulation.cpp
+    LIBRARIES
+        include_test_common
+        include_test_frontend
+    WORKING_DIRECTORY
+        ${CMAKE_CURRENT_BINARY_DIR}/../
+    NO_BATCH
+)
+set_target_properties(tst_cross_module_simulation PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../)
+
+set_target_properties(tst_cross_module_simulation PROPERTIES
+    QT_ANDROID_EXTRA_PLUGINS "${CMAKE_CURRENT_BINARY_DIR}/../interfaceframework"
+)

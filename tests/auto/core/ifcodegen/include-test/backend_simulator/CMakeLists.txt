@@ -4,7 +4,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-qt_add_plugin(include_test_simulator)
+qt_add_plugin(include_test_simulator PLUGIN_TYPE interfaceframework)
 set_target_properties(include_test_simulator PROPERTIES LIBRARY_OUTPUT_DIRECTORY ../interfaceframework)
 
 # Interface Framework Generator:

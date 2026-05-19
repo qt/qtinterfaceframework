@@ -21,6 +21,31 @@ Q_LOGGING_CATEGORY(qLcIfRecGuard, "qt.if.simulationengine.recursionguard")
 
 namespace qtif_private {
 
+namespace {
+
+// The proxy looks up the argument types by name. If that doesn't result in the original type,
+// the signals can't be matched in qt_metacall().
+bool checkTypesAreRegistered(const QMetaObject *mo, int methodOffset)
+{
+    bool ok = true;
+    for (int i = methodOffset; i < mo->methodCount(); ++i) {
+        const QMetaMethod mm = mo->method(i);
+        for (int p = 0; p < mm.parameterCount(); ++p) {
+            const QMetaType resolvedType = QMetaType::fromName(mm.parameterTypeName(p));
+            if (resolvedType.isValid() && resolvedType == mm.parameterMetaType(p))
+                continue;
+            qCCritical(qLcIfSimulationEngine, "Cannot create a proxy for %s: The type '%s' used in "
+                       "the signature of '%s' is not registered with QMetaType under this name.",
+                       mo->className(), mm.parameterTypeName(p).constData(),
+                       mm.methodSignature().constData());
+            ok = false;
+        }
+    }
+    return ok;
+}
+
+} // anonymous namespace
+
 QIfSimulationProxyBase::QIfSimulationProxyBase(QMetaObject *staticMetaObject, QObject *instance, const QHash<int, int> &methodMap, QObject *parent)
     : QObject(parent)
     , m_noSimulationEngine(false)
@@ -143,6 +168,9 @@ QMetaObject QIfSimulationProxyBase::buildObject(const QMetaObject *metaObject, Q
     }
     const int methodOffset = superClass->methodCount();
     const int propertyOffset = superClass->propertyCount();
+
+    if (!checkTypesAreRegistered(mo, methodOffset))
+        return QMetaObject();
 
     //Fill the mapping for all QObject methods.
     for (int i=0; i<methodOffset; ++i)
