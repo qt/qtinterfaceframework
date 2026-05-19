@@ -182,6 +182,33 @@ public:
     int m_testProperty = -1;
 };
 
+struct RegisteredType { int value = 0; };
+struct UnregisteredType { int value = 0; };
+
+class RegisteredTypeInSignal : public QObject
+{
+    Q_OBJECT
+
+signals:
+    void signalWithType(const RegisteredType &arg);
+};
+
+class UnregisteredTypeInSignal : public QObject
+{
+    Q_OBJECT
+
+signals:
+    void signalWithType(const UnregisteredType &arg);
+};
+
+class UnregisteredTypeInMethod : public QObject
+{
+    Q_OBJECT
+
+public slots:
+    void methodWithType(const UnregisteredType &) {}
+};
+
 QVariant callTestFunction(QObject* object, const QByteArray &function, QVariantList &expectedValues, const QVariant &returnValue, const QVariant &value1, const QVariant &value2)
 {
     //call the testfunction
@@ -246,6 +273,10 @@ private Q_SLOTS:
     void testCallingBaseFunction();
     void testRecursionPrevention();
     void testMultipleInstances();
+
+    void testRegisteredCustomType();
+    void testUnregisteredTypeInSignal();
+    void testUnregisteredTypeInMethod();
 };
 
 QVariant tst_QIfSimulationEngine::parseJson(const QString &json, QString& error) const
@@ -1021,6 +1052,43 @@ void tst_QIfSimulationEngine::testMultipleInstances()
     QCOMPARE(returnValueSpy.count(), 1);
     QCOMPARE(returnValueSpy.at(0), expectedValues);
 }
+
+template <typename T> static bool registerProxy(T *instance)
+{
+    QIfSimulationEngine engine;
+    engine.registerSimulationInstance<T>(instance, "CustomTypesAPI", 1, 0, T::staticMetaObject.className());
+    return qtif_private::QIfSimulationProxy<T>::staticMetaObject.d.data != nullptr;
+}
+
+static void ignoreUnregisteredTypeWarning(const char *className, const char *typeName)
+{
+    QTest::ignoreMessage(QtCriticalMsg, QRegularExpression(
+        QStringLiteral("Cannot create a proxy for %1: The type '%2' used .* is not registered")
+            .arg(QLatin1String(className), QLatin1String(typeName))));
+}
+
+void tst_QIfSimulationEngine::testRegisteredCustomType()
+{
+    qRegisterMetaType<RegisteredType>("RegisteredType");
+
+    RegisteredTypeInSignal instance;
+    QVERIFY(registerProxy(&instance));
+}
+
+void tst_QIfSimulationEngine::testUnregisteredTypeInSignal()
+{
+    UnregisteredTypeInSignal instance;
+    ignoreUnregisteredTypeWarning("UnregisteredTypeInSignal", "UnregisteredType");
+    QVERIFY(!registerProxy(&instance));
+}
+
+void tst_QIfSimulationEngine::testUnregisteredTypeInMethod()
+{
+    UnregisteredTypeInMethod instance;
+    ignoreUnregisteredTypeWarning("UnregisteredTypeInMethod", "UnregisteredType");
+    QVERIFY(!registerProxy(&instance));
+}
+
 
 QTEST_MAIN(tst_QIfSimulationEngine)
 

@@ -84,6 +84,10 @@
     Q_UNUSED(engine)
     qRegisterMetaType<QQmlPropertyMap*>();
 
+    // The types need to be registered before the model backends are registered as simulation
+    // instances, as the proxy resolves all used types by their name.
+    {{module.module_name|upperfirst}}::registerTypes();
+
 {% for property in interface.properties %}
 {%   if not property.tags.config_simulator or not property.tags.config_simulator.zoned %}
 {%     if property.type.is_model %}
@@ -97,8 +101,6 @@
 {%     endif %}
 {%   endif %}
 {% endfor %}
-
-    {{module.module_name|upperfirst}}::registerTypes();
 }
 
 {{class}}::~{{class}}()

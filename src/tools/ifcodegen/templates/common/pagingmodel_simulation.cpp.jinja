@@ -61,7 +61,7 @@ void {{class}}::fetchData(const QUuid &identifier, int start, int count)
     Q_EMIT dataFetched(identifier, list, start, max <  m_list.count());
 }
 
-void {{class}}::insert(int index, const {{property.type.nested}} &item)
+void {{class}}::insert(int index, const {{property.type.nested|return_type}} &item)
 {
     m_list.insert(index, item);
 
@@ -97,13 +97,13 @@ void {{class}}::reset()
     m_list.clear();
 }
 
-void {{class}}::update(int index, const {{property.type.nested}} &item)
+void {{class}}::update(int index, const {{property.type.nested|return_type}} &item)
 {
     m_list[index] = item;
     Q_EMIT dataChanged(QUuid(), { QVariant::fromValue(item) }, index, 1);
 }
 
-{{property.type.nested}} {{class}}::at(int index) const
+{{property.type.nested|return_type}} {{class}}::at(int index) const
 {
     return m_list.at(index);
 }

@@ -89,7 +89,10 @@ QT_BEGIN_NAMESPACE
 */
 QIfPagingModelInterface::QIfPagingModelInterface(QObject *parent)
     : QIfFeatureInterface(parent)
-{}
+{
+    // A backend can be used without a QIfPagingModel, e.g. in a simulation server
+    QtInterfaceFrameworkModule::registerTypes();
+}
 
 /*!
     \fn void QIfPagingModelInterface::registerInstance(const QUuid &identifier)

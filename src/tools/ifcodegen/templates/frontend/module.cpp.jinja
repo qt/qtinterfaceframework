@@ -101,6 +101,7 @@ void {{class}}::registerTypes()
 {% for enum in module.enums %}
     qRegisterMetaType<{{class}}*>();
     qRegisterMetaType<{{class}}::{{enum|flag_type}}>();
+    qRegisterMetaType<{{class}}::{{enum|flag_type}}>("::{{module.name|replace('.', '::')}}::{{class}}::{{enum|flag_type}}");
     qIfRegisterPendingReplyType<{{class}}::{{enum|flag_type}}>();
 {%   if enum.is_flag %}
     //Workaround for https://bugreports.qt.io/browse/QTBUG-75676
@@ -110,6 +111,7 @@ void {{class}}::registerTypes()
 {% endfor %}
 {% for struct in module.structs %}
     qRegisterMetaType<{{struct}}>();
+    qRegisterMetaType<{{struct}}>("::{{module.name|replace('.', '::')}}::{{struct}}");
     qIfRegisterPendingReplyType<{{struct}}>();
 {% endfor %}
 }
