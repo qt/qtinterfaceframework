@@ -43,7 +43,14 @@ endif()
 if (QT_FEATURE_mqtt AND QT_FEATURE_process)
     internal_add_backend_test(tst_mqtt_backend
         tst_mqtt_backend.cpp
+        mqtttestbase.cpp mqtttestbase.h
     )
+
+    internal_add_backend_test(tst_mqtt_backend_static
+        tst_mqtt_backend_static.cpp
+        mqtttestbase.cpp mqtttestbase.h
+    )
+    target_link_libraries(tst_mqtt_backend_static PRIVATE echo_backend_mqtt_static)
 endif()
 
 add_custom_target(tst_backends_extra_files
