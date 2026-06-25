@@ -57,14 +57,7 @@ public:
         }
 
         setSkippedTests({
-                         {"testZonedInit", "The mqtt_backend doesn't support zones for now!"},
                          {"testReconnect", "We can't test this without stopping the broker"},
-                         {"testZonedClient2Server", "The mqtt_backend doesn't support zones for now!"},
-                         {"testZonedServer2Client", "The mqtt_backend doesn't support zones for now!"},
-                         {"testZonedSlots", "The mqtt_backend doesn't support zones for now!"},
-                         {"testMultipleZonedSlotCalls", "The mqtt_backend doesn't support zones for now!"},
-                         {"testAsyncZonedSlotResults", "The mqtt_backend doesn't support zones for now!"},
-                         {"testZonedSignals", "The mqtt_backend doesn't support zones for now!"},
                          {"testModel", "The mqtt_backend doesn't support models for now!"},
         });
     }

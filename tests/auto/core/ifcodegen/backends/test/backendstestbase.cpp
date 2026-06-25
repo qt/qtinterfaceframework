@@ -895,7 +895,16 @@ void BackendsTestBase::testZonedSlots()
         QSignalSpy comboReplySpy(comboReply.watcher(), &QIfPendingReplyWatcher::replySuccess);
         WAIT_AND_COMPARE(comboReplySpy, 1);
     }
-    QCOMPARE(comboReply.reply(), expectedCompo);
+
+    // reading from JSON doesn't create a invalid QVariant but a nullptr QVariant
+    // we accept this as well and convert it to make the test pass
+    Combo resultCombo = comboReply.reply();
+    if (resultCombo.contactInfo().additionalData().isNull()) {
+        auto contact = resultCombo.contactInfo();
+        contact.setAdditionalData(QVariant());
+        resultCombo.setContactInfo(contact);
+    }
+    QCOMPARE(resultCombo, expectedCompo);
 
     Echomodule::AirflowDirections flagTestValue = Echomodule::Dashboard;
     QIfPendingReply<Echomodule::AirflowDirections> flagMethodReply = zone->flagMethod(flagTestValue);

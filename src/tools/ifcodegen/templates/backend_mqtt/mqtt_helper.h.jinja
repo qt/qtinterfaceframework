@@ -81,6 +81,7 @@ template <typename T> typename std::enable_if_t<QtPrivate::IsSequentialContainer
 
 
 template <> QVariant fromMqttMessage<QVariant>(const QVariant &variant, bool *ok);
+template <> QVariant fromMqttMessage<QVariant>(const QByteArray &message, bool *ok);
 {% for struct in module.structs %}
 template <> {{struct}} fromMqttMessage<{{struct}}>(const QVariant &variant, bool *ok);
 template <> {{struct}} fromMqttMessage<{{struct}}>(const QByteArray &message, bool *ok);
