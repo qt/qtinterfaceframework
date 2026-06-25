@@ -144,6 +144,10 @@ void BackendsTestBase::init()
 {
     CHECK_SKIP();
 
+    // An ambiguous backend discovery (more than one backend implementing the
+    // same interface) means the test isn't set up to load a specific backend.
+    QTest::failOnWarning(QRegularExpression(u"There is more than one backend implementing.*"_s));
+
     QFETCH_GLOBAL(QString, backend);
     QFETCH_GLOBAL(bool, isSimulation);
     QFETCH_GLOBAL(bool, asyncBackendLoading);
