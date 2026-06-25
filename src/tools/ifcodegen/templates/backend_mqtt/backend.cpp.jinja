@@ -7,6 +7,8 @@
 {% set class = '{0}MqttBackend'.format(interface) %}
 {% set zone_class = '{0}MqttZone'.format(interface) %}
 {% set interface_zoned = interface.tags.config and interface.tags.config.zoned %}
+{% set zones_topic = interface|mqtt_zones_topic %}
+{% set static_zones = interface|mqtt_zones %}
 #include "{{class|lower}}.h"
 
 #include <QDebug>
@@ -113,6 +115,18 @@ void {{zone_class}}::checkSync()
     auto zoneObject = new {{zone_class}}(QString(), this);
     m_zoneMap.insert(QString(), zoneObject);
     connect(zoneObject, &{{zone_class}}::syncDone, this, &{{class}}::checkSyncDone);
+{%   if static_zones %}
+    // The zones are configured statically and don't need to be discovered over MQTT
+{%     for zone in static_zones %}
+    {
+        auto staticZone = new {{zone_class}}(u"{{zone}}"_s, this);
+        m_zoneMap.insert(u"{{zone}}"_s, staticZone);
+        connect(staticZone, &{{zone_class}}::syncDone, this, &{{class}}::checkSyncDone);
+        m_zones.append(u"{{zone}}"_s);
+    }
+{%     endfor %}
+    m_zonesReceived = true;
+{%   endif %}
 {% endif %}
 }
 
@@ -316,11 +330,11 @@ bool {{class}}::connectToBroker()
         connect(m_client, &QMqttClient::stateChanged, this, [this](QMqttClient::ClientState state){
             if (state == QMqttClient::Connected) {
                 qCInfo(qLcMqtt{{interface}}) << "Connected to" << m_url.toString(QUrl::PrettyDecoded | QUrl::RemovePassword);
-{% if interface_zoned %}
+{% if interface_zoned and not static_zones %}
                 // Discover the available zones for this interface
-                auto subAvailableZones = m_client->subscribe(mqttTopic(u"availableZones"_s, true), 0);
+                auto subAvailableZones = m_client->subscribe(mqttTopic(u"{{zones_topic}}"_s, true), 0);
                 connect(subAvailableZones, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
-                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for availableZones changed to" << state;
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for {{zones_topic}} changed to" << state;
                 });
 {% endif %}
 {% for property in interface.properties if not property.type.is_model %}
@@ -460,9 +474,9 @@ void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicNam
 {
     qCDebug(qLcMqtt{{interface}}) << "Received message on topic" << topic.name() << "with payload" << message;
 
-{% if interface_zoned %}
+{% if interface_zoned and not static_zones %}
     // Zone discovery: a JSON array of zone names published on a dedicated topic
-    if (topic == mqttTopic(u"availableZones"_s, true)) {
+    if (topic == mqttTopic(u"{{zones_topic}}"_s, true)) {
         QJsonParseError error;
         const QJsonDocument doc = QJsonDocument::fromJson(message, &error);
         if (error.error != QJsonParseError::NoError || !doc.isArray()) {

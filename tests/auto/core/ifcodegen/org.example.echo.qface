@@ -153,3 +153,13 @@ struct AnotherStruct {
 struct OnlyAStringInAStruct {
     string myString;
 }
+
+// A zoned interface whose zones are configured statically (mqtt backend) instead
+// of being discovered over MQTT. The properties are optional so the backend
+// initializes without a server publishing values.
+@config: {id: "org.foo.idzs.1.0", zoned: true}
+@config_mqtt: { zones: ["FrontLeft", "Rear"], mandatory: false }
+interface EchoZonedStatic {
+    int intValue;
+    string stringValue;
+}

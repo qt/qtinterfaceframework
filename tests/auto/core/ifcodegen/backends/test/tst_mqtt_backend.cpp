@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
 
 #include "backendstestbase.h"
+#include "echozonedstatic.h"
 
 using namespace Qt::StringLiterals;
 
@@ -94,6 +95,29 @@ private slots:
 
         QTest::newRow("mqtt-backend") << "*echo_backend_mqtt*" << false << false <<  currentDir.absoluteFilePath(u"org-example-echo-mqtt-server"_s + exeSuffix);
         QTest::newRow("mqtt-backend asyncBackendLoading") << "*echo_backend_mqtt*" << false << true << currentDir.absoluteFilePath(u"org-example-echo-mqtt-server"_s + exeSuffix);
+    }
+
+    // Verifies a zoned interface whose zones are configured statically via the
+    // 'zones' annotation, instead of being discovered over MQTT. The properties
+    // are non-mandatory, so the backend initializes without a server.
+    void testStaticZones()
+    {
+        CHECK_SKIP();
+
+        EchoZonedStatic client;
+        client.setAsynchronousBackendLoading(m_asyncBackendLoading);
+        QSignalSpy initSpy(&client, &QIfAbstractFeature::isInitializedChanged);
+        QSignalSpy availableZonesSpy(&client, &EchoZonedStatic::availableZonesChanged);
+        QVERIFY(initSpy.isValid());
+        client.startAutoDiscovery();
+
+        WAIT_AND_COMPARE(initSpy, 1);
+        QVERIFY(client.isInitialized());
+
+        QVERIFY(availableZonesSpy.count() >= 1);
+        QCOMPARE(client.availableZones(), QStringList({ u"FrontLeft"_s, u"Rear"_s }));
+        QVERIFY(qobject_cast<EchoZonedStatic*>(client.zoneAt(u"FrontLeft"_s)));
+        QVERIFY(qobject_cast<EchoZonedStatic*>(client.zoneAt(u"Rear"_s)));
     }
 
 private:
