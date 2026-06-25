@@ -95,11 +95,14 @@ def mqtt_mandatory(symbol):
 
 def mqtt_topic_prefix(symbol):
     """
-    Returns the mqtt topic prefix for a given symbol as QString;
+    Returns the mqtt topic prefix for a given symbol as QString.
+
+    Defaults to the interface name; use an empty 'topic_prefix' annotation to
+    publish to the broker's root.
     """
     prefix = annotation(symbol, 'config_mqtt', 'topic_prefix', None)
     if prefix is None:
-        return 'QString()'
+        prefix = symbol.name
     return 'u"{0}"_s'.format(prefix)
 
 def mqtt_reset_on_error(symbol):
