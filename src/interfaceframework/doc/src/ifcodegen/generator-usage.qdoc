@@ -637,8 +637,9 @@
             \li Accompanying YAML file
             \li Module, Interface, Property, Operation, Signal
             \li Defines a topic prefix that is prepended to the MQTT topic of all
-                symbols in this scope. Has no effect when \c use_topic_prefix is
-                \c false for a given symbol.
+                symbols in this scope. Defaults to the interface name; set it to an
+                empty string to publish to the broker's root.
+                Has no effect when \c use_topic_prefix is \c false for a given symbol.
                 If defined on a module or interface, it applies to all symbols
                 within that scope, but it can be overridden for individual symbols.
         \row
