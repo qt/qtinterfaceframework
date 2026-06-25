@@ -1,0 +1,3 @@
+org.example.echomodule:
+    config_mqtt:
+        serviceObjectId: "org.example.echomodule_mqtt_static"
