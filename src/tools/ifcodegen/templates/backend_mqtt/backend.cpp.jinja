@@ -14,6 +14,8 @@
 #include <QTimer>
 #include <QLoggingCategory>
 #include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 
 #include "{{module.module_name|lower}}.h"
 {% for struct in module.structs %}
@@ -27,20 +29,91 @@ Q_LOGGING_CATEGORY(qLcMqtt{{interface}}, "{{module|qml_type|lower}}.{{interface|
 
 {{ module|begin_namespace }}
 
+{% if interface_zoned %}
+{{zone_class}}::{{zone_class}}(const QString &zone, {{class}} *parent)
+    : QObject(parent)
+    , m_parent(parent)
+    , m_zone(zone)
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+    , m_{{ property }}({{property|default_type_value}})
+{%   endif %}
+{% endfor %}
+{
+{% for property in interface.properties %}
+{%   if not property.is_model and property|mqtt_mandatory %}
+    m_propertiesToSync.append(u"{{property}}"_s);
+{%   endif %}
+{% endfor %}
+}
+
+bool {{zone_class}}::isSyncing() const
+{
+    return !m_propertiesToSync.isEmpty();
+}
+
+QStringList {{zone_class}}::propertiesToSync() const
+{
+    return m_propertiesToSync;
+}
+
+void {{zone_class}}::emitCurrentState()
+{
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+    Q_EMIT m_parent->{{property}}Changed(m_{{property}}, m_zone);
+{%   endif %}
+{% endfor %}
+}
+
+void {{zone_class}}::checkSync()
+{
+    if (m_propertiesToSync.isEmpty())
+        Q_EMIT syncDone();
+}
+
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+{{qtif.prop_setter(property, zone_class)}}
+{
+    m_{{property}} = {{property}};
+
+    if (isSyncing()) {
+        // During the initial sync the values are collected silently and emitted
+        // together once the whole zone is synced (see emitCurrentState()).
+        m_propertiesToSync.removeAll(u"{{property}}"_s);
+        checkSync();
+    } else {
+        Q_EMIT m_parent->{{property}}Changed({{property}}, m_zone);
+    }
+}
+
+{%   endif %}
+{% endfor %}
+{% endif %}
+
 {{class}}::{{class}}(const QString &topicPrefix, QObject *parent)
     : {{interface}}BackendInterface(parent)
     , m_client(nullptr)
     , m_topicPrefix(topicPrefix)
+{% if not interface_zoned %}
 {% for property in interface.properties %}
 {%   if not property.type.is_model %}
     , m_{{ property }}({{property|default_type_value}})
 {%   endif %}
 {% endfor %}
+{% endif %}
 {
     {{module.module_name|upperfirst}}::registerTypes();
 
     if (m_topicPrefix.isEmpty() || m_topicPrefix.back() != u'/')
         m_topicPrefix.append(u'/');
+
+{% if interface_zoned %}
+    auto zoneObject = new {{zone_class}}(QString(), this);
+    m_zoneMap.insert(QString(), zoneObject);
+    connect(zoneObject, &{{zone_class}}::syncDone, this, &{{class}}::checkSyncDone);
+{% endif %}
 }
 
 {{class}}::~{{class}}()
@@ -84,14 +157,13 @@ void {{class}}::updateServiceSettings(const QVariantMap &settings)
 {
     if (m_client->state() != QMqttClient::Connected)
         return;
-{%     if interface_zoned %}
-    Q_UNUSED(zone)
-    Q_UNUSED({{property}})
-    qCritical() << "Zone support is not implemented yet!";
-{%     else %}
     bool retain = {{"true" if property|mqtt_retain else "false" }};
     bool useTopicPrefix = {{"true" if property|mqtt_use_topic_prefix else "false" }};
+{%     if interface_zoned %}
+    auto topic = mqttTopic(zonedSymbol(u"{{property|mqtt_topic}}"_s, zone), useTopicPrefix);
+{%     else %}
     auto topic = mqttTopic(u"{{property|mqtt_topic}}"_s, useTopicPrefix);
+{%     endif %}
     quint8 qos = {{property|mqtt_qos}};
 {%      if property.type.is_list and not property.type.nested.is_var %}
     // Remove this special case again once we use QList<type> directly instead of QVariantList
@@ -110,7 +182,6 @@ void {{class}}::updateServiceSettings(const QVariantMap &settings)
 {%      endif %}
     qCDebug(qLcMqtt{{interface}}) << "publish {{property}} using topic: " << topic << {{property}} << "retain:" << retain;
     m_client->publish(topic, value, qos, retain);
-{%     endif %}
 }
 
 {%     endif %}
@@ -120,7 +191,7 @@ void {{class}}::updateServiceSettings(const QVariantMap &settings)
 {% if interface_zoned %}
 QStringList {{class}}::availableZones() const
 {
-    return {};
+    return m_zones;
 }
 {% endif %}
 
@@ -245,17 +316,37 @@ bool {{class}}::connectToBroker()
         connect(m_client, &QMqttClient::stateChanged, this, [this](QMqttClient::ClientState state){
             if (state == QMqttClient::Connected) {
                 qCInfo(qLcMqtt{{interface}}) << "Connected to" << m_url.toString(QUrl::PrettyDecoded | QUrl::RemovePassword);
+{% if interface_zoned %}
+                // Discover the available zones for this interface
+                auto subAvailableZones = m_client->subscribe(mqttTopic(u"availableZones"_s, true), 0);
+                connect(subAvailableZones, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for availableZones changed to" << state;
+                });
+{% endif %}
 {% for property in interface.properties if not property.type.is_model %}
                 auto sub{{property}} = m_client->subscribe(mqttTopic(u"{{property|mqtt_topic}}"_s, {{"true" if property|mqtt_use_topic_prefix else "false" }}), {{property|mqtt_qos}});
                 connect(sub{{property}}, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
                     qCDebug(qLcMqtt{{interface}}) << "Subscription state for property {{property}} changed to" << state;
                 });
+{%   if interface_zoned %}
+                // The named zones use a leading topic level: <prefix><zone>/<symbol>
+                auto sub{{property}}Zoned = m_client->subscribe(mqttTopic(u"+/{{property|mqtt_topic}}"_s, {{"true" if property|mqtt_use_topic_prefix else "false" }}), {{property|mqtt_qos}});
+                connect(sub{{property}}Zoned, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for zoned property {{property}} changed to" << state;
+                });
+{%   endif %}
 {% endfor %}
 {% for signal in interface.signals %}
                 auto sub{{signal}} = m_client->subscribe(mqttTopic(u"{{signal|mqtt_topic}}"_s, {{"true" if signal|mqtt_use_topic_prefix else "false" }}), {{signal|mqtt_qos}});
                 connect(sub{{signal}}, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
                     qCDebug(qLcMqtt{{interface}}) << "Subscription state for signal {{signal}} changed to" << state;
                 });
+{%   if interface_zoned %}
+                auto sub{{signal}}Zoned = m_client->subscribe(mqttTopic(u"+/{{signal|mqtt_topic}}"_s, {{"true" if signal|mqtt_use_topic_prefix else "false" }}), {{signal|mqtt_qos}});
+                connect(sub{{signal}}Zoned, &QMqttSubscription::stateChanged, this, [](QMqttSubscription::SubscriptionState state){
+                    qCDebug(qLcMqtt{{interface}}) << "Subscription state for zoned signal {{signal}} changed to" << state;
+                });
+{%   endif %}
 {% endfor %}
 {% for operation in interface.operations %}
                 auto sub{{operation}} = m_client->subscribe(mqttTopic(u"{{operation|mqtt_topic}}"_s, {{"true" if operation|mqtt_use_topic_prefix else "false" }}), {{operation|mqtt_qos}});
@@ -277,11 +368,13 @@ bool {{class}}::connectToBroker()
         });
         connect(m_client, &QMqttClient::messageReceived, this, &{{class}}::onMessageReceived);
 
+{% if not interface_zoned %}
 {% for property in interface.properties %}
 {%   if not property.type.is_model and property|mqtt_mandatory%}
         m_propertiesToSync.append(u"{{property}}"_s);
 {%   endif %}
 {% endfor %}
+{% endif %}
         m_client->connectToHost();
 
         static const int defaultTimeout = 3000;
@@ -299,10 +392,26 @@ bool {{class}}::connectToBroker()
 
         if (connectionTimeout != -1) {
             QTimer::singleShot(connectionTimeout, this, [this](){
+{% if interface_zoned %}
+                if (m_synced)
+                    return;
+
+                qCWarning(qLcMqtt{{interface}}) << "{{interface.qualified_name}} wasn't initialized within the timeout period.";
+                if (!m_zonesReceived)
+                    qCWarning(qLcMqtt{{interface}}) << "The list of available zones wasn't received yet.";
+                for (auto it = m_zoneMap.cbegin(); it != m_zoneMap.cend(); ++it) {
+                    if (!it.value()->isSyncing())
+                        continue;
+                    const QString zone = it.key().isEmpty() ? u"<default>"_s : it.key();
+                    qCWarning(qLcMqtt{{interface}}).noquote() << "Couldn't retrieve any value for the following properties in zone"
+                                                              << zone << ":" << it.value()->propertiesToSync().join(", ");
+                }
+{% else %}
                 if (!m_propertiesToSync.isEmpty()) {
                     qCWarning(qLcMqtt{{interface}}) << "{{interface.qualified_name}} wasn't initialized within the timeout period.";
                     qCWarning(qLcMqtt{{interface}}).noquote() << "Couldn't retrieve any value for the following properties:" << m_propertiesToSync.join(", ");
                 }
+{% endif %}
             });
         }
     }
@@ -316,20 +425,91 @@ QString {{class}}::mqttTopic(const QString &topic, bool usePrefix) const
     return topic;
 }
 
+{% if interface_zoned %}
+QString {{class}}::zonedSymbol(const QString &symbol, const QString &zone) const
+{
+    // The default zone (empty) keeps the flat topic, named zones get a leading level
+    if (zone.isEmpty())
+        return symbol;
+    return zone + u"/"_s + symbol;
+}
+
+std::optional<QString> {{class}}::matchZonedTopic(const QMqttTopicName &topic, const QString &symbol, bool usePrefix) const
+{
+    const QString prefix = usePrefix ? m_topicPrefix : QString();
+    const QString name = topic.name();
+    if (!name.startsWith(prefix))
+        return std::nullopt;
+
+    const QString rest = name.sliced(prefix.length());
+    if (rest == symbol)
+        return QString();
+
+    const QString suffix = u"/"_s + symbol;
+    if (rest.endsWith(suffix)) {
+        const QString candidate = rest.chopped(suffix.length());
+        // Only a single topic level is allowed for the zone
+        if (!candidate.isEmpty() && !candidate.contains(u'/'))
+            return candidate;
+    }
+    return std::nullopt;
+}
+{% endif %}
+
 void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicName &topic)
 {
     qCDebug(qLcMqtt{{interface}}) << "Received message on topic" << topic.name() << "with payload" << message;
 
+{% if interface_zoned %}
+    // Zone discovery: a JSON array of zone names published on a dedicated topic
+    if (topic == mqttTopic(u"availableZones"_s, true)) {
+        QJsonParseError error;
+        const QJsonDocument doc = QJsonDocument::fromJson(message, &error);
+        if (error.error != QJsonParseError::NoError || !doc.isArray()) {
+            qCWarning(qLcMqtt{{interface}}) << "Received invalid JSON for availableZones:" << message;
+            return;
+        }
+
+        QStringList zones;
+        const QJsonArray array = doc.array();
+        for (const auto &value : array)
+            zones.append(value.toString());
+
+        for (const QString &zone : std::as_const(zones)) {
+            if (zone.isEmpty() || m_zoneMap.contains(zone))
+                continue;
+            auto zoneObject = new {{zone_class}}(zone, this);
+            m_zoneMap.insert(zone, zoneObject);
+            connect(zoneObject, &{{zone_class}}::syncDone, this, &{{class}}::checkSyncDone);
+        }
+
+        m_zones = zones;
+        m_zonesReceived = true;
+        Q_EMIT availableZonesChanged(m_zones);
+        checkSyncDone();
+        return;
+    }
+{% endif %}
+
 {% for property in interface.properties if not property.type.is_model %}
+{%   if interface_zoned %}
+    if (const auto matchedZone = matchZonedTopic(topic, u"{{property|mqtt_topic}}"_s, {{"true" if property|mqtt_use_topic_prefix else "false" }})) {
+        const QString zone = *matchedZone;
+{%   else %}
     if (topic == mqttTopic(u"{{property|mqtt_topic}}"_s, {{"true" if property|mqtt_use_topic_prefix else "false" }})) {
+{%   endif %}
 {%   if property | mqtt_clear_on_change %}
         // Clear the value after change
         qCDebug(qLcMqtt{{interface}}) << "Clearing value after change ";
         bool retain = {{"true" if property|mqtt_retain else "false" }};
         bool useTopicPrefix = {{"true" if property|mqtt_use_topic_prefix else "false" }};
-        auto topic = mqttTopic(u"{{property|mqtt_topic}}"_s, useTopicPrefix);
+{%     if interface_zoned %}
+        auto clearTopic = mqttTopic(zonedSymbol(u"{{property|mqtt_topic}}"_s, zone), useTopicPrefix);
+{%     else %}
+        auto clearTopic = mqttTopic(u"{{property|mqtt_topic}}"_s, useTopicPrefix);
+{%     endif %}
         quint8 qos = {{property|mqtt_qos}};
-        m_client->publish(topic, QByteArray(), qos, retain);
+        m_client->publish(clearTopic, QByteArray(), qos, retain);
 {%   endif %}
 
 {%   if property.type.is_list and not property.type.nested.is_var %}
@@ -340,9 +520,9 @@ void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicNam
         bool ok = false;
         {{property_type}} value = fromMqttMessage<{{property_type}}>(message, &ok);
         if (!ok) {
-            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert topic" << topic << "to correct type: {{property_type}}";
+            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert topic" << topic.name() << "to correct type: {{property_type}}";
             qCWarning(qLcMqtt{{interface}}) << "Message received: " << message;
-{%   if property | mqtt_reset_on_error %}
+{%   if property | mqtt_reset_on_error and not interface_zoned %}
             // Reset to current value
             qCWarning(qLcMqtt{{interface}}) << "Resetting value to: " << m_{{property}};
             set{{property|upperfirst}}(m_{{property}});
@@ -354,13 +534,13 @@ void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicNam
         for (const auto &val: std::as_const(value))
             converted.append(QVariant::fromValue(val));
 {%     if interface_zoned %}
-        on{{property|upperfirst}}Changed(converted, QString());
+        on{{property|upperfirst}}Changed(converted, zone);
 {%     else %}
         on{{property|upperfirst}}Changed(converted);
 {%     endif %}
 {%   else %}
 {%     if interface_zoned %}
-        on{{property|upperfirst}}Changed(value, QString());
+        on{{property|upperfirst}}Changed(value, zone);
 {%     else %}
         on{{property|upperfirst}}Changed(value);
 {%     endif %}
@@ -370,15 +550,24 @@ void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicNam
 {% endfor %}
     // signal handling
 {% for signal in interface.signals %}
+{%   if interface_zoned %}
+    if (const auto matchedZone = matchZonedTopic(topic, u"{{signal|mqtt_topic}}"_s, {{"true" if signal|mqtt_use_topic_prefix else "false" }})) {
+        const QString zone = *matchedZone;
+{%   else %}
     if (topic == mqttTopic(u"{{signal|mqtt_topic}}"_s, {{"true" if signal|mqtt_use_topic_prefix else "false" }})) {
+{%   endif %}
 {%   if signal | mqtt_clear_on_change %}
         // Clear the value after change
         qCDebug(qLcMqtt{{interface}}) << "Clearing value after change ";
         bool retain = {{"true" if signal|mqtt_retain else "false" }};
         bool useTopicPrefix = {{"true" if signal|mqtt_use_topic_prefix else "false" }};
-        auto topic = mqttTopic(u"{{signal|mqtt_topic}}"_s, useTopicPrefix);
+{%     if interface_zoned %}
+        auto clearTopic = mqttTopic(zonedSymbol(u"{{signal|mqtt_topic}}"_s, zone), useTopicPrefix);
+{%     else %}
+        auto clearTopic = mqttTopic(u"{{signal|mqtt_topic}}"_s, useTopicPrefix);
+{%     endif %}
         quint8 qos = {{signal|mqtt_qos}};
-        m_client->publish(topic, QByteArray(), qos, retain);
+        m_client->publish(clearTopic, QByteArray(), qos, retain);
 {%   endif %}
 {%   if signal.parameters|length > 1 %}
         QJsonParseError error;
@@ -405,24 +594,28 @@ void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicNam
             return;
         }
 {%     endfor %}
+{%     if interface_zoned %}
+        Q_EMIT {{signal}}({%for param in signal.parameters%}{{param}}Value, {% endfor %}zone);
+{%     else %}
         Q_EMIT {{signal}}({%for param in signal.parameters%}{{param}}Value{% if not loop.last %}, {% endif %}{% endfor %});
+{%     endif %}
 {%   elif signal.parameters|length == 1 %}
 {%      set signal_param = signal.parameters|first %}
         bool ok = false;
         {{signal_param.type|return_type}} value = fromMqttMessage<{{signal_param.type|return_type}}>(message, &ok);
         if (!ok) {
-            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert topic" << topic << "to correct type: {{signal_param.type|return_type}}";
+            qCWarning(qLcMqtt{{interface}}) << "Couldn't convert topic" << topic.name() << "to correct type: {{signal_param.type|return_type}}";
             qCWarning(qLcMqtt{{interface}}) << "Message received: " << message;
             return;
         }
 {%     if interface_zoned %}
-        Q_EMIT {{signal}}(value, QString());
+        Q_EMIT {{signal}}(value, zone);
 {%     else %}
         Q_EMIT {{signal}}(value);
 {%     endif %}
 {%   else %}
 {%     if interface_zoned %}
-        Q_EMIT {{signal}}(QString());
+        Q_EMIT {{signal}}(zone);
 {%     else %}
         Q_EMIT {{signal}}();
 {%     endif %}
@@ -456,18 +649,23 @@ void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicNam
 {{qtif.on_prop_changed(property, zoned=interface_zoned, class=class)}}
 {
 {%     if interface_zoned %}
-    // TODO Add support for zones
-    Q_UNUSED(zone)
-    qCritical() << "Zone support is not implemented yet!";
-{%     endif %}
+    auto zoneObject = m_zoneMap.value(zone);
+    if (!zoneObject) {
+        qCWarning(qLcMqtt{{interface}}) << "Got a changed signal for property {{property}} for an unknown zone:" << zone;
+        return;
+    }
+    qCDebug(qLcMqtt{{interface}}) << "Received value for property {{property}} in zone" << zone;
+    zoneObject->set{{property|upperfirst}}({{property}});
+{%     else %}
     m_{{property}} = {{property}};
     emit {{property}}Changed({{property}});
 
-{%     if property|mqtt_mandatory %}
+{%       if property|mqtt_mandatory %}
     qCDebug(qLcMqtt{{interface}}) << "Received value for mandatory property {{property}}";
     qCDebug(qLcMqtt{{interface}}).noquote() << "Mandatory properties left until initialized:" << m_propertiesToSync.join(", ");
     m_propertiesToSync.removeAll(u"{{property}}"_s);
     checkSyncDone();
+{%       endif %}
 {%     endif %}
 }
 {%   endif %}
@@ -476,6 +674,26 @@ void {{class}}::onMessageReceived(const QByteArray &message, const QMqttTopicNam
 
 void {{class}}::checkSyncDone()
 {
+{% if interface_zoned %}
+    if (!m_zonesReceived)
+        return;
+
+    for (auto zoneObject : std::as_const(m_zoneMap)) {
+        if (zoneObject->isSyncing())
+            return;
+    }
+
+    // This is called again whenever a zone feature attaches to the backend, so
+    // only log once but keep (re)emitting the state for the newly attached one.
+    if (!m_synced) {
+        m_synced = true;
+        qCDebug(qLcMqtt{{interface}}) << "All zones initialized";
+    }
+
+    for (auto zoneObject : std::as_const(m_zoneMap))
+        zoneObject->emitCurrentState();
+    Q_EMIT initializationDone();
+{% else %}
     if (!m_propertiesToSync.isEmpty())
         return;
 
@@ -487,6 +705,7 @@ void {{class}}::checkSyncDone()
 {%     endif %}
 {%   endfor %}
     Q_EMIT initializationDone();
+{% endif %}
 }
 
 {{ module|end_namespace }}

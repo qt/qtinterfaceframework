@@ -14,6 +14,8 @@ target_sources(org-example-echo-mqtt-server
         main.cpp
         echoservice.h
         echoservice.cpp
+        echozonedservice.h
+        echozonedservice.cpp
 )
 
 target_link_libraries(org-example-echo-mqtt-server

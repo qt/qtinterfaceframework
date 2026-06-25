@@ -33,6 +33,15 @@ template <> QVariant fromMqttMessage<QVariant>(const QVariant &variant, bool *ok
     return variant;
 }
 
+template <> QVariant fromMqttMessage<QVariant>(const QByteArray &message, bool *ok)
+{
+    // 'var' values are transported as their textual representation over MQTT,
+    // so decode them as a string instead of an opaque byte array.
+    if (ok)
+        *ok = true;
+    return QVariant(QString::fromUtf8(message));
+}
+
 {% for struct in module.structs %}
 template <> {{struct}} fromMqttMessage<{{struct}}>(const QVariant &variant, bool *ok)
 {

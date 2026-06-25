@@ -13,6 +13,8 @@
 
 #include <QMqttClient>
 #include <QBitArray>
+
+#include <optional>
 {% if module.tags.config.module %}
 #include <{{module.tags.config.module}}/{{interface}}BackendInterface>
 {% else %}
@@ -22,6 +24,44 @@
 using namespace Qt::StringLiterals;
 
 {{ module|begin_namespace }}
+
+{% if interface_zoned %}
+class {{class}};
+
+class {{zone_class}} : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit {{zone_class}}(const QString &zone, {{class}} *parent = nullptr);
+
+    bool isSyncing() const;
+    QStringList propertiesToSync() const;
+    void emitCurrentState();
+
+public Q_SLOTS:
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+    {{qtif.prop_setter(property)}};
+{%   endif %}
+{% endfor %}
+
+Q_SIGNALS:
+    void syncDone();
+
+private:
+    void checkSync();
+
+    {{class}} *m_parent;
+    QString m_zone;
+{% for property in interface.properties %}
+{%   if not property.is_model %}
+    {{ property|return_type }} m_{{ property }};
+{%   endif %}
+{% endfor %}
+    QStringList m_propertiesToSync;
+};
+{% endif %}
 
 class {{class}} : public {{interface}}BackendInterface
 {
@@ -65,18 +105,31 @@ protected:
     bool connectToBroker();
     QString mqttTopic(const QString &topic, bool usePrefix) const;
     void checkSyncDone();
+{% if interface_zoned %}
+    QString zonedSymbol(const QString &symbol, const QString &zone) const;
+    std::optional<QString> matchZonedTopic(const QMqttTopicName &topic, const QString &symbol, bool usePrefix) const;
+{% endif %}
 
     QMqttClient *m_client = nullptr;
     QUrl m_url;
     QString m_topicPrefix;
     QHash<QString, std::function<void (const QByteArray &)> > m_pendingReplies;
     QVariantMap m_serviceSettings;
+{% if interface_zoned %}
+    bool m_zonesReceived = false;
+    bool m_synced = false;
+    QHash<QString, {{zone_class}}*> m_zoneMap;
+    QStringList m_zones;
+
+    friend class {{zone_class}};
+{% else %}
 {% for property in interface.properties %}
 {%     if not property.type.is_model %}
     {{ property|return_type }} m_{{ property }};
 {%     endif %}
 {% endfor %}
     QStringList m_propertiesToSync;
+{% endif %}
 };
 
 {{ module|end_namespace }}
