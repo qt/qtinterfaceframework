@@ -130,6 +130,20 @@ def mqtt_default_client_id(symbol):
     """
     return annotation(symbol, 'config_mqtt', 'default_client_id', None, AnnotationScope.MODULE)
 
+def mqtt_zones_topic(symbol):
+    """
+    Returns the topic used to discover the zones of a zoned interface.
+    Defaults to 'availableZones'.
+    """
+    return annotation(symbol, 'config_mqtt', 'zones_topic', 'availableZones')
+
+def mqtt_zones(symbol):
+    """
+    Returns the statically configured list of zones for a zoned interface, or
+    None when the zones are discovered dynamically over MQTT.
+    """
+    return annotation(symbol, 'config_mqtt', 'zones', None)
+
 filters['mqtt_topic'] = mqtt_topic
 filters['mqtt_result_topic'] = mqtt_result_topic
 filters['mqtt_use_topic_prefix'] = mqtt_use_topic_prefix
@@ -141,3 +155,5 @@ filters['mqtt_reset_on_error'] = mqtt_reset_on_error
 filters['mqtt_clear_on_change'] = mqtt_clear_on_change
 filters['mqtt_default_server'] = mqtt_default_server
 filters['mqtt_default_client_id'] = mqtt_default_client_id
+filters['mqtt_zones_topic'] = mqtt_zones_topic
+filters['mqtt_zones'] = mqtt_zones

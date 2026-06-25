@@ -719,6 +719,26 @@
                 Defaults to \c false.
                 If defined on a module or interface, it applies to all symbols
                 within that scope, but it can be overridden for individual symbols.
+        \row
+            \li
+            \code
+            config_mqtt:
+                zones_topic: "zones"
+            \endcode
+            \li Accompanying YAML file
+            \li Interface
+            \li Defines the topic a zoned interface subscribes to in order to discover
+                its zones. Defaults to \c availableZones.
+        \row
+            \li
+            \code
+            config_mqtt:
+                zones: ["FrontLeft", "FrontRight"]
+            \endcode
+            \li Accompanying YAML file
+            \li Interface
+            \li Configures the zones of a zoned interface statically, instead of
+                discovering them over MQTT via the \c zones_topic.
     \endtable
 
     \section1 Structure for Generated Projects
