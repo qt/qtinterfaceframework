@@ -88,3 +88,8 @@ instructions:
       instructions:
         - !include "{{qt/qtbase}}/coin_module_test_template_v3.yaml"
         - !include "{{qt/qtbase}}/coin_module_test_docs.yaml"
+      # Nuitka doesn't support cross-compilation. We can't build tests on the cross-compile target when qface is not installed directly.
+      disable_if:
+        condition: property
+        property: features
+        contains_value: BuildTestsInTest
