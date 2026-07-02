@@ -1,0 +1,71 @@
+// Copyright (C) 2026 The Qt Company Ltd.
+// SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GFDL-1.3-no-invariants-only
+
+/*!
+    \example interfaceframework/smartplug
+    \meta tag {ifcodegen, qface-annotations, mqtt}
+    \title Qt Interface Framework - Smart Plug (MQTT)
+    \ingroup qtinterfaceframework-examples
+    \brief Controlling a smart plug over MQTT and selecting the broker at runtime.
+
+    \image smartplug.png
+
+    This example shows how to use the \l{QtInterfaceFramework}{Qt Interface Framework}
+    with the \l{backend-mqtt-template}{backend_mqtt} template to talk to a smart plug over
+    MQTT. The application can switch the plug on and off and displays its power metering
+    (voltage, current and accumulated energy). It also lets the user choose which MQTT
+    broker to connect to at runtime.
+
+    \section1 The interface
+
+    The plug is described by a single QFace interface. The writable \c on property switches
+    the relay, while \c current, \c voltage and \c energy are read-only measurements. The
+    \c config_mqtt annotation maps every property to a topic below the \c smartplug prefix
+    (for example \c smartplug/on) and marks them optional, so the backend reports
+    itself as initialized as soon as it is connected - even before the device has published
+    anything.
+
+    \quotefile interfaceframework/smartplug/example-smartplug.qface
+
+    From this interface the \l{ifcodegen}{ifcodegen} generates a QML frontend module and,
+    with the \c backend_mqtt template, an MQTT backend plugin:
+
+    \quotefromfile interfaceframework/smartplug/CMakeLists.txt
+    \skipto qt_ifcodegen_add_qml_module
+    \printuntil )
+    \skipto qt_ifcodegen_add_plugin
+    \printuntil )
+
+    \section1 Using the plug in QML
+
+    The generated \c SmartPlug type is used like any other Interface Framework feature.
+    Binding to its properties drives the UI, and assigning to \c on publishes the command:
+
+    \snippet interfaceframework/smartplug/Main.qml feature
+
+    \section1 Choosing the broker
+
+    The broker is not hard-coded. An \l InterfaceFrameworkConfiguration item provides the
+    \c connectionUrl service setting for the module; changing it at runtime makes the MQTT
+    backend reconnect to the new broker:
+
+    \snippet interfaceframework/smartplug/Main.qml configuration
+
+    The \c BrokerBar component lets the user pick a preset or type a custom URL and feeds
+    the result back into that configuration.
+
+    \section1 Running the example
+
+    The application is only the MQTT \e client. To see it do something you need a broker and
+    a device publishing the plug's data:
+
+    \list 1
+        \li Start an MQTT broker on \c localhost, for example \c mosquitto.
+        \li Start the bundled \c smartplug-simulation helper. It simulates a real plug: it
+            reacts to \c smartplug/on and publishes changing \c smartplug/current,
+            \c smartplug/voltage and \c smartplug/energy values. Pass \c --url to point it at
+            a different broker (\c --help lists the options).
+        \li Start the \c smartplug application. Toggle the switch and watch the metering
+            update.
+    \endlist
+*/
