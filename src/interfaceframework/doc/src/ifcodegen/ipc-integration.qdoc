@@ -73,4 +73,7 @@ Unlike the QtRemoteObjects-based templates, the \c backend_mqtt template does no
 generate a corresponding server. The MQTT broker and the server-side implementation
 must be provided separately.
 
+For a complete example, including a small stand-in device that plays the server role
+on the broker, see the \l{Qt Interface Framework - Smart Plug (MQTT)}{Smart Plug example}.
+
 */

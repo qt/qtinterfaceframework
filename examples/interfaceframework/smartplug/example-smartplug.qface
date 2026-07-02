@@ -1,0 +1,36 @@
+module Example.If.SmartHome 1.0;
+
+/**
+ * \brief A power plug that can be switched on and off and reports its power metering.
+ *
+ * The properties are mapped to MQTT topics below the \c smartplug topic prefix, e.g.
+ * \c smartplug/on or \c smartplug/current. Only the \c on state is mandatory: the backend
+ * reports itself as initialized once it is connected to the broker and has received the
+ * plug state, so the UI can use \c isInitialized to reflect the connection. The metering
+ * values are optional and stream in as they are published.
+ */
+@config_mqtt: { topic_prefix: "smartplug", default_server: "mqtt://localhost:1883", mandatory: false }
+interface SmartPlug {
+    /**
+     * \brief Whether the plug's relay is switched on.
+     *
+     * Writing this property publishes the new state and switches the plug on or off.
+     */
+    @config_mqtt: { mandatory: true }
+    bool on;
+
+    /**
+     * \brief The instantaneous current draw, in Ampere.
+     */
+    readonly real current;
+
+    /**
+     * \brief The RMS line voltage, in Volt.
+     */
+    readonly real voltage;
+
+    /**
+     * \brief The accumulated energy consumption, in kilowatt-hours.
+     */
+    readonly real energy;
+}
