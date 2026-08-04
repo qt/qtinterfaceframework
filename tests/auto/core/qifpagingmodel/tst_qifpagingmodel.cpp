@@ -16,6 +16,8 @@
 #include <QScopedPointer>
 #include <private/qobject_p.h>
 
+#include <limits>
+
 //TODO Add test with multiple model instances, requesting different data at the same time
 //TODO Test the signal without a valid identifier
 
@@ -101,6 +103,12 @@ public:
         QVariantList variantList = { QVariant::fromValue(item) };
 
         emit dataChanged(QUuid(), variantList, index, 0);
+    }
+
+    // Simulates an untrusted/malicious backend sending an out-of-range start index
+    void emitDataFetched(const QVariantList &items, int start, bool moreAvailable)
+    {
+        emit dataFetched(QUuid(), items, start, moreAvailable);
     }
 
     void remove(int index)
@@ -191,6 +199,7 @@ private Q_SLOTS:
     void testFetchMore_data();
     void testFetchMore();
     void testDataChangedMode();
+    void testDataChangedMode_outOfRange();
     void testReload();
     void testDataChangedMode_jump();
     void testEditing();
@@ -439,6 +448,46 @@ void tst_QIfPagingModel::testDataChangedMode()
 
     // Test that we really fetched new data
     QCOMPARE(fetchDataSpy.at(0).at(2).toInt(), testIndex + 1);
+}
+
+void tst_QIfPagingModel::testDataChangedMode_outOfRange()
+{
+    PagingTestServiceObject *service = new PagingTestServiceObject();
+    manager->registerService(service, service->interfaces());
+    service->testBackend()->setCapabilities(QtInterfaceFrameworkModule::SupportsGetSize);
+    service->testBackend()->initializeSimpleData();
+
+    QIfPagingModel model;
+    model.setServiceObject(service);
+    QVERIFY(model.serviceObject());
+
+    // Populate the model and switch to the DataChanged loading type
+    QCOMPARE(model.rowCount(), model.chunkSize());
+    QCOMPARE(model.at<QIfStandardItem>(model.chunkSize() - 1).id(),
+             QLatin1String("simple ") + QString::number(model.chunkSize() - 1));
+    model.setLoadingType(QIfPagingModel::DataChanged);
+    QCOMPARE(model.loadingType(), QIfPagingModel::DataChanged);
+    QCOMPARE(model.rowCount(), 100);
+
+    const int rowCountBefore = model.rowCount();
+    const QString firstIdBefore = model.at<QIfStandardItem>(0).id();
+
+    QSignalSpy dataChangedSpy(&model, &QAbstractItemModel::dataChanged);
+    const QVariantList items = { QVariant::fromValue(QIfStandardItem()) };
+
+    // A negative start index from the (untrusted) backend must be rejected and
+    // must not corrupt the model or crash with an out-of-bounds write.
+    QTest::ignoreMessage(QtWarningMsg, "countChanged signal needs to be emitted before the dataFetched signal");
+    service->testBackend()->emitDataFetched(items, -1, false);
+
+    // A huge start index that would overflow start + count must be rejected too.
+    QTest::ignoreMessage(QtWarningMsg, "countChanged signal needs to be emitted before the dataFetched signal");
+    service->testBackend()->emitDataFetched(items, std::numeric_limits<int>::max(), false);
+
+    // The model must be unchanged and no dataChanged must have been emitted.
+    QCOMPARE(dataChangedSpy.count(), 0);
+    QCOMPARE(model.rowCount(), rowCountBefore);
+    QCOMPARE(model.at<QIfStandardItem>(0).id(), firstIdBefore);
 }
 
 void tst_QIfPagingModel::testReload()

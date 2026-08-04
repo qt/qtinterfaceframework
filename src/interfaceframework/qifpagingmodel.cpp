@@ -96,8 +96,10 @@ void QIfPagingModelPrivate::onDataFetched(QUuid identifier, const QList<QVariant
         m_fetchedDataCount = int(m_itemList.count());
         q->endInsertRows();
     } else {
-        const int newSize = start + int(items.count());
-        if (m_itemList.count() <  newSize || m_availableChunks.count() < newSize / m_chunkSize) {
+        // start comes from the backend and may be out of range. Validate the range before using it.
+        const qint64 newSize = qint64(start) + items.count();
+        if (start < 0 || m_itemList.count() < newSize
+                || m_availableChunks.count() < newSize / m_chunkSize) {
             qWarning() << "countChanged signal needs to be emitted before the dataFetched signal";
             return;
         }
