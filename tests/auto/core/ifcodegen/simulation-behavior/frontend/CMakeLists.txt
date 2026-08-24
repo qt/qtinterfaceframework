@@ -1,9 +1,7 @@
-qt_add_library(simu)
-
-qt_ifcodegen_extend_target(
-    simu
+qt_ifcodegen_add_qml_module(simu
     IDL_FILES ../simu.qface
     TEMPLATE frontend
+    OUTPUT_DIRECTORY ../imports/Simu
 )
 
 target_link_libraries(
