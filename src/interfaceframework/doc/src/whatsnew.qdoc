@@ -7,6 +7,15 @@
 The following page describes new features by Qt Version.
 There is a separate page to list all \l {New Classes and Functions by Qt Version}.
 
+\section1 6.12
+
+\list
+     \li Added zoning support to the \l{backend-mqtt-template}{backend_mqtt} template to support
+         zoned interfaces with per-zone property state management.
+     \li Added an \l{Qt Interface Framework - Smart Plug (MQTT)}{MQTT smart plug example}
+         demonstrating the use of the backend_mqtt template.
+\endlist
+
 \section1 6.11
 
 \list
