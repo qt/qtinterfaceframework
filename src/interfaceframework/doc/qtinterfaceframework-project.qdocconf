@@ -41,7 +41,11 @@ qhp.QtInterfaceFramework.filterAttributes    = qtinterfaceframework $QT_VERSION 
 qhp.QtInterfaceFramework.customFilters.Qt.name = QtInterfaceFramework $QT_VERSION
 qhp.QtInterfaceFramework.customFilters.Qt.filterAttributes = qtinterfaceframework $QT_VERSION
 
-qhp.QtInterfaceFramework.subprojects         = classes qml examples
+qhp.QtInterfaceFramework.subprojects         = topics classes qml examples
+
+qhp.QtInterfaceFramework.subprojects.topics.title = Topics
+qhp.QtInterfaceFramework.subprojects.topics.indexTitle = Qt Interface Framework topics
+qhp.QtInterfaceFramework.subprojects.topics.type = manual
 
 qhp.QtInterfaceFramework.subprojects.classes.title = C++ Classes
 qhp.QtInterfaceFramework.subprojects.classes.indexTitle = Qt Interface Framework C++ Classes
@@ -65,6 +69,9 @@ depends += qtcore qtdbus qtwidgets qtdoc qtcmake qtquick qtqml qtremoteobjects q
 navigation.landingpage = "Qt Interface Framework"
 navigation.cppclassespage = "Qt Interface Framework C++ Classes"
 navigation.qmltypespage = "Qt Interface Framework QML Types"
+navigation.toctitles = "Qt Interface Framework topics"
+navigation.toctitles.inclusive = false
+
 buildversion = "Qt Interface Framework $QT_VERSION"
 
 macro.fileLink = "\\l {https://code.qt.io/cgit/qt/interfaceframework.git/tree/\1?h=$QT_VER}{\2}"
