@@ -1,7 +1,7 @@
 include($QT_INSTALL_DOCS/global/qt-module-defaults-online.qdocconf)
 
-# Add an .html file with sidebar content, used in the online style
-HTML.stylesheets               += style/qt-sidebar.html
+# TOC configuration for online sidebar
+HTML.stylesheets               += style/tree_config.xml
 
 # override defaults for Qt module documentation
 HTML.nosubdirs = "false"
