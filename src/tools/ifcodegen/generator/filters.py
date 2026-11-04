@@ -251,6 +251,21 @@ def return_type(symbol):
     jinja_error('return_type: Unknown symbol {0} of type {1}'.format(symbol, symbol.type))
 
 
+def qml_doc_type(symbol):
+    """
+    Returns the type of the symbol as it should be written in QDoc's \\qmlproperty and
+    \\qmlmethod commands, which expect QML type names (e.g. real, string, var, list) instead
+    of the C++ ones. Enums, flags and structs keep their (linkable) names.
+    """
+    if symbol.type.is_void or symbol.type.is_primitive:
+        return symbol.type.name
+    elif symbol.type.is_list:
+        return 'list'
+    elif symbol.type.is_model:
+        return return_type(symbol).replace('*', '').strip()
+    return return_type(symbol)
+
+
 def flag_type(symbol):
     """
     Return the annotation for the flag type if available, the plural otherwise
@@ -573,6 +588,7 @@ def register_filters(generator):
     generator.register_filter("enum_value", enum_value)
     generator.register_filter('simulationData', simulationData)
     generator.register_filter('qml_info_type', qml_info_type)
+    generator.register_filter('qml_doc_type', qml_doc_type)
     generator.register_filter('qml_type', qml_type)
     generator.register_filter('struct_includes', struct_includes)
     generator.register_filter('comment_text', comment_text)
