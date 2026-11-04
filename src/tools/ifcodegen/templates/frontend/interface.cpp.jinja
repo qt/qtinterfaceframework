@@ -284,7 +284,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 */
 
 /*!
-    \qmlproperty {{property|return_type}} {{interface|qml_type}}::{{property}}
+    \qmlproperty {{property|qml_doc_type}} {{interface|qml_type}}::{{property}}
 {{ qtif.format_comments(property.comment) }}
 
 {% if property.type.is_enum or property.type.is_flag %}
@@ -319,7 +319,7 @@ void {{class}}::registerQmlTypes(const QString& uri, int majorVersion, int minor
 
 {%- for operation in interface.operations %}
 /*!
-    \qmlmethod {{interface|qml_type}}::{{operation}}({{qtif.join_params(operation)}})
+    \qmlmethod {{operation|qml_doc_type}} {{interface|qml_type}}::{{operation}}({{qtif.join_params(operation)}})
 {{ qtif.format_comments(operation.comment) }}
 
 {% for param in operation.parameters %}
