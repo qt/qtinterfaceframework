@@ -117,9 +117,22 @@ else()
     set(DOC_CONF "doc/qtinterfaceframework.qdocconf")
 endif()
 
+set(DOC_EXTRA_ARGS)
+if(TARGET ifcodegen)
+    get_target_property(ifcodegen_attribution_file ifcodegen _qt_ifcodegen_attribution_file)
+    if(ifcodegen_attribution_file)
+        list(APPEND DOC_EXTRA_ARGS ATTRIBUTION_FILE_PATHS ${ifcodegen_attribution_file})
+    endif()
+endif()
+
 qt_internal_add_docs(InterfaceFramework
     ${DOC_CONF}
+    ${DOC_EXTRA_ARGS}
 )
+
+if(DOC_EXTRA_ARGS AND TARGET qattributionsscanner_InterfaceFramework)
+    add_dependencies(qattributionsscanner_InterfaceFramework ifcodegen)
+endif()
 
 file(GLOB_RECURSE allDocFiles "doc/*.qdoc" "doc/*.png" "doc/*.qdocconf")
 add_custom_target(InterfaceFramework_Documentation SOURCES

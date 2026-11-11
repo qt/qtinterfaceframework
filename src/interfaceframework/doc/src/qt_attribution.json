@@ -1,12 +1,13 @@
 {
     "Id": "jinja-documentation",
     "Name": "Jinja Documentation",
-    "QDocModule": "interfaceframework",
+    "QDocModule": "qtinterfaceframework",
     "QtUsage": "Used in the Documentation of the Jinja template language",
     "Files": "ifcodegen/template-syntax.qdoc",
+    "SecurityCritical": false,
 
     "Description": "Full featured template engine for python.",
-    "Homepage": "http://jinja.pocoo.org/",
+    "Homepage": "https://jinja.palletsprojects.com/",
     "Version": "2.9.6",
 
     "License": "BSD 3-clause License",
@@ -14,4 +15,3 @@
     "LicenseFile": "LICENSE.JINJA",
     "Copyright": "(c) 2009 by the Jinja Team, see AUTHORS for more details."
 }
-

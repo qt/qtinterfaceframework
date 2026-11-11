@@ -6,13 +6,20 @@
 qt_path_join(ifcodegen_install_dir "${QT_INSTALL_DIR}" "${INSTALL_LIBEXECDIR}" "ifcodegen")
 qt_path_join(templates_install_dir "${QT_INSTALL_DIR}" "${INSTALL_DATADIR}" "ifcodegen-templates")
 
+# The attribution of the python packages and runtime bundled with ifcodegen is generated during the
+# build. It is picked up once CMake re-runs after the virtualenv was created.
+set(IFCODEGEN_ATTRIBUTION_DIR ${CMAKE_CURRENT_BINARY_DIR}/attribution)
+set(IFCODEGEN_ATTRIBUTION_FILE ${IFCODEGEN_ATTRIBUTION_DIR}/qt_attribution.json)
+set(ifcodegen_attribution_files ../../3rdparty/qt_attribution.json)
+if(EXISTS ${IFCODEGEN_ATTRIBUTION_FILE})
+    list(APPEND ifcodegen_attribution_files ${IFCODEGEN_ATTRIBUTION_FILE})
+endif()
+
 qt_internal_add_sbom(qtifcodegen
     TYPE "QT_TOOL"
     CREATE_SBOM_FOR_EACH_ATTRIBUTION
-    ATTRIBUTION_FILE_DIR_PATHS
-        ../../../src/3rdparty
-    ATTRIBUTION_IDS
-        qface
+    ATTRIBUTION_FILE_PATHS
+        ${ifcodegen_attribution_files}
 )
 
 set(COMPILE_IFCODEGEN QT_FEATURE_ifcodegen AND NOT QT_FEATURE_host_ifcodegen AND QT_FEATURE_compiled_ifcodegen)
@@ -96,7 +103,14 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
                                ${IFCODEGEN_SOURCE_FILES}|
                        COMMENT "Installing qface development version into ${VIRTUALENV_NAME}"
                        )
+    set(GENERATE_ATTRIBUTION_COMMAND
+        COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/generate_attribution.py
+                       --package qface
+                       --output-dir ${IFCODEGEN_ATTRIBUTION_DIR}
+    )
     if (${COMPILE_IFCODEGEN})
+        set(NUITKA_REPORT ${CMAKE_CURRENT_BINARY_DIR}/nuitka-report.xml)
+        list(APPEND GENERATE_ATTRIBUTION_COMMAND --nuitka-report ${NUITKA_REPORT})
         set(MAKE_IFCODEGEN_COMMAND
                 COMMAND python -m nuitka ${CMAKE_CURRENT_SOURCE_DIR}/generate.py
                                --onefile
@@ -109,6 +123,7 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
                                --company-name="The Qt Company"
                                --product-name="ifcodegen"
                                --product-version="${QT_REPO_MODULE_VERSION}"
+                               --report=${NUITKA_REPORT}
                 COMMAND ${QT_BUILD_DIR}/${INSTALL_LIBEXECDIR}/ifcodegen${CMAKE_EXECUTABLE_SUFFIX} --selfcheck
         )
         set(MAKE_IFCODEGEN_MESSAGE "Building a relocatable ifcodegen")
@@ -121,8 +136,10 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
 
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
                               ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
+                              ${IFCODEGEN_ATTRIBUTION_FILE}
                        COMMAND ${VIRTUALENV_ACTIVATE_COMMAND}
                        ${MAKE_IFCODEGEN_COMMAND}
+                       ${GENERATE_ATTRIBUTION_COMMAND}
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-generator-verified
                        COMMAND ${CMAKE_COMMAND} -E touch .stamp-cmake-rerun
                        COMMAND ${VIRTUALENV_DEACTIVATE_COMMAND}
@@ -135,6 +152,8 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-generator-verified
                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/.stamp-cmake-rerun
                       )
+    set_property(TARGET ifcodegen PROPERTY _qt_ifcodegen_attribution_file
+                 ${IFCODEGEN_ATTRIBUTION_FILE})
     # Create the rerun cmake stamp file here to be able to add cmake configure dependency
     # A dependency can only be added to an existing file
     # This file is touched during the build during the deploy virtualenv step and is marked as an output
