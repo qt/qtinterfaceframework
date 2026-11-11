@@ -2,20 +2,21 @@
     "Id": "qface",
     "Name": "QFace",
     "QDocModule": "qtinterfaceframework",
-    "QtUsage": "Used for qtivi autogeneration of interfaces.",
+    "QtUsage": "Used by ifcodegen for the autogeneration of interfaces. Qt maintains a fork of QFace, which is used as a git submodule.",
     "Files": "qface ../interfaceframework/doc/src/ifcodegen/template-syntax.qdoc ../interfaceframework/doc/src/ifcodegen/idl-syntax.qdoc",
+    "SecurityCritical": false,
 
     "Description": "QFace is a generator framework based on a modern IDL.",
-    "Homepage": "https://pelagicore.github.io/qface",
+    "Homepage": "https://github.com/Pelagicore/qface",
+    "DownloadLocation": "https://code.qt.io/cgit/qt/qtinterfaceframework-qface.git",
     "Version": "2.0.14",
     "PURL": [
-        "pkg:github/Pelagicore/qface@$<VERSION>"
+        "pkg:github/qt/qtinterfaceframework-qface@$<VERSION>"
     ],
     "Comment": "No relevant CPE found",
 
     "License": "MIT License",
     "LicenseId": "MIT",
     "LicenseFile": "qface/LICENSE",
-    "Copyright": "Copyright (C) 2019 Luxoft Sweden AB"
+    "Copyright": "Copyright (c) 2017 Pelagicore AG"
 }
-
