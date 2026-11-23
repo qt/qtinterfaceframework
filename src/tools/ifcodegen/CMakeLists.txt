@@ -85,6 +85,9 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
         if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
             set(EXTRA_LINUX_PACKAGES_COMMAND COMMAND pip3 install -r ${CMAKE_CURRENT_SOURCE_DIR}/tool_requirements_linux.txt)
         endif()
+        if (APPLE)
+            set(NUITKA_STATIC_LIBPYTHON_OPTION --static-libpython=no)
+        endif()
     endif()
 
     add_custom_command(OUTPUT ${IFCODEGEN_BIN}
@@ -115,7 +118,8 @@ if(QT_FEATURE_python3_venv AND (${COMPILE_IFCODEGEN} OR NOT QT_FEATURE_system_qf
                 COMMAND python -m nuitka ${CMAKE_CURRENT_SOURCE_DIR}/generate.py
                                --onefile
                                --standalone
-                               --include-data-files=${CMAKE_CURRENT_BINARY_DIR}/.config=
+                               ${NUITKA_STATIC_LIBPYTHON_OPTION}
+                               --include-data-files=${CMAKE_CURRENT_BINARY_DIR}/.config=.config
                                --include-package-data=qface
                                --output-filename=ifcodegen
                                --output-dir=${QT_BUILD_DIR}/${INSTALL_LIBEXECDIR}
